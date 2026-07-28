@@ -3,7 +3,7 @@ using CutAssistantNext.Core.Media;
 
 namespace CutAssistantNext.Media.Analysis;
 
-public sealed class FfprobeRunner
+public sealed class FfprobeRunner : IMediaAnalysisRunner
 {
     public const string DefaultFfprobePath =
         @"C:\Tools\ffmpeg\bin\ffprobe.exe";
