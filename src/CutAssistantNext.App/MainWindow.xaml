@@ -1,28 +1,382 @@
 ﻿<Window x:Class="CutAssistantNext.App.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CutAssistantNext.App"
-        mc:Ignorable="d"
-        Title="Cut Assistant Next – Proof of Concept 0.1"
-        Height="450"
-        Width="800"
-        WindowStartupLocation="CenterScreen">
-    <Grid>
-        <StackPanel HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-            <TextBlock HorizontalAlignment="Center"
-                       FontSize="28"
-                       FontWeight="SemiBold"
-                       Text="Cut Assistant Next" />
-            <TextBlock Margin="0,8,0,0"
-                       HorizontalAlignment="Center"
-                       FontSize="18"
-                       Text="Proof of Concept 0.1" />
-            <TextBlock Margin="0,24,0,0"
-                       HorizontalAlignment="Center"
-                       Text="Grundgerüst erfolgreich gestartet" />
-        </StackPanel>
+        Title="Cut Assistant Next – Medienanalyse"
+        Width="960"
+        Height="780"
+        MinWidth="760"
+        MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#F4F6F8">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter
+            x:Key="BooleanToVisibilityConverter" />
+
+        <Style x:Key="SectionBorderStyle"
+               TargetType="Border">
+            <Setter Property="Margin"
+                    Value="0,0,0,14" />
+            <Setter Property="Padding"
+                    Value="18" />
+            <Setter Property="Background"
+                    Value="White" />
+            <Setter Property="BorderBrush"
+                    Value="#D9DEE5" />
+            <Setter Property="BorderThickness"
+                    Value="1" />
+            <Setter Property="CornerRadius"
+                    Value="8" />
+        </Style>
+
+        <Style x:Key="SectionHeaderStyle"
+               TargetType="TextBlock">
+            <Setter Property="Margin"
+                    Value="0,0,0,14" />
+            <Setter Property="FontSize"
+                    Value="18" />
+            <Setter Property="FontWeight"
+                    Value="SemiBold" />
+            <Setter Property="Foreground"
+                    Value="#1F2937" />
+        </Style>
+
+        <Style x:Key="LabelTextStyle"
+               TargetType="TextBlock">
+            <Setter Property="Margin"
+                    Value="0,5,18,5" />
+            <Setter Property="VerticalAlignment"
+                    Value="Top" />
+            <Setter Property="FontWeight"
+                    Value="SemiBold" />
+            <Setter Property="Foreground"
+                    Value="#4B5563" />
+        </Style>
+
+        <Style x:Key="ValueTextStyle"
+               TargetType="TextBlock">
+            <Setter Property="Margin"
+                    Value="0,5,0,5" />
+            <Setter Property="VerticalAlignment"
+                    Value="Top" />
+            <Setter Property="TextWrapping"
+                    Value="Wrap" />
+            <Setter Property="Foreground"
+                    Value="#111827" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0"
+              Margin="0,0,0,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <TextBlock FontSize="28"
+                           FontWeight="SemiBold"
+                           Foreground="#111827"
+                           Text="Cut Assistant Next" />
+
+                <TextBlock Margin="0,5,0,0"
+                           FontSize="15"
+                           Foreground="#6B7280"
+                           Text="MP4-Medienanalyse mit ffprobe" />
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    MinWidth="190"
+                    Height="42"
+                    Margin="20,0,0,0"
+                    Padding="18,0"
+                    VerticalAlignment="Center"
+                    IsEnabled="{Binding CanAnalyze}"
+                    Click="SelectMediaFileButton_Click"
+                    Content="MP4-Datei auswählen" />
+        </Grid>
+
+        <Border Grid.Row="1"
+                Margin="0,0,0,14"
+                Padding="14"
+                Background="#EAF2FF"
+                BorderBrush="#BCD2F2"
+                BorderThickness="1"
+                CornerRadius="8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock FontWeight="SemiBold"
+                           Foreground="#1E3A5F"
+                           Text="{Binding StatusMessage}" />
+
+                <ProgressBar Grid.Row="1"
+                             Height="6"
+                             Margin="0,10,0,0"
+                             IsIndeterminate="{Binding IsAnalyzing}"
+                             Visibility="{Binding IsAnalyzing,
+                                 Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2"
+                Margin="0,0,0,14"
+                Padding="14"
+                Background="#FFF1F1"
+                BorderBrush="#E5A4A4"
+                BorderThickness="1"
+                CornerRadius="8"
+                Visibility="{Binding HasError,
+                    Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel>
+                <TextBlock FontWeight="SemiBold"
+                           Foreground="#991B1B"
+                           Text="Bei der Analyse ist ein Fehler aufgetreten:" />
+
+                <TextBlock Margin="0,6,0,0"
+                           Foreground="#7F1D1D"
+                           TextWrapping="Wrap"
+                           Text="{Binding ErrorMessage}" />
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="3"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Grid.IsSharedSizeScope="True">
+
+                <Border Style="{StaticResource SectionBorderStyle}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource SectionHeaderStyle}"
+                                   Text="Datei und Container" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"
+                                                  SharedSizeGroup="Labels" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Dateiname" />
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding FileName}" />
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Vollständiger Pfad" />
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       ToolTip="{Binding FilePath}"
+                                       Text="{Binding FilePath}" />
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Containerformat" />
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding ContainerFormat}" />
+
+                            <TextBlock Grid.Row="3"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Dateigröße" />
+
+                            <TextBlock Grid.Row="3"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding FileSize}" />
+
+                            <TextBlock Grid.Row="4"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Laufzeit" />
+
+                            <TextBlock Grid.Row="4"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding Duration}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource SectionBorderStyle}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource SectionHeaderStyle}"
+                                   Text="Video" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"
+                                                  SharedSizeGroup="Labels" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Video-Codec" />
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding VideoCodec}" />
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Auflösung" />
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding Resolution}" />
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="SAR" />
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding SampleAspectRatio}" />
+
+                            <TextBlock Grid.Row="3"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="DAR" />
+
+                            <TextBlock Grid.Row="3"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding DisplayAspectRatio}" />
+
+                            <TextBlock Grid.Row="4"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Bildrate" />
+
+                            <TextBlock Grid.Row="4"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding FrameRate}" />
+
+                            <TextBlock Grid.Row="5"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Field Order" />
+
+                            <TextBlock Grid.Row="5"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding FieldOrder}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource SectionBorderStyle}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource SectionHeaderStyle}"
+                                   Text="Audio" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"
+                                                  SharedSizeGroup="Labels" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Audio-Codec" />
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding AudioCodec}" />
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Samplerate" />
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding SampleRate}" />
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Kanalanzahl" />
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding ChannelCount}" />
+
+                            <TextBlock Grid.Row="3"
+                                       Grid.Column="0"
+                                       Style="{StaticResource LabelTextStyle}"
+                                       Text="Kanallayout" />
+
+                            <TextBlock Grid.Row="3"
+                                       Grid.Column="1"
+                                       Style="{StaticResource ValueTextStyle}"
+                                       Text="{Binding ChannelLayout}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>

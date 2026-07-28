@@ -17,8 +17,13 @@ Die .NET-Solution und die grundlegenden Projekte sind eingerichtet:
 - `CutAssistantNext.App`
 - `CutAssistantNext.Core.Tests`
 - `CutAssistantNext.Media.Tests`
+- `CutAssistantNext.App.Tests`
 
-Die erste funktionsfähige Medienkomponente ist umgesetzt: Cut Assistant Next kann `ffprobe.exe` tatsächlich starten, die JSON-Ausgabe lesen und in strukturierte .NET-Objekte überführen.
+Die ffprobe-Medienanalyse ist inzwischen bis in die WPF-Anwendung integriert.
+
+Eine MP4-Datei kann über einen Dateiauswahldialog ausgewählt, asynchron analysiert und ohne Blockierung der Oberfläche ausgewertet werden.
+
+Die Verarbeitung ist über `IMediaAnalysisRunner` abstrahiert. Das testbare `MainWindowViewModel` verwaltet Status, Fehleranzeige, Auslastungszustand und die formatierten Medieninformationen.
 
 ## ffprobe-Medienanalyse
 
@@ -85,41 +90,100 @@ Der Runner behandelt außerdem:
 
 Dateipfade mit Leerzeichen werden über `ProcessStartInfo.ArgumentList` sicher übergeben.
 
-## Manueller Praxistest
+## WPF-Medienanalyse
 
-Der vollständige Ablauf wurde mit einer realen MP4-Datei erfolgreich geprüft.
+Eine MP4-Datei kann direkt über die WPF-Oberfläche ausgewählt und analysiert werden.
+
+Der Ablauf:
 
 ```text
-Format:       QuickTime / MOV
-Dateigröße:   973.028.644 Byte
-Dauer:        00:28:53,5
-Videostreams: 1
-Audiostreams: 1
+MainWindow
+    ↓
+MainWindowViewModel
+    ↓
+IMediaAnalysisRunner
+    ↓
+FfprobeRunner
+    ↓
+FfprobeJsonParser
+    ↓
+MediaAnalysisResult
+```
+
+Während der Analyse:
+
+- bleibt die Oberfläche reaktionsfähig
+- wird die Dateiauswahl vorübergehend deaktiviert
+- erscheint der Status `Datei wird analysiert …`
+- wird ein unbestimmter Fortschrittsbalken angezeigt
+
+Nach erfolgreicher Analyse werden dargestellt:
+
+- Dateiname und vollständiger Pfad
+- Containerformat
+- Dateigröße
+- Laufzeit
+- Video-Codec
+- Auflösung
+- SAR und DAR
+- Bildrate
+- Field Order
+- Audio-Codec
+- Samplerate
+- Kanalanzahl
+- Kanallayout
+
+Für den Proof of Concept werden jeweils der erste Video- und Audiostream angezeigt.
+Fehlende Werte erscheinen als `Nicht verfügbar`.
+Fehler des Runners werden verständlich in der Oberfläche dargestellt.
+
+## Manueller Praxistest
+
+Der vollständige ffprobe-Ablauf wurde mit einer realen MP4-Datei erfolgreich über die WPF-Oberfläche geprüft.
+
+```text
+Datei:
+  Frieren Nach dem Ende der Reise S02E05
+  Ein ganz normaler Kerl [26.07.2026].mp4
+
+Container:
+  QuickTime / MOV
+  Dateigröße: 1,10 GiB
+  Laufzeit:   00:25:13.035
 
 Video:
-  Codec:       H.264
+  Codec:       H.264 / AVC
   Auflösung:   1920 × 1080
   SAR:         1:1
   DAR:         16:9
-  Bildrate:    50 fps
+  Bildrate:    25 fps
   Field Order: progressive
 
 Audio:
   Codec:       AAC
-  Samplerate:  48.000 Hz
+  Samplerate:  44.100 Hz
   Kanäle:      2
   Layout:      stereo
 ```
 
-Damit ist nachgewiesen, dass Cut Assistant Next nicht nur vorbereitetes Test-JSON verarbeitet, sondern `ffprobe.exe` tatsächlich ausführt.
+Der Status wechselte nach Abschluss auf `Analyse erfolgreich abgeschlossen.`
+
+Die Oberfläche blieb während der asynchronen Analyse reaktionsfähig. Damit ist nachgewiesen, dass die vollständige Kette von der Dateiauswahl über `ffprobe.exe` bis zur Ergebnisanzeige funktioniert.
 
 ## Tests
 
-Die Parser- und Runner-Funktionen sind durch automatisierte xUnit-Tests abgesichert.
+Parser, Runner und ViewModel sind durch automatisierte xUnit-Tests abgesichert.
+
+Die ViewModel-Tests prüfen unter anderem:
+
+- Übernahme und Formatierung erfolgreicher Analyseergebnisse
+- verständliche Fehleranzeige
+- `IsAnalyzing` und `CanAnalyze` während einer laufenden Analyse
+- Ersatzanzeige `Nicht verfügbar` bei fehlenden Werten
 
 ```text
-Tests insgesamt:  7
-Erfolgreich:      7
+Tests insgesamt:  11
+Erfolgreich:      11
 Fehlgeschlagen:   0
 Übersprungen:     0
 ```
@@ -157,13 +221,18 @@ Bereits umgesetzt:
 - Behandlung unvollständiger und ungültiger JSON-Daten
 - tatsächliche Ausführung von `ffprobe.exe`
 - Übergabe der JSON-Ausgabe an den vorhandenen Parser
-- automatisierte Tests für Parser und Runner
-- erfolgreicher Praxistest mit einer realen MP4-Datei
+- Abstraktion über `IMediaAnalysisRunner`
+- MP4-Dateiauswahl über die WPF-Oberfläche
+- asynchrone Analyse ohne Blockierung der Oberfläche
+- Status- und Fortschrittsanzeige während der Analyse
+- verständliche Fehleranzeige
+- Anzeige der wichtigsten Datei-, Container-, Video- und Audiowerte
+- testbares `MainWindowViewModel`
+- automatisierte Tests für Parser, Runner und ViewModel
+- erfolgreicher Praxistest mit einer realen MP4-Datei in der WPF-Anwendung
 
 Als Nächstes geplant:
 
-- MP4-Datei über die WPF-Oberfläche auswählen
-- Medieninformationen in der Oberfläche anzeigen
 - mpv/libmpv einbinden
 - eingebettete Videowiedergabe
 - Play/Pause
@@ -184,9 +253,11 @@ cut-assistant-next/
 ├── docs/
 ├── src/
 │   ├── CutAssistantNext.App/
+│   │   └── ViewModels/
 │   ├── CutAssistantNext.Core/
 │   └── CutAssistantNext.Media/
 ├── tests/
+│   ├── CutAssistantNext.App.Tests/
 │   ├── CutAssistantNext.Core.Tests/
 │   └── CutAssistantNext.Media.Tests/
 ├── samples/
@@ -197,6 +268,12 @@ cut-assistant-next/
 ## Entwicklungsstand
 
 Die tatsächliche ffprobe-Ausführung wurde mit Pull Request **#3** in `main` übernommen.
+
+Die zugehörige Dokumentation folgte mit Pull Request **#4**.
+
+Die WPF-Integration der Medienanalyse ist umgesetzt, durch automatisierte Tests abgesichert und mit einer realen MP4-Datei erfolgreich geprüft.
+
+Die WPF-Integration ist für die abschließende Git-Kontrolle und einen Pull Request vorbereitet.
 
 ## Arbeitsgrundsatz
 
