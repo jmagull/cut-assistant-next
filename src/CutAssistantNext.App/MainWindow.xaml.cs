@@ -150,5 +150,28 @@ public partial class MainWindow : Window
         }
 
         await _viewModel.AnalyzeAsync(dialog.FileName);
+
+        try
+        {
+            await EnsureMediaPlayerInitializedAsync();
+
+            await _mediaPlayerService.LoadAsync(
+                dialog.FileName);
+
+            await _mediaPlayerService.PlayAsync();
+        }
+        catch (Exception exception)
+        {
+            if (!_isClosed)
+            {
+                MessageBox.Show(
+                    this,
+                    $"Die Mediendatei konnte nicht wiedergegeben werden:" +
+                    $"{Environment.NewLine}{exception.Message}",
+                    "Wiedergabe fehlgeschlagen",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
     }
 }
