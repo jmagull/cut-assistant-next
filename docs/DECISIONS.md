@@ -20,23 +20,29 @@ DirectShow, DSPack und installierte Windows-Codecs werden nicht verwendet.
 
 ## ADR-004 – mpv/libmpv für Wiedergabe
 
-**Status:** technischer Spike in Vorbereitung; im POC praktisch zu bestätigen
+**Status:** technischer Spike erfolgreich; für den POC vorläufig bestätigt
 
-Für den ersten Wiedergabe-POC wird libmpv untersucht.
+Der erste Wiedergabe-POC verwendet libmpv.
 
-Vorgesehene technische Richtung:
+Umgesetzte technische Lösung:
 
-- WPF-Einbettung zunächst über einen eigenen `HwndHost` und die mpv-Option `wid`
-- `HanumanInstitute.LibMpv` als erster Kandidat für die .NET-Anbindung
+- WPF-Einbettung über einen eigenen `HwndHost` und die mpv-Option `wid`
+- `HanumanInstitute.LibMpv` 0.10.1 als .NET-Anbindung
 - vollständige Kapselung hinter eigenen Schnittstellen
 - `IMediaPlayerService` als testbare Schnittstelle für die Anwendung
-- separate interne Kapselung der konkreten libmpv-Aufrufe
-- Bereitstellung einer fest versionierten `libmpv-2.dll` für Windows x64
+- `MpvMediaPlayerService` für Zustände, Steuerung und Ereignisverarbeitung
+- `HanumanLibMpvClient` als interne Kapselung der konkreten libmpv-Aufrufe
+- reproduzierbare Bereitstellung einer fest versionierten `libmpv-2.dll` für Windows x64
+- SHA-256-Prüfung des heruntergeladenen Archivs
+- automatische Übernahme der nativen DLL in Build- und Publish-Ausgaben
+- kontrollierte Freigabe von libmpv vor dem Zerstören des nativen Videofensters
 - keine direkte Abhängigkeit des ViewModels von WPF-, mpv- oder nativen Typen
 
-Die libmpv-Render-API bleibt eine mögliche spätere Alternative, falls die HWND-Einbettung wegen WPF-Airspace, Overlays oder anderer Einschränkungen nicht ausreicht.
+Einbettung, Laden und Wiedergabe wurden mit einer realen MP4-Datei praktisch bestätigt. Video und Ton wurden korrekt innerhalb der WPF-Anwendung wiedergegeben. Auch der vollständige Shutdown ohne zurückbleibenden Prozess wurde nachgewiesen.
 
-Der POC muss mindestens Einbettung, Laden, Wiedergabe, Pause, Seeking und Frame-Schritte mit realen OTR-Dateien nachweisen. Erst danach wird die technische Richtung endgültig entschieden.
+Play, Pause, Seeking und Stoppen sind bereits über den testbaren Service abgebildet. Die praktische Bestätigung über Bedienelemente sowie Einzelbildschritte stehen noch aus. Nach diesen Tests wird die technische Entscheidung endgültig bestätigt.
+
+Die libmpv-Render-API bleibt eine mögliche spätere Alternative, falls die HWND-Einbettung wegen WPF-Airspace, Overlays oder anderer Einschränkungen nicht ausreicht.
 
 ## ADR-005 – ffprobe für Medienanalyse
 

@@ -19,11 +19,15 @@ Die .NET-Solution und die grundlegenden Projekte sind eingerichtet:
 - `CutAssistantNext.Media.Tests`
 - `CutAssistantNext.App.Tests`
 
-Die ffprobe-Medienanalyse ist inzwischen bis in die WPF-Anwendung integriert.
+Die ffprobe-Medienanalyse und die erste eingebettete libmpv-Wiedergabe sind inzwischen bis in die WPF-Anwendung integriert.
 
-Eine MP4-Datei kann über einen Dateiauswahldialog ausgewählt, asynchron analysiert und ohne Blockierung der Oberfläche ausgewertet werden.
+Eine MP4-Datei kann über einen Dateiauswahldialog ausgewählt, asynchron analysiert und anschließend direkt im eingebetteten Videofenster mit Bild und Ton wiedergegeben werden.
 
-Die Verarbeitung ist über `IMediaAnalysisRunner` abstrahiert. Das testbare `MainWindowViewModel` verwaltet Status, Fehleranzeige, Auslastungszustand und die formatierten Medieninformationen.
+Die Analyse ist über `IMediaAnalysisRunner` abstrahiert. Das testbare `MainWindowViewModel` verwaltet Status, Fehleranzeige, Auslastungszustand und die formatierten Medieninformationen.
+
+Die Wiedergabe ist über `IMediaPlayerService` und `MpvMediaPlayerService` gekapselt. Ein eigener WPF-Host auf Basis von `HwndHost` stellt das native Fensterhandle für libmpv bereit.
+
+Die native Laufzeitbibliothek wird fest versioniert, per SHA-256 kontrolliert und beim Build automatisch in den Ausgabeordner kopiert. Beim Schließen der Anwendung wird libmpv vollständig freigegeben, bevor das native Videofenster zerstört wird.
 
 ## ffprobe-Medienanalyse
 
@@ -166,24 +170,29 @@ Audio:
   Layout:      stereo
 ```
 
-Der Status wechselte nach Abschluss auf `Analyse erfolgreich abgeschlossen.`
+Der Status wechselte nach Abschluss auf `Analyse erfolgreich abgeschlossen.` Die Oberfläche blieb während der asynchronen Analyse reaktionsfähig.
 
-Die Oberfläche blieb während der asynchronen Analyse reaktionsfähig. Damit ist nachgewiesen, dass die vollständige Kette von der Dateiauswahl über `ffprobe.exe` bis zur Ergebnisanzeige funktioniert.
+Zusätzlich wurde die eingebettete Wiedergabe mit der realen Datei `2068756_60422686.mp4` geprüft. libmpv zeigte das Video innerhalb des WPF-Fensters an und gab den Ton korrekt aus.
+
+Nach dem normalen Schließen der Anwendung wurde der Prozess vollständig beendet. Damit ist die vollständige Kette von der Dateiauswahl über ffprobe bis zur eingebetteten Bild- und Tonwiedergabe praktisch nachgewiesen.
 
 ## Tests
 
-Parser, Runner und ViewModel sind durch automatisierte xUnit-Tests abgesichert.
+Parser, Runner, ViewModel und MediaPlayer-Service sind durch automatisierte xUnit-Tests abgesichert.
 
-Die ViewModel-Tests prüfen unter anderem:
+Die Tests prüfen unter anderem:
 
 - Übernahme und Formatierung erfolgreicher Analyseergebnisse
 - verständliche Fehleranzeige
 - `IsAnalyzing` und `CanAnalyze` während einer laufenden Analyse
 - Ersatzanzeige `Nicht verfügbar` bei fehlenden Werten
+- Initialisierung und Zustandswechsel des MediaPlayer-Service
+- Laden, Wiedergabe, Pause, Seeking und Stoppen
+- Verarbeitung von libmpv-Ereignissen und Fehlern
 
 ```text
-Tests insgesamt:  11
-Erfolgreich:      11
+Tests insgesamt:  17
+Erfolgreich:      17
 Fehlgeschlagen:   0
 Übersprungen:     0
 ```
@@ -205,7 +214,9 @@ dotnet build .\CutAssistantNext.sln --configuration Release
 - C# und .NET 10
 - WPF
 - ffprobe für Medieninformationen
-- mpv/libmpv für die geplante Videowiedergabe
+- mpv/libmpv für die eingebettete Videowiedergabe
+- `HanumanInstitute.LibMpv` 0.10.1 als .NET-Anbindung
+- eigener `HwndHost` für die Windows-HWND-Einbettung
 - xUnit für automatisierte Tests
 - Git und GitHub für Versionsverwaltung
 - Codex als Programmierwerkstatt
@@ -228,15 +239,25 @@ Bereits umgesetzt:
 - verständliche Fehleranzeige
 - Anzeige der wichtigsten Datei-, Container-, Video- und Audiowerte
 - testbares `MainWindowViewModel`
-- automatisierte Tests für Parser, Runner und ViewModel
-- erfolgreicher Praxistest mit einer realen MP4-Datei in der WPF-Anwendung
+- eigene Wiedergabeschnittstelle `IMediaPlayerService`
+- testbarer `MpvMediaPlayerService`
+- interne Kapselung der libmpv-Aufrufe
+- `HanumanInstitute.LibMpv` als .NET-Wrapper
+- reproduzierbares Setup der fest versionierten `libmpv-2.dll`
+- SHA-256-Prüfung des heruntergeladenen libmpv-Archivs
+- automatische Übernahme der nativen DLL in Build- und Publish-Ordner
+- eigener WPF-Video-Host auf Basis von `HwndHost`
+- Einbettung über die mpv-Option `wid`
+- kontrollierte Initialisierung und Freigabe von libmpv
+- eingebettete Videowiedergabe mit Bild und Ton
+- automatisierte Tests für Parser, Runner, ViewModel und MediaPlayer-Service
+- erfolgreicher Praxistest mit realen MP4-Dateien in der WPF-Anwendung
 
 Als Nächstes geplant:
 
-- mpv/libmpv einbinden
-- eingebettete Videowiedergabe
-- Play/Pause
+- Bedienelemente für Play und Pause
 - Positionsanzeige und Zeitleiste
+- Seeking über die Oberfläche
 - Einzelbild vorwärts und rückwärts
 - Lautstärkeregelung
 - verständliche Protokolldatei
@@ -271,9 +292,11 @@ Die tatsächliche ffprobe-Ausführung wurde mit Pull Request **#3** in `main` ü
 
 Die zugehörige Dokumentation folgte mit Pull Request **#4**.
 
-Die WPF-Integration der Medienanalyse ist umgesetzt, durch automatisierte Tests abgesichert und mit einer realen MP4-Datei erfolgreich geprüft.
+Die WPF-Integration der Medienanalyse wurde mit Pull Request **#5** übernommen.
 
-Die WPF-Integration ist für die abschließende Git-Kontrolle und einen Pull Request vorbereitet.
+Die eingebettete libmpv-Wiedergabe ist im aktuellen Entwicklungsstand umgesetzt. Bild und Ton, native HWND-Einbettung, reproduzierbare Bereitstellung der Laufzeitbibliothek sowie der kontrollierte Anwendungs-Shutdown wurden praktisch geprüft.
+
+Der nächste Entwicklungsschritt ist die Wiedergabesteuerung mit Play, Pause, Positionsanzeige und Zeitleiste.
 
 ## Arbeitsgrundsatz
 
