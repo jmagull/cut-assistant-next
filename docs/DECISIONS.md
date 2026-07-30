@@ -20,9 +20,23 @@ DirectShow, DSPack und installierte Windows-Codecs werden nicht verwendet.
 
 ## ADR-004 – mpv/libmpv für Wiedergabe
 
-**Status:** vorläufig entschieden; im POC praktisch zu bestätigen
+**Status:** technischer Spike in Vorbereitung; im POC praktisch zu bestätigen
 
-Der POC muss Einbettung, Seeking sowie Frame-Schritte mit realen OTR-Dateien nachweisen.
+Für den ersten Wiedergabe-POC wird libmpv untersucht.
+
+Vorgesehene technische Richtung:
+
+- WPF-Einbettung zunächst über einen eigenen `HwndHost` und die mpv-Option `wid`
+- `HanumanInstitute.LibMpv` als erster Kandidat für die .NET-Anbindung
+- vollständige Kapselung hinter eigenen Schnittstellen
+- `IMediaPlayerService` als testbare Schnittstelle für die Anwendung
+- separate interne Kapselung der konkreten libmpv-Aufrufe
+- Bereitstellung einer fest versionierten `libmpv-2.dll` für Windows x64
+- keine direkte Abhängigkeit des ViewModels von WPF-, mpv- oder nativen Typen
+
+Die libmpv-Render-API bleibt eine mögliche spätere Alternative, falls die HWND-Einbettung wegen WPF-Airspace, Overlays oder anderer Einschränkungen nicht ausreicht.
+
+Der POC muss mindestens Einbettung, Laden, Wiedergabe, Pause, Seeking und Frame-Schritte mit realen OTR-Dateien nachweisen. Erst danach wird die technische Richtung endgültig entschieden.
 
 ## ADR-005 – ffprobe für Medienanalyse
 

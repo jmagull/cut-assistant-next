@@ -31,10 +31,39 @@ Später: Cutlists | Schnittmotoren | Server | Renamer | Stapel
 - Pfade und Laufzeitabhängigkeiten werden nicht fest codiert.
 - Fehler werden in verständliche Anwendungsmeldungen und technische Logs getrennt.
 
+## Wiedergabe-POC – technische Richtung
+
+Für den libmpv-Spike ist folgende Aufteilung vorgesehen:
+
+```text
+CutAssistantNext.App
+├── MainWindow und ViewModel
+└── MpvVideoHost auf Basis von HwndHost
+          |
+          | stellt ein Windows-HWND bereit
+          v
+CutAssistantNext.Media
+├── IMediaPlayerService
+├── MpvMediaPlayerService
+└── interne Kapselung der libmpv-Aufrufe
+          |
+          v
+libmpv-2.dll
+```
+
+- Der WPF-spezifische Video-Host verbleibt in `CutAssistantNext.App`.
+- Player-Zustand und Wiedergabesteuerung werden hinter `IMediaPlayerService` gekapselt.
+- ViewModels kennen weder WPF-Fensterklassen noch mpv- oder native Typen.
+- `HanumanInstitute.LibMpv` wird als erster .NET-Wrapper im Spike geprüft.
+- Die native `libmpv-2.dll` wird für Windows x64 fest versioniert und reproduzierbar bereitgestellt.
+- Die Einbettung erfolgt zunächst über die mpv-Option `wid`.
+- Die libmpv-Render-API bleibt eine spätere Alternative.
+
 ## Offene Entscheidungen
 
-- konkrete libmpv-.NET-Anbindung oder eigener schlanker Wrapper
-- Verteilung der nativen mpv-Dateien
+- Bestätigung von `HanumanInstitute.LibMpv` oder Wechsel auf einen eigenen schlanken Wrapper
+- genaue Quelle, Version, Prüfsumme und Lizenzvariante von `libmpv-2.dll`
+- Lebenszyklus, Ereignisschleife und Threading des MediaPlayer-Service
 - Logging-Bibliothek
 - MVVM-Hilfsbibliothek oder möglichst wenige externe Pakete
 - Installer-/Portable-Konzept
