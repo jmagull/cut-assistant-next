@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Media.Analysis;
+using CutAssistantNext.Media.Playback;
 using Microsoft.Win32;
 
 namespace CutAssistantNext.App;
@@ -8,15 +10,126 @@ namespace CutAssistantNext.App;
 public partial class MainWindow : Window
 {
     private readonly MainWindowViewModel _viewModel;
+    private readonly IMediaPlayerService _mediaPlayerService;
+
+    private Task? _mediaPlayerInitializationTask;
+    private bool _isClosed;
+    private bool _shutdownStarted;
+    private bool _allowClose;
 
     public MainWindow()
     {
         InitializeComponent();
 
+        _mediaPlayerService =
+            new MpvMediaPlayerService();
+
         _viewModel = new MainWindowViewModel(
             new FfprobeRunner());
 
         DataContext = _viewModel;
+
+        VideoHost.VideoWindowHandleCreated +=
+            VideoHost_VideoWindowHandleCreated;
+
+        Closing += MainWindow_Closing;
+
+        if (VideoHost.IsVideoWindowReady)
+        {
+            _ = EnsureMediaPlayerInitializedAsync();
+        }
+    }
+
+    private async void VideoHost_VideoWindowHandleCreated(
+        object? sender,
+        EventArgs e)
+    {
+        await EnsureMediaPlayerInitializedAsync();
+    }
+
+    private Task EnsureMediaPlayerInitializedAsync()
+    {
+        if (_isClosed ||
+            !VideoHost.IsVideoWindowReady)
+        {
+            return Task.CompletedTask;
+        }
+
+        _mediaPlayerInitializationTask ??=
+            InitializeMediaPlayerCoreAsync(
+                VideoHost.VideoWindowHandle);
+
+        return _mediaPlayerInitializationTask;
+    }
+
+    private async Task InitializeMediaPlayerCoreAsync(
+        nint videoWindowHandle)
+    {
+        try
+        {
+            await _mediaPlayerService.InitializeAsync(
+                videoWindowHandle);
+        }
+        catch (Exception exception)
+        {
+            if (!_isClosed)
+            {
+                MessageBox.Show(
+                    this,
+                    $"libmpv konnte nicht initialisiert werden:" +
+                    $"{Environment.NewLine}{exception.Message}",
+                    "Wiedergabeinitialisierung fehlgeschlagen",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+    }
+
+    private async void MainWindow_Closing(
+        object? sender,
+        CancelEventArgs e)
+    {
+        if (_allowClose)
+        {
+            return;
+        }
+
+        e.Cancel = true;
+
+        if (_shutdownStarted)
+        {
+            return;
+        }
+
+        _shutdownStarted = true;
+        _isClosed = true;
+
+        VideoHost.VideoWindowHandleCreated -=
+            VideoHost_VideoWindowHandleCreated;
+
+        try
+        {
+            if (_mediaPlayerInitializationTask is not null)
+            {
+                await _mediaPlayerInitializationTask;
+            }
+
+            await _mediaPlayerService.DisposeAsync();
+        }
+        catch (Exception exception)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"Fehler beim Freigeben von libmpv: " +
+                $"{exception.Message}");
+        }
+        finally
+        {
+            _allowClose = true;
+
+            Closing -= MainWindow_Closing;
+
+            Close();
+        }
     }
 
     private async void SelectMediaFileButton_Click(

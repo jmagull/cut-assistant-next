@@ -296,7 +296,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
         {
             try
             {
-                await eventLoopTask;
+                await eventLoopTask.ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -304,7 +304,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             }
         }
 
-        await _client.DisposeAsync();
+        await _client.DisposeAsync().ConfigureAwait(false);
 
         cancellation?.Dispose();
 
