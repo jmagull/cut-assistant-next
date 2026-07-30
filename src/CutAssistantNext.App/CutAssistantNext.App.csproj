@@ -6,6 +6,22 @@
   </ItemGroup>
 
   <PropertyGroup>
+    <LibMpvPath>$(MSBuildThisFileDirectory)..\..\external\libmpv\win-x64\libmpv-2.dll</LibMpvPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(LibMpvPath)"
+          Link="libmpv-2.dll"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="EnsureLibMpvPresent"
+          BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(LibMpvPath)')"
+           Text="libmpv-2.dll wurde nicht gefunden. Bitte zuerst tools\setup-libmpv.ps1 ausführen." />
+  </Target>
+  <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>

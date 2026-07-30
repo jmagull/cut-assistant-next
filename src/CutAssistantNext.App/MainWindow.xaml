@@ -1,6 +1,7 @@
 ﻿<Window x:Class="CutAssistantNext.App.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CutAssistantNext.App.Controls"
         Title="Cut Assistant Next – Medienanalyse"
         Width="960"
         Height="780"
@@ -68,6 +69,7 @@
 
     <Grid Margin="24">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -151,7 +153,27 @@
             </StackPanel>
         </Border>
 
-        <ScrollViewer Grid.Row="3"
+        <Border Grid.Row="3"
+                Style="{StaticResource SectionBorderStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="300" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Style="{StaticResource SectionHeaderStyle}"
+                           Text="Videowiedergabe – technischer Host" />
+
+                <Border Grid.Row="1"
+                        Background="Black"
+                        BorderBrush="#374151"
+                        BorderThickness="1">
+                    <controls:MpvVideoHost x:Name="VideoHost" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="4"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
             <StackPanel Grid.IsSharedSizeScope="True">
