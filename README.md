@@ -19,13 +19,17 @@ Die .NET-Solution und die grundlegenden Projekte sind eingerichtet:
 - `CutAssistantNext.Media.Tests`
 - `CutAssistantNext.App.Tests`
 
-Die ffprobe-Medienanalyse und die erste eingebettete libmpv-Wiedergabe sind inzwischen bis in die WPF-Anwendung integriert.
+Die ffprobe-Medienanalyse, die eingebettete libmpv-Wiedergabe und die grundlegende Player-Steuerung sind inzwischen bis in die WPF-Anwendung integriert.
 
 Eine MP4-Datei kann über einen Dateiauswahldialog ausgewählt, asynchron analysiert und anschließend direkt im eingebetteten Videofenster mit Bild und Ton wiedergegeben werden.
 
 Die Analyse ist über `IMediaAnalysisRunner` abstrahiert. Das testbare `MainWindowViewModel` verwaltet Status, Fehleranzeige, Auslastungszustand und die formatierten Medieninformationen.
 
 Die Wiedergabe ist über `IMediaPlayerService` und `MpvMediaPlayerService` gekapselt. Ein eigener WPF-Host auf Basis von `HwndHost` stellt das native Fensterhandle für libmpv bereit.
+
+Das testbare `PlaybackViewModel` bildet Player-Zustand, aktuelle Position, Gesamtdauer und die Verfügbarkeit der Bedienelemente ab. Die Oberfläche bietet Play, Pause, eine formatierte Zeitanzeige und eine automatisch mitlaufende Zeitleiste mit Seeking.
+
+Während der Benutzer den Slider bewegt, überschreiben automatische Positionsmeldungen von libmpv nicht den gewählten Vorschauwert. Erst beim Loslassen wird die neue Position an den MediaPlayer-Service übergeben.
 
 Die native Laufzeitbibliothek wird fest versioniert, per SHA-256 kontrolliert und beim Build automatisch in den Ausgabeordner kopiert. Beim Schließen der Anwendung wird libmpv vollständig freigegeben, bevor das native Videofenster zerstört wird.
 
@@ -174,11 +178,20 @@ Der Status wechselte nach Abschluss auf `Analyse erfolgreich abgeschlossen.` Die
 
 Zusätzlich wurde die eingebettete Wiedergabe mit der realen Datei `2068756_60422686.mp4` geprüft. libmpv zeigte das Video innerhalb des WPF-Fensters an und gab den Ton korrekt aus.
 
-Nach dem normalen Schließen der Anwendung wurde der Prozess vollständig beendet. Damit ist die vollständige Kette von der Dateiauswahl über ffprobe bis zur eingebetteten Bild- und Tonwiedergabe praktisch nachgewiesen.
+Auch die Wiedergabesteuerung wurde praktisch geprüft:
+
+- Play und Pause funktionieren zuverlässig
+- aktuelle Position und Gesamtdauer werden korrekt angezeigt
+- die Zeitleiste läuft während der Wiedergabe automatisch mit
+- Seeking funktioniert während laufender und pausierter Wiedergabe
+- während des manuellen Ziehens springt der Slider nicht zur Player-Position zurück
+- der Ablauf `Pause → Seeking → Play → Pause → Play` funktioniert stabil
+
+Nach dem normalen Schließen der Anwendung wurde der Prozess vollständig beendet. Damit ist die vollständige Kette von der Dateiauswahl über ffprobe bis zur eingebetteten Bild- und Tonwiedergabe einschließlich Play/Pause und Navigation über die Zeitleiste praktisch nachgewiesen.
 
 ## Tests
 
-Parser, Runner, ViewModel und MediaPlayer-Service sind durch automatisierte xUnit-Tests abgesichert.
+Parser, Runner, `MainWindowViewModel`, `PlaybackViewModel` und MediaPlayer-Service sind durch automatisierte xUnit-Tests abgesichert.
 
 Die Tests prüfen unter anderem:
 
@@ -189,10 +202,13 @@ Die Tests prüfen unter anderem:
 - Initialisierung und Zustandswechsel des MediaPlayer-Service
 - Laden, Wiedergabe, Pause, Seeking und Stoppen
 - Verarbeitung von libmpv-Ereignissen und Fehlern
+- Play-/Pause-Zustände bei unterschiedlichen libmpv-Ereignisreihenfolgen
+- Positions-, Dauer- und Slider-Verhalten des `PlaybackViewModel`
+- Seeking-Vorschau, Begrenzung und Abbruch
 
 ```text
-Tests insgesamt:  17
-Erfolgreich:      17
+Tests insgesamt:  29
+Erfolgreich:      29
 Fehlgeschlagen:   0
 Übersprungen:     0
 ```
@@ -250,14 +266,16 @@ Bereits umgesetzt:
 - Einbettung über die mpv-Option `wid`
 - kontrollierte Initialisierung und Freigabe von libmpv
 - eingebettete Videowiedergabe mit Bild und Ton
-- automatisierte Tests für Parser, Runner, ViewModel und MediaPlayer-Service
+- testbares `PlaybackViewModel` für Player-Zustand, Position und Dauer
+- Bedienelemente für Play und Pause
+- Positionsanzeige und automatisch mitlaufende Zeitleiste
+- Seeking während laufender und pausierter Wiedergabe
+- Schutz vor zurückspringendem Slider während des manuellen Seeking
+- automatisierte Tests für Parser, Runner, ViewModels und MediaPlayer-Service
 - erfolgreicher Praxistest mit realen MP4-Dateien in der WPF-Anwendung
 
 Als Nächstes geplant:
 
-- Bedienelemente für Play und Pause
-- Positionsanzeige und Zeitleiste
-- Seeking über die Oberfläche
 - Einzelbild vorwärts und rückwärts
 - Lautstärkeregelung
 - verständliche Protokolldatei
@@ -294,9 +312,15 @@ Die zugehörige Dokumentation folgte mit Pull Request **#4**.
 
 Die WPF-Integration der Medienanalyse wurde mit Pull Request **#5** übernommen.
 
-Die eingebettete libmpv-Wiedergabe ist im aktuellen Entwicklungsstand umgesetzt. Bild und Ton, native HWND-Einbettung, reproduzierbare Bereitstellung der Laufzeitbibliothek sowie der kontrollierte Anwendungs-Shutdown wurden praktisch geprüft.
+Die eingebettete libmpv-Wiedergabe mit Bild, Ton, eigener HWND-Einbettung und kontrolliertem Shutdown wurde mit Pull Request **#6** integriert.
 
-Der nächste Entwicklungsschritt ist die Wiedergabesteuerung mit Play, Pause, Positionsanzeige und Zeitleiste.
+Play, Pause, Positionsanzeige, Gesamtdauer und Zeitleiste mit Seeking wurden mit Pull Request **#7** in `main` übernommen.
+
+Aktueller Merge-Commit: `6e5312b`.
+
+Der Proof of Concept ist damit ein funktionsfähiger eingebetteter MP4-Player mit ffprobe-Medienanalyse, Play/Pause-Steuerung und präziser Navigation über eine Zeitleiste.
+
+Der nächste Entwicklungsschritt ist die Einzelbildnavigation vorwärts und rückwärts sowie die Erweiterung der Player-Bedienung.
 
 ## Arbeitsgrundsatz
 
