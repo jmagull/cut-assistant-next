@@ -73,6 +73,11 @@ public sealed class MpvMediaPlayerServiceTests
         await using var service =
             new MpvMediaPlayerService(client);
 
+        var durationChangedCount = 0;
+
+        service.DurationChanged +=
+            (_, _) => durationChangedCount++;
+
         await service.InitializeAsync((nint)123);
 
         client.Publish(
@@ -119,6 +124,8 @@ public sealed class MpvMediaPlayerServiceTests
         Assert.Equal(
             TimeSpan.FromSeconds(120.5),
             service.Duration);
+
+        Assert.Equal(1, durationChangedCount);
     }
 
     [Fact]
@@ -132,7 +139,17 @@ public sealed class MpvMediaPlayerServiceTests
         await service.InitializeAsync((nint)123);
 
         await service.PauseAsync();
+
+        Assert.Equal(
+            MediaPlayerState.Paused,
+            service.State);
+
         await service.PlayAsync();
+
+        Assert.Equal(
+            MediaPlayerState.Playing,
+            service.State);
+
         await service.SeekAsync(TimeSpan.FromSeconds(42.5));
         await service.StopAsync();
 
@@ -181,6 +198,72 @@ public sealed class MpvMediaPlayerServiceTests
             service.ErrorMessage);
 
         Assert.Equal(1, errorEventCount);
+    }
+
+    [Fact]
+    public async Task FileLoaded_AfterPlayRequest_KeepsPlayingState()
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+        await service.PlayAsync();
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.FileLoaded));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "time-pos",
+                "5"));
+
+        await WaitUntilAsync(
+            () => service.Position ==
+                TimeSpan.FromSeconds(5));
+
+        Assert.Equal(
+            MediaPlayerState.Playing,
+            service.State);
+    }
+
+    [Fact]
+    public async Task PlaybackRestarted_WhilePaused_KeepsPausedState()
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.FileLoaded));
+
+        await WaitUntilAsync(
+            () => service.State == MediaPlayerState.Paused);
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PlaybackRestarted));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "time-pos",
+                "15"));
+
+        await WaitUntilAsync(
+            () => service.Position ==
+                TimeSpan.FromSeconds(15));
+
+        Assert.Equal(
+            MediaPlayerState.Paused,
+            service.State);
     }
 
     [Fact]

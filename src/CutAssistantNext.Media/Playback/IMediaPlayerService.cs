@@ -14,6 +14,8 @@ public interface IMediaPlayerService : IAsyncDisposable
 
     event EventHandler? PositionChanged;
 
+    event EventHandler? DurationChanged;
+
     event EventHandler? ErrorOccurred;
 
     Task InitializeAsync(
