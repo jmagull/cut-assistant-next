@@ -1,0 +1,322 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using CutAssistantNext.Media.Playback;
+
+namespace CutAssistantNext.App.ViewModels;
+
+public sealed class PlaybackViewModel
+    : INotifyPropertyChanged, IDisposable
+{
+    private readonly IMediaPlayerService _mediaPlayerService;
+    private readonly SynchronizationContext? _synchronizationContext;
+
+    private bool _isSeeking;
+    private double _seekPositionSeconds;
+    private bool _disposed;
+
+    public PlaybackViewModel(
+        IMediaPlayerService mediaPlayerService)
+    {
+        _mediaPlayerService = mediaPlayerService
+            ?? throw new ArgumentNullException(
+                nameof(mediaPlayerService));
+
+        _synchronizationContext =
+            SynchronizationContext.Current;
+
+        _mediaPlayerService.StateChanged +=
+            MediaPlayerService_StateChanged;
+
+        _mediaPlayerService.PositionChanged +=
+            MediaPlayerService_PositionChanged;
+
+        _mediaPlayerService.DurationChanged +=
+            MediaPlayerService_DurationChanged;
+
+        _mediaPlayerService.ErrorOccurred +=
+            MediaPlayerService_ErrorOccurred;
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public MediaPlayerState State =>
+        _mediaPlayerService.State;
+
+    public TimeSpan Position =>
+        _mediaPlayerService.Position;
+
+    public TimeSpan? Duration =>
+        _mediaPlayerService.Duration;
+
+    public double PositionSeconds =>
+        Math.Max(0, Position.TotalSeconds);
+
+    public double DurationSeconds =>
+        Math.Max(0, Duration?.TotalSeconds ?? 0);
+
+    public string PositionText =>
+        FormatTime(Position);
+
+    public string DurationText =>
+        Duration.HasValue
+            ? FormatTime(Duration.Value)
+            : "--:--:--";
+
+    public string? ErrorMessage =>
+        _mediaPlayerService.ErrorMessage;
+
+    public bool HasError =>
+        !string.IsNullOrWhiteSpace(ErrorMessage);
+
+    public bool CanPlay =>
+        State == MediaPlayerState.Paused;
+
+    public bool CanPause =>
+        State == MediaPlayerState.Playing;
+
+    public bool CanSeek =>
+        DurationSeconds > 0 &&
+        State is
+            MediaPlayerState.Paused or
+            MediaPlayerState.Playing or
+            MediaPlayerState.Ended;
+
+    public bool IsSeeking =>
+        _isSeeking;
+
+    public double TimelinePositionSeconds =>
+        IsSeeking
+            ? _seekPositionSeconds
+            : PositionSeconds;
+
+    public void BeginSeek()
+    {
+        if (!CanSeek || IsSeeking)
+        {
+            return;
+        }
+
+        _seekPositionSeconds = PositionSeconds;
+        _isSeeking = true;
+
+        OnPropertyChanged(nameof(IsSeeking));
+        OnPropertyChanged(nameof(TimelinePositionSeconds));
+    }
+
+    public void UpdateSeekPosition(
+        double positionSeconds)
+    {
+        if (!IsSeeking)
+        {
+            return;
+        }
+
+        var normalizedPosition =
+            NormalizeSeekPosition(positionSeconds);
+
+        if (_seekPositionSeconds == normalizedPosition)
+        {
+            return;
+        }
+
+        _seekPositionSeconds = normalizedPosition;
+
+        OnPropertyChanged(nameof(TimelinePositionSeconds));
+    }
+
+    public async Task CommitSeekAsync(
+        CancellationToken cancellationToken = default)
+    {
+        if (!IsSeeking)
+        {
+            return;
+        }
+
+        var position =
+            TimeSpan.FromSeconds(_seekPositionSeconds);
+
+        try
+        {
+            await _mediaPlayerService.SeekAsync(
+                position,
+                cancellationToken);
+        }
+        finally
+        {
+            EndSeek();
+        }
+    }
+
+    public void CancelSeek()
+    {
+        EndSeek();
+    }
+
+    public Task PlayAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.PlayAsync(
+            cancellationToken);
+    }
+
+    public Task PauseAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.PauseAsync(
+            cancellationToken);
+    }
+
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+
+        _mediaPlayerService.StateChanged -=
+            MediaPlayerService_StateChanged;
+
+        _mediaPlayerService.PositionChanged -=
+            MediaPlayerService_PositionChanged;
+
+        _mediaPlayerService.DurationChanged -=
+            MediaPlayerService_DurationChanged;
+
+        _mediaPlayerService.ErrorOccurred -=
+            MediaPlayerService_ErrorOccurred;
+    }
+
+    private void MediaPlayerService_StateChanged(
+        object? sender,
+        EventArgs e)
+    {
+        PublishPropertyChanges(
+            nameof(State),
+            nameof(CanPlay),
+            nameof(CanPause),
+            nameof(CanSeek));
+    }
+
+    private void MediaPlayerService_PositionChanged(
+        object? sender,
+        EventArgs e)
+    {
+        if (IsSeeking)
+        {
+            PublishPropertyChanges(
+                nameof(Position),
+                nameof(PositionSeconds),
+                nameof(PositionText),
+                nameof(Duration),
+                nameof(DurationSeconds),
+                nameof(DurationText),
+                nameof(CanSeek));
+
+            return;
+        }
+
+        PublishPropertyChanges(
+            nameof(Position),
+            nameof(PositionSeconds),
+            nameof(PositionText),
+            nameof(Duration),
+            nameof(DurationSeconds),
+            nameof(DurationText),
+            nameof(CanSeek),
+            nameof(TimelinePositionSeconds));
+    }
+
+    private void MediaPlayerService_DurationChanged(
+        object? sender,
+        EventArgs e)
+    {
+        PublishPropertyChanges(
+            nameof(Duration),
+            nameof(DurationSeconds),
+            nameof(DurationText),
+            nameof(CanSeek),
+            nameof(TimelinePositionSeconds));
+    }
+
+    private void MediaPlayerService_ErrorOccurred(
+        object? sender,
+        EventArgs e)
+    {
+        PublishPropertyChanges(
+            nameof(ErrorMessage),
+            nameof(HasError));
+    }
+
+    private void PublishPropertyChanges(
+        params string[] propertyNames)
+    {
+        void Publish()
+        {
+            foreach (var propertyName in propertyNames)
+            {
+                OnPropertyChanged(propertyName);
+            }
+        }
+
+        if (_synchronizationContext is null ||
+            SynchronizationContext.Current ==
+                _synchronizationContext)
+        {
+            Publish();
+            return;
+        }
+
+        _synchronizationContext.Post(
+            _ => Publish(),
+            null);
+    }
+
+    private void EndSeek()
+    {
+        if (!IsSeeking)
+        {
+            return;
+        }
+
+        _isSeeking = false;
+
+        OnPropertyChanged(nameof(IsSeeking));
+        OnPropertyChanged(nameof(TimelinePositionSeconds));
+    }
+
+    private double NormalizeSeekPosition(
+        double positionSeconds)
+    {
+        if (!double.IsFinite(positionSeconds))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(positionSeconds),
+                "Die gewünschte Position muss eine endliche Zahl sein.");
+        }
+
+        return Math.Clamp(
+            positionSeconds,
+            0,
+            DurationSeconds);
+    }
+
+    private void OnPropertyChanged(
+        [CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(
+            this,
+            new PropertyChangedEventArgs(propertyName));
+    }
+
+    private static string FormatTime(TimeSpan value)
+    {
+        var totalHours =
+            Math.Max(0, (long)value.TotalHours);
+
+        return $"{totalHours:00}:" +
+               $"{value.Minutes:00}:" +
+               $"{value.Seconds:00}";
+    }
+}

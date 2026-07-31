@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Media.Analysis;
 using CutAssistantNext.Media.Playback;
@@ -11,6 +12,7 @@ public partial class MainWindow : Window
 {
     private readonly MainWindowViewModel _viewModel;
     private readonly IMediaPlayerService _mediaPlayerService;
+    private readonly PlaybackViewModel _playbackViewModel;
 
     private Task? _mediaPlayerInitializationTask;
     private bool _isClosed;
@@ -24,10 +26,14 @@ public partial class MainWindow : Window
         _mediaPlayerService =
             new MpvMediaPlayerService();
 
+        _playbackViewModel =
+            new PlaybackViewModel(_mediaPlayerService);
+
         _viewModel = new MainWindowViewModel(
             new FfprobeRunner());
 
         DataContext = _viewModel;
+        PlaybackControls.DataContext = _playbackViewModel;
 
         VideoHost.VideoWindowHandleCreated +=
             VideoHost_VideoWindowHandleCreated;
@@ -107,6 +113,8 @@ public partial class MainWindow : Window
         VideoHost.VideoWindowHandleCreated -=
             VideoHost_VideoWindowHandleCreated;
 
+        _playbackViewModel.Dispose();
+
         try
         {
             if (_mediaPlayerInitializationTask is not null)
@@ -129,6 +137,82 @@ public partial class MainWindow : Window
             Closing -= MainWindow_Closing;
 
             Close();
+        }
+    }
+
+    private void TimelineSlider_PreviewMouseLeftButtonDown(
+        object sender,
+        MouseButtonEventArgs e)
+    {
+        if (!IsInitialized)
+        {
+            return;
+        }
+
+        _playbackViewModel.BeginSeek();
+    }
+
+    private void TimelineSlider_ValueChanged(
+        object sender,
+        RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (!IsInitialized)
+        {
+            return;
+        }
+
+        _playbackViewModel.UpdateSeekPosition(
+            e.NewValue);
+    }
+
+    private async void TimelineSlider_PreviewMouseLeftButtonUp(
+        object sender,
+        MouseButtonEventArgs e)
+    {
+        if (!IsInitialized)
+        {
+            return;
+        }
+
+        await ExecutePlaybackActionAsync(
+            () => _playbackViewModel.CommitSeekAsync());
+    }
+
+    private async void PlayButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        await ExecutePlaybackActionAsync(
+            () => _playbackViewModel.PlayAsync());
+    }
+
+    private async void PauseButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        await ExecutePlaybackActionAsync(
+            () => _playbackViewModel.PauseAsync());
+    }
+
+    private async Task ExecutePlaybackActionAsync(
+        Func<Task> action)
+    {
+        try
+        {
+            await action();
+        }
+        catch (Exception exception)
+        {
+            if (!_isClosed)
+            {
+                MessageBox.Show(
+                    this,
+                    $"Die Wiedergabeaktion ist fehlgeschlagen:" +
+                    $"{Environment.NewLine}{exception.Message}",
+                    "Wiedergabefehler",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
     }
 

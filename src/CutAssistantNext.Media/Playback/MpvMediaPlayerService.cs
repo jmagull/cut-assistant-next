@@ -22,6 +22,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 
     private bool _initialized;
     private bool _stopRequested;
+    private bool _pauseRequested = true;
     private bool _disposed;
 
     public MpvMediaPlayerService()
@@ -38,6 +39,8 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
     public event EventHandler? StateChanged;
 
     public event EventHandler? PositionChanged;
+
+    public event EventHandler? DurationChanged;
 
     public event EventHandler? ErrorOccurred;
 
@@ -164,9 +167,13 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             _duration = null;
             _errorMessage = null;
             _stopRequested = false;
+            _pauseRequested = true;
         }
 
         SetState(MediaPlayerState.Loading);
+
+        PositionChanged?.Invoke(this, EventArgs.Empty);
+        DurationChanged?.Invoke(this, EventArgs.Empty);
 
         try
         {
@@ -196,6 +203,13 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
                 PauseProperty,
                 false,
                 cancellationToken);
+
+            lock (_syncRoot)
+            {
+                _pauseRequested = false;
+            }
+
+            SetState(MediaPlayerState.Playing);
         }
         catch (Exception exception)
         {
@@ -215,6 +229,13 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
                 PauseProperty,
                 true,
                 cancellationToken);
+
+            lock (_syncRoot)
+            {
+                _pauseRequested = true;
+            }
+
+            SetState(MediaPlayerState.Paused);
         }
         catch (Exception exception)
         {
@@ -258,6 +279,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
         lock (_syncRoot)
         {
             _stopRequested = true;
+            _pauseRequested = true;
             _position = TimeSpan.Zero;
             _duration = null;
         }
@@ -270,6 +292,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 
             SetState(MediaPlayerState.Empty);
             PositionChanged?.Invoke(this, EventArgs.Empty);
+            DurationChanged?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception exception)
         {
@@ -343,11 +366,11 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
         switch (mpvEvent.Kind)
         {
             case LibMpvEventKind.FileLoaded:
-                SetState(MediaPlayerState.Paused);
+                ApplyRequestedPlaybackState();
                 break;
 
             case LibMpvEventKind.PlaybackRestarted:
-                SetState(MediaPlayerState.Playing);
+                ProcessPlaybackRestarted();
                 break;
 
             case LibMpvEventKind.EndFile:
@@ -371,6 +394,26 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
                     mpvEvent.Kind,
                     "Unbekanntes libmpv-Ereignis.");
         }
+    }
+
+    private void ProcessPlaybackRestarted()
+    {
+        ApplyRequestedPlaybackState();
+    }
+
+    private void ApplyRequestedPlaybackState()
+    {
+        bool pauseRequested;
+
+        lock (_syncRoot)
+        {
+            pauseRequested = _pauseRequested;
+        }
+
+        SetState(
+            pauseRequested
+                ? MediaPlayerState.Paused
+                : MediaPlayerState.Playing);
     }
 
     private void ProcessEndFile()
@@ -431,6 +474,11 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 
     private void ProcessPauseChanged(bool isPaused)
     {
+        lock (_syncRoot)
+        {
+            _pauseRequested = isPaused;
+        }
+
         var currentState = State;
 
         if (currentState is
@@ -482,8 +530,15 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
     {
         lock (_syncRoot)
         {
+            if (_duration == duration)
+            {
+                return;
+            }
+
             _duration = duration;
         }
+
+        DurationChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void SetError(string errorMessage)
