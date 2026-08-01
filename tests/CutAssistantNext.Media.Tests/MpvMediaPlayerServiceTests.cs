@@ -19,7 +19,12 @@ public sealed class MpvMediaPlayerServiceTests
         Assert.Equal((nint)123, client.VideoWindowHandle);
 
         Assert.Equal(
-            ["time-pos", "duration", "pause"],
+            [
+                "time-pos",
+                "duration",
+                "estimated-frame-count",
+                "pause"
+            ],
             client.ObservedProperties);
 
         Assert.Equal(MediaPlayerState.Empty, service.State);
@@ -66,7 +71,7 @@ public sealed class MpvMediaPlayerServiceTests
     }
 
     [Fact]
-    public async Task Events_UpdateStatePositionDurationAndPause()
+    public async Task Events_UpdateStatePositionDurationFramesAndPause()
     {
         var client = new StubLibMpvClient();
 
@@ -75,8 +80,13 @@ public sealed class MpvMediaPlayerServiceTests
 
         var durationChangedCount = 0;
 
+        var frameChangedCount = 0;
+
         service.DurationChanged +=
             (_, _) => durationChangedCount++;
+
+        service.FrameChanged +=
+            (_, _) => frameChangedCount++;
 
         await service.InitializeAsync((nint)123);
 
@@ -96,6 +106,12 @@ public sealed class MpvMediaPlayerServiceTests
         client.Publish(
             new LibMpvEvent(
                 LibMpvEventKind.PropertyChanged,
+                "estimated-frame-count",
+                "3013"));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
                 "time-pos",
                 "12.25"));
 
@@ -111,7 +127,9 @@ public sealed class MpvMediaPlayerServiceTests
                 service.Position ==
                     TimeSpan.FromSeconds(12.25) &&
                 service.Duration ==
-                    TimeSpan.FromSeconds(120.5));
+                    TimeSpan.FromSeconds(120.5) &&
+                service.FrameNumber == 306 &&
+                service.EstimatedFrameCount == 3013);
 
         Assert.Equal(
             MediaPlayerState.Playing,
@@ -125,7 +143,11 @@ public sealed class MpvMediaPlayerServiceTests
             TimeSpan.FromSeconds(120.5),
             service.Duration);
 
+        Assert.Equal(306, service.FrameNumber);
+        Assert.Equal(3013, service.EstimatedFrameCount);
+
         Assert.Equal(1, durationChangedCount);
+        Assert.Equal(2, frameChangedCount);
     }
 
     [Fact]

@@ -8,6 +8,10 @@ public interface IMediaPlayerService : IAsyncDisposable
 
     TimeSpan? Duration { get; }
 
+    long? FrameNumber { get; }
+
+    long? EstimatedFrameCount { get; }
+
     string? ErrorMessage { get; }
 
     event EventHandler? StateChanged;
@@ -15,6 +19,8 @@ public interface IMediaPlayerService : IAsyncDisposable
     event EventHandler? PositionChanged;
 
     event EventHandler? DurationChanged;
+
+    event EventHandler? FrameChanged;
 
     event EventHandler? ErrorOccurred;
 

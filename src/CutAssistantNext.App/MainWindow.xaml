@@ -265,22 +265,32 @@
 
                     <StackPanel Grid.Row="1"
                                 Grid.Column="7"
-                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                        <TextBlock FontFamily="Consolas"
-                                   FontSize="15"
-                                   FontWeight="SemiBold"
-                                   Text="{Binding PositionText}" />
+                        <StackPanel HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <TextBlock FontFamily="Consolas"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Text="{Binding PositionText}" />
 
-                        <TextBlock Margin="6,0"
-                                   FontSize="15"
+                            <TextBlock Margin="6,0"
+                                       FontSize="15"
+                                       Foreground="#6B7280"
+                                       Text="/" />
+
+                            <TextBlock FontFamily="Consolas"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Text="{Binding DurationText}" />
+                        </StackPanel>
+
+                        <TextBlock Margin="0,3,0,0"
+                                   HorizontalAlignment="Right"
+                                   FontFamily="Consolas"
+                                   FontSize="13"
                                    Foreground="#6B7280"
-                                   Text="/" />
-
-                        <TextBlock FontFamily="Consolas"
-                                   FontSize="15"
-                                   FontWeight="SemiBold"
-                                   Text="{Binding DurationText}" />
+                                   Text="{Binding FrameText}" />
                     </StackPanel>
                 </Grid>
             </Grid>

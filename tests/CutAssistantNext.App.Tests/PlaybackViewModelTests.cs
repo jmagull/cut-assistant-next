@@ -43,6 +43,28 @@ public sealed class PlaybackViewModelTests
     }
 
     [Theory]
+    [InlineData(null, null, "Frame \u2013 / ca. \u2013")]
+    [InlineData(18526L, null, "Frame 18.526 / ca. \u2013")]
+    [InlineData(null, 67500L, "Frame \u2013 / ca. 67.500")]
+    [InlineData(18526L, 67500L, "Frame 18.526 / ca. 67.500")]
+    public void FrameText_FormatsAvailableFrameValues(
+        long? frameNumber,
+        long? estimatedFrameCount,
+        string expected)
+    {
+        var service = new StubMediaPlayerService
+        {
+            FrameNumber = frameNumber,
+            EstimatedFrameCount = estimatedFrameCount
+        };
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        Assert.Equal(expected, viewModel.FrameText);
+    }
+
+    [Theory]
     [InlineData(MediaPlayerState.Empty, false)]
     [InlineData(MediaPlayerState.Loading, false)]
     [InlineData(MediaPlayerState.Paused, true)]
@@ -94,6 +116,9 @@ public sealed class PlaybackViewModelTests
             TimeSpan.FromSeconds(120);
 
         service.RaisePositionChanged();
+        service.FrameNumber = 18526;
+        service.EstimatedFrameCount = 67500;
+        service.RaiseFrameChanged();
 
         service.ErrorMessage = "Testfehler";
         service.RaiseErrorOccurred();
@@ -119,6 +144,18 @@ public sealed class PlaybackViewModelTests
             changedProperties);
 
         Assert.Contains(
+            nameof(PlaybackViewModel.FrameNumber),
+            changedProperties);
+
+        Assert.Contains(
+            nameof(PlaybackViewModel.EstimatedFrameCount),
+            changedProperties);
+
+        Assert.Contains(
+            nameof(PlaybackViewModel.FrameText),
+            changedProperties);
+
+        Assert.Contains(
             nameof(PlaybackViewModel.ErrorMessage),
             changedProperties);
 
@@ -128,6 +165,9 @@ public sealed class PlaybackViewModelTests
 
         Assert.Equal("00:00:12", viewModel.PositionText);
         Assert.Equal("00:02:00", viewModel.DurationText);
+        Assert.Equal(
+            "Frame 18.526 / ca. 67.500",
+            viewModel.FrameText);
         Assert.True(viewModel.CanPause);
         Assert.True(viewModel.HasError);
     }
@@ -389,6 +429,10 @@ public sealed class PlaybackViewModelTests
 
         public TimeSpan? Duration { get; set; }
 
+        public long? FrameNumber { get; set; }
+
+        public long? EstimatedFrameCount { get; set; }
+
         public string? ErrorMessage { get; set; }
 
         public int PlayCallCount { get; private set; }
@@ -408,6 +452,8 @@ public sealed class PlaybackViewModelTests
         public event EventHandler? PositionChanged;
 
         public event EventHandler? DurationChanged;
+
+        public event EventHandler? FrameChanged;
 
         public event EventHandler? ErrorOccurred;
 
@@ -517,6 +563,13 @@ public sealed class PlaybackViewModelTests
             DurationChanged?.Invoke(
                 this,
                 EventArgs.Empty);
+        }
+
+        public void RaiseFrameChanged()
+        {
+            FrameChanged?.Invoke(
+            this,
+            EventArgs.Empty);
         }
 
         public void RaiseErrorOccurred()
