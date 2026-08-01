@@ -42,6 +42,28 @@ public sealed class PlaybackViewModelTests
         Assert.False(viewModel.HasError);
     }
 
+    [Theory]
+    [InlineData(MediaPlayerState.Empty, false)]
+    [InlineData(MediaPlayerState.Loading, false)]
+    [InlineData(MediaPlayerState.Paused, true)]
+    [InlineData(MediaPlayerState.Playing, false)]
+    [InlineData(MediaPlayerState.Ended, false)]
+    [InlineData(MediaPlayerState.Error, false)]
+    public void CanStepFrame_DependsOnPausedState(
+        MediaPlayerState state,
+        bool expected)
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = state
+        };
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        Assert.Equal(expected, viewModel.CanStepFrame);
+    }
+
     [Fact]
     public void ServiceEvents_RaiseExpectedPropertyChanges()
     {
@@ -82,6 +104,10 @@ public sealed class PlaybackViewModelTests
 
         Assert.Contains(
             nameof(PlaybackViewModel.CanPause),
+            changedProperties);
+
+        Assert.Contains(
+            nameof(PlaybackViewModel.CanStepFrame),
             changedProperties);
 
         Assert.Contains(
@@ -176,6 +202,62 @@ public sealed class PlaybackViewModelTests
         await viewModel.PauseAsync();
 
         Assert.Equal(1, service.PauseCallCount);
+    }
+
+    [Fact]
+    public async Task StepForwardAsync_ForwardsToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.StepForwardAsync();
+
+        Assert.Equal(1, service.StepForwardCallCount);
+    }
+
+    [Fact]
+    public async Task StepBackwardAsync_ForwardsToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.StepBackwardAsync();
+
+        Assert.Equal(1, service.StepBackwardCallCount);
+    }
+
+    [Fact]
+    public async Task StepBackwardTenFramesAsync_ForwardsMinusTenToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.StepBackwardTenFramesAsync();
+
+        Assert.Equal(
+            [-10],
+            service.StepFrameCounts);
+    }
+
+    [Fact]
+    public async Task StepForwardTenFramesAsync_ForwardsTenToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.StepForwardTenFramesAsync();
+
+        Assert.Equal(
+            [10],
+            service.StepFrameCounts);
     }
 
     [Fact]
@@ -313,6 +395,12 @@ public sealed class PlaybackViewModelTests
 
         public int PauseCallCount { get; private set; }
 
+        public int StepForwardCallCount { get; private set; }
+
+        public int StepBackwardCallCount { get; private set; }
+
+        public List<int> StepFrameCounts { get; } = [];
+
         public List<TimeSpan> SeekPositions { get; } = [];
 
         public event EventHandler? StateChanged;
@@ -353,6 +441,37 @@ public sealed class PlaybackViewModelTests
             cancellationToken.ThrowIfCancellationRequested();
 
             PauseCallCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task StepForwardAsync(
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            StepForwardCallCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task StepBackwardAsync(
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            StepBackwardCallCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task StepFramesAsync(
+            int frameCount,
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            StepFrameCounts.Add(frameCount);
 
             return Task.CompletedTask;
         }

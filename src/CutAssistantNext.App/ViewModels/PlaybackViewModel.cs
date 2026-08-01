@@ -74,6 +74,9 @@ public sealed class PlaybackViewModel
     public bool CanPause =>
         State == MediaPlayerState.Playing;
 
+    public bool CanStepFrame =>
+        State == MediaPlayerState.Paused;
+
     public bool CanSeek =>
         DurationSeconds > 0 &&
         State is
@@ -166,6 +169,36 @@ public sealed class PlaybackViewModel
             cancellationToken);
     }
 
+    public Task StepForwardAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.StepForwardAsync(
+            cancellationToken);
+    }
+
+    public Task StepBackwardAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.StepBackwardAsync(
+            cancellationToken);
+    }
+
+    public Task StepBackwardTenFramesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.StepFramesAsync(
+            -10,
+            cancellationToken);
+    }
+
+    public Task StepForwardTenFramesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.StepFramesAsync(
+            10,
+            cancellationToken);
+    }
+
     public void Dispose()
     {
         if (_disposed)
@@ -196,6 +229,7 @@ public sealed class PlaybackViewModel
             nameof(State),
             nameof(CanPlay),
             nameof(CanPause),
+            nameof(CanStepFrame),
             nameof(CanSeek));
     }
 

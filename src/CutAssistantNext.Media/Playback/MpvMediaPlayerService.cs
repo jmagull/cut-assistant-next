@@ -23,6 +23,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
     private bool _initialized;
     private bool _stopRequested;
     private bool _pauseRequested = true;
+    private bool _suppressNextFrameStepUnpause;
     private bool _disposed;
 
     public MpvMediaPlayerService()
@@ -242,6 +243,77 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             SetError(exception.Message);
             throw;
         }
+    }
+
+    public Task StepForwardAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return StepFramesAsync(
+            1,
+            cancellationToken);
+    }
+
+    public async Task StepFramesAsync(
+        int frameCount,
+        CancellationToken cancellationToken = default)
+    {
+        EnsureInitialized();
+
+        if (frameCount == 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(frameCount),
+                "Die Anzahl der Bildschritte darf nicht 0 sein.");
+        }
+
+        var isForwardStep =
+            frameCount > 0;
+
+        var frameStepMode =
+            isForwardStep
+                ? "mute"
+                : "seek";
+
+        if (isForwardStep)
+        {
+            lock (_syncRoot)
+            {
+                _suppressNextFrameStepUnpause = true;
+            }
+        }
+
+        try
+        {
+            await _client.CommandAsync(
+                [
+                    "frame-step",
+                    frameCount.ToString(
+                        CultureInfo.InvariantCulture),
+                    frameStepMode
+                ],
+                cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            if (isForwardStep)
+            {
+                lock (_syncRoot)
+                {
+                    _suppressNextFrameStepUnpause = false;
+                }
+            }
+
+            SetError(exception.Message);
+            throw;
+        }
+    }
+
+    public Task StepBackwardAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return StepFramesAsync(
+            -1,
+            cancellationToken);
     }
 
     public async Task SeekAsync(
@@ -474,9 +546,28 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 
     private void ProcessPauseChanged(bool isPaused)
     {
+        bool suppressPauseChange;
+
         lock (_syncRoot)
         {
-            _pauseRequested = isPaused;
+            suppressPauseChange =
+                !isPaused &&
+                _suppressNextFrameStepUnpause;
+
+            if (suppressPauseChange)
+            {
+                _suppressNextFrameStepUnpause = false;
+            }
+
+            if (!suppressPauseChange)
+            {
+                _pauseRequested = isPaused;
+            }
+        }
+
+        if (suppressPauseChange)
+        {
+            return;
         }
 
         var currentState = State;

@@ -32,6 +32,16 @@ public interface IMediaPlayerService : IAsyncDisposable
     Task PauseAsync(
         CancellationToken cancellationToken = default);
 
+    Task StepForwardAsync(
+        CancellationToken cancellationToken = default);
+
+    Task StepFramesAsync(
+        int frameCount,
+        CancellationToken cancellationToken = default);
+
+    Task StepBackwardAsync(
+        CancellationToken cancellationToken = default);
+
     Task SeekAsync(
         TimeSpan position,
         CancellationToken cancellationToken = default);

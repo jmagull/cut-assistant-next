@@ -171,6 +171,125 @@ public sealed class MpvMediaPlayerServiceTests
     }
 
     [Fact]
+    public async Task StepForwardAsync_SendsFrameStepCommand()
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+
+        await service.StepForwardAsync();
+
+        var command = Assert.Single(client.Commands);
+
+        Assert.Equal(
+            ["frame-step", "1", "mute"],
+            command);
+    }
+
+    [Fact]
+    public async Task StepForwardAsync_TransientPauseEvents_KeepPausedState()
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.FileLoaded));
+
+        await WaitUntilAsync(
+            () => service.State == MediaPlayerState.Paused);
+
+        var stateChangedCount = 0;
+
+        service.StateChanged +=
+            (_, _) => stateChangedCount++;
+
+        await service.StepForwardAsync();
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "pause",
+                "no"));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "pause",
+                "yes"));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "time-pos",
+                "1"));
+
+        await WaitUntilAsync(
+            () => service.Position ==
+                TimeSpan.FromSeconds(1));
+
+        Assert.Equal(
+            MediaPlayerState.Paused,
+            service.State);
+
+        Assert.Equal(0, stateChangedCount);
+    }
+
+    [Fact]
+    public async Task StepBackwardAsync_SendsNegativeFrameStepCommand()
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+
+        await service.StepBackwardAsync();
+
+        var command = Assert.Single(client.Commands);
+
+        Assert.Equal(
+            ["frame-step", "-1", "seek"],
+            command);
+    }
+
+    [Theory]
+    [InlineData(10, "10", "mute")]
+    [InlineData(-10, "-10", "seek")]
+    public async Task StepFramesAsync_SendsExpectedCommand(
+        int frameCount,
+        string expectedFrameCount,
+        string expectedMode)
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+
+        await service.StepFramesAsync(frameCount);
+
+        var command = Assert.Single(client.Commands);
+
+        Assert.Equal(
+            [
+                "frame-step",
+                expectedFrameCount,
+                expectedMode
+            ],
+            command);
+    }
+
+    [Fact]
     public async Task ErrorEvent_SetsErrorState()
     {
         var client = new StubLibMpvClient();
