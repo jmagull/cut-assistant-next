@@ -27,7 +27,7 @@ Die Analyse ist über `IMediaAnalysisRunner` abstrahiert. Das testbare `MainWind
 
 Die Wiedergabe ist über `IMediaPlayerService` und `MpvMediaPlayerService` gekapselt. Ein eigener WPF-Host auf Basis von `HwndHost` stellt das native Fensterhandle für libmpv bereit.
 
-Das testbare `PlaybackViewModel` bildet Player-Zustand, aktuelle Position, Gesamtdauer und die Verfügbarkeit der Bedienelemente ab. Die Oberfläche bietet Play, Pause, eine formatierte Zeitanzeige und eine automatisch mitlaufende Zeitleiste mit Seeking.
+Das testbare `PlaybackViewModel` bildet Player-Zustand, aktuelle Position, Gesamtdauer, Frameinformationen und die Verfügbarkeit der Bedienelemente ab. Die Oberfläche bietet Play, Pause, eine formatierte Zeit- und Frameanzeige, eine automatisch mitlaufende Zeitleiste mit Seeking sowie die Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames. Die Frame-Schaltflächen sind nur im pausierten Zustand verfügbar.
 
 Während der Benutzer den Slider bewegt, überschreiben automatische Positionsmeldungen von libmpv nicht den gewählten Vorschauwert. Erst beim Loslassen wird die neue Position an den MediaPlayer-Service übergeben.
 
@@ -145,6 +145,27 @@ Für den Proof of Concept werden jeweils der erste Video- und Audiostream angeze
 Fehlende Werte erscheinen als `Nicht verfügbar`.
 Fehler des Runners werden verständlich in der Oberfläche dargestellt.
 
+## Einzelbildnavigation und Frameanzeige
+
+Im pausierten Zustand stehen vier Schaltflächen für die Navigation zur Verfügung:
+
+- `−10 Frames`
+- `−1 Frame`
+- `+1 Frame`
+- `+10 Frames`
+
+Die Vorwärtsnavigation verwendet die Frame-Step-Funktion von mpv. Für die Rückwärtsnavigation wird die Zielposition über einen relativen Seek-Befehl angesteuert.
+
+Unterhalb der Zeitanzeige zeigt die Oberfläche die aktuelle Frame-Nummer und die von mpv geschätzte Gesamtzahl der Frames an. Die aktuelle Frame-Nummer wird aus Wiedergabeposition, Gesamtdauer und geschätzter Frameanzahl berechnet und auf den gültigen Bereich begrenzt.
+
+Beispiel:
+
+```text
+Frame 89 / ca. 121.211
+```
+
+Solange noch keine ausreichenden Werte vorliegen, erscheint ein Gedankenstrich als Ersatzanzeige.
+
 ## Manueller Praxistest
 
 Der vollständige ffprobe-Ablauf wurde mit einer realen MP4-Datei erfolgreich über die WPF-Oberfläche geprüft.
@@ -186,8 +207,12 @@ Auch die Wiedergabesteuerung wurde praktisch geprüft:
 - Seeking funktioniert während laufender und pausierter Wiedergabe
 - während des manuellen Ziehens springt der Slider nicht zur Player-Position zurück
 - der Ablauf `Pause → Seeking → Play → Pause → Play` funktioniert stabil
+- die Frame-Schaltflächen sind während der Wiedergabe deaktiviert
+- im pausierten Zustand funktionieren Schritte um `−10`, `−1`, `+1` und `+10` Frames
+- die Frameanzeige ändert sich bei jedem Schritt um die erwartete Anzahl
+- die aktuelle Frame-Nummer läuft während der normalen Wiedergabe automatisch mit
 
-Nach dem normalen Schließen der Anwendung wurde der Prozess vollständig beendet. Damit ist die vollständige Kette von der Dateiauswahl über ffprobe bis zur eingebetteten Bild- und Tonwiedergabe einschließlich Play/Pause und Navigation über die Zeitleiste praktisch nachgewiesen.
+Nach dem normalen Schließen der Anwendung wurde der Prozess vollständig beendet. Damit ist die vollständige Kette von der Dateiauswahl über ffprobe bis zur eingebetteten Bild- und Tonwiedergabe einschließlich Play/Pause, Seeking, Einzelbildnavigation und Frameanzeige praktisch nachgewiesen.
 
 ## Tests
 
@@ -205,10 +230,14 @@ Die Tests prüfen unter anderem:
 - Play-/Pause-Zustände bei unterschiedlichen libmpv-Ereignisreihenfolgen
 - Positions-, Dauer- und Slider-Verhalten des `PlaybackViewModel`
 - Seeking-Vorschau, Begrenzung und Abbruch
+- Freigabe der Frame-Schaltflächen nur im pausierten Zustand
+- Vorwärts- und Rückwärtsschritte um ein und zehn Frames
+- Berechnung, Begrenzung und Formatierung der Frameanzeige
+- stabile Beibehaltung des Pausenzustands nach Frame-Schritten
 
 ```text
-Tests insgesamt:  29
-Erfolgreich:      29
+Tests insgesamt:  48
+Erfolgreich:      48
 Fehlgeschlagen:   0
 Übersprungen:     0
 ```
@@ -271,12 +300,15 @@ Bereits umgesetzt:
 - Positionsanzeige und automatisch mitlaufende Zeitleiste
 - Seeking während laufender und pausierter Wiedergabe
 - Schutz vor zurückspringendem Slider während des manuellen Seeking
+- Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames
+- Frame-Schaltflächen nur im pausierten Zustand
+- Anzeige der aktuellen Frame-Nummer und der geschätzten Gesamtzahl
+- automatische Aktualisierung der Frameanzeige während der Wiedergabe
 - automatisierte Tests für Parser, Runner, ViewModels und MediaPlayer-Service
 - erfolgreicher Praxistest mit realen MP4-Dateien in der WPF-Anwendung
 
 Als Nächstes geplant:
 
-- Einzelbild vorwärts und rückwärts
 - Lautstärkeregelung
 - verständliche Protokolldatei
 
@@ -316,11 +348,15 @@ Die eingebettete libmpv-Wiedergabe mit Bild, Ton, eigener HWND-Einbettung und ko
 
 Play, Pause, Positionsanzeige, Gesamtdauer und Zeitleiste mit Seeking wurden mit Pull Request **#7** in `main` übernommen.
 
-Aktueller Merge-Commit: `6e5312b`.
+Die zugehörige README-Dokumentation wurde mit Pull Request **#8** aktualisiert.
 
-Der Proof of Concept ist damit ein funktionsfähiger eingebetteter MP4-Player mit ffprobe-Medienanalyse, Play/Pause-Steuerung und präziser Navigation über eine Zeitleiste.
+Die Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames sowie die aktuelle Frameanzeige wurden mit Pull Request **#9** in `main` übernommen.
 
-Der nächste Entwicklungsschritt ist die Einzelbildnavigation vorwärts und rückwärts sowie die Erweiterung der Player-Bedienung.
+Aktueller Merge-Commit: `18222b4`.
+
+Der Proof of Concept ist damit ein funktionsfähiger eingebetteter MP4-Player mit ffprobe-Medienanalyse, Play/Pause-Steuerung, präzisem Seeking, Einzelbildnavigation und aktueller Frameanzeige.
+
+Die nächsten Entwicklungsschritte sind die Lautstärkeregelung und eine verständliche Protokolldatei.
 
 ## Arbeitsgrundsatz
 
