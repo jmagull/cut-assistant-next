@@ -42,6 +42,50 @@ public sealed class PlaybackViewModelTests
         Assert.False(viewModel.HasError);
     }
 
+    [Theory]
+    [InlineData(null, null, "Frame \u2013 / ca. \u2013")]
+    [InlineData(18526L, null, "Frame 18.526 / ca. \u2013")]
+    [InlineData(null, 67500L, "Frame \u2013 / ca. 67.500")]
+    [InlineData(18526L, 67500L, "Frame 18.526 / ca. 67.500")]
+    public void FrameText_FormatsAvailableFrameValues(
+        long? frameNumber,
+        long? estimatedFrameCount,
+        string expected)
+    {
+        var service = new StubMediaPlayerService
+        {
+            FrameNumber = frameNumber,
+            EstimatedFrameCount = estimatedFrameCount
+        };
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        Assert.Equal(expected, viewModel.FrameText);
+    }
+
+    [Theory]
+    [InlineData(MediaPlayerState.Empty, false)]
+    [InlineData(MediaPlayerState.Loading, false)]
+    [InlineData(MediaPlayerState.Paused, true)]
+    [InlineData(MediaPlayerState.Playing, false)]
+    [InlineData(MediaPlayerState.Ended, false)]
+    [InlineData(MediaPlayerState.Error, false)]
+    public void CanStepFrame_DependsOnPausedState(
+        MediaPlayerState state,
+        bool expected)
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = state
+        };
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        Assert.Equal(expected, viewModel.CanStepFrame);
+    }
+
     [Fact]
     public void ServiceEvents_RaiseExpectedPropertyChanges()
     {
@@ -72,6 +116,9 @@ public sealed class PlaybackViewModelTests
             TimeSpan.FromSeconds(120);
 
         service.RaisePositionChanged();
+        service.FrameNumber = 18526;
+        service.EstimatedFrameCount = 67500;
+        service.RaiseFrameChanged();
 
         service.ErrorMessage = "Testfehler";
         service.RaiseErrorOccurred();
@@ -85,11 +132,27 @@ public sealed class PlaybackViewModelTests
             changedProperties);
 
         Assert.Contains(
+            nameof(PlaybackViewModel.CanStepFrame),
+            changedProperties);
+
+        Assert.Contains(
             nameof(PlaybackViewModel.PositionText),
             changedProperties);
 
         Assert.Contains(
             nameof(PlaybackViewModel.DurationText),
+            changedProperties);
+
+        Assert.Contains(
+            nameof(PlaybackViewModel.FrameNumber),
+            changedProperties);
+
+        Assert.Contains(
+            nameof(PlaybackViewModel.EstimatedFrameCount),
+            changedProperties);
+
+        Assert.Contains(
+            nameof(PlaybackViewModel.FrameText),
             changedProperties);
 
         Assert.Contains(
@@ -102,6 +165,9 @@ public sealed class PlaybackViewModelTests
 
         Assert.Equal("00:00:12", viewModel.PositionText);
         Assert.Equal("00:02:00", viewModel.DurationText);
+        Assert.Equal(
+            "Frame 18.526 / ca. 67.500",
+            viewModel.FrameText);
         Assert.True(viewModel.CanPause);
         Assert.True(viewModel.HasError);
     }
@@ -176,6 +242,62 @@ public sealed class PlaybackViewModelTests
         await viewModel.PauseAsync();
 
         Assert.Equal(1, service.PauseCallCount);
+    }
+
+    [Fact]
+    public async Task StepForwardAsync_ForwardsToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.StepForwardAsync();
+
+        Assert.Equal(1, service.StepForwardCallCount);
+    }
+
+    [Fact]
+    public async Task StepBackwardAsync_ForwardsToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.StepBackwardAsync();
+
+        Assert.Equal(1, service.StepBackwardCallCount);
+    }
+
+    [Fact]
+    public async Task StepBackwardTenFramesAsync_ForwardsMinusTenToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.StepBackwardTenFramesAsync();
+
+        Assert.Equal(
+            [-10],
+            service.StepFrameCounts);
+    }
+
+    [Fact]
+    public async Task StepForwardTenFramesAsync_ForwardsTenToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.StepForwardTenFramesAsync();
+
+        Assert.Equal(
+            [10],
+            service.StepFrameCounts);
     }
 
     [Fact]
@@ -307,11 +429,21 @@ public sealed class PlaybackViewModelTests
 
         public TimeSpan? Duration { get; set; }
 
+        public long? FrameNumber { get; set; }
+
+        public long? EstimatedFrameCount { get; set; }
+
         public string? ErrorMessage { get; set; }
 
         public int PlayCallCount { get; private set; }
 
         public int PauseCallCount { get; private set; }
+
+        public int StepForwardCallCount { get; private set; }
+
+        public int StepBackwardCallCount { get; private set; }
+
+        public List<int> StepFrameCounts { get; } = [];
 
         public List<TimeSpan> SeekPositions { get; } = [];
 
@@ -320,6 +452,8 @@ public sealed class PlaybackViewModelTests
         public event EventHandler? PositionChanged;
 
         public event EventHandler? DurationChanged;
+
+        public event EventHandler? FrameChanged;
 
         public event EventHandler? ErrorOccurred;
 
@@ -353,6 +487,37 @@ public sealed class PlaybackViewModelTests
             cancellationToken.ThrowIfCancellationRequested();
 
             PauseCallCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task StepForwardAsync(
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            StepForwardCallCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task StepBackwardAsync(
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            StepBackwardCallCount++;
+
+            return Task.CompletedTask;
+        }
+
+        public Task StepFramesAsync(
+            int frameCount,
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            StepFrameCounts.Add(frameCount);
 
             return Task.CompletedTask;
         }
@@ -398,6 +563,13 @@ public sealed class PlaybackViewModelTests
             DurationChanged?.Invoke(
                 this,
                 EventArgs.Empty);
+        }
+
+        public void RaiseFrameChanged()
+        {
+            FrameChanged?.Invoke(
+            this,
+            EventArgs.Empty);
         }
 
         public void RaiseErrorOccurred()

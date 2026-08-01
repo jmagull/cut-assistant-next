@@ -194,6 +194,38 @@ public partial class MainWindow : Window
             () => _playbackViewModel.PauseAsync());
     }
 
+    private async void StepBackwardTenFramesButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        await ExecutePlaybackActionAsync(
+            () => _playbackViewModel.StepBackwardTenFramesAsync());
+    }
+
+    private async void StepBackwardButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        await ExecutePlaybackActionAsync(
+            () => _playbackViewModel.StepBackwardAsync());
+    }
+
+    private async void StepForwardButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        await ExecutePlaybackActionAsync(
+            () => _playbackViewModel.StepForwardAsync());
+    }
+
+    private async void StepForwardTenFramesButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        await ExecutePlaybackActionAsync(
+            () => _playbackViewModel.StepForwardTenFramesAsync());
+    }
+
     private async Task ExecutePlaybackActionAsync(
         Func<Task> action)
     {

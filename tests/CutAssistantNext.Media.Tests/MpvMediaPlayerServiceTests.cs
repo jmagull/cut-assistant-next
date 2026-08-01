@@ -19,7 +19,12 @@ public sealed class MpvMediaPlayerServiceTests
         Assert.Equal((nint)123, client.VideoWindowHandle);
 
         Assert.Equal(
-            ["time-pos", "duration", "pause"],
+            [
+                "time-pos",
+                "duration",
+                "estimated-frame-count",
+                "pause"
+            ],
             client.ObservedProperties);
 
         Assert.Equal(MediaPlayerState.Empty, service.State);
@@ -66,7 +71,7 @@ public sealed class MpvMediaPlayerServiceTests
     }
 
     [Fact]
-    public async Task Events_UpdateStatePositionDurationAndPause()
+    public async Task Events_UpdateStatePositionDurationFramesAndPause()
     {
         var client = new StubLibMpvClient();
 
@@ -75,8 +80,13 @@ public sealed class MpvMediaPlayerServiceTests
 
         var durationChangedCount = 0;
 
+        var frameChangedCount = 0;
+
         service.DurationChanged +=
             (_, _) => durationChangedCount++;
+
+        service.FrameChanged +=
+            (_, _) => frameChangedCount++;
 
         await service.InitializeAsync((nint)123);
 
@@ -96,6 +106,12 @@ public sealed class MpvMediaPlayerServiceTests
         client.Publish(
             new LibMpvEvent(
                 LibMpvEventKind.PropertyChanged,
+                "estimated-frame-count",
+                "3013"));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
                 "time-pos",
                 "12.25"));
 
@@ -111,7 +127,9 @@ public sealed class MpvMediaPlayerServiceTests
                 service.Position ==
                     TimeSpan.FromSeconds(12.25) &&
                 service.Duration ==
-                    TimeSpan.FromSeconds(120.5));
+                    TimeSpan.FromSeconds(120.5) &&
+                service.FrameNumber == 306 &&
+                service.EstimatedFrameCount == 3013);
 
         Assert.Equal(
             MediaPlayerState.Playing,
@@ -125,7 +143,11 @@ public sealed class MpvMediaPlayerServiceTests
             TimeSpan.FromSeconds(120.5),
             service.Duration);
 
+        Assert.Equal(306, service.FrameNumber);
+        Assert.Equal(3013, service.EstimatedFrameCount);
+
         Assert.Equal(1, durationChangedCount);
+        Assert.Equal(2, frameChangedCount);
     }
 
     [Fact]
@@ -168,6 +190,125 @@ public sealed class MpvMediaPlayerServiceTests
 
         Assert.Equal(["stop"], command);
         Assert.Equal(MediaPlayerState.Empty, service.State);
+    }
+
+    [Fact]
+    public async Task StepForwardAsync_SendsFrameStepCommand()
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+
+        await service.StepForwardAsync();
+
+        var command = Assert.Single(client.Commands);
+
+        Assert.Equal(
+            ["frame-step", "1", "mute"],
+            command);
+    }
+
+    [Fact]
+    public async Task StepForwardAsync_TransientPauseEvents_KeepPausedState()
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.FileLoaded));
+
+        await WaitUntilAsync(
+            () => service.State == MediaPlayerState.Paused);
+
+        var stateChangedCount = 0;
+
+        service.StateChanged +=
+            (_, _) => stateChangedCount++;
+
+        await service.StepForwardAsync();
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "pause",
+                "no"));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "pause",
+                "yes"));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "time-pos",
+                "1"));
+
+        await WaitUntilAsync(
+            () => service.Position ==
+                TimeSpan.FromSeconds(1));
+
+        Assert.Equal(
+            MediaPlayerState.Paused,
+            service.State);
+
+        Assert.Equal(0, stateChangedCount);
+    }
+
+    [Fact]
+    public async Task StepBackwardAsync_SendsNegativeFrameStepCommand()
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+
+        await service.StepBackwardAsync();
+
+        var command = Assert.Single(client.Commands);
+
+        Assert.Equal(
+            ["frame-step", "-1", "seek"],
+            command);
+    }
+
+    [Theory]
+    [InlineData(10, "10", "mute")]
+    [InlineData(-10, "-10", "seek")]
+    public async Task StepFramesAsync_SendsExpectedCommand(
+        int frameCount,
+        string expectedFrameCount,
+        string expectedMode)
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+
+        await service.StepFramesAsync(frameCount);
+
+        var command = Assert.Single(client.Commands);
+
+        Assert.Equal(
+            [
+                "frame-step",
+                expectedFrameCount,
+                expectedMode
+            ],
+            command);
     }
 
     [Fact]

@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using CutAssistantNext.Media.Playback;
 
@@ -33,6 +34,9 @@ public sealed class PlaybackViewModel
         _mediaPlayerService.DurationChanged +=
             MediaPlayerService_DurationChanged;
 
+        _mediaPlayerService.FrameChanged +=
+            MediaPlayerService_FrameChanged;
+
         _mediaPlayerService.ErrorOccurred +=
             MediaPlayerService_ErrorOccurred;
     }
@@ -62,6 +66,16 @@ public sealed class PlaybackViewModel
             ? FormatTime(Duration.Value)
             : "--:--:--";
 
+    public long? FrameNumber =>
+        _mediaPlayerService.FrameNumber;
+
+    public long? EstimatedFrameCount =>
+        _mediaPlayerService.EstimatedFrameCount;
+
+    public string FrameText =>
+        $"Frame {FormatFrameNumber(FrameNumber)} / " +
+        $"ca. {FormatFrameNumber(EstimatedFrameCount)}";
+
     public string? ErrorMessage =>
         _mediaPlayerService.ErrorMessage;
 
@@ -73,6 +87,9 @@ public sealed class PlaybackViewModel
 
     public bool CanPause =>
         State == MediaPlayerState.Playing;
+
+    public bool CanStepFrame =>
+        State == MediaPlayerState.Paused;
 
     public bool CanSeek =>
         DurationSeconds > 0 &&
@@ -166,6 +183,36 @@ public sealed class PlaybackViewModel
             cancellationToken);
     }
 
+    public Task StepForwardAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.StepForwardAsync(
+            cancellationToken);
+    }
+
+    public Task StepBackwardAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.StepBackwardAsync(
+            cancellationToken);
+    }
+
+    public Task StepBackwardTenFramesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.StepFramesAsync(
+            -10,
+            cancellationToken);
+    }
+
+    public Task StepForwardTenFramesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.StepFramesAsync(
+            10,
+            cancellationToken);
+    }
+
     public void Dispose()
     {
         if (_disposed)
@@ -184,6 +231,9 @@ public sealed class PlaybackViewModel
         _mediaPlayerService.DurationChanged -=
             MediaPlayerService_DurationChanged;
 
+        _mediaPlayerService.FrameChanged -=
+            MediaPlayerService_FrameChanged;
+
         _mediaPlayerService.ErrorOccurred -=
             MediaPlayerService_ErrorOccurred;
     }
@@ -196,6 +246,7 @@ public sealed class PlaybackViewModel
             nameof(State),
             nameof(CanPlay),
             nameof(CanPause),
+            nameof(CanStepFrame),
             nameof(CanSeek));
     }
 
@@ -238,6 +289,16 @@ public sealed class PlaybackViewModel
             nameof(DurationText),
             nameof(CanSeek),
             nameof(TimelinePositionSeconds));
+    }
+
+    private void MediaPlayerService_FrameChanged(
+        object? sender,
+        EventArgs e)
+    {
+        PublishPropertyChanges(
+            nameof(FrameNumber),
+            nameof(EstimatedFrameCount),
+            nameof(FrameText));
     }
 
     private void MediaPlayerService_ErrorOccurred(
@@ -308,6 +369,15 @@ public sealed class PlaybackViewModel
         PropertyChanged?.Invoke(
             this,
             new PropertyChangedEventArgs(propertyName));
+    }
+
+    private static string FormatFrameNumber(long? value)
+    {
+        return value.HasValue
+            ? value.Value.ToString(
+                "N0",
+                CultureInfo.GetCultureInfo("de-DE"))
+            : "\u2013";
     }
 
     private static string FormatTime(TimeSpan value)

@@ -7,6 +7,10 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 {
     private const string TimePositionProperty = "time-pos";
     private const string DurationProperty = "duration";
+
+    private const string EstimatedFrameCountProperty =
+        "estimated-frame-count";
+
     private const string PauseProperty = "pause";
 
     private readonly ILibMpvClient _client;
@@ -18,11 +22,14 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
     private MediaPlayerState _state = MediaPlayerState.Empty;
     private TimeSpan _position = TimeSpan.Zero;
     private TimeSpan? _duration;
+    private long? _frameNumber;
+    private long? _estimatedFrameCount;
     private string? _errorMessage;
 
     private bool _initialized;
     private bool _stopRequested;
     private bool _pauseRequested = true;
+    private bool _suppressNextFrameStepUnpause;
     private bool _disposed;
 
     public MpvMediaPlayerService()
@@ -41,6 +48,8 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
     public event EventHandler? PositionChanged;
 
     public event EventHandler? DurationChanged;
+
+    public event EventHandler? FrameChanged;
 
     public event EventHandler? ErrorOccurred;
 
@@ -73,6 +82,28 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             lock (_syncRoot)
             {
                 return _duration;
+            }
+        }
+    }
+
+    public long? FrameNumber
+    {
+        get
+        {
+            lock (_syncRoot)
+            {
+                return _frameNumber;
+            }
+        }
+    }
+
+    public long? EstimatedFrameCount
+    {
+        get
+        {
+            lock (_syncRoot)
+            {
+                return _estimatedFrameCount;
             }
         }
     }
@@ -124,6 +155,10 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 
             await _client.ObservePropertyAsync(
                 DurationProperty,
+                cancellationToken);
+
+            await _client.ObservePropertyAsync(
+                EstimatedFrameCountProperty,
                 cancellationToken);
 
             await _client.ObservePropertyAsync(
@@ -242,6 +277,77 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             SetError(exception.Message);
             throw;
         }
+    }
+
+    public Task StepForwardAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return StepFramesAsync(
+            1,
+            cancellationToken);
+    }
+
+    public async Task StepFramesAsync(
+        int frameCount,
+        CancellationToken cancellationToken = default)
+    {
+        EnsureInitialized();
+
+        if (frameCount == 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(frameCount),
+                "Die Anzahl der Bildschritte darf nicht 0 sein.");
+        }
+
+        var isForwardStep =
+            frameCount > 0;
+
+        var frameStepMode =
+            isForwardStep
+                ? "mute"
+                : "seek";
+
+        if (isForwardStep)
+        {
+            lock (_syncRoot)
+            {
+                _suppressNextFrameStepUnpause = true;
+            }
+        }
+
+        try
+        {
+            await _client.CommandAsync(
+                [
+                    "frame-step",
+                    frameCount.ToString(
+                        CultureInfo.InvariantCulture),
+                    frameStepMode
+                ],
+                cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            if (isForwardStep)
+            {
+                lock (_syncRoot)
+                {
+                    _suppressNextFrameStepUnpause = false;
+                }
+            }
+
+            SetError(exception.Message);
+            throw;
+        }
+    }
+
+    public Task StepBackwardAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return StepFramesAsync(
+            -1,
+            cancellationToken);
     }
 
     public async Task SeekAsync(
@@ -462,6 +568,17 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 
                 break;
 
+            case EstimatedFrameCountProperty:
+                if (TryParseFrameNumber(
+                    value,
+                    out var estimatedFrameCount))
+                {
+                    SetEstimatedFrameCount(
+                        estimatedFrameCount);
+                }
+
+                break;
+
             case PauseProperty:
                 if (TryParseBoolean(value, out var isPaused))
                 {
@@ -474,9 +591,28 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 
     private void ProcessPauseChanged(bool isPaused)
     {
+        bool suppressPauseChange;
+
         lock (_syncRoot)
         {
-            _pauseRequested = isPaused;
+            suppressPauseChange =
+                !isPaused &&
+                _suppressNextFrameStepUnpause;
+
+            if (suppressPauseChange)
+            {
+                _suppressNextFrameStepUnpause = false;
+            }
+
+            if (!suppressPauseChange)
+            {
+                _pauseRequested = isPaused;
+            }
+        }
+
+        if (suppressPauseChange)
+        {
+            return;
         }
 
         var currentState = State;
@@ -513,32 +649,146 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 
     private void SetPosition(TimeSpan position)
     {
+        bool positionChanged;
+        bool frameChanged;
+
         lock (_syncRoot)
         {
-            if (_position == position)
+            positionChanged = _position != position;
+
+            if (positionChanged)
             {
-                return;
+                _position = position;
             }
 
-            _position = position;
+            frameChanged =
+                RecalculateFrameNumberLocked();
         }
 
-        PositionChanged?.Invoke(this, EventArgs.Empty);
+        if (positionChanged)
+        {
+            PositionChanged?.Invoke(
+                this,
+                EventArgs.Empty);
+        }
+
+        if (frameChanged)
+        {
+            FrameChanged?.Invoke(
+                this,
+                EventArgs.Empty);
+        }
     }
 
     private void SetDuration(TimeSpan duration)
     {
+        bool durationChanged;
+        bool frameChanged;
+
         lock (_syncRoot)
         {
-            if (_duration == duration)
+            durationChanged = _duration != duration;
+
+            if (durationChanged)
             {
-                return;
+                _duration = duration;
             }
 
-            _duration = duration;
+            frameChanged =
+                RecalculateFrameNumberLocked();
         }
 
-        DurationChanged?.Invoke(this, EventArgs.Empty);
+        if (durationChanged)
+        {
+            DurationChanged?.Invoke(
+                this,
+                EventArgs.Empty);
+        }
+
+        if (frameChanged)
+        {
+            FrameChanged?.Invoke(
+                this,
+                EventArgs.Empty);
+        }
+    }
+
+    private void SetEstimatedFrameCount(
+        long estimatedFrameCount)
+    {
+        bool frameChanged;
+
+        lock (_syncRoot)
+        {
+            var estimatedFrameCountChanged =
+                _estimatedFrameCount !=
+                estimatedFrameCount;
+
+            if (estimatedFrameCountChanged)
+            {
+                _estimatedFrameCount =
+                    estimatedFrameCount;
+            }
+
+            var frameNumberChanged =
+                RecalculateFrameNumberLocked();
+
+            frameChanged =
+                estimatedFrameCountChanged ||
+                frameNumberChanged;
+        }
+
+        if (frameChanged)
+        {
+            FrameChanged?.Invoke(
+                this,
+                EventArgs.Empty);
+        }
+    }
+
+    private bool RecalculateFrameNumberLocked()
+    {
+        var frameNumber =
+            CalculateFrameNumber(
+                _position,
+                _duration,
+                _estimatedFrameCount);
+
+        if (_frameNumber == frameNumber)
+        {
+            return false;
+        }
+
+        _frameNumber = frameNumber;
+        return true;
+    }
+
+    private static long? CalculateFrameNumber(
+        TimeSpan position,
+        TimeSpan? duration,
+        long? estimatedFrameCount)
+    {
+        if (!duration.HasValue ||
+            duration.Value <= TimeSpan.Zero ||
+            !estimatedFrameCount.HasValue ||
+            estimatedFrameCount.Value <= 0)
+        {
+            return null;
+        }
+
+        var progress = Math.Clamp(
+            position.TotalSeconds /
+                duration.Value.TotalSeconds,
+            0,
+            1);
+
+        var frameNumber = (long)Math.Floor(
+            progress *
+            estimatedFrameCount.Value);
+
+        return Math.Min(
+            frameNumber,
+            estimatedFrameCount.Value - 1);
     }
 
     private void SetError(string errorMessage)
@@ -586,6 +836,24 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             seconds >= 0)
         {
             result = TimeSpan.FromSeconds(seconds);
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    private static bool TryParseFrameNumber(
+        string? value,
+        out long result)
+    {
+        if (long.TryParse(
+            value,
+            NumberStyles.Integer,
+            CultureInfo.InvariantCulture,
+            out result) &&
+            result >= 0)
+        {
             return true;
         }
 

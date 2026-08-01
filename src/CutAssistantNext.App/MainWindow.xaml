@@ -183,13 +183,17 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <Slider x:Name="TimelineSlider"
                             Grid.Row="0"
-                            Grid.ColumnSpan="4"
+                            Grid.ColumnSpan="8"
                             Height="24"
                             Margin="0,0,0,10"
                             Minimum="0"
@@ -219,24 +223,74 @@
                             Click="PauseButton_Click"
                             Content="Pause" />
 
+                    <Button Grid.Row="1"
+                            Grid.Column="2"
+                            MinWidth="90"
+                            Height="36"
+                            Margin="10,0,0,0"
+                            Padding="14,0"
+                            IsEnabled="{Binding CanStepFrame}"
+                            Click="StepBackwardTenFramesButton_Click"
+                            Content="−10 Bilder" />
+
+                    <Button Grid.Row="1"
+                            Grid.Column="3"
+                            MinWidth="110"
+                            Height="36"
+                            Margin="10,0,0,0"
+                            Padding="14,0"
+                            IsEnabled="{Binding CanStepFrame}"
+                            Click="StepBackwardButton_Click"
+                            Content="Bild zurück" />
+
+                    <Button Grid.Row="1"
+                            Grid.Column="4"
+                            MinWidth="110"
+                            Height="36"
+                            Margin="10,0,0,0"
+                            Padding="14,0"
+                            IsEnabled="{Binding CanStepFrame}"
+                            Click="StepForwardButton_Click"
+                            Content="Bild vor" />
+
+                    <Button Grid.Row="1"
+                            Grid.Column="5"
+                            MinWidth="90"
+                            Height="36"
+                            Margin="10,0,0,0"
+                            Padding="14,0"
+                            IsEnabled="{Binding CanStepFrame}"
+                            Click="StepForwardTenFramesButton_Click"
+                            Content="+10 Bilder" />
+
                     <StackPanel Grid.Row="1"
-                                Grid.Column="3"
-                                Orientation="Horizontal"
+                                Grid.Column="7"
+                                HorizontalAlignment="Right"
                                 VerticalAlignment="Center">
-                        <TextBlock FontFamily="Consolas"
-                                   FontSize="15"
-                                   FontWeight="SemiBold"
-                                   Text="{Binding PositionText}" />
+                        <StackPanel HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <TextBlock FontFamily="Consolas"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Text="{Binding PositionText}" />
 
-                        <TextBlock Margin="6,0"
-                                   FontSize="15"
+                            <TextBlock Margin="6,0"
+                                       FontSize="15"
+                                       Foreground="#6B7280"
+                                       Text="/" />
+
+                            <TextBlock FontFamily="Consolas"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Text="{Binding DurationText}" />
+                        </StackPanel>
+
+                        <TextBlock Margin="0,3,0,0"
+                                   HorizontalAlignment="Right"
+                                   FontFamily="Consolas"
+                                   FontSize="13"
                                    Foreground="#6B7280"
-                                   Text="/" />
-
-                        <TextBlock FontFamily="Consolas"
-                                   FontSize="15"
-                                   FontWeight="SemiBold"
-                                   Text="{Binding DurationText}" />
+                                   Text="{Binding FrameText}" />
                     </StackPanel>
                 </Grid>
             </Grid>
