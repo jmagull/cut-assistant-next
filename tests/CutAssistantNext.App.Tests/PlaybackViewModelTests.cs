@@ -43,6 +43,33 @@ public sealed class PlaybackViewModelTests
     }
 
     [Theory]
+    [InlineData(MediaPlayerState.Empty, false)]
+    [InlineData(MediaPlayerState.Loading, true)]
+    [InlineData(MediaPlayerState.Paused, true)]
+    [InlineData(MediaPlayerState.Playing, true)]
+    [InlineData(MediaPlayerState.Ended, true)]
+    [InlineData(MediaPlayerState.Error, false)]
+    public void Volume_ProjectsValueTextAndAvailability(
+        MediaPlayerState state,
+        bool expectedCanSetVolume)
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = state,
+            Volume = 75
+        };
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        Assert.Equal(75, viewModel.Volume);
+        Assert.Equal("75 %", viewModel.VolumeText);
+        Assert.Equal(
+            expectedCanSetVolume,
+            viewModel.CanSetVolume);
+    }
+
+    [Theory]
     [InlineData(null, null, "Frame \u2013 / ca. \u2013")]
     [InlineData(18526L, null, "Frame 18.526 / ca. \u2013")]
     [InlineData(null, 67500L, "Frame \u2013 / ca. 67.500")]
@@ -120,6 +147,9 @@ public sealed class PlaybackViewModelTests
         service.EstimatedFrameCount = 67500;
         service.RaiseFrameChanged();
 
+        service.Volume = 75;
+        service.RaiseVolumeChanged();
+
         service.ErrorMessage = "Testfehler";
         service.RaiseErrorOccurred();
 
@@ -156,6 +186,14 @@ public sealed class PlaybackViewModelTests
             changedProperties);
 
         Assert.Contains(
+            nameof(PlaybackViewModel.Volume),
+            changedProperties);
+
+        Assert.Contains(
+            nameof(PlaybackViewModel.VolumeText),
+            changedProperties);
+
+        Assert.Contains(
             nameof(PlaybackViewModel.ErrorMessage),
             changedProperties);
 
@@ -168,6 +206,8 @@ public sealed class PlaybackViewModelTests
         Assert.Equal(
             "Frame 18.526 / ca. 67.500",
             viewModel.FrameText);
+        Assert.Equal(75, viewModel.Volume);
+        Assert.Equal("75 %", viewModel.VolumeText);
         Assert.True(viewModel.CanPause);
         Assert.True(viewModel.HasError);
     }
@@ -242,6 +282,21 @@ public sealed class PlaybackViewModelTests
         await viewModel.PauseAsync();
 
         Assert.Equal(1, service.PauseCallCount);
+    }
+
+    [Fact]
+    public async Task SetVolumeAsync_ForwardsValueToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.SetVolumeAsync(75);
+
+        Assert.Equal(
+            [75],
+            service.VolumeValues);
     }
 
     [Fact]
@@ -413,6 +468,7 @@ public sealed class PlaybackViewModelTests
         service.RaiseStateChanged();
         service.RaisePositionChanged();
         service.RaiseDurationChanged();
+        service.RaiseVolumeChanged();
         service.RaiseErrorOccurred();
 
         Assert.Equal(0, propertyChangedCount);
@@ -433,6 +489,8 @@ public sealed class PlaybackViewModelTests
 
         public long? EstimatedFrameCount { get; set; }
 
+        public double Volume { get; set; } = 100;
+
         public string? ErrorMessage { get; set; }
 
         public int PlayCallCount { get; private set; }
@@ -447,6 +505,8 @@ public sealed class PlaybackViewModelTests
 
         public List<TimeSpan> SeekPositions { get; } = [];
 
+        public List<double> VolumeValues { get; } = [];
+
         public event EventHandler? StateChanged;
 
         public event EventHandler? PositionChanged;
@@ -454,6 +514,8 @@ public sealed class PlaybackViewModelTests
         public event EventHandler? DurationChanged;
 
         public event EventHandler? FrameChanged;
+
+        public event EventHandler? VolumeChanged;
 
         public event EventHandler? ErrorOccurred;
 
@@ -533,6 +595,18 @@ public sealed class PlaybackViewModelTests
             return Task.CompletedTask;
         }
 
+        public Task SetVolumeAsync(
+            double volume,
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            Volume = volume;
+            VolumeValues.Add(volume);
+
+            return Task.CompletedTask;
+        }
+
         public Task StopAsync(
             CancellationToken cancellationToken = default)
         {
@@ -570,6 +644,13 @@ public sealed class PlaybackViewModelTests
             FrameChanged?.Invoke(
             this,
             EventArgs.Empty);
+        }
+
+        public void RaiseVolumeChanged()
+        {
+            VolumeChanged?.Invoke(
+                this,
+                EventArgs.Empty);
         }
 
         public void RaiseErrorOccurred()

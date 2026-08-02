@@ -27,7 +27,7 @@ Die Analyse ist über `IMediaAnalysisRunner` abstrahiert. Das testbare `MainWind
 
 Die Wiedergabe ist über `IMediaPlayerService` und `MpvMediaPlayerService` gekapselt. Ein eigener WPF-Host auf Basis von `HwndHost` stellt das native Fensterhandle für libmpv bereit.
 
-Das testbare `PlaybackViewModel` bildet Player-Zustand, aktuelle Position, Gesamtdauer, Frameinformationen und die Verfügbarkeit der Bedienelemente ab. Die Oberfläche bietet Play, Pause, eine formatierte Zeit- und Frameanzeige, eine automatisch mitlaufende Zeitleiste mit Seeking sowie die Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames. Die Frame-Schaltflächen sind nur im pausierten Zustand verfügbar.
+Das testbare `PlaybackViewModel` bildet Player-Zustand, aktuelle Position, Gesamtdauer, Frameinformationen, Lautstärke und die Verfügbarkeit der Bedienelemente ab. Die Oberfläche bietet Play, Pause, eine formatierte Zeit- und Frameanzeige, eine automatisch mitlaufende Zeitleiste mit Seeking, die Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames sowie eine Lautstärkeregelung von `0` bis `100 Prozent`. Die Frame-Schaltflächen sind nur im pausierten Zustand verfügbar.
 
 Während der Benutzer den Slider bewegt, überschreiben automatische Positionsmeldungen von libmpv nicht den gewählten Vorschauwert. Erst beim Loslassen wird die neue Position an den MediaPlayer-Service übergeben.
 
@@ -211,8 +211,11 @@ Auch die Wiedergabesteuerung wurde praktisch geprüft:
 - im pausierten Zustand funktionieren Schritte um `−10`, `−1`, `+1` und `+10` Frames
 - die Frameanzeige ändert sich bei jedem Schritt um die erwartete Anzahl
 - die aktuelle Frame-Nummer läuft während der normalen Wiedergabe automatisch mit
+- die Lautstärke lässt sich während der Wiedergabe und im pausierten Zustand von `0` bis `100 Prozent` einstellen
+- die Prozentanzeige folgt dem Lautstärkeregler
+- die gewählte Lautstärke bleibt beim Laden einer anderen Datei erhalten
 
-Nach dem normalen Schließen der Anwendung wurde der Prozess vollständig beendet. Damit ist die vollständige Kette von der Dateiauswahl über ffprobe bis zur eingebetteten Bild- und Tonwiedergabe einschließlich Play/Pause, Seeking, Einzelbildnavigation und Frameanzeige praktisch nachgewiesen.
+Nach dem normalen Schließen der Anwendung wurde der Prozess vollständig beendet. Damit ist die vollständige Kette von der Dateiauswahl über ffprobe bis zur eingebetteten Bild- und Tonwiedergabe einschließlich Play/Pause, Seeking, Einzelbildnavigation, Frameanzeige und Lautstärkeregelung praktisch nachgewiesen.
 
 ## Tests
 
@@ -234,10 +237,15 @@ Die Tests prüfen unter anderem:
 - Vorwärts- und Rückwärtsschritte um ein und zehn Frames
 - Berechnung, Begrenzung und Formatierung der Frameanzeige
 - stabile Beibehaltung des Pausenzustands nach Frame-Schritten
+- Projektion und Formatierung der Lautstärke im `PlaybackViewModel`
+- Aktivierung des Lautstärkereglers in den geeigneten Player-Zuständen
+- Übergabe der Lautstärke an die mpv-Eigenschaft `volume`
+- Begrenzung der Lautstärke auf den Bereich von `0` bis `100`
+- Ereignisbehandlung bei Lautstärkeänderungen
 
 ```text
-Tests insgesamt:  48
-Erfolgreich:      48
+Tests insgesamt:  57
+Erfolgreich:      57
 Fehlgeschlagen:   0
 Übersprungen:     0
 ```
@@ -304,12 +312,13 @@ Bereits umgesetzt:
 - Frame-Schaltflächen nur im pausierten Zustand
 - Anzeige der aktuellen Frame-Nummer und der geschätzten Gesamtzahl
 - automatische Aktualisierung der Frameanzeige während der Wiedergabe
+- Lautstärkeregelung von `0` bis `100 Prozent`
+- Beibehaltung der gewählten Lautstärke beim Dateiwechsel
 - automatisierte Tests für Parser, Runner, ViewModels und MediaPlayer-Service
 - erfolgreicher Praxistest mit realen MP4-Dateien in der WPF-Anwendung
 
 Als Nächstes geplant:
 
-- Lautstärkeregelung
 - verständliche Protokolldatei
 
 Noch nicht enthalten sind Cutlists, Cutlist-Server, MP4Box-/FFmpeg-Schnitt, Stapelverarbeitung und automatische Umbenennung.
@@ -352,11 +361,13 @@ Die zugehörige README-Dokumentation wurde mit Pull Request **#8** aktualisiert.
 
 Die Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames sowie die aktuelle Frameanzeige wurden mit Pull Request **#9** in `main` übernommen.
 
-Aktueller Merge-Commit: `18222b4`.
+Die zugehörige README-Dokumentation wurde mit Pull Request **#10** aktualisiert.
 
-Der Proof of Concept ist damit ein funktionsfähiger eingebetteter MP4-Player mit ffprobe-Medienanalyse, Play/Pause-Steuerung, präzisem Seeking, Einzelbildnavigation und aktueller Frameanzeige.
+Aktueller Merge-Commit von `main`: `b0f725d`.
 
-Die nächsten Entwicklungsschritte sind die Lautstärkeregelung und eine verständliche Protokolldatei.
+Der Proof of Concept ist damit ein funktionsfähiger eingebetteter MP4-Player mit ffprobe-Medienanalyse, Play/Pause-Steuerung, präzisem Seeking, Einzelbildnavigation, aktueller Frameanzeige und Lautstärkeregelung.
+
+Der nächste Entwicklungsschritt ist eine verständliche Protokolldatei.
 
 ## Arbeitsgrundsatz
 

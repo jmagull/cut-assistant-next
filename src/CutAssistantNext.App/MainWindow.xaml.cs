@@ -178,6 +178,21 @@ public partial class MainWindow : Window
             () => _playbackViewModel.CommitSeekAsync());
     }
 
+    private async void VolumeSlider_ValueChanged(
+        object sender,
+        RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (!IsInitialized ||
+            !_playbackViewModel.CanSetVolume)
+        {
+            return;
+        }
+
+        await ExecutePlaybackActionAsync(
+            () => _playbackViewModel.SetVolumeAsync(
+                e.NewValue));
+    }
+
     private async void PlayButton_Click(
         object sender,
         RoutedEventArgs e)

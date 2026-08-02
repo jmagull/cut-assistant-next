@@ -12,6 +12,11 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
         "estimated-frame-count";
 
     private const string PauseProperty = "pause";
+    private const string VolumeProperty = "volume";
+
+    private const double MinimumVolume = 0;
+    private const double MaximumVolume = 100;
+    private const double DefaultVolume = 100;
 
     private readonly ILibMpvClient _client;
     private readonly object _syncRoot = new();
@@ -24,6 +29,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
     private TimeSpan? _duration;
     private long? _frameNumber;
     private long? _estimatedFrameCount;
+    private double _volume = DefaultVolume;
     private string? _errorMessage;
 
     private bool _initialized;
@@ -50,6 +56,8 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
     public event EventHandler? DurationChanged;
 
     public event EventHandler? FrameChanged;
+
+    public event EventHandler? VolumeChanged;
 
     public event EventHandler? ErrorOccurred;
 
@@ -104,6 +112,17 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             lock (_syncRoot)
             {
                 return _estimatedFrameCount;
+            }
+        }
+    }
+
+    public double Volume
+    {
+        get
+        {
+            lock (_syncRoot)
+            {
+                return _volume;
             }
         }
     }
@@ -369,6 +388,47 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
                 TimePositionProperty,
                 position.TotalSeconds,
                 cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            SetError(exception.Message);
+            throw;
+        }
+    }
+
+    public async Task SetVolumeAsync(
+        double volume,
+        CancellationToken cancellationToken = default)
+    {
+        EnsureInitialized();
+
+        if (!double.IsFinite(volume))
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(volume),
+                "Die Lautstärke muss eine endliche Zahl sein.");
+        }
+
+        var normalizedVolume = Math.Clamp(
+            volume,
+            MinimumVolume,
+            MaximumVolume);
+
+        try
+        {
+            await _client.SetDoublePropertyAsync(
+                VolumeProperty,
+                normalizedVolume,
+                cancellationToken);
+
+            lock (_syncRoot)
+            {
+                _volume = normalizedVolume;
+            }
+
+            VolumeChanged?.Invoke(
+                this,
+                EventArgs.Empty);
         }
         catch (Exception exception)
         {
