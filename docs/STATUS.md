@@ -2,58 +2,75 @@
 
 ## Aktueller Stand
 
-Stand: 27.07.2026
+Stand: 02.08.2026
 
-- GitHub-Repository `cut-assistant-next` ist angelegt.
-- Das Repository ist derzeit privat.
-- Der Branch `main` ist sauber und mit GitHub synchronisiert.
+- GitHub-Repository `cut-assistant-next` ist angelegt und derzeit privat.
+- Der Branch `main` ist sauber und mit `origin/main` synchronisiert.
 - Die Repository-Grundstruktur und `AGENTS.md` sind vorhanden.
+- Das Projekt verwendet C#, .NET 10 und WPF.
 - Das .NET 10 SDK 10.0.302 ist installiert.
-- Eine minimale WPF-Solution wurde angelegt.
-- Release-Build und automatisierte Tests waren erfolgreich.
-- Die WPF-Anwendung wurde unter Windows manuell gestartet.
-- Der Feature-Branch `feature/initial-wpf-solution` wurde per Pull Request nach `main` �bernommen.
-- Es bestehen derzeit keine lokalen �nderungen.
+- ffprobe ist über eine eigene Schnittstelle eingebunden.
+- MP4-Dateien können ausgewählt und analysiert werden.
+- Container-, Video- und Audiodaten werden in der WPF-Oberfläche angezeigt.
+- mpv/libmpv ist als eingebetteter MediaPlayer integriert.
+- Play, Pause, Positionsanzeige und Zeitleiste mit Seeking sind umgesetzt.
+- Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames ist umgesetzt.
+- Die aktuelle Frame-Nummer und die geschätzte Gesamtzahl der Frames werden angezeigt.
+- Eine Lautstärkeregelung von `0` bis `100 Prozent` ist umgesetzt.
+- Die gewählte Lautstärke bleibt beim Laden einer anderen Datei erhalten.
+- Release-Build und automatisierte Tests sind erfolgreich.
+- Insgesamt sind 57 von 57 automatisierten Tests erfolgreich.
+- Die vollständige Wiedergabesteuerung wurde unter Windows praktisch geprüft.
+- Pull Request #11 wurde in `main` übernommen.
+- Aktueller Merge-Commit von `main`: `57a071a`.
+- Es bestehen derzeit keine lokalen Änderungen.
 
 ## Vorhandene Projekte
 
 - `CutAssistantNext.App`
 - `CutAssistantNext.Core`
 - `CutAssistantNext.Media`
+- `CutAssistantNext.App.Tests`
 - `CutAssistantNext.Core.Tests`
+- `CutAssistantNext.Media.Tests`
 
 ## Letzter abgeschlossener Bauabschnitt
 
-Minimales .NET-10-WPF-Grundger�st:
+Lautstärkeregelung für den eingebetteten mpv-Player:
 
-- WPF-Hauptfenster
-- Core-Klassenbibliothek
-- Media-Klassenbibliothek
-- xUnit-Testprojekt
-- Build mit 0 Warnungen und 0 Fehlern
-- 1 automatisierter Test erfolgreich
+- Lautstärkeregler von `0` bis `100 Prozent`
+- Prozentanzeige in der WPF-Oberfläche
+- Steuerung über `PlaybackViewModel`
+- Übergabe an die mpv-Eigenschaft `volume`
+- Begrenzung ungültiger Werte auf den erlaubten Bereich
+- Aktivierung nur in geeigneten Player-Zuständen
+- Beibehaltung der gewählten Lautstärke beim Dateiwechsel
+- automatisierte Tests für Service, ViewModel und Ereignisbehandlung
+- manueller Praxistest während Wiedergabe und Pause
+- Release-Build mit 0 Fehlern
+- 57 automatisierte Tests erfolgreich
+- Übernahme mit Pull Request #11
 
-## N�chster geplanter Bauabschnitt
+## Nächster geplanter Bauabschnitt
 
-**ffprobe und Medienanalyse**
+**Verständliche Protokolldatei**
 
 Geplante Themen:
 
-- Einbindung beziehungsweise Auffinden von ffprobe
-- Medieninformationen als JSON auslesen
-- Dauer, Aufl�sung, Bildrate und Codecs erfassen
-- ffprobe-Aufruf hinter einer klaren Schnittstelle kapseln
-- Parser mit anonymisierten Testdaten testen
-- Medieninformationen zun�chst ohne Videowiedergabe in der WPF-Oberfl�che darstellen
+- zentrale Protokollierung wichtiger Programmabläufe
+- verständliche Meldungen für Start, Dateiauswahl, Analyse und Wiedergabe
+- nachvollziehbare Fehlerprotokollierung
+- geeigneter Speicherort für die Protokolldatei
+- Begrenzung beziehungsweise Rotation älterer Protokolle
+- testbare Kapselung hinter einer klaren Schnittstelle
+- Dokumentation und manueller Praxistest
 
 ## Noch nicht umgesetzt
 
-- mpv/libmpv
-- Videowiedergabe
-- Frame-Stepping
+- verständliche Protokolldatei
 - Cutlists
-- MP4Box
-- FFmpeg-Schnitt
 - Cutlist-Server
+- MP4Box-Schnitt
+- FFmpeg-Schnitt
 - Renamer
 - Stapelverarbeitung
