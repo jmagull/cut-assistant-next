@@ -178,6 +178,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -262,6 +263,37 @@
                             IsEnabled="{Binding CanStepFrame}"
                             Click="StepForwardTenFramesButton_Click"
                             Content="+10 Bilder" />
+
+                    <StackPanel Grid.Row="2"
+                                Grid.ColumnSpan="8"
+                                Margin="0,12,0,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <TextBlock Margin="0,0,10,0"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold"
+                                   Foreground="#4B5563"
+                                   Text="Lautstärke" />
+
+                        <Slider x:Name="VolumeSlider"
+                                Width="180"
+                                Minimum="0"
+                                Maximum="100"
+                                TickFrequency="5"
+                                IsSnapToTickEnabled="False"
+                                IsEnabled="{Binding CanSetVolume}"
+                                Value="{Binding Volume, Mode=OneWay}"
+                                ValueChanged="VolumeSlider_ValueChanged" />
+
+                        <TextBlock Width="55"
+                                   Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   FontFamily="Consolas"
+                                   FontWeight="SemiBold"
+                                   TextAlignment="Right"
+                                   Text="{Binding VolumeText}" />
+                    </StackPanel>
 
                     <StackPanel Grid.Row="1"
                                 Grid.Column="7"

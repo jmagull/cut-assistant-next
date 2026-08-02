@@ -12,6 +12,8 @@ public interface IMediaPlayerService : IAsyncDisposable
 
     long? EstimatedFrameCount { get; }
 
+    double Volume { get; }
+
     string? ErrorMessage { get; }
 
     event EventHandler? StateChanged;
@@ -21,6 +23,8 @@ public interface IMediaPlayerService : IAsyncDisposable
     event EventHandler? DurationChanged;
 
     event EventHandler? FrameChanged;
+
+    event EventHandler? VolumeChanged;
 
     event EventHandler? ErrorOccurred;
 
@@ -50,6 +54,10 @@ public interface IMediaPlayerService : IAsyncDisposable
 
     Task SeekAsync(
         TimeSpan position,
+        CancellationToken cancellationToken = default);
+
+    Task SetVolumeAsync(
+        double volume,
         CancellationToken cancellationToken = default);
 
     Task StopAsync(

@@ -28,6 +28,7 @@ public sealed class MpvMediaPlayerServiceTests
             client.ObservedProperties);
 
         Assert.Equal(MediaPlayerState.Empty, service.State);
+        Assert.Equal(100, service.Volume);
         Assert.Null(service.ErrorMessage);
     }
 
@@ -158,6 +159,11 @@ public sealed class MpvMediaPlayerServiceTests
         await using var service =
             new MpvMediaPlayerService(client);
 
+        var volumeChangedCount = 0;
+
+        service.VolumeChanged +=
+            (_, _) => volumeChangedCount++;
+
         await service.InitializeAsync((nint)123);
 
         await service.PauseAsync();
@@ -173,6 +179,7 @@ public sealed class MpvMediaPlayerServiceTests
             service.State);
 
         await service.SeekAsync(TimeSpan.FromSeconds(42.5));
+        await service.SetVolumeAsync(75);
         await service.StopAsync();
 
         Assert.Equal(
@@ -183,13 +190,41 @@ public sealed class MpvMediaPlayerServiceTests
             client.BooleanPropertyCalls);
 
         Assert.Equal(
-            [("time-pos", 42.5)],
+            [
+                ("time-pos", 42.5),
+                ("volume", 75)
+            ],
             client.DoublePropertyCalls);
+
+        Assert.Equal(75, service.Volume);
+        Assert.Equal(1, volumeChangedCount);
 
         var command = Assert.Single(client.Commands);
 
         Assert.Equal(["stop"], command);
         Assert.Equal(MediaPlayerState.Empty, service.State);
+    }
+
+    [Theory]
+    [InlineData(-25, 0)]
+    [InlineData(125, 100)]
+    public async Task SetVolumeAsync_ClampsValueToSupportedRange(
+        double volume,
+        double expectedVolume)
+    {
+        var client = new StubLibMpvClient();
+
+        await using var service =
+            new MpvMediaPlayerService(client);
+
+        await service.InitializeAsync((nint)123);
+        await service.SetVolumeAsync(volume);
+
+        Assert.Equal(expectedVolume, service.Volume);
+
+        Assert.Equal(
+            [("volume", expectedVolume)],
+            client.DoublePropertyCalls);
     }
 
     [Fact]

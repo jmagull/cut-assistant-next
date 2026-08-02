@@ -37,6 +37,9 @@ public sealed class PlaybackViewModel
         _mediaPlayerService.FrameChanged +=
             MediaPlayerService_FrameChanged;
 
+        _mediaPlayerService.VolumeChanged +=
+            MediaPlayerService_VolumeChanged;
+
         _mediaPlayerService.ErrorOccurred +=
             MediaPlayerService_ErrorOccurred;
     }
@@ -75,6 +78,19 @@ public sealed class PlaybackViewModel
     public string FrameText =>
         $"Frame {FormatFrameNumber(FrameNumber)} / " +
         $"ca. {FormatFrameNumber(EstimatedFrameCount)}";
+
+    public double Volume =>
+        _mediaPlayerService.Volume;
+
+    public string VolumeText =>
+        $"{Volume:0} %";
+
+    public bool CanSetVolume =>
+        State is
+            MediaPlayerState.Loading or
+            MediaPlayerState.Paused or
+            MediaPlayerState.Playing or
+            MediaPlayerState.Ended;
 
     public string? ErrorMessage =>
         _mediaPlayerService.ErrorMessage;
@@ -183,6 +199,15 @@ public sealed class PlaybackViewModel
             cancellationToken);
     }
 
+    public Task SetVolumeAsync(
+        double volume,
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.SetVolumeAsync(
+            volume,
+            cancellationToken);
+    }
+
     public Task StepForwardAsync(
         CancellationToken cancellationToken = default)
     {
@@ -234,6 +259,9 @@ public sealed class PlaybackViewModel
         _mediaPlayerService.FrameChanged -=
             MediaPlayerService_FrameChanged;
 
+        _mediaPlayerService.VolumeChanged -=
+            MediaPlayerService_VolumeChanged;
+
         _mediaPlayerService.ErrorOccurred -=
             MediaPlayerService_ErrorOccurred;
     }
@@ -247,7 +275,8 @@ public sealed class PlaybackViewModel
             nameof(CanPlay),
             nameof(CanPause),
             nameof(CanStepFrame),
-            nameof(CanSeek));
+            nameof(CanSeek),
+            nameof(CanSetVolume));
     }
 
     private void MediaPlayerService_PositionChanged(
@@ -299,6 +328,15 @@ public sealed class PlaybackViewModel
             nameof(FrameNumber),
             nameof(EstimatedFrameCount),
             nameof(FrameText));
+    }
+
+    private void MediaPlayerService_VolumeChanged(
+        object? sender,
+        EventArgs e)
+    {
+        PublishPropertyChanges(
+            nameof(Volume),
+            nameof(VolumeText));
     }
 
     private void MediaPlayerService_ErrorOccurred(
