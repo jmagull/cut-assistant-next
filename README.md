@@ -33,6 +33,8 @@ Während der Benutzer den Slider bewegt, überschreiben automatische Positionsme
 
 Die native Laufzeitbibliothek wird fest versioniert, per SHA-256 kontrolliert und beim Build automatisch in den Ausgabeordner kopiert. Beim Schließen der Anwendung wird libmpv vollständig freigegeben, bevor das native Videofenster zerstört wird.
 
+Eine zentrale Protokollierung hinter `IAppLogger` erfasst wichtige Programmabläufe und Fehler in verständlicher Form. Die UTF-8-Protokolldatei liegt unter `%LOCALAPPDATA%\Cut Assistant Next\Logs\CutAssistantNext.log`. Sie wird ab einer Größe von 2 MiB rotiert; bis zu drei ältere Protokolldateien bleiben erhalten. Häufige Positions-, Frame- und Lautstärkeereignisse werden bewusst nicht protokolliert.
+
 ## ffprobe-Medienanalyse
 
 Der `FfprobeRunner` startet `ffprobe.exe` als externen Prozess.
@@ -214,12 +216,15 @@ Auch die Wiedergabesteuerung wurde praktisch geprüft:
 - die Lautstärke lässt sich während der Wiedergabe und im pausierten Zustand von `0` bis `100 Prozent` einstellen
 - die Prozentanzeige folgt dem Lautstärkeregler
 - die gewählte Lautstärke bleibt beim Laden einer anderen Datei erhalten
+- die Protokolldatei enthält Start, Dateiauswahl, Analyse, mpv-Ladevorgang, ausgewählte Bedienaktionen und Programmende
+- häufige Positions-, Frame- und Lautstärkeereignisse erzeugen keine Logflut
+- libmpv wird nachvollziehbar und vollständig freigegeben
 
 Nach dem normalen Schließen der Anwendung wurde der Prozess vollständig beendet. Damit ist die vollständige Kette von der Dateiauswahl über ffprobe bis zur eingebetteten Bild- und Tonwiedergabe einschließlich Play/Pause, Seeking, Einzelbildnavigation, Frameanzeige und Lautstärkeregelung praktisch nachgewiesen.
 
 ## Tests
 
-Parser, Runner, `MainWindowViewModel`, `PlaybackViewModel` und MediaPlayer-Service sind durch automatisierte xUnit-Tests abgesichert.
+Parser, Runner, `FileAppLogger`, `MainWindowViewModel`, `PlaybackViewModel` und MediaPlayer-Service sind durch automatisierte xUnit-Tests abgesichert.
 
 Die Tests prüfen unter anderem:
 
@@ -243,9 +248,16 @@ Die Tests prüfen unter anderem:
 - Begrenzung der Lautstärke auf den Bereich von `0` bis `100`
 - Ereignisbehandlung bei Lautstärkeänderungen
 
+- UTF-8-Protokollierung einschließlich Umlauten und technischen Fehlerdetails
+- Größenbegrenzung und Rotation der Protokolldateien
+- störungsfreies Verhalten bei einem nicht beschreibbaren Protokollpfad
+- Protokollierung von Analysebeginn, Erfolg, Abbruch und Fehlern
+- Protokollierung von libmpv-Initialisierung, Ladevorgängen, ausgewählten Bedienaktionen und Fehlern
+- Schutz vor Logfluten durch häufige Positions-, Frame- und Lautstärkeereignisse
+
 ```text
-Tests insgesamt:  57
-Erfolgreich:      57
+Tests insgesamt:  70
+Erfolgreich:      70
 Fehlgeschlagen:   0
 Übersprungen:     0
 ```
@@ -314,12 +326,16 @@ Bereits umgesetzt:
 - automatische Aktualisierung der Frameanzeige während der Wiedergabe
 - Lautstärkeregelung von `0` bis `100 Prozent`
 - Beibehaltung der gewählten Lautstärke beim Dateiwechsel
-- automatisierte Tests für Parser, Runner, ViewModels und MediaPlayer-Service
+- zentrale Logging-Schnittstelle `IAppLogger` mit stiller Standardimplementierung
+- UTF-8-Protokolldatei im lokalen Benutzerprofil
+- Größenbegrenzung auf 2 MiB und Rotation von bis zu drei älteren Protokollen
+- verständliche Einträge für Programmstart und -ende, Dateiauswahl, Analyse, mpv-Ladevorgänge und ausgewählte Bedienaktionen
+- technische Fehlerdetails ohne Beeinträchtigung der Anwendung
+- Schutz vor Logfluten bei häufigen Player-Ereignissen
+- automatisierte Tests für Parser, Runner, Logger, ViewModels und MediaPlayer-Service
 - erfolgreicher Praxistest mit realen MP4-Dateien in der WPF-Anwendung
 
-Als Nächstes geplant:
-
-- verständliche Protokolldatei
+Der nächste Bauabschnitt wird nach Abschluss und Übernahme dieses Feature-Branches festgelegt.
 
 Noch nicht enthalten sind Cutlists, Cutlist-Server, MP4Box-/FFmpeg-Schnitt, Stapelverarbeitung und automatische Umbenennung.
 
@@ -363,11 +379,15 @@ Die Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames sowie die akt
 
 Die zugehörige README-Dokumentation wurde mit Pull Request **#10** aktualisiert.
 
-Aktueller Merge-Commit von `main`: `b0f725d`.
+Die Lautstärkeregelung wurde mit Pull Request **#11** in `main` übernommen. Die Statusdokumentation folgte mit Pull Request **#12**.
 
-Der Proof of Concept ist damit ein funktionsfähiger eingebetteter MP4-Player mit ffprobe-Medienanalyse, Play/Pause-Steuerung, präzisem Seeking, Einzelbildnavigation, aktueller Frameanzeige und Lautstärkeregelung.
+Aktueller Merge-Commit von `main`: `cd4e021`.
 
-Der nächste Entwicklungsschritt ist eine verständliche Protokolldatei.
+Die verständliche Protokolldatei ist auf `feature/understandable-logging` umgesetzt, vollständig getestet und noch nicht in `main` übernommen.
+
+Der Proof of Concept ist damit ein funktionsfähiger eingebetteter MP4-Player mit ffprobe-Medienanalyse, Play/Pause-Steuerung, präzisem Seeking, Einzelbildnavigation, aktueller Frameanzeige, Lautstärkeregelung und verständlicher rotierender Protokolldatei.
+
+Der nächste Entwicklungsschritt wird nach Abschluss dieses Bauabschnitts festgelegt.
 
 ## Arbeitsgrundsatz
 

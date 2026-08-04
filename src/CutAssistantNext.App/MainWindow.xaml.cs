@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using CutAssistantNext.App.ViewModels;
+using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Media.Analysis;
 using CutAssistantNext.Media.Playback;
 using Microsoft.Win32;
@@ -10,6 +11,7 @@ namespace CutAssistantNext.App;
 
 public partial class MainWindow : Window
 {
+    private readonly IAppLogger _logger;
     private readonly MainWindowViewModel _viewModel;
     private readonly IMediaPlayerService _mediaPlayerService;
     private readonly PlaybackViewModel _playbackViewModel;
@@ -20,17 +22,26 @@ public partial class MainWindow : Window
     private bool _allowClose;
 
     public MainWindow()
+        : this(NullAppLogger.Instance)
     {
+    }
+
+    internal MainWindow(IAppLogger logger)
+    {
+        _logger = logger
+            ?? throw new ArgumentNullException(nameof(logger));
+
         InitializeComponent();
 
         _mediaPlayerService =
-            new MpvMediaPlayerService();
+            new MpvMediaPlayerService(_logger);
 
         _playbackViewModel =
             new PlaybackViewModel(_mediaPlayerService);
 
         _viewModel = new MainWindowViewModel(
-            new FfprobeRunner());
+            new FfprobeRunner(),
+            _logger);
 
         DataContext = _viewModel;
         PlaybackControls.DataContext = _playbackViewModel;
@@ -279,6 +290,9 @@ public partial class MainWindow : Window
         {
             return;
         }
+
+        _logger.Information(
+            $"Mediendatei wurde ausgewählt: {dialog.FileName}");
 
         await _viewModel.AnalyzeAsync(dialog.FileName);
 

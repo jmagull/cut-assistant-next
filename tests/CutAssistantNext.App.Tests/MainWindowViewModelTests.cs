@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using CutAssistantNext.App.ViewModels;
+using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Core.Media;
 using CutAssistantNext.Media.Analysis;
 
@@ -158,6 +159,105 @@ public class MainWindowViewModelTests
         Assert.Equal("Nicht verfügbar", viewModel.ChannelLayout);
     }
 
+    [Fact]
+    public async Task AnalyzeAsync_LogsStartAndSuccessfulCompletion()
+    {
+        var runner = new StubMediaAnalysisRunner(
+            (_, _) => Task.FromResult(CreateCompleteResult()));
+
+        var logger = new RecordingAppLogger();
+
+        var viewModel = new MainWindowViewModel(
+            runner,
+            logger);
+
+        var mediaFilePath = Path.Combine(
+            Path.GetTempPath(),
+            "Protokolltest.mp4");
+
+        await viewModel.AnalyzeAsync(mediaFilePath);
+
+        var fullMediaFilePath =
+            Path.GetFullPath(mediaFilePath);
+
+        Assert.Equal(2, logger.InformationMessages.Count);
+
+        Assert.Contains(
+            $"Medienanalyse wurde gestartet: {fullMediaFilePath}",
+            logger.InformationMessages);
+
+        Assert.Contains(
+            $"Medienanalyse wurde erfolgreich abgeschlossen: " +
+            $"{fullMediaFilePath}",
+            logger.InformationMessages);
+
+        Assert.Empty(logger.WarningMessages);
+        Assert.Empty(logger.ErrorEntries);
+    }
+
+    [Fact]
+    public async Task AnalyzeAsync_LogsCancellationAsWarning()
+    {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        var runner = new StubMediaAnalysisRunner(
+            (_, cancellationToken) =>
+                Task.FromCanceled<MediaAnalysisResult>(
+                    cancellationToken));
+
+        var logger = new RecordingAppLogger();
+
+        var viewModel = new MainWindowViewModel(
+            runner,
+            logger);
+
+        await viewModel.AnalyzeAsync(
+            "Abbruchtest.mp4",
+            cancellation.Token);
+
+        Assert.Single(logger.InformationMessages);
+
+        Assert.Contains(
+            "Medienanalyse wurde abgebrochen:",
+            Assert.Single(logger.WarningMessages));
+
+        Assert.Empty(logger.ErrorEntries);
+    }
+
+    [Fact]
+    public async Task AnalyzeAsync_LogsFailureWithException()
+    {
+        var expectedException =
+            new InvalidOperationException(
+                "Technischer Testfehler bei ffprobe.");
+
+        var runner = new StubMediaAnalysisRunner(
+            (_, _) => throw expectedException);
+
+        var logger = new RecordingAppLogger();
+
+        var viewModel = new MainWindowViewModel(
+            runner,
+            logger);
+
+        await viewModel.AnalyzeAsync("Fehlertest.mp4");
+
+        Assert.Single(logger.InformationMessages);
+        Assert.Empty(logger.WarningMessages);
+
+        var errorEntry =
+            Assert.Single(logger.ErrorEntries);
+
+        Assert.Contains(
+            "Medienanalyse ist fehlgeschlagen:",
+            errorEntry.Message);
+
+        Assert.Same(
+            expectedException,
+            errorEntry.Exception);
+    }
+
     private static MediaAnalysisResult CreateCompleteResult()
     {
         return new MediaAnalysisResult(
@@ -212,6 +312,34 @@ public class MainWindowViewModelTests
             return _runAsync(
                 mediaFilePath,
                 cancellationToken);
+        }
+    }
+
+    private sealed class RecordingAppLogger : IAppLogger
+    {
+        public List<string> InformationMessages { get; } = [];
+
+        public List<string> WarningMessages { get; } = [];
+
+        public List<(string Message, Exception? Exception)>
+            ErrorEntries { get; } = [];
+
+        public void Information(string message)
+        {
+            InformationMessages.Add(message);
+        }
+
+        public void Warning(string message)
+        {
+            WarningMessages.Add(message);
+        }
+
+        public void Error(
+            string message,
+            Exception? exception = null)
+        {
+            ErrorEntries.Add(
+                (message, exception));
         }
     }
 
