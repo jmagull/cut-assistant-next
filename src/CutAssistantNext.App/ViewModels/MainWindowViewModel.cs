@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
+using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Core.Media;
 using CutAssistantNext.Media.Analysis;
 
@@ -12,6 +13,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private const string NotAvailable = "Nicht verfügbar";
 
     private readonly IMediaAnalysisRunner _mediaAnalysisRunner;
+    private readonly IAppLogger _logger;
 
     private bool _isAnalyzing;
     private string _statusMessage = "Bereit.";
@@ -32,10 +34,14 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private string _channelCount = NotAvailable;
     private string _channelLayout = NotAvailable;
 
-    public MainWindowViewModel(IMediaAnalysisRunner mediaAnalysisRunner)
+    public MainWindowViewModel(
+        IMediaAnalysisRunner mediaAnalysisRunner,
+        IAppLogger? logger = null)
     {
         _mediaAnalysisRunner = mediaAnalysisRunner
             ?? throw new ArgumentNullException(nameof(mediaAnalysisRunner));
+
+        _logger = logger ?? NullAppLogger.Instance;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -176,9 +182,15 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         StatusMessage = "Datei wird analysiert …";
         IsAnalyzing = true;
 
+        var logMediaFilePath = mediaFilePath;
+
         try
         {
             var fullMediaFilePath = Path.GetFullPath(mediaFilePath);
+            logMediaFilePath = fullMediaFilePath;
+
+            _logger.Information(
+                $"Medienanalyse wurde gestartet: {fullMediaFilePath}");
 
             FileName = Path.GetFileName(fullMediaFilePath);
             FilePath = fullMediaFilePath;
@@ -190,16 +202,29 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             ApplyResult(result);
 
             StatusMessage = "Analyse erfolgreich abgeschlossen.";
+
+            _logger.Information(
+                $"Medienanalyse wurde erfolgreich abgeschlossen: " +
+                $"{fullMediaFilePath}");
         }
         catch (OperationCanceledException)
             when (cancellationToken.IsCancellationRequested)
         {
             StatusMessage = "Analyse wurde abgebrochen.";
+
+            _logger.Warning(
+                $"Medienanalyse wurde abgebrochen: " +
+                $"{logMediaFilePath}");
         }
         catch (Exception exception)
         {
             ErrorMessage = exception.Message;
             StatusMessage = "Analyse fehlgeschlagen.";
+
+            _logger.Error(
+                $"Medienanalyse ist fehlgeschlagen: " +
+                $"{logMediaFilePath}",
+                exception);
         }
         finally
         {

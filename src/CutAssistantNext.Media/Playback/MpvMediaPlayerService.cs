@@ -1,4 +1,5 @@
 using System.Globalization;
+using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Media.Playback.Interop;
 
 namespace CutAssistantNext.Media.Playback;
@@ -19,6 +20,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
     private const double DefaultVolume = 100;
 
     private readonly ILibMpvClient _client;
+    private readonly IAppLogger _logger;
     private readonly object _syncRoot = new();
 
     private CancellationTokenSource? _eventLoopCancellation;
@@ -31,6 +33,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
     private long? _estimatedFrameCount;
     private double _volume = DefaultVolume;
     private string? _errorMessage;
+    private string? _currentMediaFilePath;
 
     private bool _initialized;
     private bool _stopRequested;
@@ -39,14 +42,31 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
     private bool _disposed;
 
     public MpvMediaPlayerService()
-        : this(new HanumanLibMpvClient())
+        : this(
+            new HanumanLibMpvClient(),
+            NullAppLogger.Instance)
+    {
+    }
+
+    public MpvMediaPlayerService(IAppLogger logger)
+        : this(new HanumanLibMpvClient(), logger)
     {
     }
 
     internal MpvMediaPlayerService(ILibMpvClient client)
+        : this(client, NullAppLogger.Instance)
+    {
+    }
+
+    internal MpvMediaPlayerService(
+        ILibMpvClient client,
+        IAppLogger logger)
     {
         _client = client
             ?? throw new ArgumentNullException(nameof(client));
+
+        _logger = logger
+            ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public event EventHandler? StateChanged;
@@ -162,6 +182,9 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             _initialized = true;
         }
 
+        _logger.Information(
+            "libmpv-Initialisierung wurde gestartet.");
+
         try
         {
             await _client.InitializeAsync(
@@ -189,9 +212,16 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 
             _eventLoopTask = ProcessEventsAsync(
                 _eventLoopCancellation.Token);
+
+            _logger.Information(
+                "libmpv wurde erfolgreich initialisiert.");
         }
         catch (Exception exception)
         {
+            _logger.Error(
+                "libmpv konnte nicht initialisiert werden.",
+                exception);
+
             SetError(exception.Message);
             throw;
         }
@@ -220,9 +250,14 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             _position = TimeSpan.Zero;
             _duration = null;
             _errorMessage = null;
+            _currentMediaFilePath = fullMediaFilePath;
             _stopRequested = false;
             _pauseRequested = true;
         }
+
+        _logger.Information(
+            $"Mediendatei wird in mpv geladen: " +
+            $"{fullMediaFilePath}");
 
         SetState(MediaPlayerState.Loading);
 
@@ -241,6 +276,11 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
         }
         catch (Exception exception)
         {
+            _logger.Error(
+                $"Mediendatei konnte nicht in mpv geladen werden: " +
+                $"{fullMediaFilePath}",
+                exception);
+
             SetError(exception.Message);
             throw;
         }
@@ -264,9 +304,16 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             }
 
             SetState(MediaPlayerState.Playing);
+
+            _logger.Information(
+                "Wiedergabe wurde gestartet.");
         }
         catch (Exception exception)
         {
+            _logger.Error(
+                "Wiedergabe konnte nicht gestartet werden.",
+                exception);
+
             SetError(exception.Message);
             throw;
         }
@@ -290,9 +337,16 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             }
 
             SetState(MediaPlayerState.Paused);
+
+            _logger.Information(
+                "Wiedergabe wurde pausiert.");
         }
         catch (Exception exception)
         {
+            _logger.Error(
+                "Wiedergabe konnte nicht pausiert werden.",
+                exception);
+
             SetError(exception.Message);
             throw;
         }
@@ -356,6 +410,11 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
                 }
             }
 
+            _logger.Error(
+                $"Bildnavigation konnte nicht ausgeführt werden: " +
+                $"{frameCount:+0;-0} Frames.",
+                exception);
+
             SetError(exception.Message);
             throw;
         }
@@ -388,9 +447,18 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
                 TimePositionProperty,
                 position.TotalSeconds,
                 cancellationToken);
+
+            _logger.Information(
+                $"Wiedergabeposition wurde geändert: " +
+                $"{position:hh\\:mm\\:ss\\.fff}.");
         }
         catch (Exception exception)
         {
+            _logger.Error(
+                $"Wiedergabeposition konnte nicht geändert werden: " +
+                $"{position:hh\\:mm\\:ss\\.fff}.",
+                exception);
+
             SetError(exception.Message);
             throw;
         }
@@ -432,6 +500,11 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
         }
         catch (Exception exception)
         {
+            _logger.Error(
+                $"Lautstärke konnte nicht geändert werden: " +
+                $"{normalizedVolume:0.##}.",
+                exception);
+
             SetError(exception.Message);
             throw;
         }
@@ -459,9 +532,16 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             SetState(MediaPlayerState.Empty);
             PositionChanged?.Invoke(this, EventArgs.Empty);
             DurationChanged?.Invoke(this, EventArgs.Empty);
+
+            _logger.Information(
+                "Wiedergabe wurde gestoppt.");
         }
         catch (Exception exception)
         {
+            _logger.Error(
+                "Wiedergabe konnte nicht gestoppt werden.",
+                exception);
+
             SetError(exception.Message);
             throw;
         }
@@ -493,7 +573,24 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
             }
         }
 
-        await _client.DisposeAsync().ConfigureAwait(false);
+        _logger.Information(
+            "libmpv-Ressourcen werden freigegeben.");
+
+        try
+        {
+            await _client.DisposeAsync().ConfigureAwait(false);
+
+            _logger.Information(
+                "libmpv-Ressourcen wurden erfolgreich freigegeben.");
+        }
+        catch (Exception exception)
+        {
+            _logger.Error(
+                "libmpv-Ressourcen konnten nicht freigegeben werden.",
+                exception);
+
+            throw;
+        }
 
         cancellation?.Dispose();
 
@@ -522,6 +619,10 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
         {
             if (!_disposed)
             {
+                _logger.Error(
+                    "Die libmpv-Ereignisverarbeitung wurde unerwartet beendet.",
+                    exception);
+
                 SetError(exception.Message);
             }
         }
@@ -532,7 +633,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
         switch (mpvEvent.Kind)
         {
             case LibMpvEventKind.FileLoaded:
-                ApplyRequestedPlaybackState();
+                ProcessFileLoaded();
                 break;
 
             case LibMpvEventKind.PlaybackRestarted:
@@ -548,10 +649,7 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
                 break;
 
             case LibMpvEventKind.Error:
-                SetError(
-                    string.IsNullOrWhiteSpace(mpvEvent.ErrorMessage)
-                        ? "libmpv hat einen unbekannten Fehler gemeldet."
-                        : mpvEvent.ErrorMessage);
+                ProcessErrorEvent(mpvEvent.ErrorMessage);
                 break;
 
             default:
@@ -560,6 +658,38 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
                     mpvEvent.Kind,
                     "Unbekanntes libmpv-Ereignis.");
         }
+    }
+
+    private void ProcessErrorEvent(string? errorMessage)
+    {
+        var understandableMessage =
+            string.IsNullOrWhiteSpace(errorMessage)
+                ? "libmpv hat einen unbekannten Fehler gemeldet."
+                : errorMessage;
+
+        _logger.Error(
+            $"libmpv hat einen Fehler gemeldet: " +
+            $"{understandableMessage}");
+
+        SetError(understandableMessage);
+    }
+
+    private void ProcessFileLoaded()
+    {
+        string? mediaFilePath;
+
+        lock (_syncRoot)
+        {
+            mediaFilePath = _currentMediaFilePath;
+        }
+
+        _logger.Information(
+            string.IsNullOrWhiteSpace(mediaFilePath)
+                ? "Mediendatei wurde erfolgreich in mpv geladen."
+                : $"Mediendatei wurde erfolgreich in mpv geladen: " +
+                  $"{mediaFilePath}");
+
+        ApplyRequestedPlaybackState();
     }
 
     private void ProcessPlaybackRestarted()

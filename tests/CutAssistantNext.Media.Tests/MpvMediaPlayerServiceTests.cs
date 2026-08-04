@@ -1,4 +1,6 @@
+using System.Collections.Concurrent;
 using System.Threading.Channels;
+using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Media.Playback;
 using CutAssistantNext.Media.Playback.Interop;
 
@@ -30,6 +32,114 @@ public sealed class MpvMediaPlayerServiceTests
         Assert.Equal(MediaPlayerState.Empty, service.State);
         Assert.Equal(100, service.Volume);
         Assert.Null(service.ErrorMessage);
+    }
+
+    [Fact]
+    public async Task InitializeAsync_LogsStartAndSuccess()
+    {
+        var client = new StubLibMpvClient();
+        var logger = new RecordingAppLogger();
+
+        await using var service =
+            new MpvMediaPlayerService(
+                client,
+                logger);
+
+        await service.InitializeAsync((nint)123);
+
+        Assert.Contains(
+            "libmpv-Initialisierung wurde gestartet.",
+            logger.InformationMessages);
+
+        Assert.Contains(
+            "libmpv wurde erfolgreich initialisiert.",
+            logger.InformationMessages);
+
+        Assert.Empty(logger.Errors);
+    }
+
+    [Fact]
+    public async Task InitializeAsync_LogsFailureWithException()
+    {
+        var expectedException =
+            new InvalidOperationException(
+                "Testfehler bei der Initialisierung.");
+
+        var client = new StubLibMpvClient
+        {
+            InitializeException = expectedException
+        };
+
+        var logger = new RecordingAppLogger();
+
+        await using var service =
+            new MpvMediaPlayerService(
+                client,
+                logger);
+
+        var actualException =
+            await Assert.ThrowsAsync<InvalidOperationException>(
+                () => service.InitializeAsync((nint)123));
+
+        Assert.Same(
+            expectedException,
+            actualException);
+
+        var loggedError =
+            Assert.Single(logger.Errors);
+
+        Assert.Equal(
+            "libmpv konnte nicht initialisiert werden.",
+            loggedError.Message);
+
+        Assert.Same(
+            expectedException,
+            loggedError.Exception);
+    }
+
+    [Fact]
+    public async Task LoadAsync_LogsStartAndFileLoadedSuccess()
+    {
+        var mediaFilePath = Path.Combine(
+            Path.GetTempPath(),
+            $"CutAssistantNext-{Guid.NewGuid():N}.mp4");
+
+        File.WriteAllText(mediaFilePath, string.Empty);
+
+        try
+        {
+            var client = new StubLibMpvClient();
+            var logger = new RecordingAppLogger();
+
+            await using var service =
+                new MpvMediaPlayerService(
+                    client,
+                    logger);
+
+            await service.InitializeAsync((nint)123);
+            await service.LoadAsync(mediaFilePath);
+
+            var fullMediaFilePath =
+                Path.GetFullPath(mediaFilePath);
+
+            Assert.Contains(
+                $"Mediendatei wird in mpv geladen: {fullMediaFilePath}",
+                logger.InformationMessages);
+
+            client.Publish(
+                new LibMpvEvent(
+                    LibMpvEventKind.FileLoaded));
+
+            await WaitUntilAsync(
+                () => logger.InformationMessages.Contains(
+                    $"Mediendatei wurde erfolgreich in mpv geladen: {fullMediaFilePath}"));
+
+            Assert.Empty(logger.Errors);
+        }
+        finally
+        {
+            File.Delete(mediaFilePath);
+        }
     }
 
     [Fact]
@@ -152,6 +262,69 @@ public sealed class MpvMediaPlayerServiceTests
     }
 
     [Fact]
+    public async Task FrequentPropertyEvents_DoNotCreateLogFlood()
+    {
+        var client = new StubLibMpvClient();
+        var logger = new RecordingAppLogger();
+
+        await using var service =
+            new MpvMediaPlayerService(
+                client,
+                logger);
+
+        await service.InitializeAsync((nint)123);
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.FileLoaded));
+
+        await WaitUntilAsync(
+            () => service.State == MediaPlayerState.Paused);
+
+        logger.InformationMessages.Clear();
+        logger.WarningMessages.Clear();
+        logger.Errors.Clear();
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "duration",
+                "120.5"));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "estimated-frame-count",
+                "3013"));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "time-pos",
+                "12.25"));
+
+        client.Publish(
+            new LibMpvEvent(
+                LibMpvEventKind.PropertyChanged,
+                "pause",
+                "no"));
+
+        await WaitUntilAsync(
+            () =>
+                service.Position ==
+                    TimeSpan.FromSeconds(12.25) &&
+                service.Duration ==
+                    TimeSpan.FromSeconds(120.5) &&
+                service.EstimatedFrameCount == 3013 &&
+                service.State ==
+                    MediaPlayerState.Playing);
+
+        Assert.Empty(logger.InformationMessages);
+        Assert.Empty(logger.WarningMessages);
+        Assert.Empty(logger.Errors);
+    }
+
+    [Fact]
     public async Task ControlMethods_ForwardToClient()
     {
         var client = new StubLibMpvClient();
@@ -203,6 +376,57 @@ public sealed class MpvMediaPlayerServiceTests
 
         Assert.Equal(["stop"], command);
         Assert.Equal(MediaPlayerState.Empty, service.State);
+    }
+
+    [Fact]
+    public async Task ControlMethods_LogSelectedActionsWithoutVolumeFlood()
+    {
+        var client = new StubLibMpvClient();
+        var logger = new RecordingAppLogger();
+
+        await using var service =
+            new MpvMediaPlayerService(
+                client,
+                logger);
+
+        await service.InitializeAsync((nint)123);
+        await service.PauseAsync();
+        await service.PlayAsync();
+        await service.SeekAsync(
+            TimeSpan.FromSeconds(42.5));
+        await service.SetVolumeAsync(75);
+        await service.StepFramesAsync(10);
+        await service.StopAsync();
+
+        Assert.Contains(
+            "Wiedergabe wurde pausiert.",
+            logger.InformationMessages);
+
+        Assert.Contains(
+            "Wiedergabe wurde gestartet.",
+            logger.InformationMessages);
+
+        Assert.Contains(
+            "Wiedergabeposition wurde geändert: 00:00:42.500.",
+            logger.InformationMessages);
+
+        Assert.Contains(
+            "Wiedergabe wurde gestoppt.",
+            logger.InformationMessages);
+
+        Assert.DoesNotContain(
+            logger.InformationMessages,
+            message => message.Contains(
+                "Lautstärke",
+                StringComparison.Ordinal));
+
+        Assert.DoesNotContain(
+            logger.InformationMessages,
+            message => message.Contains(
+                "Bildnavigation",
+                StringComparison.Ordinal));
+
+        Assert.Empty(logger.Errors);
     }
 
     [Theory]
@@ -350,9 +574,12 @@ public sealed class MpvMediaPlayerServiceTests
     public async Task ErrorEvent_SetsErrorState()
     {
         var client = new StubLibMpvClient();
+        var logger = new RecordingAppLogger();
 
         await using var service =
-            new MpvMediaPlayerService(client);
+            new MpvMediaPlayerService(
+                client,
+                logger);
 
         var errorEventCount = 0;
 
@@ -374,6 +601,15 @@ public sealed class MpvMediaPlayerServiceTests
             service.ErrorMessage);
 
         Assert.Equal(1, errorEventCount);
+
+        var loggedError =
+            Assert.Single(logger.Errors);
+
+        Assert.Equal(
+            "libmpv hat einen Fehler gemeldet: Testfehler von libmpv.",
+            loggedError.Message);
+
+        Assert.Null(loggedError.Exception);
     }
 
     [Fact]
@@ -489,6 +725,37 @@ public sealed class MpvMediaPlayerServiceTests
         }
     }
 
+    private sealed class RecordingAppLogger
+        : IAppLogger
+    {
+        public ConcurrentQueue<string> InformationMessages { get; } = [];
+
+        public ConcurrentQueue<string> WarningMessages { get; } = [];
+
+        public ConcurrentQueue<(string Message, Exception? Exception)> Errors
+        {
+            get;
+        } = [];
+
+        public void Information(string message)
+        {
+            InformationMessages.Enqueue(message);
+        }
+
+        public void Warning(string message)
+        {
+            WarningMessages.Enqueue(message);
+        }
+
+        public void Error(
+            string message,
+            Exception? exception = null)
+        {
+            Errors.Enqueue(
+                (message, exception));
+        }
+    }
+
     private sealed class StubLibMpvClient
         : ILibMpvClient
     {
@@ -509,6 +776,8 @@ public sealed class MpvMediaPlayerServiceTests
 
         public bool IsDisposed { get; private set; }
 
+        public Exception? InitializeException { get; set; }
+
         public IAsyncEnumerable<LibMpvEvent> ReadEventsAsync(
             CancellationToken cancellationToken = default)
         {
@@ -521,6 +790,11 @@ public sealed class MpvMediaPlayerServiceTests
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+            if (InitializeException is not null)
+            {
+                throw InitializeException;
+            }
 
             VideoWindowHandle = videoWindowHandle;
 
