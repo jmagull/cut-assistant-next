@@ -82,11 +82,19 @@ Die eingebettete Wiedergabe wurde mit einer realen MP4-Datei einschließlich Bil
 
 Die libmpv-Render-API bleibt eine spätere Alternative, falls HWND-Einbettung, WPF-Airspace oder gewünschte Overlays dies erforderlich machen.
 
+## Schnittplanung – umgesetzte Architektur
+
+- `RemoveSegment` in `CutAssistantNext.Core` beschreibt einen Bereich, der entfernt werden soll.
+- `CutPlan` verwaltet Mediendauer und Entfernungsbereiche, sortiert sie chronologisch und verhindert ungültige Überschneidungen.
+- `CutPlanViewModel` bildet Erfassung, Auswahl, Korrektur und Löschen für die WPF-Oberfläche ab.
+- `CutTimelineTrack` visualisiert die Schnittbereiche, enthält aber keine fachliche Schnittlogik.
+- Tabelle und Schnitt-Timeline verwenden dieselbe Auswahl.
+- Die Benutzeroberfläche arbeitet bewusst mit Remove-Bereichen.
+- Eine spätere klassische Cutlist-Ausgabe berechnet daraus die komplementären Keep-Bereiche.
+
 ## Offene Entscheidungen
 
-- endgültige Bestätigung von `HanumanInstitute.LibMpv` nach den praktischen Play/Pause-, Seeking- und Frame-Step-Tests
 - möglicher späterer Wechsel von der HWND-Einbettung zur libmpv-Render-API
 - Strategie für Aktualisierungen der fest versionierten nativen Laufzeit
-- Logging-Bibliothek
 - MVVM-Hilfsbibliothek oder möglichst wenige externe Pakete
 - Installer-/Portable-Konzept
