@@ -258,6 +258,63 @@ public sealed class PlaybackViewModelTests
             changedProperties);
     }
 
+    [Theory]
+    [InlineData(MediaPlayerState.Empty, false)]
+    [InlineData(MediaPlayerState.Loading, false)]
+    [InlineData(MediaPlayerState.Paused, true)]
+    [InlineData(MediaPlayerState.Playing, true)]
+    [InlineData(MediaPlayerState.Ended, false)]
+    public void PlaybackToggleState_ReflectsPlayerState(
+        MediaPlayerState state,
+        bool canTogglePlayback)
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = state
+        };
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        Assert.Equal(
+            canTogglePlayback,
+            viewModel.CanTogglePlayback);
+    }
+
+    [Fact]
+    public async Task TogglePlaybackAsync_WhilePaused_ForwardsToPlay()
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = MediaPlayerState.Paused
+        };
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.TogglePlaybackAsync();
+
+        Assert.Equal(1, service.PlayCallCount);
+        Assert.Equal(0, service.PauseCallCount);
+    }
+
+    [Fact]
+    public async Task TogglePlaybackAsync_WhilePlaying_ForwardsToPause()
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = MediaPlayerState.Playing
+        };
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.TogglePlaybackAsync();
+
+        Assert.Equal(0, service.PlayCallCount);
+        Assert.Equal(1, service.PauseCallCount);
+    }
+
     [Fact]
     public async Task PlayAsync_ForwardsToService()
     {
