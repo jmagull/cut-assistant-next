@@ -266,6 +266,11 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
 
         try
         {
+            await _client.SetBooleanPropertyAsync(
+                PauseProperty,
+                true,
+                cancellationToken);
+
             await _client.CommandAsync(
                 [
                     "loadfile",
@@ -794,7 +799,8 @@ public sealed class MpvMediaPlayerService : IMediaPlayerService
                 _suppressNextFrameStepUnpause = false;
             }
 
-            if (!suppressPauseChange)
+            if (!suppressPauseChange &&
+                _state != MediaPlayerState.Loading)
             {
                 _pauseRequested = isPaused;
             }

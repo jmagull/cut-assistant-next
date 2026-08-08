@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Media.Analysis;
@@ -12,9 +13,11 @@ namespace CutAssistantNext.App;
 public partial class MainWindow : Window
 {
     private readonly IAppLogger _logger;
+    private readonly WindowSettingsStore _windowSettingsStore;
     private readonly MainWindowViewModel _viewModel;
     private readonly IMediaPlayerService _mediaPlayerService;
     private readonly PlaybackViewModel _playbackViewModel;
+    private readonly CutPlanViewModel _cutPlanViewModel;
 
     private Task? _mediaPlayerInitializationTask;
     private bool _isClosed;
@@ -33,11 +36,19 @@ public partial class MainWindow : Window
 
         InitializeComponent();
 
+        _windowSettingsStore =
+            new WindowSettingsStore();
+
+        RestoreWindowSettings();
+
         _mediaPlayerService =
             new MpvMediaPlayerService(_logger);
 
         _playbackViewModel =
             new PlaybackViewModel(_mediaPlayerService);
+
+        _cutPlanViewModel =
+            new CutPlanViewModel();
 
         _viewModel = new MainWindowViewModel(
             new FfprobeRunner(),
@@ -45,11 +56,14 @@ public partial class MainWindow : Window
 
         DataContext = _viewModel;
         PlaybackControls.DataContext = _playbackViewModel;
+        CutPlanSection.DataContext = _cutPlanViewModel;
+        CutTimelineTrack.DataContext = _cutPlanViewModel;
 
         VideoHost.VideoWindowHandleCreated +=
             VideoHost_VideoWindowHandleCreated;
 
         Closing += MainWindow_Closing;
+        PreviewKeyDown += MainWindow_PreviewKeyDown;
 
         if (VideoHost.IsVideoWindowReady)
         {
@@ -121,8 +135,12 @@ public partial class MainWindow : Window
         _shutdownStarted = true;
         _isClosed = true;
 
+        SaveWindowSettings();
+
         VideoHost.VideoWindowHandleCreated -=
             VideoHost_VideoWindowHandleCreated;
+
+        PreviewKeyDown -= MainWindow_PreviewKeyDown;
 
         _playbackViewModel.Dispose();
 
@@ -149,6 +167,70 @@ public partial class MainWindow : Window
 
             Close();
         }
+    }
+
+    private void RestoreWindowSettings()
+    {
+        var settings =
+            _windowSettingsStore.Load();
+
+        if (settings is null)
+        {
+            return;
+        }
+
+        if (double.IsFinite(settings.Width) &&
+            settings.Width >= MinWidth)
+        {
+            Width = Math.Max(
+                MinWidth,
+                Math.Min(
+                    settings.Width,
+                    SystemParameters.WorkArea.Width));
+        }
+
+        if (double.IsFinite(settings.Height) &&
+            settings.Height >= MinHeight)
+        {
+            Height = Math.Max(
+                MinHeight,
+                Math.Min(
+                    settings.Height,
+                    SystemParameters.WorkArea.Height));
+        }
+
+        if (settings.IsMaximized)
+        {
+            WindowState =
+                System.Windows.WindowState.Maximized;
+        }
+    }
+
+    private void SaveWindowSettings()
+    {
+        var bounds = RestoreBounds;
+
+        var width =
+            double.IsFinite(bounds.Width) &&
+            bounds.Width > 0
+                ? bounds.Width
+                : ActualWidth;
+
+        var height =
+            double.IsFinite(bounds.Height) &&
+            bounds.Height > 0
+                ? bounds.Height
+                : ActualHeight;
+
+        _windowSettingsStore.Save(
+            new WindowSettings
+            {
+                Width = width,
+                Height = height,
+                IsMaximized =
+                    WindowState ==
+                    System.Windows.WindowState.Maximized
+            });
     }
 
     private void TimelineSlider_PreviewMouseLeftButtonDown(
@@ -204,20 +286,78 @@ public partial class MainWindow : Window
                 e.NewValue));
     }
 
+    private async void MainWindow_PreviewKeyDown(
+        object sender,
+        KeyEventArgs e)
+    {
+        var modifiers = Keyboard.Modifiers;
+
+        if (e.Key == Key.Space &&
+            modifiers == ModifierKeys.None &&
+            _playbackViewModel.CanTogglePlayback)
+        {
+            e.Handled = true;
+
+            await ExecutePlaybackActionAsync(
+                () => _playbackViewModel.TogglePlaybackAsync());
+
+            return;
+        }
+
+        if (!_playbackViewModel.CanStepFrame)
+        {
+            return;
+        }
+
+        if (e.Key == Key.Left &&
+            modifiers == ModifierKeys.None)
+        {
+            e.Handled = true;
+
+            await ExecutePlaybackActionAsync(
+                () => _playbackViewModel.StepBackwardAsync());
+
+            return;
+        }
+
+        if (e.Key == Key.Right &&
+            modifiers == ModifierKeys.None)
+        {
+            e.Handled = true;
+
+            await ExecutePlaybackActionAsync(
+                () => _playbackViewModel.StepForwardAsync());
+
+            return;
+        }
+
+        if (e.Key == Key.Left &&
+            modifiers == ModifierKeys.Control)
+        {
+            e.Handled = true;
+
+            await ExecutePlaybackActionAsync(
+                () => _playbackViewModel.StepBackwardTenFramesAsync());
+
+            return;
+        }
+
+        if (e.Key == Key.Right &&
+            modifiers == ModifierKeys.Control)
+        {
+            e.Handled = true;
+
+            await ExecutePlaybackActionAsync(
+                () => _playbackViewModel.StepForwardTenFramesAsync());
+        }
+    }
+
     private async void PlayButton_Click(
         object sender,
         RoutedEventArgs e)
     {
         await ExecutePlaybackActionAsync(
-            () => _playbackViewModel.PlayAsync());
-    }
-
-    private async void PauseButton_Click(
-        object sender,
-        RoutedEventArgs e)
-    {
-        await ExecutePlaybackActionAsync(
-            () => _playbackViewModel.PauseAsync());
+            () => _playbackViewModel.TogglePlaybackAsync());
     }
 
     private async void StepBackwardTenFramesButton_Click(
@@ -252,6 +392,154 @@ public partial class MainWindow : Window
             () => _playbackViewModel.StepForwardTenFramesAsync());
     }
 
+    private void SetCutStartButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        ExecuteCutPlanAction(
+            () =>
+            {
+                _cutPlanViewModel.SetStart(
+                    _playbackViewModel.Position);
+
+                _logger.Information(
+                    $"Schnittanfang wurde gesetzt: " +
+                    $"{_playbackViewModel.Position:c}");
+            });
+    }
+
+    private void SetCutEndButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        ExecuteCutPlanAction(
+            () =>
+            {
+                var endPosition =
+                    _playbackViewModel.Position;
+
+                _cutPlanViewModel.SetEnd(
+                    endPosition);
+
+                _logger.Information(
+                    $"Schnittende wurde gesetzt: " +
+                    $"{endPosition:c}");
+            });
+    }
+
+    private void CorrectCutStartButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        ExecuteCutPlanAction(
+            () =>
+            {
+                var selectedSegment =
+                    _cutPlanViewModel.SelectedRemoveSegment
+                    ?? throw new InvalidOperationException(
+                        "Es ist kein Schnittbereich ausgewählt.");
+
+                var position =
+                    _playbackViewModel.Position;
+
+                if (position >= selectedSegment.End)
+                {
+                    throw new InvalidOperationException(
+                        "Die aktuelle Videoposition liegt nicht vor dem Ende des ausgewählten Schnittbereichs. " +
+                        "Verschiebe die Zeitleiste auf die gewünschte neue Anfangsposition.");
+                }
+                _cutPlanViewModel.Replace(
+                    selectedSegment,
+                    position,
+                    selectedSegment.End);
+
+                _logger.Information(
+                    $"Schnittanfang wurde korrigiert: " +
+                    $"{selectedSegment.Start:c} -> {position:c}");
+            });
+    }
+
+    private void CorrectCutEndButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        ExecuteCutPlanAction(
+            () =>
+            {
+                var selectedSegment =
+                    _cutPlanViewModel.SelectedRemoveSegment
+                    ?? throw new InvalidOperationException(
+                        "Es ist kein Schnittbereich ausgewählt.");
+
+                var position =
+                    _playbackViewModel.Position;
+
+                if (position <= selectedSegment.Start)
+                {
+                    throw new InvalidOperationException(
+                        "Die aktuelle Videoposition liegt nicht hinter dem Anfang des ausgewählten Schnittbereichs. " +
+                        "Verschiebe die Zeitleiste auf die gewünschte neue Endposition.");
+                }
+                _cutPlanViewModel.Replace(
+                    selectedSegment,
+                    selectedSegment.Start,
+                    position);
+
+                _logger.Information(
+                    $"Schnittende wurde korrigiert: " +
+                    $"{selectedSegment.End:c} -> {position:c}");
+            });
+    }
+
+    private void RemoveCutSegmentButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        ExecuteCutPlanAction(
+            () =>
+            {
+                var selectedSegment =
+                    _cutPlanViewModel.SelectedRemoveSegment
+                    ?? throw new InvalidOperationException(
+                        "Es ist kein Schnittbereich ausgewählt.");
+
+                if (!_cutPlanViewModel.Remove(selectedSegment))
+                {
+                    throw new InvalidOperationException(
+                        "Der ausgewählte Schnittbereich konnte nicht gelöscht werden.");
+                }
+
+                _logger.Information(
+                    $"Schnittbereich wurde gelöscht: " +
+                    $"{selectedSegment.Start:c} - {selectedSegment.End:c}");
+            });
+    }
+
+    private void ExecuteCutPlanAction(
+        Action action)
+    {
+        try
+        {
+            action();
+        }
+        catch (Exception exception)
+        {
+            _logger.Warning(
+                $"Schnittmarke konnte nicht übernommen werden: " +
+                $"{exception.Message}");
+
+            if (!_isClosed)
+            {
+                MessageBox.Show(
+                    this,
+                    exception.Message,
+                    "Schnittmarke ungültig",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+        }
+    }
+
     private async Task ExecutePlaybackActionAsync(
         Func<Task> action)
     {
@@ -281,7 +569,7 @@ public partial class MainWindow : Window
         var dialog = new OpenFileDialog
         {
             Title = "MP4-Datei auswählen",
-            Filter = "MP4-Dateien (*.mp4)|*.mp4|Alle Dateien (*.*)|*.*",
+            Filter = "OTR-Videodateien (*.mp4;*.avi)|*.mp4;*.avi|Alle Dateien (*.*)|*.*",
             CheckFileExists = true,
             Multiselect = false
         };
@@ -294,7 +582,16 @@ public partial class MainWindow : Window
         _logger.Information(
             $"Mediendatei wurde ausgewählt: {dialog.FileName}");
 
+        _cutPlanViewModel.Reset();
+
         await _viewModel.AnalyzeAsync(dialog.FileName);
+
+        if (_viewModel.MediaDuration.HasValue &&
+            _viewModel.MediaDuration.Value > TimeSpan.Zero)
+        {
+            _cutPlanViewModel.Initialize(
+                _viewModel.MediaDuration.Value);
+        }
 
         try
         {
@@ -303,7 +600,6 @@ public partial class MainWindow : Window
             await _mediaPlayerService.LoadAsync(
                 dialog.FileName);
 
-            await _mediaPlayerService.PlayAsync();
         }
         catch (Exception exception)
         {

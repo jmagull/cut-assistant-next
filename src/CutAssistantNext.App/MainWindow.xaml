@@ -192,40 +192,38 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Slider x:Name="TimelineSlider"
-                            Grid.Row="0"
-                            Grid.ColumnSpan="8"
-                            Height="24"
-                            Margin="0,0,0,10"
-                            Minimum="0"
-                            Maximum="{Binding DurationSeconds}"
-                            Value="{Binding TimelinePositionSeconds,
-                                Mode=OneWay}"
-                            IsEnabled="{Binding CanSeek}"
-                            PreviewMouseLeftButtonDown="TimelineSlider_PreviewMouseLeftButtonDown"
-                            PreviewMouseLeftButtonUp="TimelineSlider_PreviewMouseLeftButtonUp"
-                            ValueChanged="TimelineSlider_ValueChanged" />
+                    <StackPanel Grid.Row="0"
+                                Grid.ColumnSpan="8">
+                        <Slider x:Name="TimelineSlider"
+                                Height="24"
+                                Margin="0,0,0,4"
+                                Minimum="0"
+                                Maximum="{Binding DurationSeconds}"
+                                Value="{Binding TimelinePositionSeconds,
+                                    Mode=OneWay}"
+                                IsEnabled="{Binding CanSeek}"
+                                PreviewMouseLeftButtonDown="TimelineSlider_PreviewMouseLeftButtonDown"
+                                PreviewMouseLeftButtonUp="TimelineSlider_PreviewMouseLeftButtonUp"
+                                ValueChanged="TimelineSlider_ValueChanged" />
+
+                        <controls:CutTimelineTrack x:Name="CutTimelineTrack"
+                                                   Height="12"
+                                                   Margin="0,0,0,10"
+                                                   MediaDuration="{Binding MediaDuration}"
+                                                   RemoveSegments="{Binding RemoveSegments}"
+                                                   SelectedRemoveSegment="{Binding SelectedRemoveSegment, Mode=TwoWay}" />
+                    </StackPanel>
 
                     <Button Grid.Row="1"
                             MinWidth="90"
                             Height="36"
                             Padding="14,0"
-                            IsEnabled="{Binding CanPlay}"
+                            IsEnabled="{Binding CanTogglePlayback}"
                             Click="PlayButton_Click"
-                            Content="Play" />
+                            Content="Play/Pause" />
 
                     <Button Grid.Row="1"
                             Grid.Column="1"
-                            MinWidth="90"
-                            Height="36"
-                            Margin="10,0,0,0"
-                            Padding="14,0"
-                            IsEnabled="{Binding CanPause}"
-                            Click="PauseButton_Click"
-                            Content="Pause" />
-
-                    <Button Grid.Row="1"
-                            Grid.Column="2"
                             MinWidth="90"
                             Height="36"
                             Margin="10,0,0,0"
@@ -235,7 +233,7 @@
                             Content="−10 Bilder" />
 
                     <Button Grid.Row="1"
-                            Grid.Column="3"
+                            Grid.Column="2"
                             MinWidth="110"
                             Height="36"
                             Margin="10,0,0,0"
@@ -245,7 +243,7 @@
                             Content="Bild zurück" />
 
                     <Button Grid.Row="1"
-                            Grid.Column="4"
+                            Grid.Column="3"
                             MinWidth="110"
                             Height="36"
                             Margin="10,0,0,0"
@@ -255,7 +253,7 @@
                             Content="Bild vor" />
 
                     <Button Grid.Row="1"
-                            Grid.Column="5"
+                            Grid.Column="4"
                             MinWidth="90"
                             Height="36"
                             Margin="10,0,0,0"
@@ -332,6 +330,97 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
             <StackPanel Grid.IsSharedSizeScope="True">
+
+                <Border x:Name="CutPlanSection"
+                        Style="{StaticResource SectionBorderStyle}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource SectionHeaderStyle}"
+                                   Text="Schnittbereiche – entfernen" />
+
+                        <WrapPanel>
+                            <Button MinWidth="170"
+                                    Height="36"
+                                    Padding="14,0"
+                                    IsEnabled="{Binding CanSetStart}"
+                                    Click="SetCutStartButton_Click"
+                                    Content="Schnittanfang setzen" />
+
+                            <Button MinWidth="170"
+                                    Height="36"
+                                    Margin="10,0,0,0"
+                                    Padding="14,0"
+                                    IsEnabled="{Binding CanSetEnd}"
+                                    Click="SetCutEndButton_Click"
+                                    Content="Schnittende setzen" />
+
+                            <TextBlock Margin="22,0,8,0"
+                                       VerticalAlignment="Center"
+                                       FontWeight="SemiBold"
+                                       Foreground="#4B5563"
+                                       Text="Vorgemerkter Anfang:" />
+
+                            <TextBlock VerticalAlignment="Center"
+                                       FontFamily="Consolas"
+                                       FontWeight="SemiBold"
+                                       Text="{Binding PendingStartText}" />
+                        </WrapPanel>
+
+                        <DataGrid Margin="0,14,0,0"
+                                  MinHeight="100"
+                                  MaxHeight="180"
+                                  Background="White"
+                                  Foreground="#111827"
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  IsReadOnly="True"
+                                  SelectionMode="Single"
+                                  SelectionUnit="FullRow"
+                                  SelectedItem="{Binding SelectedRemoveSegment, Mode=TwoWay}"
+                                  ItemsSource="{Binding RemoveSegments}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Anfang"
+                                                    Width="*"
+                                                    Binding="{Binding Start}" />
+
+                                <DataGridTextColumn Header="Ende"
+                                                    Width="*"
+                                                    Binding="{Binding End}" />
+
+                                <DataGridTextColumn Header="Dauer"
+                                                    Width="*"
+                                                    Binding="{Binding Duration}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                    <WrapPanel Margin="0,12,0,0">
+                        <Button MinWidth="170"
+                                Height="36"
+                                Padding="14,0"
+                                IsEnabled="{Binding CanModifySelectedSegment}"
+                                Click="CorrectCutStartButton_Click"
+                                ToolTip="Anfang des ausgewählten Bereichs auf die aktuelle Videoposition setzen"
+                                Content="Anfang korrigieren" />
+
+                        <Button MinWidth="170"
+                                Height="36"
+                                Margin="10,0,0,0"
+                                Padding="14,0"
+                                IsEnabled="{Binding CanModifySelectedSegment}"
+                                Click="CorrectCutEndButton_Click"
+                                ToolTip="Ende des ausgewählten Bereichs auf die aktuelle Videoposition setzen"
+                                Content="Ende korrigieren" />
+
+                        <Button MinWidth="150"
+                                Height="36"
+                                Margin="10,0,0,0"
+                                Padding="14,0"
+                                IsEnabled="{Binding CanModifySelectedSegment}"
+                                Click="RemoveCutSegmentButton_Click"
+                                Content="Bereich löschen" />
+                    </WrapPanel>
+                    </StackPanel>
+                </Border>
 
                 <Border Style="{StaticResource SectionBorderStyle}">
                     <StackPanel>

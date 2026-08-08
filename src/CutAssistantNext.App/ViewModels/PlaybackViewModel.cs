@@ -104,6 +104,12 @@ public sealed class PlaybackViewModel
     public bool CanPause =>
         State == MediaPlayerState.Playing;
 
+    public bool CanTogglePlayback =>
+        State is
+            MediaPlayerState.Paused or
+            MediaPlayerState.Playing;
+
+
     public bool CanStepFrame =>
         State == MediaPlayerState.Paused;
 
@@ -199,6 +205,21 @@ public sealed class PlaybackViewModel
             cancellationToken);
     }
 
+    public Task TogglePlaybackAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return State switch
+        {
+            MediaPlayerState.Paused =>
+                PlayAsync(cancellationToken),
+
+            MediaPlayerState.Playing =>
+                PauseAsync(cancellationToken),
+
+            _ => Task.CompletedTask
+        };
+    }
+
     public Task SetVolumeAsync(
         double volume,
         CancellationToken cancellationToken = default)
@@ -274,6 +295,7 @@ public sealed class PlaybackViewModel
             nameof(State),
             nameof(CanPlay),
             nameof(CanPause),
+            nameof(CanTogglePlayback),
             nameof(CanStepFrame),
             nameof(CanSeek),
             nameof(CanSetVolume));

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Core.Media;
@@ -35,6 +35,9 @@ public class MainWindowViewModelTests
 
         Assert.Equal("700,00 MiB", viewModel.FileSize);
         Assert.Equal("01:02:20.180", viewModel.Duration);
+        Assert.Equal(
+            TimeSpan.FromSeconds(3740.18),
+            viewModel.MediaDuration);
 
         Assert.Equal(
             "H.264 / AVC (h264)",
@@ -141,6 +144,7 @@ public class MainWindowViewModelTests
 
         Assert.Equal("Nicht verfügbar", viewModel.FileSize);
         Assert.Equal("Nicht verfügbar", viewModel.Duration);
+        Assert.Null(viewModel.MediaDuration);
         Assert.Equal("Nicht verfügbar", viewModel.VideoCodec);
         Assert.Equal("Nicht verfügbar", viewModel.Resolution);
         Assert.Equal(

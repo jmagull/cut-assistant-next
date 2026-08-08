@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -23,6 +23,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private string _containerFormat = NotAvailable;
     private string _fileSize = NotAvailable;
     private string _duration = NotAvailable;
+    private TimeSpan? _mediaDuration;
     private string _videoCodec = NotAvailable;
     private string _resolution = NotAvailable;
     private string _sampleAspectRatio = NotAvailable;
@@ -108,6 +109,12 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
         get => _duration;
         private set => SetProperty(ref _duration, value);
+    }
+
+    public TimeSpan? MediaDuration
+    {
+        get => _mediaDuration;
+        private set => SetProperty(ref _mediaDuration, value);
     }
 
     public string VideoCodec
@@ -240,6 +247,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
         FileSize = FormatFileSize(result.FileSizeBytes);
         Duration = FormatDuration(result.Duration);
+        MediaDuration = result.Duration;
 
         var videoStream = result.VideoStreams.FirstOrDefault();
 
@@ -301,6 +309,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         ContainerFormat = NotAvailable;
         FileSize = NotAvailable;
         Duration = NotAvailable;
+        MediaDuration = null;
         VideoCodec = NotAvailable;
         Resolution = NotAvailable;
         SampleAspectRatio = NotAvailable;

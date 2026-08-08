@@ -20,7 +20,7 @@ DirectShow, DSPack und installierte Windows-Codecs werden nicht verwendet.
 
 ## ADR-004 – mpv/libmpv für Wiedergabe
 
-**Status:** technischer Spike erfolgreich; für den POC vorläufig bestätigt
+**Status:** entschieden
 
 Der erste Wiedergabe-POC verwendet libmpv.
 
@@ -40,7 +40,7 @@ Umgesetzte technische Lösung:
 
 Einbettung, Laden und Wiedergabe wurden mit einer realen MP4-Datei praktisch bestätigt. Video und Ton wurden korrekt innerhalb der WPF-Anwendung wiedergegeben. Auch der vollständige Shutdown ohne zurückbleibenden Prozess wurde nachgewiesen.
 
-Play, Pause, Seeking und Stoppen sind bereits über den testbaren Service abgebildet. Die praktische Bestätigung über Bedienelemente sowie Einzelbildschritte stehen noch aus. Nach diesen Tests wird die technische Entscheidung endgültig bestätigt.
+Play/Pause, Seeking, Stoppen und Einzelbildschritte um `−10`, `−1`, `+1` und `+10` Frames sind über den testbaren Service abgebildet und praktisch über die WPF-Oberfläche bestätigt. Auch die Tastatursteuerung, der zuverlässige Start geladener Medien im pausierten Zustand und der kontrollierte Shutdown wurden erfolgreich geprüft.
 
 Die libmpv-Render-API bleibt eine mögliche spätere Alternative, falls die HWND-Einbettung wegen WPF-Airspace, Overlays oder anderer Einschränkungen nicht ausreicht.
 
@@ -49,3 +49,18 @@ Die libmpv-Render-API bleibt eine mögliche spätere Alternative, falls die HWND
 **Status:** entschieden
 
 Metadaten werden über ffprobe strukturiert ausgelesen und anhand anonymisierter JSON-Testdaten testbar gemacht.
+
+## ADR-006 – Schnittbearbeitung verwendet Remove-Bereiche
+
+**Status:** entschieden
+
+Die Benutzeroberfläche beschreibt Schnittbereiche als Abschnitte, die aus dem Video entfernt werden sollen.
+
+Begründung:
+
+- Beim manuellen Schneiden markiert der Benutzer typischerweise Werbung, Vorlauf, Nachlauf oder Wiederholungen, die entfernt werden sollen.
+- Dieses Bedienmodell ist intuitiver als das direkte Erfassen aller Behaltebereiche.
+- `RemoveSegment` und `CutPlan` bilden diese Semantik in der testbaren Core-Schicht ab.
+- Die klassische Cutlist-Spezifikation beschreibt dagegen die Teile, die im fertigen Film erhalten bleiben.
+- Eine spätere Cutlist-Ausgabe berechnet deshalb aus den Remove-Bereichen die komplementären Keep-Bereiche.
+- Die unterschiedliche Semantik von Benutzeroberfläche und Cutlist-Dateiformat ist damit beabsichtigt und keine Umkehrung durch die Oberfläche.

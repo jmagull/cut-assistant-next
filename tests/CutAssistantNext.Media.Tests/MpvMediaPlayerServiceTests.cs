@@ -643,6 +643,59 @@ public sealed class MpvMediaPlayerServiceTests
     }
 
     [Fact]
+    public async Task LoadAsync_PauseNoWhileLoading_KeepsPauseRequest()
+    {
+        var mediaFilePath = Path.Combine(
+            Path.GetTempPath(),
+            $"CutAssistantNext-{Guid.NewGuid():N}.mp4");
+
+        File.WriteAllText(mediaFilePath, string.Empty);
+
+        try
+        {
+            var client = new StubLibMpvClient();
+
+            await using var service =
+                new MpvMediaPlayerService(client);
+
+            await service.InitializeAsync((nint)123);
+            await service.LoadAsync(mediaFilePath);
+
+            Assert.Equal(
+                MediaPlayerState.Loading,
+                service.State);
+
+            client.Publish(
+                new LibMpvEvent(
+                    LibMpvEventKind.PropertyChanged,
+                    "pause",
+                    "no"));
+
+            client.Publish(
+                new LibMpvEvent(
+                    LibMpvEventKind.FileLoaded));
+
+            client.Publish(
+                new LibMpvEvent(
+                    LibMpvEventKind.PropertyChanged,
+                    "time-pos",
+                    "1"));
+
+            await WaitUntilAsync(
+                () => service.Position ==
+                    TimeSpan.FromSeconds(1));
+
+            Assert.Equal(
+                MediaPlayerState.Paused,
+                service.State);
+        }
+        finally
+        {
+            File.Delete(mediaFilePath);
+        }
+    }
+
+    [Fact]
     public async Task PlaybackRestarted_WhilePaused_KeepsPausedState()
     {
         var client = new StubLibMpvClient();
