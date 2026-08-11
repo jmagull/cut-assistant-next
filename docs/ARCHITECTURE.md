@@ -12,7 +12,7 @@ Anwendungslogik / ViewModels
 | mpv/libmpv           | ffprobe              |
 +----------------------+----------------------+
       |
-Später: Cutlists | Schnittmotoren | Server | Renamer | Stapel
+Cutlists            | später: Schnittmotoren | Server | Renamer | Stapel
 ```
 
 ## Vorgesehene Projekte
@@ -20,7 +20,7 @@ Später: Cutlists | Schnittmotoren | Server | Renamer | Stapel
 - `CutAssistantNext.App` – WPF-Oberfläche und Startpunkt
 - `CutAssistantNext.Core` – Modelle, Verträge und Anwendungslogik
 - `CutAssistantNext.Media` – mpv/libmpv und ffprobe
-- `CutAssistantNext.Cutlists` – späterer Cutlist-Parser
+- `CutAssistantNext.Cutlists` – Cutlist-Modell, Metadaten, Serialisierung und Dateiausgabe; ein Reader/Parser folgt später
 - passende Testprojekte unter `tests/`
 
 ## Architekturregeln
@@ -90,7 +90,58 @@ Die libmpv-Render-API bleibt eine spätere Alternative, falls HWND-Einbettung, W
 - `CutTimelineTrack` visualisiert die Schnittbereiche, enthält aber keine fachliche Schnittlogik.
 - Tabelle und Schnitt-Timeline verwenden dieselbe Auswahl.
 - Die Benutzeroberfläche arbeitet bewusst mit Remove-Bereichen.
-- Eine spätere klassische Cutlist-Ausgabe berechnet daraus die komplementären Keep-Bereiche.
+- Die klassische Cutlist-Ausgabe berechnet daraus die komplementären Keep-Bereiche.
+
+## Cutlist-Erzeugung – umgesetzte Architektur
+
+Die Cutlist-Erzeugung ist als eigenes Modul umgesetzt und von WPF sowie konkreten Schnittmotoren getrennt.
+
+```text
+CutAssistantNext.Core
+├── Editing
+│   ├── RemoveSegment
+│   └── CutPlan
+├── Naming
+│   ├── NameTemplateContext
+│   └── NameTemplateRenderer
+└── Metadata
+    ├── TechnicalNotice
+    └── TechnicalNoticeDetector
+          |
+          v
+CutAssistantNext.Cutlists
+├── Editing
+│   ├── CutlistKeepSegment
+│   └── CutlistKeepSegmentBuilder
+├── Metadata
+│   ├── CutlistGeneralMetadata
+│   ├── CutlistInfoMetadata
+│   └── CutApplicationInfo
+├── Model
+│   └── CutlistDocument
+├── Serialization
+│   └── CutlistSerializer
+└── IO
+    └── CutlistFileWriter
+```
+
+Architekturregeln:
+
+- `CutAssistantNext.Cutlists` hängt von `CutAssistantNext.Core` ab, nicht von `CutAssistantNext.App` oder `CutAssistantNext.Media`.
+- Die Benutzeroberfläche und das Core-Schnittmodell arbeiten mit Remove-Bereichen; `CutlistKeepSegmentBuilder` bildet daraus die komplementären Keep-Bereiche für das klassische Cutlist-Format.
+- `NoOfCuts` wird aus der tatsächlichen Anzahl der Keep-Bereiche abgeleitet und gegen das Dokumentmodell validiert.
+- `CutlistDocument` bündelt `[General]`, Keep-Bereiche und `[Info]` als typisiertes Modell.
+- `CutlistSerializer` erzeugt den Cutlist-Inhalt unabhängig vom Dateisystem.
+- `CutlistFileWriter` übernimmt die Dateiausgabe als UTF-8 ohne BOM mit CRLF-Zeilenenden.
+- Zeit- und Zahlenwerte werden kulturunabhängig serialisiert.
+- `StartFrame` und `DurationFrames` bleiben optionale spätere Kompatibilitätsfelder.
+- Technische Hinweise wie eine `.avi`-Dateiendung bei tatsächlich erkanntem MP4/ISO-BMFF-Container entstehen in `CutAssistantNext.Core` und werden erst im Cutlist-Modul auf `OtherError` und `OtherErrorDescription` abgebildet.
+- Die Namensbildung liegt in `CutAssistantNext.Core.Naming`, weil derselbe erzeugte Basisname für `SuggestedMovieName` und später für den Ausgabedateinamen verwendet werden soll.
+- Namensmaske, Standardautor und Schnelltexte sind Benutzereinstellungen und keine fest codierten Cutlist-Werte.
+- Die Identität eines Schnittprogramms wird über `CutApplicationInfo` beschrieben. Der lokale Installationspfad eines Schnittmotors gehört nicht in die Cutlist-Metadaten.
+- Ein Cutlist-Reader/Parser sowie Server- und Upload-Funktionen sind noch nicht umgesetzt.
+
+Die Kompatibilitätsdetails der erzeugten Dateien sind in ADR-007 festgelegt und durch automatisierte Tests abgesichert.
 
 ## Offene Entscheidungen
 

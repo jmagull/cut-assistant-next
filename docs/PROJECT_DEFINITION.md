@@ -6,7 +6,7 @@ Der bestehende Cut Assistant 2018 basiert auf Delphi/VCL, DirectShow und install
 
 ## Ziel
 
-Der POC soll nachweisen, dass typische OTR-MP4-Dateien ohne DirectShow zuverlässig wiedergegeben und präzise navigiert werden können. Dieser Nachweis ist inzwischen erbracht. Darauf aufbauend wird der POC schrittweise zum Schnittassistenten erweitert; die erste manuelle Schnittplanung mit markierten Entfernungsbereichen ist bereits umgesetzt. Cutlist-Unterstützung, MP4Box, FFmpeg und Dateiumbenennung folgen in späteren Bauabschnitten.
+Der POC soll nachweisen, dass typische OTR-MP4-Dateien ohne DirectShow zuverlässig wiedergegeben und präzise navigiert werden können. Dieser Nachweis ist inzwischen erbracht. Darauf aufbauend wird der POC schrittweise zum Schnittassistenten erweitert. Die manuelle Schnittplanung mit markierten Entfernungsbereichen und die technische Grundlage für die Erzeugung klassischer Cutlists sind inzwischen umgesetzt. Die Anbindung tatsächlicher Schnittverfahren mit MP4Box oder FFmpeg, Serverfunktionen und Dateiumbenennung folgen in späteren Bauabschnitten.
 
 ## Erreichter Zwischenstand
 
@@ -16,7 +16,8 @@ Der POC soll nachweisen, dass typische OTR-MP4-Dateien ohne DirectShow zuverläs
 - Die erste Schnittplanung mit `RemoveSegment` und `CutPlan` ist umgesetzt.
 - Zu entfernende Bereiche können gesetzt, ausgewählt, korrigiert und gelöscht werden.
 - Eine eigene Schnitt-Timeline visualisiert die markierten Bereiche.
-- Die spätere Cutlist-Ausgabe wird aus den Remove-Bereichen komplementäre Keep-Bereiche erzeugen.
+- Aus den Remove-Bereichen werden komplementäre Keep-Bereiche für klassische Cutlists erzeugt.
+- Cutlist-Metadaten, Dokumentmodell, Serialisierung und lokale Dateiausgabe sind umgesetzt und automatisiert getestet.
 
 ## Grundentscheidungen
 
