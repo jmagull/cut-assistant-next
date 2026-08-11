@@ -39,7 +39,17 @@
 - `CutPlan` einschließlich Sortierung, Überschneidungsschutz, Ersetzen und Löschen
 - `CutPlanViewModel` einschließlich Erfassung, Auswahl und Korrekturmodus
 - UTF-8-Protokollierung, Größenbegrenzung und Rotation
+- `NameTemplateRenderer` einschließlich Namensvariablen, optionaler Präfixe, fehlender Werte und unbekannter Variablen
+- `CutlistSettingsStore` einschließlich Standardwerten, Standardautor, Schnelltexten, Laden und Speichern sowie UTF-8 ohne BOM
+- `TechnicalNoticeDetector` einschließlich des Sonderfalls `.avi` mit tatsächlich erkanntem MP4/ISO-BMFF-Container
+- `CutlistKeepSegmentBuilder` einschließlich der Umrechnung von Remove- in Keep-Bereiche und der Behandlung von Randfällen
+- Cutlist-Metadaten einschließlich `NoOfCuts`, Autor, Benutzerkommentar und technischer Hinweise
+- `CutlistDocument` einschließlich Konsistenzprüfung zwischen Metadaten und Keep-Bereichen
+- `CutlistSerializer` einschließlich klassischer Kompatibilitätszeilen, kulturunabhängiger Zahlenwerte und Golden-Master-Test
+- `CutlistFileWriter` einschließlich UTF-8 ohne BOM, CRLF-Zeilenenden und Umlauten
 
-Aktueller vollständiger Solution-Testlauf: **107 von 107 Tests erfolgreich**.
+Aktueller vollständiger Solution-Testlauf: **162 von 162 Tests erfolgreich**.
 
-Cutlist-Parser und Cutlist-Ausgabe werden ergänzt, sobald der entsprechende Bauabschnitt umgesetzt wird.
+Zusätzlich wurde die lokale Cutlist-Dateiausgabe in einem Smoke-Test praktisch geprüft. Dabei wurde eine vollständige `.cutlist`-Datei erzeugt und anschließend explizit als UTF-8 eingelesen; auch Umlaute wurden korrekt erhalten.
+
+Ein Cutlist-Reader/Parser ist noch nicht umgesetzt. Die Unterstützung historischer Windows-1252-/ANSI-Cutlists wird beim späteren Einlese-Bauabschnitt ergänzt.
