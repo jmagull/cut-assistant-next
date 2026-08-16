@@ -65,6 +65,35 @@ public sealed class CutPlanViewModelTests
     }
 
     [Fact]
+    public void SetStartAtBeginningAndSetEndAtMediaEnd_UsesExactMediaBoundaries()
+    {
+        var viewModel = new CutPlanViewModel();
+
+        var mediaDuration =
+            TimeSpan.FromSeconds(5387.52);
+
+        viewModel.Initialize(
+            mediaDuration);
+
+        viewModel.SetStart(
+            TimeSpan.Zero);
+
+        viewModel.SetEnd(
+            mediaDuration);
+
+        var segment =
+            Assert.Single(viewModel.RemoveSegments);
+
+        Assert.Equal(
+            TimeSpan.Zero,
+            segment.Start);
+
+        Assert.Equal(
+            mediaDuration,
+            segment.End);
+    }
+
+    [Fact]
     public void SetEnd_WithoutStart_ThrowsInvalidOperationException()
     {
         var viewModel = new CutPlanViewModel();
@@ -361,5 +390,61 @@ public sealed class CutPlanViewModelTests
         Assert.False(viewModel.CanSetStart);
         Assert.False(viewModel.CanSetEnd);
         Assert.True(viewModel.CanModifySelectedSegment);
+    }
+
+    [Fact]
+    public void CreateCutPlanSnapshot_ReturnsIndependentPlanWithCurrentSegments()
+    {
+        var viewModel = new CutPlanViewModel();
+
+        viewModel.Initialize(
+            TimeSpan.FromMinutes(60));
+
+        viewModel.SetStart(
+            TimeSpan.FromMinutes(10));
+
+        viewModel.SetEnd(
+            TimeSpan.FromMinutes(20));
+
+        var snapshot =
+            viewModel.CreateCutPlanSnapshot();
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(60),
+            snapshot.MediaDuration);
+
+        var snapshotSegment =
+            Assert.Single(snapshot.RemoveSegments);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(10),
+            snapshotSegment.Start);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(20),
+            snapshotSegment.End);
+
+        var originalSegment =
+            Assert.Single(viewModel.RemoveSegments);
+
+        Assert.True(
+            viewModel.Remove(originalSegment));
+
+        Assert.Empty(viewModel.RemoveSegments);
+        Assert.Single(snapshot.RemoveSegments);
+    }
+
+    [Fact]
+    public void CreateCutPlanSnapshot_WithoutInitialization_ThrowsInvalidOperationException()
+    {
+        var viewModel = new CutPlanViewModel();
+
+        var exception =
+            Assert.Throws<InvalidOperationException>(
+                () => viewModel.CreateCutPlanSnapshot());
+
+        Assert.Equal(
+            "Es wurde noch keine Mediendatei für den Schnittplan initialisiert.",
+            exception.Message);
     }
 }

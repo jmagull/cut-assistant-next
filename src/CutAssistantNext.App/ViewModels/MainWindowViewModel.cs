@@ -117,6 +117,8 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         private set => SetProperty(ref _mediaDuration, value);
     }
 
+    public MediaAnalysisResult? AnalysisResult { get; private set; }
+
     public string VideoCodec
     {
         get => _videoCodec;
@@ -205,6 +207,8 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             var result = await _mediaAnalysisRunner.RunAsync(
                 fullMediaFilePath,
                 cancellationToken);
+
+            AnalysisResult = result;
 
             ApplyResult(result);
 
@@ -310,6 +314,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         FileSize = NotAvailable;
         Duration = NotAvailable;
         MediaDuration = null;
+        AnalysisResult = null;
         VideoCodec = NotAvailable;
         Resolution = NotAvailable;
         SampleAspectRatio = NotAvailable;

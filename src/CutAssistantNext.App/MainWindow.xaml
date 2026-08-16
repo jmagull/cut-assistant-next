@@ -345,6 +345,14 @@
                                     Click="SetCutStartButton_Click"
                                     Content="Schnittanfang setzen" />
 
+                            <Button MinWidth="80"
+                                    Height="36"
+                                    Margin="6,0,0,0"
+                                    Padding="12,0"
+                                    IsEnabled="{Binding CanSetStart}"
+                                    Click="SetCutStartAtBeginningButton_Click"
+                                    Content="Anfang" />
+
                             <Button MinWidth="170"
                                     Height="36"
                                     Margin="10,0,0,0"
@@ -352,6 +360,14 @@
                                     IsEnabled="{Binding CanSetEnd}"
                                     Click="SetCutEndButton_Click"
                                     Content="Schnittende setzen" />
+
+                            <Button MinWidth="80"
+                                    Height="36"
+                                    Margin="6,0,0,0"
+                                    Padding="12,0"
+                                    IsEnabled="{Binding CanSetEnd}"
+                                    Click="SetCutEndAtMediaEndButton_Click"
+                                    Content="Ende" />
 
                             <TextBlock Margin="22,0,8,0"
                                        VerticalAlignment="Center"
@@ -418,6 +434,14 @@
                                 IsEnabled="{Binding CanModifySelectedSegment}"
                                 Click="RemoveCutSegmentButton_Click"
                                 Content="Bereich löschen" />
+                    </WrapPanel>
+
+                    <WrapPanel Margin="0,18,0,0">
+                        <Button MinWidth="170"
+                                Height="36"
+                                Padding="14,0"
+                                Click="GenerateCutlistButton_Click"
+                                Content="Cutlist erzeugen …" />
                     </WrapPanel>
                     </StackPanel>
                 </Border>
