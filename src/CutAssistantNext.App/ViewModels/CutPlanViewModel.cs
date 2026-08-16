@@ -200,6 +200,25 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         SelectedRemoveSegment = replacementSegment;
     }
 
+    public CutPlan CreateCutPlanSnapshot()
+    {
+        var cutPlan =
+            GetInitializedCutPlan();
+
+        var snapshot =
+            new CutPlan(cutPlan.MediaDuration);
+
+        foreach (var segment in cutPlan.RemoveSegments)
+        {
+            snapshot.Add(
+                new RemoveSegment(
+                    segment.Start,
+                    segment.End));
+        }
+
+        return snapshot;
+    }
+
     private CutPlan GetInitializedCutPlan()
     {
         return _cutPlan

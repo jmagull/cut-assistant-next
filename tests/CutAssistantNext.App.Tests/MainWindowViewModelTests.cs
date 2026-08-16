@@ -65,6 +65,61 @@ public class MainWindowViewModelTests
     }
 
     [Fact]
+    public async Task AnalyzeAsync_KeepsSuccessfulAnalysisResult()
+    {
+        var expectedResult =
+            CreateCompleteResult();
+
+        var runner = new StubMediaAnalysisRunner(
+            (_, _) => Task.FromResult(expectedResult));
+
+        var viewModel =
+            new MainWindowViewModel(runner);
+
+        await viewModel.AnalyzeAsync("Beispiel.mp4");
+
+        Assert.Same(
+            expectedResult,
+            viewModel.AnalysisResult);
+    }
+
+    [Fact]
+    public async Task AnalyzeAsync_FailureClearsPreviousAnalysisResult()
+    {
+        var successfulResult =
+            CreateCompleteResult();
+
+        var callCount = 0;
+
+        var runner = new StubMediaAnalysisRunner(
+            (_, _) =>
+            {
+                callCount++;
+
+                if (callCount == 1)
+                {
+                    return Task.FromResult(successfulResult);
+                }
+
+                throw new InvalidOperationException(
+                    "Testfehler bei ffprobe.");
+            });
+
+        var viewModel =
+            new MainWindowViewModel(runner);
+
+        await viewModel.AnalyzeAsync("ErsteDatei.mp4");
+
+        Assert.Same(
+            successfulResult,
+            viewModel.AnalysisResult);
+
+        await viewModel.AnalyzeAsync("ZweiteDatei.mp4");
+
+        Assert.Null(viewModel.AnalysisResult);
+    }
+
+    [Fact]
     public async Task AnalyzeAsync_ShowsRunnerError()
     {
         var runner = new StubMediaAnalysisRunner(

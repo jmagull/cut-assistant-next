@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CutAssistantNext.Core\CutAssistantNext.Core.csproj" />
     <ProjectReference Include="..\CutAssistantNext.Media\CutAssistantNext.Media.csproj" />
+    <ProjectReference Include="..\CutAssistantNext.Cutlists\CutAssistantNext.Cutlists.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

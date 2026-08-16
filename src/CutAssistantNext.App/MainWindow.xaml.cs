@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using CutAssistantNext.App.Dialogs;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.ViewModels;
+using CutAssistantNext.Cutlists.IO;
 using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Media.Analysis;
 using CutAssistantNext.Media.Playback;
@@ -407,6 +410,21 @@ public partial class MainWindow : Window
                     $"{_playbackViewModel.Position:c}");
             });
     }
+    private void SetCutStartAtBeginningButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        ExecuteCutPlanAction(
+            () =>
+            {
+                _cutPlanViewModel.SetStart(
+                    TimeSpan.Zero);
+
+                _logger.Information(
+                    "Schnittanfang wurde auf den Dateianfang gesetzt.");
+            });
+    }
+
 
     private void SetCutEndButton_Click(
         object sender,
@@ -426,6 +444,27 @@ public partial class MainWindow : Window
                     $"{endPosition:c}");
             });
     }
+    private void SetCutEndAtMediaEndButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        ExecuteCutPlanAction(
+            () =>
+            {
+                var mediaDuration =
+                    _cutPlanViewModel.MediaDuration
+                    ?? throw new InvalidOperationException(
+                        "Es wurde noch keine Mediendatei für den Schnittplan initialisiert.");
+
+                _cutPlanViewModel.SetEnd(
+                    mediaDuration);
+
+                _logger.Information(
+                    $"Schnittende wurde auf das Dateiende gesetzt: " +
+                    $"{mediaDuration:c}");
+            });
+    }
+
 
     private void CorrectCutStartButton_Click(
         object sender,
@@ -560,6 +599,117 @@ public partial class MainWindow : Window
                     MessageBoxImage.Error);
             }
         }
+    }
+
+    private void GenerateCutlistButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var analysis =
+            _viewModel.AnalysisResult;
+
+        if (analysis is null)
+        {
+            MessageBox.Show(
+                this,
+                "Bitte zuerst eine Mediendatei auswählen und erfolgreich analysieren.",
+                "Cutlist erzeugen",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        var fileName =
+            _viewModel.FileName;
+
+        var settings =
+            new CutlistSettingsStore().Load()
+            ?? CutlistSettings.CreateDefault();
+
+        var cutlistViewModel =
+            CutlistGenerationViewModelFactory.Create(
+                settings,
+                fileName,
+                analysis);
+
+        var cutPlan =
+            _cutPlanViewModel.CreateCutPlanSnapshot();
+
+        var dialog =
+            new CutlistGenerationDialog(
+                cutlistViewModel)
+            {
+                Owner = this
+            };
+
+        dialog.SaveRequested +=
+            (_, _) =>
+            {
+                var originalFileName =
+                    Path.GetFileName(fileName);
+
+                var saveDialog =
+                    new SaveFileDialog
+                    {
+                        Title = "Cutlist speichern",
+                        FileName = $"{originalFileName}.cutlist",
+                        Filter =
+                            "Cutlist-Dateien (*.cutlist)|*.cutlist|" +
+                            "Alle Dateien (*.*)|*.*",
+                        DefaultExt = ".cutlist",
+                        AddExtension = true,
+                        InitialDirectory =
+                            Path.GetDirectoryName(fileName)
+                    };
+
+                if (saveDialog.ShowDialog(dialog) != true)
+                {
+                    return;
+                }
+
+                try
+                {
+                    var applicationVersion =
+                        typeof(MainWindow)
+                            .Assembly
+                            .GetName()
+                            .Version?
+                            .ToString(3)
+                        ?? throw new InvalidOperationException(
+                            "Die Anwendungsversion konnte nicht ermittelt werden.");
+
+                    var document =
+                        cutlistViewModel.CreateDocument(
+                            cutPlan,
+                            originalFileName,
+                            applicationVersion,
+                            analysis);
+
+                    CutlistFileWriter.Write(
+                        saveDialog.FileName,
+                        document);
+
+                    MessageBox.Show(
+                        dialog,
+                        "Die Cutlist wurde erfolgreich gespeichert.",
+                        "Cutlist speichern",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(
+                        dialog,
+                        $"Die Cutlist konnte nicht gespeichert werden:" +
+                        $"{Environment.NewLine}{exception.Message}",
+                        "Cutlist speichern",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+            };
+
+        dialog.ShowDialog();
     }
 
     private async void SelectMediaFileButton_Click(

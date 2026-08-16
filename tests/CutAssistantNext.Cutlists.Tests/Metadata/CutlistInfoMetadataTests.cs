@@ -124,9 +124,8 @@ public sealed class CutlistInfoMetadataTests
             "joerg",
             metadata.Author);
     }
-
     [Fact]
-    public void Create_UsesClassicDefaultInfoValues()
+    public void Create_WithoutExplicitRating_UsesClassicDefaultRating()
     {
         var metadata = CutlistInfoMetadata.Create(
             suggestedMovieName: "Tatort [13.08.2026]",
@@ -135,6 +134,21 @@ public sealed class CutlistInfoMetadataTests
 
         Assert.Equal(
             5,
+            metadata.RatingByAuthor);
+    }
+
+
+    [Fact]
+    public void Create_WithExplicitRating_PreservesRatingAndUsesDefaultErrorValues()
+    {
+        var metadata = CutlistInfoMetadata.Create(
+            suggestedMovieName: "Tatort [13.08.2026]",
+            userComment: null,
+            technicalNotices: [],
+            ratingByAuthor: 3);
+
+        Assert.Equal(
+            3,
             metadata.RatingByAuthor);
 
         Assert.False(
@@ -154,5 +168,45 @@ public sealed class CutlistInfoMetadataTests
 
         Assert.False(
             metadata.MissingAudio);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(6)]
+    public void Create_WithRatingOutsideValidRange_ThrowsArgumentOutOfRangeException(
+        int ratingByAuthor)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () => CutlistInfoMetadata.Create(
+                suggestedMovieName: null,
+                userComment: null,
+                technicalNotices: [],
+                ratingByAuthor: ratingByAuthor));
+    }
+
+    [Fact]
+    public void Create_WithUserOtherErrorAndTechnicalNotice_PreservesBoth()
+    {
+        var notices = new[]
+        {
+            new TechnicalNotice(
+                "Dateiendung .avi, tatsächlich erkannter Container: MP4/ISO-BMFF.")
+        };
+
+        var metadata = CutlistInfoMetadata.Create(
+            suggestedMovieName: "Tatort [13.08.2026]",
+            userComment: null,
+            technicalNotices: notices,
+            ratingByAuthor: 3,
+            otherError: true,
+            otherErrorDescription:
+                "Bildstörung während der Aufnahme.");
+
+        Assert.True(
+            metadata.OtherError);
+
+        Assert.Equal(
+            "Bildstörung während der Aufnahme. Dateiendung .avi, tatsächlich erkannter Container: MP4/ISO-BMFF.",
+            metadata.OtherErrorDescription);
     }
 }
