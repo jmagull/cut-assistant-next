@@ -1,4 +1,4 @@
-﻿using CutAssistantNext.Media.Analysis;
+using CutAssistantNext.Media.Analysis;
 
 namespace CutAssistantNext.Media.Tests;
 
@@ -51,5 +51,11 @@ public class FfprobeRunnerTests
         Assert.Equal(
             Path.GetFullPath(missingMediaPath),
             exception.FileName);
+    }
+    [Fact]
+    public void Constructor_RejectsEmptyFfprobePath()
+    {
+        Assert.Throws<ArgumentException>(
+            () => new FfprobeRunner(" "));
     }
 }

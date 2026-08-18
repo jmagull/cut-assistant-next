@@ -26,14 +26,8 @@ internal static class CutlistGenerationViewModelFactory
             Path.GetFileName(fileName);
 
         var nameContext =
-            OtrFileNameParser.TryParse(
-                originalFileName,
-                out var parsedContext)
-                ? parsedContext
-                : new NameTemplateContext(
-                    Name: Path.GetFileNameWithoutExtension(
-                        originalFileName),
-                    OriginalName: originalFileName);
+            NameTemplateContextFactory.Create(
+                originalFileName);
 
         var technicalNotices =
             TechnicalNoticeDetector.Detect(

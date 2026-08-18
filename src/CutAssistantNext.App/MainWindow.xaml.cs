@@ -3,11 +3,15 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using CutAssistantNext.App.Dialogs;
+using CutAssistantNext.App.Services.Analysis;
+using CutAssistantNext.App.Services.Cutting;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Cutlists.IO;
 using CutAssistantNext.Core.Logging;
+using CutAssistantNext.Core.Naming;
 using CutAssistantNext.Media.Analysis;
+using CutAssistantNext.Media.Cutting;
 using CutAssistantNext.Media.Playback;
 using Microsoft.Win32;
 
@@ -53,8 +57,15 @@ public partial class MainWindow : Window
         _cutPlanViewModel =
             new CutPlanViewModel();
 
+        var ffmpegSettingsStore =
+            new FfmpegSettingsStore();
+
         _viewModel = new MainWindowViewModel(
-            new FfprobeRunner(),
+            new ConfiguredFfprobeRunner(
+                ffmpegSettingsStore.Load,
+                ffprobePath =>
+                    new FfprobeRunner(
+                        ffprobePath)),
             _logger);
 
         DataContext = _viewModel;
@@ -601,6 +612,211 @@ public partial class MainWindow : Window
         }
     }
 
+    private void CutApplicationSettingsButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var store =
+            new CutApplicationSettingsStore();
+
+        var settings =
+            store.Load()
+            ?? CutApplicationSettings.CreateDefault();
+
+        var viewModel =
+            new CutApplicationSettingsViewModel(
+                settings);
+
+        var dialog =
+            new CutApplicationSettingsDialog(
+                viewModel)
+            {
+                Owner = this
+            };
+
+        if (dialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        store.Save(
+            viewModel.CreateSettings());
+    }
+
+    private void FfmpegSettingsButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var store =
+            new FfmpegSettingsStore();
+
+        var settings =
+            store.Load()
+            ?? FfmpegSettings.CreateDefault();
+
+        var viewModel =
+            new FfmpegSettingsViewModel(
+                settings);
+
+        var dialog =
+            new FfmpegSettingsDialog(
+                viewModel)
+            {
+                Owner = this
+            };
+
+        if (dialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        store.Save(
+            viewModel.CreateSettings());
+    }
+    private void CutOutputButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var analysis =
+            _viewModel.AnalysisResult;
+
+        if (analysis is null)
+        {
+            MessageBox.Show(
+                this,
+                "Bitte zuerst eine Mediendatei auswählen und erfolgreich analysieren.",
+                "Schneiden",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        var settings =
+            new CutlistSettingsStore().Load()
+            ?? CutlistSettings.CreateDefault();
+
+        var nameContext =
+            NameTemplateContextFactory.Create(
+                _viewModel.FileName);
+
+        var viewModel =
+            new CutOutputViewModel(
+                settings.DefaultNameTemplate,
+                nameContext);
+
+        var dialog =
+            new CutOutputDialog(
+                viewModel)
+            {
+                Owner = this
+            };
+
+        dialog.CutRequested +=
+            async (_, _) =>
+            {
+                string suggestedOutputFileName;
+
+                try
+                {
+                    suggestedOutputFileName =
+                        OutputFileNameBuilder.Build(
+                            viewModel.SuggestedMovieName,
+                            ".mp4");
+                }
+                catch (ArgumentException exception)
+                {
+                    MessageBox.Show(
+                        dialog,
+                        exception.Message,
+                        "Schneiden",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+
+                    return;
+                }
+
+                var saveDialog =
+                    new SaveFileDialog
+                    {
+                        Title = "Geschnittene Datei speichern",
+                        FileName = suggestedOutputFileName,
+                        DefaultExt = ".mp4",
+                        AddExtension = true,
+                        Filter = "MP4-Datei (*.mp4)|*.mp4",
+                        OverwritePrompt = false
+                    };
+
+                if (saveDialog.ShowDialog(
+                    dialog) != true)
+                {
+                    return;
+                }
+
+                if (File.Exists(
+                    saveDialog.FileName))
+                {
+                    MessageBox.Show(
+                        dialog,
+                        "Die gewählte Zieldatei existiert bereits. Bitte einen anderen Dateinamen wählen.",
+                        "Schneiden",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+
+                    return;
+                }
+
+                try
+                {
+                    var framesPerSecond =
+                        CutMediaAnalysisValidator.GetFramesPerSecond(
+                            analysis);
+
+                    var cutPlan =
+                        _cutPlanViewModel.CreateCutPlanSnapshot();
+
+                    var cutApplicationSettingsStore =
+                        new CutApplicationSettingsStore();
+
+                    var cutServiceFactory =
+                        new ConfiguredMp4BoxCutServiceFactory(
+                            cutApplicationSettingsStore.Load,
+                            executablePath =>
+                                new Mp4BoxRunner(
+                                    executablePath,
+                                    _logger));
+
+                    var cutService =
+                        cutServiceFactory.Create();
+
+                    await cutService.RunAsync(
+                        _viewModel.FilePath,
+                        saveDialog.FileName,
+                        cutPlan,
+                        framesPerSecond);
+
+                    MessageBox.Show(
+                        dialog,
+                        "Die Mediendatei wurde erfolgreich geschnitten.",
+                        "Schneiden",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+
+                    dialog.Close();
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(
+                        dialog,
+                        $"Der Schnitt ist fehlgeschlagen:{Environment.NewLine}{exception.Message}",
+                        "Schneiden",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+            };
+
+        dialog.ShowDialog();
+    }
     private void GenerateCutlistButton_Click(
         object sender,
         RoutedEventArgs e)
@@ -626,6 +842,13 @@ public partial class MainWindow : Window
         var settings =
             new CutlistSettingsStore().Load()
             ?? CutlistSettings.CreateDefault();
+        var cutApplicationSettings =
+            new CutApplicationSettingsStore().Load()
+            ?? CutApplicationSettings.CreateDefault();
+
+        var intendedCutApplication =
+            CutApplicationSettingsMapper.ToCutApplicationInfo(
+                cutApplicationSettings);
 
         var cutlistViewModel =
             CutlistGenerationViewModelFactory.Create(
@@ -684,7 +907,8 @@ public partial class MainWindow : Window
                             cutPlan,
                             originalFileName,
                             applicationVersion,
-                            analysis);
+                            analysis,
+                            intendedCutApplication);
 
                     CutlistFileWriter.Write(
                         saveDialog.FileName,
@@ -708,6 +932,7 @@ public partial class MainWindow : Window
                         MessageBoxImage.Error);
                 }
             };
+
 
         dialog.ShowDialog();
     }
