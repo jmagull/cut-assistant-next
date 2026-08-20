@@ -110,6 +110,111 @@ public sealed class Mp4BoxCutWorkflowTests
                 recursive: true);
         }
     }
+    [Fact]
+    public async Task RunAsync_WithTwoRanges_ReportsWorkflowProgressInOrder()
+    {
+        var runner =
+            new RecordingMp4BoxRunner();
+
+        var workflow =
+            new Mp4BoxCutWorkflow(
+                runner);
+
+        var updates =
+            new List<Mp4BoxProgressUpdate>();
+
+        var progress =
+            new InlineProgress<Mp4BoxProgressUpdate>(
+                updates.Add);
+
+        var ranges =
+            new[]
+            {
+                new Mp4BoxSplitRange(
+                    TimeSpan.FromSeconds(10),
+                    TimeSpan.FromSeconds(20)),
+
+                new Mp4BoxSplitRange(
+                    TimeSpan.FromSeconds(30),
+                    TimeSpan.FromSeconds(40))
+            };
+
+        var outputFilePath =
+            Path.Combine(
+                Path.GetTempPath(),
+                $"{Guid.NewGuid():N}.mp4");
+
+        await workflow.RunAsync(
+            "source.mp4",
+            outputFilePath,
+            ranges,
+            progress);
+
+        Assert.Collection(
+            updates,
+            update =>
+            {
+                Assert.Equal(
+                    Mp4BoxProgressKind.Status,
+                    update.Kind);
+
+                Assert.Equal(
+                    "Segment 1 von 2 wird geschnitten …",
+                    update.Message);
+            },
+            update =>
+            {
+                Assert.Equal(
+                    Mp4BoxProgressKind.Status,
+                    update.Kind);
+
+                Assert.Equal(
+                    "Segment 2 von 2 wird geschnitten …",
+                    update.Message);
+            },
+            update =>
+            {
+                Assert.Equal(
+                    Mp4BoxProgressKind.Status,
+                    update.Kind);
+
+                Assert.Equal(
+                    "Segmente werden zusammengefügt …",
+                    update.Message);
+            },
+            update =>
+            {
+                Assert.Equal(
+                    Mp4BoxProgressKind.Status,
+                    update.Kind);
+
+                Assert.Equal(
+                    "Fertig.",
+                    update.Message);
+            });
+    }
+
+    private sealed class InlineProgress<T> :
+        IProgress<T>
+    {
+        private readonly Action<T> _report;
+
+        public InlineProgress(
+            Action<T> report)
+        {
+            _report =
+                report
+                ?? throw new ArgumentNullException(
+                    nameof(report));
+        }
+
+        public void Report(
+            T value)
+        {
+            _report(
+                value);
+        }
+    }
     private sealed class RecordingMp4BoxRunner : IMp4BoxRunner
     {
         public List<SplitCall> SplitCalls { get; } = [];

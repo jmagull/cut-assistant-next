@@ -1,4 +1,5 @@
 using CutAssistantNext.App.ViewModels;
+using CutAssistantNext.Core.Editing;
 
 namespace CutAssistantNext.App.Tests;
 
@@ -447,4 +448,72 @@ public sealed class CutPlanViewModelTests
             "Es wurde noch keine Mediendatei für den Schnittplan initialisiert.",
             exception.Message);
     }
-}
+
+    [Fact]
+    public void LoadCutPlan_CopiesPlanAndResetsEditingState()
+    {
+        var importedPlan =
+            new CutPlan(
+                TimeSpan.FromMinutes(60));
+
+        importedPlan.Add(
+            new RemoveSegment(
+                TimeSpan.FromMinutes(10),
+                TimeSpan.FromMinutes(20)));
+
+        importedPlan.Add(
+            new RemoveSegment(
+                TimeSpan.FromMinutes(30),
+                TimeSpan.FromMinutes(40)));
+
+        var viewModel =
+            new CutPlanViewModel();
+
+        viewModel.Initialize(
+            TimeSpan.FromMinutes(90));
+
+        viewModel.SetStart(
+            TimeSpan.FromMinutes(5));
+
+        viewModel.LoadCutPlan(
+            importedPlan);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(60),
+            viewModel.MediaDuration);
+
+        Assert.Null(
+            viewModel.PendingStart);
+
+        Assert.Null(
+            viewModel.SelectedRemoveSegment);
+
+        Assert.Equal(
+            2,
+            viewModel.RemoveSegments.Count);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(10),
+            viewModel.RemoveSegments[0].Start);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(20),
+            viewModel.RemoveSegments[0].End);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(30),
+            viewModel.RemoveSegments[1].Start);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(40),
+            viewModel.RemoveSegments[1].End);
+
+        importedPlan.Add(
+            new RemoveSegment(
+                TimeSpan.FromMinutes(50),
+                TimeSpan.FromMinutes(55)));
+
+        Assert.Equal(
+            2,
+            viewModel.RemoveSegments.Count);
+    }}

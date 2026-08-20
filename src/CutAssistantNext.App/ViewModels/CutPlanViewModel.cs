@@ -100,6 +100,41 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         OnPropertyChanged(nameof(CanSetEnd));
     }
 
+    public void LoadCutPlan(
+        CutPlan cutPlan)
+    {
+        ArgumentNullException.ThrowIfNull(
+            cutPlan);
+
+        var importedPlan =
+            new CutPlan(
+                cutPlan.MediaDuration);
+
+        foreach (var segment in cutPlan.RemoveSegments)
+        {
+            importedPlan.Add(
+                new RemoveSegment(
+                    segment.Start,
+                    segment.End));
+        }
+
+        _cutPlan =
+            importedPlan;
+
+        PendingStart = null;
+        SelectedRemoveSegment = null;
+
+        SynchronizeSegments();
+
+        OnPropertyChanged(
+            nameof(MediaDuration));
+
+        OnPropertyChanged(
+            nameof(CanSetStart));
+
+        OnPropertyChanged(
+            nameof(CanSetEnd));
+    }
     public void Reset()
     {
         _cutPlan = null;

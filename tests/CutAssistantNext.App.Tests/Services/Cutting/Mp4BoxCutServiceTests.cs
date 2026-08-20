@@ -92,6 +92,85 @@ public sealed class Mp4BoxCutServiceTests
         }
     }
 
+    [Fact]
+    public async Task RunAsync_WithProgress_ReportsWorkflowProgress()
+    {
+        var runner =
+            new RecordingMp4BoxRunner();
+
+        var service =
+            new Mp4BoxCutService(
+                runner);
+
+        var cutPlan =
+            new CutPlan(
+                TimeSpan.FromSeconds(100));
+
+        cutPlan.Add(
+            new RemoveSegment(
+                TimeSpan.FromSeconds(20),
+                TimeSpan.FromSeconds(30)));
+
+        var updates =
+            new List<Mp4BoxProgressUpdate>();
+
+        var progress =
+            new InlineProgress<Mp4BoxProgressUpdate>(
+                updates.Add);
+
+        var outputFilePath =
+            Path.Combine(
+                Path.GetTempPath(),
+                $"{Guid.NewGuid():N}.mp4");
+
+        await service.RunAsync(
+            "source.mp4",
+            outputFilePath,
+            cutPlan,
+            25,
+            progress);
+
+        Assert.Collection(
+            updates,
+            update =>
+                Assert.Equal(
+                    "Segment 1 von 2 wird geschnitten …",
+                    update.Message),
+            update =>
+                Assert.Equal(
+                    "Segment 2 von 2 wird geschnitten …",
+                    update.Message),
+            update =>
+                Assert.Equal(
+                    "Segmente werden zusammengefügt …",
+                    update.Message),
+            update =>
+                Assert.Equal(
+                    "Fertig.",
+                    update.Message));
+    }
+
+    private sealed class InlineProgress<T> :
+        IProgress<T>
+    {
+        private readonly Action<T> _report;
+
+        public InlineProgress(
+            Action<T> report)
+        {
+            _report =
+                report
+                ?? throw new ArgumentNullException(
+                    nameof(report));
+        }
+
+        public void Report(
+            T value)
+        {
+            _report(
+                value);
+        }
+    }
     private sealed class RecordingMp4BoxRunner :
         IMp4BoxRunner
     {

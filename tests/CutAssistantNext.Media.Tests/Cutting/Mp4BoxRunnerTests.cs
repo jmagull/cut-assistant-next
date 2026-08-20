@@ -97,6 +97,25 @@ public sealed class Mp4BoxRunnerTests
         }
     }
 
+    [Fact]
+    public void Constructor_WithProgress_AcceptsProgressReporter()
+    {
+        var executablePath =
+            Environment.ProcessPath
+            ?? throw new InvalidOperationException(
+                "Der Pfad des aktuellen Testprozesses ist nicht verfügbar.");
+
+        var progress =
+            new Progress<Mp4BoxProgressUpdate>();
+
+        var runner =
+            new Mp4BoxRunner(
+                executablePath,
+                progress: progress);
+
+        Assert.NotNull(
+            runner);
+    }
     private static Mp4BoxSplitRange CreateRange()
     {
         return new Mp4BoxSplitRange(

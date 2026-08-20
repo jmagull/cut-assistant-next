@@ -80,4 +80,39 @@ public sealed class Mp4BoxSplitRangeFormatterTests
                 Mp4BoxSplitRangeFormatter.Format(
                     null!));
     }
-}
+
+    [Fact]
+    public void Format_SlidersSecondKeepSegment_MatchesClassicCutAssistant()
+    {
+        var range =
+            Mp4BoxSplitRangeBuilder.Build(
+                TimeSpan.FromSeconds(1762.44),
+                TimeSpan.FromSeconds(1215.12),
+                25);
+
+        var result =
+            Mp4BoxSplitRangeFormatter.Format(
+                range);
+
+        Assert.Equal(
+            "1762.44:2977.52",
+            result);
+    }
+
+    [Fact]
+    public void Format_SlidersThirdKeepSegment_MatchesClassicCutAssistant()
+    {
+        var range =
+            Mp4BoxSplitRangeBuilder.Build(
+                TimeSpan.FromSeconds(3460.76),
+                TimeSpan.FromSeconds(607.68),
+                25);
+
+        var result =
+            Mp4BoxSplitRangeFormatter.Format(
+                range);
+
+        Assert.Equal(
+            "3460.76:4068.4",
+            result);
+    }}

@@ -13,10 +13,25 @@ public sealed class Mp4BoxCutWorkflow
                 nameof(runner));
     }
 
+    public Task RunAsync(
+        string sourceFilePath,
+        string outputFilePath,
+        IReadOnlyList<Mp4BoxSplitRange> ranges,
+        CancellationToken cancellationToken = default)
+    {
+        return RunAsync(
+            sourceFilePath,
+            outputFilePath,
+            ranges,
+            progress: null,
+            cancellationToken);
+    }
+
     public async Task RunAsync(
         string sourceFilePath,
         string outputFilePath,
         IReadOnlyList<Mp4BoxSplitRange> ranges,
+        IProgress<Mp4BoxProgressUpdate>? progress,
         CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
@@ -73,6 +88,11 @@ public sealed class Mp4BoxCutWorkflow
         {
             for (var index = 0; index < ranges.Count; index++)
             {
+                progress?.Report(
+                    new Mp4BoxProgressUpdate(
+                        Mp4BoxProgressKind.Status,
+                        $"Segment {index + 1} von {ranges.Count} wird geschnitten …"));
+
                 var segmentFilePath =
                     Path.Combine(
                         outputDirectoryPath,
@@ -88,10 +108,20 @@ public sealed class Mp4BoxCutWorkflow
                     cancellationToken);
             }
 
+            progress?.Report(
+                new Mp4BoxProgressUpdate(
+                    Mp4BoxProgressKind.Status,
+                    "Segmente werden zusammengefügt …"));
+
             await _runner.RunConcatAsync(
                 segmentFilePaths,
                 fullOutputFilePath,
                 cancellationToken);
+
+            progress?.Report(
+                new Mp4BoxProgressUpdate(
+                    Mp4BoxProgressKind.Status,
+                    "Fertig."));
         }
         finally
         {

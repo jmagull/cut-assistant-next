@@ -7,6 +7,7 @@ using CutAssistantNext.App.Services.Analysis;
 using CutAssistantNext.App.Services.Cutting;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.ViewModels;
+using CutAssistantNext.Cutlists.Editing;
 using CutAssistantNext.Cutlists.IO;
 using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Core.Naming;
@@ -778,31 +779,108 @@ public partial class MainWindow : Window
                     var cutApplicationSettingsStore =
                         new CutApplicationSettingsStore();
 
+                    var progressViewModel =
+                        new Mp4BoxProgressViewModel();
+
+                    using var cancellationTokenSource =
+                        new CancellationTokenSource();
+
+                    var progress =
+                        new Progress<Mp4BoxProgressUpdate>(
+                            progressViewModel.ApplyProgress);
+
+                    var progressDialog =
+                        new Mp4BoxProgressDialog(
+                            progressViewModel)
+                        {
+                            Owner = dialog
+                        };
+
+                    var cutSucceeded =
+                        false;
+
+                    progressDialog.CancelRequested +=
+                        (_, _) =>
+                        {
+                            cancellationTokenSource.Cancel();
+                        };
+
+                    progressDialog.Closed +=
+                        (_, _) =>
+                        {
+                            dialog.IsEnabled = true;
+
+                            if (cutSucceeded)
+                            {
+                                dialog.Close();
+                            }
+                        };
+
                     var cutServiceFactory =
                         new ConfiguredMp4BoxCutServiceFactory(
                             cutApplicationSettingsStore.Load,
-                            executablePath =>
+                            (executablePath, runnerProgress) =>
                                 new Mp4BoxRunner(
                                     executablePath,
-                                    _logger));
+                                    _logger,
+                                    runnerProgress));
 
                     var cutService =
-                        cutServiceFactory.Create();
+                        cutServiceFactory.Create(
+                            progress);
 
-                    await cutService.RunAsync(
-                        _viewModel.FilePath,
-                        saveDialog.FileName,
-                        cutPlan,
-                        framesPerSecond);
+                    dialog.IsEnabled = false;
 
-                    MessageBox.Show(
-                        dialog,
-                        "Die Mediendatei wurde erfolgreich geschnitten.",
-                        "Schneiden",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
+                    progressViewModel.MarkRunning();
 
-                    dialog.Close();
+                    progressDialog.Show();
+
+                    try
+                    {
+                        await cutService.RunAsync(
+                            _viewModel.FilePath,
+                            saveDialog.FileName,
+                            cutPlan,
+                            framesPerSecond,
+                            progress,
+                            cancellationTokenSource.Token);
+
+                        cutSucceeded = true;
+
+                        progressViewModel.MarkSucceeded();
+
+                        progressDialog.MarkOperationCompleted(
+                            startAutoClose: true);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        progressViewModel.ApplyProgress(
+                            new Mp4BoxProgressUpdate(
+                                Mp4BoxProgressKind.Status,
+                                "Abgebrochen."));
+
+                        progressViewModel.MarkCancelled();
+
+                        progressDialog.MarkOperationCompleted(
+                            startAutoClose: false);
+                    }
+                    catch (Exception exception)
+                    {
+                        progressViewModel.ApplyProgress(
+                            new Mp4BoxProgressUpdate(
+                                Mp4BoxProgressKind.Status,
+                                "Fehler."));
+
+                        progressViewModel.ApplyProgress(
+                            new Mp4BoxProgressUpdate(
+                                Mp4BoxProgressKind.Output,
+                                $"Der Schnitt ist fehlgeschlagen: {exception.Message}"));
+
+                        progressViewModel.MarkFailed();
+
+                        progressDialog.MarkOperationCompleted(
+                            startAutoClose: false);
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -816,6 +894,77 @@ public partial class MainWindow : Window
             };
 
         dialog.ShowDialog();
+    }
+    private void LoadCutlistButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var mediaDuration =
+            _viewModel.MediaDuration;
+
+        if (!mediaDuration.HasValue ||
+            mediaDuration.Value <= TimeSpan.Zero)
+        {
+            MessageBox.Show(
+                this,
+                "Bitte zuerst eine Mediendatei auswählen und erfolgreich analysieren.",
+                "Cutlist laden",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        var dialog =
+            new OpenFileDialog
+            {
+                Title = "Cutlist laden",
+                Filter =
+                    "Cutlist-Dateien (*.cutlist)|*.cutlist|" +
+                    "Alle Dateien (*.*)|*.*",
+                CheckFileExists = true,
+                Multiselect = false
+            };
+
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        try
+        {
+            var document =
+                CutlistFileReader.Read(
+                    dialog.FileName);
+
+            var cutPlan =
+                CutlistCutPlanBuilder.Build(
+                    document,
+                    mediaDuration.Value);
+
+            _cutPlanViewModel.LoadCutPlan(
+                cutPlan);
+
+            _logger.Information(
+                $"Cutlist wurde geladen: {dialog.FileName}");
+
+            MessageBox.Show(
+                this,
+                "Die Cutlist wurde erfolgreich geladen.",
+                "Cutlist laden",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(
+                this,
+                $"Die Cutlist konnte nicht geladen werden:" +
+                $"{Environment.NewLine}{exception.Message}",
+                "Cutlist laden",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
     }
     private void GenerateCutlistButton_Click(
         object sender,

@@ -7,10 +7,12 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
 {
     private readonly string _executablePath;
     private readonly IAppLogger _logger;
+    private readonly IProgress<Mp4BoxProgressUpdate>? _progress;
 
     public Mp4BoxRunner(
         string executablePath,
-        IAppLogger? logger = null)
+        IAppLogger? logger = null,
+        IProgress<Mp4BoxProgressUpdate>? progress = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
             executablePath);
@@ -20,6 +22,9 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
 
         _logger =
             logger ?? NullAppLogger.Instance;
+
+        _progress =
+            progress;
     }
 
     public async Task RunSplitAsync(
@@ -91,6 +96,19 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
         startInfo.ArgumentList.Add(
             fullOutputFilePath);
 
+        var commandLine =
+            Mp4BoxCommandLineFormatter.Format(
+                _executablePath,
+                startInfo.ArgumentList);
+
+        _progress?.Report(
+            new Mp4BoxProgressUpdate(
+                Mp4BoxProgressKind.Output,
+                $"> {commandLine}"));
+
+        _logger.Information(
+            $"MP4Box-Aufruf: {commandLine}");
+
         _logger.Information(
             $"MP4Box -splitx wird gestartet: {formattedRange}");
 
@@ -124,19 +142,35 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
             });
 
         var outputTask =
-            process.StandardOutput.ReadToEndAsync();
+            Mp4BoxOutputReader.ReadAsync(
+                process.StandardOutput,
+                _progress,
+                cancellationToken);
 
         var errorTask =
-            process.StandardError.ReadToEndAsync();
+            Mp4BoxOutputReader.ReadAsync(
+                process.StandardError,
+                _progress,
+                cancellationToken);
 
         await process.WaitForExitAsync(
             cancellationToken);
 
-        var standardOutput =
+        var standardOutputLines =
             await outputTask;
 
-        var errorOutput =
+        var errorOutputLines =
             await errorTask;
+
+        var standardOutput =
+            string.Join(
+                Environment.NewLine,
+                standardOutputLines);
+
+        var errorOutput =
+            string.Join(
+                Environment.NewLine,
+                errorOutputLines);
 
         if (process.ExitCode != 0)
         {
@@ -252,6 +286,19 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
         startInfo.ArgumentList.Add(
             fullOutputFilePath);
 
+        var commandLine =
+            Mp4BoxCommandLineFormatter.Format(
+                _executablePath,
+                startInfo.ArgumentList);
+
+        _progress?.Report(
+            new Mp4BoxProgressUpdate(
+                Mp4BoxProgressKind.Output,
+                $"> {commandLine}"));
+
+        _logger.Information(
+            $"MP4Box-Aufruf: {commandLine}");
+
         _logger.Information(
             $"MP4Box -cat wird gestartet: {fullSegmentFilePaths.Count} Segment(e).");
 
@@ -285,19 +332,35 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
             });
 
         var outputTask =
-            process.StandardOutput.ReadToEndAsync();
+            Mp4BoxOutputReader.ReadAsync(
+                process.StandardOutput,
+                _progress,
+                cancellationToken);
 
         var errorTask =
-            process.StandardError.ReadToEndAsync();
+            Mp4BoxOutputReader.ReadAsync(
+                process.StandardError,
+                _progress,
+                cancellationToken);
 
         await process.WaitForExitAsync(
             cancellationToken);
 
-        var standardOutput =
+        var standardOutputLines =
             await outputTask;
 
-        var errorOutput =
+        var errorOutputLines =
             await errorTask;
+
+        var standardOutput =
+            string.Join(
+                Environment.NewLine,
+                standardOutputLines);
+
+        var errorOutput =
+            string.Join(
+                Environment.NewLine,
+                errorOutputLines);
 
         if (process.ExitCode != 0)
         {

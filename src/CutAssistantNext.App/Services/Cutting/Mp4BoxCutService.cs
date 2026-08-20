@@ -25,6 +25,23 @@ internal sealed class Mp4BoxCutService
         double framesPerSecond,
         CancellationToken cancellationToken = default)
     {
+        return RunAsync(
+            sourceFilePath,
+            outputFilePath,
+            cutPlan,
+            framesPerSecond,
+            progress: null,
+            cancellationToken);
+    }
+
+    public Task RunAsync(
+        string sourceFilePath,
+        string outputFilePath,
+        CutPlan cutPlan,
+        double framesPerSecond,
+        IProgress<Mp4BoxProgressUpdate>? progress,
+        CancellationToken cancellationToken = default)
+    {
         ArgumentNullException.ThrowIfNull(
             cutPlan);
 
@@ -37,6 +54,7 @@ internal sealed class Mp4BoxCutService
             sourceFilePath,
             outputFilePath,
             ranges,
+            progress,
             cancellationToken);
     }
 }
