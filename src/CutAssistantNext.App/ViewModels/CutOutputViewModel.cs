@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using CutAssistantNext.App.State;
 using CutAssistantNext.Core.Naming;
 
 namespace CutAssistantNext.App.ViewModels;
@@ -30,6 +31,21 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
             NameTemplateRenderer.Render(
                 _nameTemplate,
                 _nameContext);
+    }
+    public CutOutputViewModel(
+        CutNamingState namingState)
+    {
+        ArgumentNullException.ThrowIfNull(
+            namingState);
+
+        _nameTemplate =
+            namingState.NameTemplate;
+
+        _nameContext =
+            namingState.NameContext;
+
+        _suggestedMovieName =
+            namingState.SuggestedMovieName;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -103,6 +119,15 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
                 {
                     EpisodeTitle = value
                 });
+    }
+
+    public CutNamingState CreateNamingState()
+    {
+        return new CutNamingState(
+            _nameTemplate,
+            _nameContext)
+            .UseSuggestedMovieName(
+                _suggestedMovieName);
     }
 
     public string SuggestedMovieName =>

@@ -6,6 +6,7 @@ using CutAssistantNext.App.Dialogs;
 using CutAssistantNext.App.Services.Analysis;
 using CutAssistantNext.App.Services.Cutting;
 using CutAssistantNext.App.Settings;
+using CutAssistantNext.App.State;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Cutlists.Editing;
 using CutAssistantNext.Cutlists.IO;
@@ -26,6 +27,7 @@ public partial class MainWindow : Window
     private readonly IMediaPlayerService _mediaPlayerService;
     private readonly PlaybackViewModel _playbackViewModel;
     private readonly CutPlanViewModel _cutPlanViewModel;
+    private CutNamingState? _cutNamingState;
 
     private Task? _mediaPlayerInitializationTask;
     private bool _isClosed;
@@ -697,14 +699,15 @@ public partial class MainWindow : Window
             new CutlistSettingsStore().Load()
             ?? CutlistSettings.CreateDefault();
 
-        var nameContext =
-            NameTemplateContextFactory.Create(
-                _viewModel.FileName);
+        _cutNamingState ??=
+            new CutNamingState(
+                settings.DefaultNameTemplate,
+                NameTemplateContextFactory.Create(
+                    _viewModel.FileName));
 
         var viewModel =
             new CutOutputViewModel(
-                settings.DefaultNameTemplate,
-                nameContext);
+                _cutNamingState);
 
         var dialog =
             new CutOutputDialog(
@@ -716,6 +719,7 @@ public partial class MainWindow : Window
         dialog.CutRequested +=
             async (_, _) =>
             {
+
                 string suggestedOutputFileName;
 
                 try
@@ -724,6 +728,9 @@ public partial class MainWindow : Window
                         OutputFileNameBuilder.Build(
                             viewModel.SuggestedMovieName,
                             ".mp4");
+
+                    _cutNamingState =
+                        viewModel.CreateNamingState();
                 }
                 catch (ArgumentException exception)
                 {
@@ -945,6 +952,26 @@ public partial class MainWindow : Window
             _cutPlanViewModel.LoadCutPlan(
                 cutPlan);
 
+            var suggestedMovieName =
+                document.Info.SuggestedMovieName;
+
+            if (!string.IsNullOrWhiteSpace(
+                    suggestedMovieName))
+            {
+                var settings =
+                    new CutlistSettingsStore().Load()
+                    ?? CutlistSettings.CreateDefault();
+
+                _cutNamingState ??=
+                    new CutNamingState(
+                        settings.DefaultNameTemplate,
+                        NameTemplateContextFactory.Create(
+                            _viewModel.FileName));
+
+                _cutNamingState =
+                    _cutNamingState.UseSuggestedMovieName(
+                        suggestedMovieName);
+            }
             _logger.Information(
                 $"Cutlist wurde geladen: {dialog.FileName}");
 
@@ -1000,10 +1027,16 @@ public partial class MainWindow : Window
                 cutApplicationSettings);
 
         var cutlistViewModel =
-            CutlistGenerationViewModelFactory.Create(
-                settings,
-                fileName,
-                analysis);
+            _cutNamingState is null
+                ? CutlistGenerationViewModelFactory.Create(
+                    settings,
+                    fileName,
+                    analysis)
+                : CutlistGenerationViewModelFactory.Create(
+                    settings,
+                    fileName,
+                    analysis,
+                    _cutNamingState);
 
         var cutPlan =
             _cutPlanViewModel.CreateCutPlanSnapshot();
@@ -1063,12 +1096,17 @@ public partial class MainWindow : Window
                         saveDialog.FileName,
                         document);
 
+                    _cutNamingState =
+                        cutlistViewModel.CreateNamingState();
+
                     MessageBox.Show(
                         dialog,
                         "Die Cutlist wurde erfolgreich gespeichert.",
                         "Cutlist speichern",
                         MessageBoxButton.OK,
                         MessageBoxImage.Information);
+
+                    dialog.Close();
                 }
                 catch (Exception exception)
                 {
@@ -1107,6 +1145,8 @@ public partial class MainWindow : Window
             $"Mediendatei wurde ausgewählt: {dialog.FileName}");
 
         _cutPlanViewModel.Reset();
+
+        _cutNamingState = null;
 
         await _viewModel.AnalyzeAsync(dialog.FileName);
 

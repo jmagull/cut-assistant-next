@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CutAssistantNext.App.Settings;
+using CutAssistantNext.App.State;
 using CutAssistantNext.Core.Naming;
 using CutAssistantNext.Core.Metadata;
 using CutAssistantNext.Core.Editing;
@@ -56,6 +57,37 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
             NameTemplateRenderer.Render(
                 _nameTemplate,
                 _nameContext);
+    }
+
+    internal CutlistGenerationViewModel(
+        CutlistSettings settings,
+        CutNamingState namingState,
+        IReadOnlyCollection<TechnicalNotice>? technicalNotices = null)
+    {
+        ArgumentNullException.ThrowIfNull(
+            settings);
+
+        ArgumentNullException.ThrowIfNull(
+            namingState);
+
+        _nameContext =
+            namingState.NameContext;
+
+        _nameTemplate =
+            namingState.NameTemplate;
+
+        _author =
+            settings.DefaultAuthor;
+
+        QuickTexts =
+            settings.QuickTexts.ToArray();
+
+        TechnicalNotices =
+            technicalNotices?.ToArray()
+            ?? [];
+
+        _suggestedMovieName =
+            namingState.SuggestedMovieName;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -364,6 +396,13 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
             general,
             keepSegments,
             info);
+    }
+
+    public CutNamingState CreateNamingState()
+    {
+        return new CutNamingState(
+            _nameTemplate,
+            _nameContext);
     }
 
     public string SuggestedMovieName =>

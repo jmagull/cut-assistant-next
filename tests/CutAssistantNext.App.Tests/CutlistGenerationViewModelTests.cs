@@ -205,6 +205,102 @@ public sealed class CutlistGenerationViewModelTests
     }
 
     [Fact]
+    public void CreateNamingState_UsesCompleteCurrentNamingData()
+    {
+        var settings = new CutlistSettings
+        {
+            DefaultNameTemplate =
+                "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]",
+            DefaultAuthor = "joerg",
+            QuickTexts = []
+        };
+
+        var context =
+            new NameTemplateContext(
+                Name: "Alter Name",
+                Year: "2026",
+                Month: "08",
+                Day: "19",
+                Season: "01",
+                Episode: "01",
+                OriginalName: "Sliders_original.mp4",
+                Hour: "17",
+                Minute: "15",
+                Sender: "tele5",
+                Series: "Sliders",
+                EpisodeTitle: "Alter Titel");
+
+        var viewModel =
+            new CutlistGenerationViewModel(
+                settings,
+                context);
+
+        viewModel.Name = "Sliders";
+        viewModel.Season = "04";
+        viewModel.Episode = "20";
+        viewModel.EpisodeTitle = "Der Abgrund";
+
+        var state =
+            viewModel.CreateNamingState();
+
+        Assert.Equal(
+            viewModel.NameTemplate,
+            state.NameTemplate);
+
+        Assert.Equal(
+            viewModel.SuggestedMovieName,
+            state.SuggestedMovieName);
+
+        Assert.Equal(
+            "Sliders",
+            state.NameContext.Name);
+
+        Assert.Equal(
+            "04",
+            state.NameContext.Season);
+
+        Assert.Equal(
+            "20",
+            state.NameContext.Episode);
+
+        Assert.Equal(
+            "Der Abgrund",
+            state.NameContext.EpisodeTitle);
+
+        Assert.Equal(
+            "2026",
+            state.NameContext.Year);
+
+        Assert.Equal(
+            "08",
+            state.NameContext.Month);
+
+        Assert.Equal(
+            "19",
+            state.NameContext.Day);
+
+        Assert.Equal(
+            "Sliders_original.mp4",
+            state.NameContext.OriginalName);
+
+        Assert.Equal(
+            "17",
+            state.NameContext.Hour);
+
+        Assert.Equal(
+            "15",
+            state.NameContext.Minute);
+
+        Assert.Equal(
+            "tele5",
+            state.NameContext.Sender);
+
+        Assert.Equal(
+            "Sliders",
+            state.NameContext.Series);
+    }
+
+    [Fact]
     public void ChangingAuthorAndUserComment_RaisesPropertyChanged()
     {
         var settings = new CutlistSettings
