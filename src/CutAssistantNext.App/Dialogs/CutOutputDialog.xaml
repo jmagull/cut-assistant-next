@@ -26,7 +26,7 @@
             <TextBlock Margin="0,5,0,0"
                        FontSize="14"
                        Foreground="#6B7280"
-                       Text="Zieldateiname für die geschnittene Mediendatei festlegen" />
+                       Text="Namensdaten für die geschnittene Mediendatei prüfen" />
         </StackPanel>
 
         <Border Grid.Row="1"
@@ -44,7 +44,7 @@
                                FontSize="18"
                                FontWeight="SemiBold"
                                Foreground="#1F2937"
-                               Text="Namensvorschlag" />
+                               Text="Namensdaten" />
 
                     <TextBlock Margin="0,0,0,5"
                                FontWeight="SemiBold"
