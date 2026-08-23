@@ -26,13 +26,14 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         _cutPlan?.MediaDuration;
 
     public bool CanSetStart =>
-        _cutPlan is not null &&
-        SelectedRemoveSegment is null;
+        _cutPlan is not null;
 
     public bool CanSetEnd =>
         _cutPlan is not null &&
-        PendingStart.HasValue &&
-        SelectedRemoveSegment is null;
+        (
+            PendingStart.HasValue ||
+            SelectedRemoveSegment is not null
+        );
 
     public bool CanModifySelectedSegment =>
         SelectedRemoveSegment is not null;
@@ -156,6 +157,19 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             position,
             cutPlan.MediaDuration);
 
+        if (SelectedRemoveSegment is not null)
+        {
+            var selectedSegment =
+                SelectedRemoveSegment;
+
+            Replace(
+                selectedSegment,
+                position,
+                selectedSegment.End);
+
+            return;
+        }
+
         PendingStart = position;
     }
 
@@ -164,15 +178,29 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     {
         var cutPlan = GetInitializedCutPlan();
 
+        ValidatePosition(
+            position,
+            cutPlan.MediaDuration);
+
+        if (SelectedRemoveSegment is not null)
+        {
+            var selectedSegment =
+                SelectedRemoveSegment;
+
+            Replace(
+                selectedSegment,
+                selectedSegment.Start,
+                position);
+
+            SelectedRemoveSegment = null;
+            return;
+        }
+
         if (!PendingStart.HasValue)
         {
             throw new InvalidOperationException(
                 "Es wurde noch kein Schnittanfang gesetzt.");
         }
-
-        ValidatePosition(
-            position,
-            cutPlan.MediaDuration);
 
         var segment = new RemoveSegment(
             PendingStart.Value,

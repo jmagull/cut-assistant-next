@@ -38,6 +38,25 @@ public sealed class CutPlanViewModelTests
     }
 
     [Fact]
+    public void SetStart_WhenPendingStartExists_ReplacesPendingStart()
+    {
+        var viewModel = new CutPlanViewModel();
+
+        viewModel.Initialize(
+            TimeSpan.FromMinutes(60));
+
+        viewModel.SetStart(
+            TimeSpan.Zero);
+
+        viewModel.SetStart(
+            TimeSpan.FromMinutes(10));
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(10),
+            viewModel.PendingStart);
+    }
+
+    [Fact]
     public void SetEnd_AfterStart_AddsSegmentAndClearsPendingStart()
     {
         var viewModel = new CutPlanViewModel();
@@ -297,8 +316,8 @@ public sealed class CutPlanViewModelTests
             originalSegment,
             viewModel.SelectedRemoveSegment);
         Assert.True(viewModel.CanModifySelectedSegment);
-        Assert.False(viewModel.CanSetStart);
-        Assert.False(viewModel.CanSetEnd);
+        Assert.True(viewModel.CanSetStart);
+        Assert.True(viewModel.CanSetEnd);
 
         viewModel.Replace(
             originalSegment,
@@ -332,6 +351,83 @@ public sealed class CutPlanViewModelTests
     }
 
     [Fact]
+    public void SetStart_WhenSegmentIsSelected_ReplacesStartAndKeepsSelection()
+    {
+        var viewModel = new CutPlanViewModel();
+
+        viewModel.Initialize(
+            TimeSpan.FromMinutes(60));
+
+        viewModel.SetStart(
+            TimeSpan.FromMinutes(10));
+
+        viewModel.SetEnd(
+            TimeSpan.FromMinutes(20));
+
+        var originalSegment =
+            Assert.Single(viewModel.RemoveSegments);
+
+        viewModel.SelectedRemoveSegment =
+            originalSegment;
+
+        viewModel.SetStart(
+            TimeSpan.FromMinutes(12));
+
+        var replacementSegment =
+            Assert.Single(viewModel.RemoveSegments);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(12),
+            replacementSegment.Start);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(20),
+            replacementSegment.End);
+
+        Assert.Same(
+            replacementSegment,
+            viewModel.SelectedRemoveSegment);
+    }
+
+    [Fact]
+    public void SetEnd_WhenSegmentIsSelected_ReplacesEndAndClearsSelection()
+    {
+        var viewModel = new CutPlanViewModel();
+
+        viewModel.Initialize(
+            TimeSpan.FromMinutes(60));
+
+        viewModel.SetStart(
+            TimeSpan.FromMinutes(10));
+
+        viewModel.SetEnd(
+            TimeSpan.FromMinutes(20));
+
+        var originalSegment =
+            Assert.Single(viewModel.RemoveSegments);
+
+        viewModel.SelectedRemoveSegment =
+            originalSegment;
+
+        viewModel.SetEnd(
+            TimeSpan.FromMinutes(22));
+
+        var replacementSegment =
+            Assert.Single(viewModel.RemoveSegments);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(10),
+            replacementSegment.Start);
+
+        Assert.Equal(
+            TimeSpan.FromMinutes(22),
+            replacementSegment.End);
+
+        Assert.Null(
+            viewModel.SelectedRemoveSegment);
+    }
+
+    [Fact]
     public void CanModifySelectedSegment_FollowsSelection()
     {
         var viewModel = new CutPlanViewModel();
@@ -362,7 +458,7 @@ public sealed class CutPlanViewModelTests
     }
 
     [Fact]
-    public void SelectingExistingSegment_ClearsPendingStartAndDisablesNewSegmentButtons()
+    public void SelectingExistingSegment_ClearsPendingStartAndEnablesEditingButtons()
     {
         var viewModel = new CutPlanViewModel();
 
@@ -388,8 +484,8 @@ public sealed class CutPlanViewModelTests
 
         Assert.Null(viewModel.PendingStart);
         Assert.Equal("–", viewModel.PendingStartText);
-        Assert.False(viewModel.CanSetStart);
-        Assert.False(viewModel.CanSetEnd);
+        Assert.True(viewModel.CanSetStart);
+        Assert.True(viewModel.CanSetEnd);
         Assert.True(viewModel.CanModifySelectedSegment);
     }
 

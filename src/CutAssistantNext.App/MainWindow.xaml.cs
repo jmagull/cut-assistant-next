@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using CutAssistantNext.App.Dialogs;
 using CutAssistantNext.App.Services.Analysis;
@@ -409,6 +410,35 @@ public partial class MainWindow : Window
             () => _playbackViewModel.StepForwardTenFramesAsync());
     }
 
+    private void RemoveSegmentsDataGrid_PreviewMouseLeftButtonDown(
+        object sender,
+        MouseButtonEventArgs e)
+    {
+        if (sender is not DataGrid dataGrid ||
+            e.OriginalSource is not DependencyObject source)
+        {
+            return;
+        }
+
+        var clickedRow =
+            ItemsControl.ContainerFromElement(
+                dataGrid,
+                source) as DataGridRow;
+
+        if (clickedRow is null ||
+            !ReferenceEquals(
+                dataGrid.SelectedItem,
+                clickedRow.Item))
+        {
+            return;
+        }
+
+        e.Handled = true;
+
+        dataGrid.SelectedItem = null;
+        _cutPlanViewModel.SelectedRemoveSegment = null;
+    }
+
     private void SetCutStartButton_Click(
         object sender,
         RoutedEventArgs e)
@@ -476,71 +506,6 @@ public partial class MainWindow : Window
                 _logger.Information(
                     $"Schnittende wurde auf das Dateiende gesetzt: " +
                     $"{mediaDuration:c}");
-            });
-    }
-
-
-    private void CorrectCutStartButton_Click(
-        object sender,
-        RoutedEventArgs e)
-    {
-        ExecuteCutPlanAction(
-            () =>
-            {
-                var selectedSegment =
-                    _cutPlanViewModel.SelectedRemoveSegment
-                    ?? throw new InvalidOperationException(
-                        "Es ist kein Schnittbereich ausgewählt.");
-
-                var position =
-                    _playbackViewModel.Position;
-
-                if (position >= selectedSegment.End)
-                {
-                    throw new InvalidOperationException(
-                        "Die aktuelle Videoposition liegt nicht vor dem Ende des ausgewählten Schnittbereichs. " +
-                        "Verschiebe die Zeitleiste auf die gewünschte neue Anfangsposition.");
-                }
-                _cutPlanViewModel.Replace(
-                    selectedSegment,
-                    position,
-                    selectedSegment.End);
-
-                _logger.Information(
-                    $"Schnittanfang wurde korrigiert: " +
-                    $"{selectedSegment.Start:c} -> {position:c}");
-            });
-    }
-
-    private void CorrectCutEndButton_Click(
-        object sender,
-        RoutedEventArgs e)
-    {
-        ExecuteCutPlanAction(
-            () =>
-            {
-                var selectedSegment =
-                    _cutPlanViewModel.SelectedRemoveSegment
-                    ?? throw new InvalidOperationException(
-                        "Es ist kein Schnittbereich ausgewählt.");
-
-                var position =
-                    _playbackViewModel.Position;
-
-                if (position <= selectedSegment.Start)
-                {
-                    throw new InvalidOperationException(
-                        "Die aktuelle Videoposition liegt nicht hinter dem Anfang des ausgewählten Schnittbereichs. " +
-                        "Verschiebe die Zeitleiste auf die gewünschte neue Endposition.");
-                }
-                _cutPlanViewModel.Replace(
-                    selectedSegment,
-                    selectedSegment.Start,
-                    position);
-
-                _logger.Information(
-                    $"Schnittende wurde korrigiert: " +
-                    $"{selectedSegment.End:c} -> {position:c}");
             });
     }
 

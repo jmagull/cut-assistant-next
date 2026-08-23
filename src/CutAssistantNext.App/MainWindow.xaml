@@ -338,20 +338,20 @@
                                    Text="Schnittbereiche – entfernen" />
 
                         <WrapPanel>
+                            <Button MinWidth="110"
+                                    Height="36"
+                                    Padding="12,0"
+                                    IsEnabled="{Binding CanSetStart}"
+                                    Click="SetCutStartAtBeginningButton_Click"
+                                    Content="Videoanfang" />
+
                             <Button MinWidth="170"
                                     Height="36"
+                                    Margin="6,0,0,0"
                                     Padding="14,0"
                                     IsEnabled="{Binding CanSetStart}"
                                     Click="SetCutStartButton_Click"
                                     Content="Schnittanfang setzen" />
-
-                            <Button MinWidth="80"
-                                    Height="36"
-                                    Margin="6,0,0,0"
-                                    Padding="12,0"
-                                    IsEnabled="{Binding CanSetStart}"
-                                    Click="SetCutStartAtBeginningButton_Click"
-                                    Content="Anfang" />
 
                             <Button MinWidth="170"
                                     Height="36"
@@ -361,13 +361,13 @@
                                     Click="SetCutEndButton_Click"
                                     Content="Schnittende setzen" />
 
-                            <Button MinWidth="80"
+                            <Button MinWidth="110"
                                     Height="36"
                                     Margin="6,0,0,0"
                                     Padding="12,0"
                                     IsEnabled="{Binding CanSetEnd}"
                                     Click="SetCutEndAtMediaEndButton_Click"
-                                    Content="Ende" />
+                                    Content="Videoende" />
 
                             <TextBlock Margin="22,0,8,0"
                                        VerticalAlignment="Center"
@@ -392,6 +392,7 @@
                                   IsReadOnly="True"
                                   SelectionMode="Single"
                                   SelectionUnit="FullRow"
+                                  PreviewMouseLeftButtonDown="RemoveSegmentsDataGrid_PreviewMouseLeftButtonDown"
                                   SelectedItem="{Binding SelectedRemoveSegment, Mode=TwoWay}"
                                   ItemsSource="{Binding RemoveSegments}">
                             <DataGrid.Columns>
@@ -410,26 +411,8 @@
                         </DataGrid>
 
                     <WrapPanel Margin="0,12,0,0">
-                        <Button MinWidth="170"
-                                Height="36"
-                                Padding="14,0"
-                                IsEnabled="{Binding CanModifySelectedSegment}"
-                                Click="CorrectCutStartButton_Click"
-                                ToolTip="Anfang des ausgewählten Bereichs auf die aktuelle Videoposition setzen"
-                                Content="Anfang korrigieren" />
-
-                        <Button MinWidth="170"
-                                Height="36"
-                                Margin="10,0,0,0"
-                                Padding="14,0"
-                                IsEnabled="{Binding CanModifySelectedSegment}"
-                                Click="CorrectCutEndButton_Click"
-                                ToolTip="Ende des ausgewählten Bereichs auf die aktuelle Videoposition setzen"
-                                Content="Ende korrigieren" />
-
                         <Button MinWidth="150"
                                 Height="36"
-                                Margin="10,0,0,0"
                                 Padding="14,0"
                                 IsEnabled="{Binding CanModifySelectedSegment}"
                                 Click="RemoveCutSegmentButton_Click"
