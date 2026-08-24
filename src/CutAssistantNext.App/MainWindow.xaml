@@ -165,7 +165,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="300" />
+                    <RowDefinition Height="350" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
@@ -183,7 +183,6 @@
                       Grid.Row="2"
                       Margin="0,14,0,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
@@ -269,9 +268,9 @@
                             Click="StepForwardTenFramesButton_Click"
                             Content="+10 Bilder" />
 
-                    <StackPanel Grid.Row="2"
-                                Grid.ColumnSpan="8"
-                                Margin="0,12,0,0"
+                    <StackPanel Grid.Row="1"
+                                Grid.Column="6"
+                                Margin="20,0,20,0"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
                                 Orientation="Horizontal">
@@ -290,14 +289,6 @@
                                 IsEnabled="{Binding CanSetVolume}"
                                 Value="{Binding Volume, Mode=OneWay}"
                                 ValueChanged="VolumeSlider_ValueChanged" />
-
-                        <TextBlock Width="55"
-                                   Margin="10,0,0,0"
-                                   VerticalAlignment="Center"
-                                   FontFamily="Consolas"
-                                   FontWeight="SemiBold"
-                                   TextAlignment="Right"
-                                   Text="{Binding VolumeText}" />
                     </StackPanel>
 
                     <StackPanel Grid.Row="1"
@@ -306,6 +297,15 @@
                                 VerticalAlignment="Center">
                         <StackPanel HorizontalAlignment="Right"
                                     Orientation="Horizontal">
+
+                            <TextBlock Width="55"
+                                       Margin="0,0,18,0"
+                                       VerticalAlignment="Center"
+                                       FontFamily="Consolas"
+                                       FontWeight="SemiBold"
+                                       TextAlignment="Right"
+                                       Text="{Binding VolumeText}" />
+
                             <TextBlock FontFamily="Consolas"
                                        FontSize="15"
                                        FontWeight="SemiBold"
@@ -424,11 +424,10 @@
                                 IsEnabled="{Binding CanModifySelectedSegment}"
                                 Click="RemoveCutSegmentButton_Click"
                                 Content="Bereich löschen" />
-                    </WrapPanel>
 
-                    <WrapPanel Margin="0,18,0,0">
                         <Button MinWidth="170"
                                 Height="36"
+                                Margin="10,0,0,0"
                                 Padding="14,0"
                                 Click="GenerateCutlistButton_Click"
                                 Content="Cutlist erzeugen …" />
@@ -439,6 +438,7 @@
                                 Padding="14,0"
                                 Click="LoadCutlistButton_Click"
                                 Content="Cutlist laden …" />
+
                         <Button MinWidth="170"
                                 Height="36"
                                 Margin="10,0,0,0"
