@@ -117,13 +117,20 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock FontWeight="SemiBold"
                            Foreground="#1E3A5F"
                            Text="{Binding StatusMessage}" />
 
-                <ProgressBar Grid.Row="1"
+                <TextBlock Grid.Row="1"
+                           Margin="0,4,0,0"
+                           Foreground="#1E3A5F"
+                           TextWrapping="Wrap"
+                           Text="{Binding FileName}" />
+
+                <ProgressBar Grid.Row="2"
                              Height="6"
                              Margin="0,10,0,0"
                              IsIndeterminate="{Binding IsAnalyzing}"
