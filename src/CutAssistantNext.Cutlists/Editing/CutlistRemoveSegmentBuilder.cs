@@ -25,6 +25,13 @@ public static class CutlistRemoveSegmentBuilder
 
         foreach (var keepSegment in keepSegments)
         {
+            if (keepSegment.End > mediaDuration)
+            {
+                throw new InvalidDataException(
+                    "Die Cutlist scheint nicht zur geladenen Mediendatei zu passen. " +
+                    "Sie enthält Schnittpositionen hinter dem tatsächlichen Videoende.");
+            }
+
             if (keepSegment.Start > currentPosition)
             {
                 removeSegments.Add(

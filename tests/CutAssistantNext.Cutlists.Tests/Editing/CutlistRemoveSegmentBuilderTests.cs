@@ -84,4 +84,29 @@ public sealed class CutlistRemoveSegmentBuilderTests
         Assert.Equal(
             TimeSpan.FromSeconds(30),
             removeSegment.End);
-    }}
+    }
+
+    [Fact]
+    public void Build_WithKeepSegmentBeyondMediaDuration_ThrowsClearCompatibilityError()
+    {
+        var keepSegments =
+            new[]
+            {
+                new CutlistKeepSegment(
+                    TimeSpan.FromSeconds(90),
+                    TimeSpan.FromSeconds(20))
+            };
+
+        var exception =
+            Assert.Throws<InvalidDataException>(
+                () =>
+                    CutlistRemoveSegmentBuilder.Build(
+                        TimeSpan.FromSeconds(100),
+                        keepSegments));
+
+        Assert.Equal(
+            "Die Cutlist scheint nicht zur geladenen Mediendatei zu passen. " +
+            "Sie enthält Schnittpositionen hinter dem tatsächlichen Videoende.",
+            exception.Message);
+    }
+}
