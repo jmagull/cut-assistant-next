@@ -84,6 +84,7 @@ public partial class MainWindow : Window
 
         Closing += MainWindow_Closing;
         PreviewKeyDown += MainWindow_PreviewKeyDown;
+        PreviewKeyUp += MainWindow_PreviewKeyUp;
 
         if (VideoHost.IsVideoWindowReady)
         {
@@ -161,6 +162,8 @@ public partial class MainWindow : Window
             VideoHost_VideoWindowHandleCreated;
 
         PreviewKeyDown -= MainWindow_PreviewKeyDown;
+
+        PreviewKeyUp -= MainWindow_PreviewKeyUp;
 
         _playbackViewModel.Dispose();
 
@@ -312,6 +315,9 @@ public partial class MainWindow : Window
     {
         var modifiers = Keyboard.Modifiers;
 
+        UpdateFrameStepButtonLabels(
+            modifiers);
+
         if (e.Key == Key.Space &&
             modifiers == ModifierKeys.None &&
             _playbackViewModel.CanTogglePlayback)
@@ -357,7 +363,7 @@ public partial class MainWindow : Window
             e.Handled = true;
 
             await ExecutePlaybackActionAsync(
-                () => _playbackViewModel.StepBackwardTenFramesAsync());
+                () => _playbackViewModel.StepBackwardTwentyFramesAsync());
 
             return;
         }
@@ -368,8 +374,33 @@ public partial class MainWindow : Window
             e.Handled = true;
 
             await ExecutePlaybackActionAsync(
-                () => _playbackViewModel.StepForwardTenFramesAsync());
+                () => _playbackViewModel.StepForwardTwentyFramesAsync());
         }
+    }
+
+    private void MainWindow_PreviewKeyUp(
+        object sender,
+        KeyEventArgs e)
+    {
+        UpdateFrameStepButtonLabels(
+            Keyboard.Modifiers);
+    }
+
+    private void UpdateFrameStepButtonLabels(
+        ModifierKeys modifiers)
+    {
+        var useTwentyFrames =
+            (modifiers & ModifierKeys.Control) != 0;
+
+        StepBackwardFramesButton.Content =
+            useTwentyFrames
+                ? "−20 Bilder"
+                : "−10 Bilder";
+
+        StepForwardFramesButton.Content =
+            useTwentyFrames
+                ? "+20 Bilder"
+                : "+10 Bilder";
     }
 
     private async void PlayButton_Click(
@@ -380,10 +411,18 @@ public partial class MainWindow : Window
             () => _playbackViewModel.TogglePlaybackAsync());
     }
 
-    private async void StepBackwardTenFramesButton_Click(
+    private async void StepBackwardFramesButton_Click(
         object sender,
         RoutedEventArgs e)
     {
+        if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
+        {
+            await ExecutePlaybackActionAsync(
+                () => _playbackViewModel.StepBackwardTwentyFramesAsync());
+
+            return;
+        }
+
         await ExecutePlaybackActionAsync(
             () => _playbackViewModel.StepBackwardTenFramesAsync());
     }
@@ -404,10 +443,18 @@ public partial class MainWindow : Window
             () => _playbackViewModel.StepForwardAsync());
     }
 
-    private async void StepForwardTenFramesButton_Click(
+    private async void StepForwardFramesButton_Click(
         object sender,
         RoutedEventArgs e)
     {
+        if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
+        {
+            await ExecutePlaybackActionAsync(
+                () => _playbackViewModel.StepForwardTwentyFramesAsync());
+
+            return;
+        }
+
         await ExecutePlaybackActionAsync(
             () => _playbackViewModel.StepForwardTenFramesAsync());
     }

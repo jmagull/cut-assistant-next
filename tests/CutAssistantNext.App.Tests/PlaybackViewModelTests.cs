@@ -413,6 +413,36 @@ public sealed class PlaybackViewModelTests
     }
 
     [Fact]
+    public async Task StepBackwardTwentyFramesAsync_ForwardsMinusTwentyToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.StepBackwardTwentyFramesAsync();
+
+        Assert.Equal(
+            [-20],
+            service.StepFrameCounts);
+    }
+
+    [Fact]
+    public async Task StepForwardTwentyFramesAsync_ForwardsTwentyToService()
+    {
+        var service = new StubMediaPlayerService();
+
+        using var viewModel =
+            new PlaybackViewModel(service);
+
+        await viewModel.StepForwardTwentyFramesAsync();
+
+        Assert.Equal(
+            [20],
+            service.StepFrameCounts);
+    }
+
+    [Fact]
     public void Seeking_KeepsTimelinePositionDuringServiceUpdates()
     {
         var service = new StubMediaPlayerService

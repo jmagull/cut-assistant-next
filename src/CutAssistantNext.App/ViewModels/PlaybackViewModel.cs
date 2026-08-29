@@ -259,6 +259,22 @@ public sealed class PlaybackViewModel
             cancellationToken);
     }
 
+    public Task StepBackwardTwentyFramesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.StepFramesAsync(
+            -20,
+            cancellationToken);
+    }
+
+    public Task StepForwardTwentyFramesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return _mediaPlayerService.StepFramesAsync(
+            20,
+            cancellationToken);
+    }
+
     public void Dispose()
     {
         if (_disposed)
