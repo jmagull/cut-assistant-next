@@ -9,6 +9,7 @@ using CutAssistantNext.App.Services.Cutting;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.State;
 using CutAssistantNext.App.ViewModels;
+using CutAssistantNext.Cutlists.Compatibility;
 using CutAssistantNext.Cutlists.Editing;
 using CutAssistantNext.Cutlists.IO;
 using CutAssistantNext.Core.Editing;
@@ -909,6 +910,39 @@ public partial class MainWindow : Window
             var document =
                 CutlistFileReader.Read(
                     dialog.FileName);
+
+            var fileSizeMismatch =
+                CutlistFileSizeCompatibilityDetector.FindMismatch(
+                    document.General.OriginalFileSizeBytes,
+                    _viewModel.AnalysisResult?.FileSizeBytes);
+
+            if (fileSizeMismatch is not null)
+            {
+                var continueResult =
+                    MessageBox.Show(
+                        this,
+                        "Die Dateigröße der geladenen Mediendatei weicht deutlich " +
+                        "von der in der Cutlist gespeicherten Größe ab." +
+                        $"{Environment.NewLine}{Environment.NewLine}" +
+                        $"Größe laut Cutlist: {fileSizeMismatch.ExpectedFileSizeBytes:N0} Bytes" +
+                        $"{Environment.NewLine}" +
+                        $"Geladene Datei: {fileSizeMismatch.ActualFileSizeBytes:N0} Bytes" +
+                        $"{Environment.NewLine}" +
+                        $"Abweichung: {fileSizeMismatch.DifferenceRatio:P1}" +
+                        $"{Environment.NewLine}{Environment.NewLine}" +
+                        "Die Cutlist könnte für eine andere oder anders aufgezeichnete " +
+                        "Mediendatei erstellt worden sein." +
+                        $"{Environment.NewLine}{Environment.NewLine}" +
+                        "Trotzdem laden?",
+                        "Cutlist laden",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning);
+
+                if (continueResult != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+            }
 
             var endFragment =
                 CutlistEndFragmentDetector.Find(
