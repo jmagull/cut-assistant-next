@@ -11,6 +11,7 @@ using CutAssistantNext.App.State;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Cutlists.Editing;
 using CutAssistantNext.Cutlists.IO;
+using CutAssistantNext.Core.Editing;
 using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Core.Naming;
 using CutAssistantNext.Media.Analysis;
@@ -909,10 +910,55 @@ public partial class MainWindow : Window
                 CutlistFileReader.Read(
                     dialog.FileName);
 
-            var cutPlan =
-                CutlistCutPlanBuilder.Build(
+            var endFragment =
+                CutlistEndFragmentDetector.Find(
                     document,
                     mediaDuration.Value);
+
+            CutPlan cutPlan;
+
+            if (endFragment is not null)
+            {
+                var framesPerSecond =
+                    document.General.FramesPerSecond.GetValueOrDefault();
+
+                var approximateFrames =
+                    (int)Math.Round(
+                        endFragment.Duration.TotalSeconds *
+                        framesPerSecond);
+
+                var correctionResult =
+                    MessageBox.Show(
+                        this,
+                        "Die Cutlist enthält am Videoende einen ungewöhnlich kurzen " +
+                        $"Behaltebereich von {endFragment.Duration.TotalSeconds:0.###} Sekunden " +
+                        $"(ca. {approximateFrames} Frames)." +
+                        $"{Environment.NewLine}{Environment.NewLine}" +
+                        "Dieser Bereich kann beim Schneiden mit MP4Box zu Problemen führen." +
+                        $"{Environment.NewLine}{Environment.NewLine}" +
+                        "Neues Ende bis Videoende setzen?",
+                        "Cutlist laden",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning);
+
+                if (correctionResult != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+
+                cutPlan =
+                    CutlistEndFragmentCorrector.BuildCutPlan(
+                        document,
+                        mediaDuration.Value,
+                        endFragment);
+            }
+            else
+            {
+                cutPlan =
+                    CutlistCutPlanBuilder.Build(
+                        document,
+                        mediaDuration.Value);
+            }
 
             _cutPlanViewModel.LoadCutPlan(
                 cutPlan);
