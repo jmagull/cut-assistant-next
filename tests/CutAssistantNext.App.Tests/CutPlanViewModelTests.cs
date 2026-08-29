@@ -546,6 +546,36 @@ public sealed class CutPlanViewModelTests
     }
 
     [Fact]
+    public void EstimatedOutputDuration_AfterSegments_ReturnsRemainingDuration()
+    {
+        var viewModel =
+            new CutPlanViewModel();
+
+        viewModel.Initialize(
+            TimeSpan.FromSeconds(100));
+
+        viewModel.SetStart(
+            TimeSpan.FromSeconds(10));
+
+        viewModel.SetEnd(
+            TimeSpan.FromSeconds(30));
+
+        viewModel.SetStart(
+            TimeSpan.FromSeconds(50));
+
+        viewModel.SetEnd(
+            TimeSpan.FromSeconds(60));
+
+        Assert.Equal(
+            TimeSpan.FromSeconds(70),
+            viewModel.EstimatedOutputDuration);
+
+        Assert.Equal(
+            "00:01:10.000",
+            viewModel.EstimatedOutputDurationText);
+    }
+
+    [Fact]
     public void LoadCutPlan_CopiesPlanAndResetsEditingState()
     {
         var importedPlan =

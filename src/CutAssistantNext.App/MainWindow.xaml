@@ -306,6 +306,11 @@
                                        TextAlignment="Right"
                                        Text="{Binding VolumeText}" />
 
+                            <TextBlock Margin="0,0,6,0"
+                                       FontSize="15"
+                                       Foreground="#6B7280"
+                                       Text="Position:" />
+
                             <TextBlock FontFamily="Consolas"
                                        FontSize="15"
                                        FontWeight="SemiBold"
@@ -320,6 +325,21 @@
                                        FontSize="15"
                                        FontWeight="SemiBold"
                                        Text="{Binding DurationText}" />
+                        </StackPanel>
+
+                        <StackPanel Margin="0,3,0,0"
+                                    HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
+                            <TextBlock Margin="0,0,6,0"
+                                       FontSize="13"
+                                       Foreground="#6B7280"
+                                       Text="Geschnitten:" />
+
+                            <TextBlock FontFamily="Consolas"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Text="{Binding DataContext.EstimatedOutputDurationText,
+                                           ElementName=CutTimelineTrack}" />
                         </StackPanel>
 
                         <TextBlock Margin="0,3,0,0"

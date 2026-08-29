@@ -25,6 +25,32 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public TimeSpan? MediaDuration =>
         _cutPlan?.MediaDuration;
 
+    public TimeSpan? EstimatedOutputDuration
+    {
+        get
+        {
+            if (_cutPlan is null)
+            {
+                return null;
+            }
+
+            var removedDuration =
+                TimeSpan.FromTicks(
+                    _cutPlan.RemoveSegments.Sum(
+                        segment => segment.Duration.Ticks));
+
+            return
+                _cutPlan.MediaDuration -
+                removedDuration;
+        }
+    }
+
+    public string EstimatedOutputDurationText =>
+        EstimatedOutputDuration.HasValue
+            ? FormatTime(
+                EstimatedOutputDuration.Value)
+            : "–";
+
     public bool CanSetStart =>
         _cutPlan is not null;
 
@@ -97,6 +123,11 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         _removeSegments.Clear();
 
         OnPropertyChanged(nameof(MediaDuration));
+        OnPropertyChanged(
+            nameof(EstimatedOutputDuration));
+
+        OnPropertyChanged(
+            nameof(EstimatedOutputDurationText));
         OnPropertyChanged(nameof(CanSetStart));
         OnPropertyChanged(nameof(CanSetEnd));
     }
@@ -144,6 +175,11 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         _removeSegments.Clear();
 
         OnPropertyChanged(nameof(MediaDuration));
+        OnPropertyChanged(
+            nameof(EstimatedOutputDuration));
+
+        OnPropertyChanged(
+            nameof(EstimatedOutputDurationText));
         OnPropertyChanged(nameof(CanSetStart));
         OnPropertyChanged(nameof(CanSetEnd));
     }
@@ -310,6 +346,12 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         {
             _removeSegments.Add(segment);
         }
+
+        OnPropertyChanged(
+            nameof(EstimatedOutputDuration));
+
+        OnPropertyChanged(
+            nameof(EstimatedOutputDurationText));
     }
 
     private static string FormatTime(
