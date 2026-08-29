@@ -31,17 +31,24 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
 
     internal CutlistGenerationViewModel(
         CutlistSettings settings,
+        NamingSettings namingSettings,
         NameTemplateContext nameContext,
         IReadOnlyCollection<TechnicalNotice>? technicalNotices = null)
     {
-        ArgumentNullException.ThrowIfNull(settings);
-        ArgumentNullException.ThrowIfNull(nameContext);
+        ArgumentNullException.ThrowIfNull(
+            settings);
+
+        ArgumentNullException.ThrowIfNull(
+            namingSettings);
+
+        ArgumentNullException.ThrowIfNull(
+            nameContext);
 
         _nameContext =
             nameContext;
 
         _nameTemplate =
-            settings.DefaultNameTemplate;
+            namingSettings.DefaultNameTemplate;
 
         _author =
             settings.DefaultAuthor;

@@ -709,19 +709,19 @@ public partial class MainWindow : Window
             return;
         }
 
-        var settings =
-            new CutlistSettingsStore().Load()
-            ?? CutlistSettings.CreateDefault();
+        var namingSettings =
+            new NamingSettingsLoader().Load();
 
         _cutNamingState ??=
             new CutNamingState(
-                settings.DefaultNameTemplate,
+                namingSettings.DefaultNameTemplate,
                 NameTemplateContextFactory.Create(
                     _viewModel.FileName));
 
         var viewModel =
             new CutOutputViewModel(
-                _cutNamingState);
+                _cutNamingState,
+                namingSettings.DefaultNameTemplate);
 
         var dialog =
             new CutOutputDialog(
@@ -1050,13 +1050,12 @@ public partial class MainWindow : Window
             if (!string.IsNullOrWhiteSpace(
                     suggestedMovieName))
             {
-                var settings =
-                    new CutlistSettingsStore().Load()
-                    ?? CutlistSettings.CreateDefault();
+                var namingSettings =
+                    new NamingSettingsLoader().Load();
 
                 _cutNamingState ??=
                     new CutNamingState(
-                        settings.DefaultNameTemplate,
+                        namingSettings.DefaultNameTemplate,
                         NameTemplateContextFactory.Create(
                             _viewModel.FileName));
 
@@ -1110,6 +1109,10 @@ public partial class MainWindow : Window
         var settings =
             new CutlistSettingsStore().Load()
             ?? CutlistSettings.CreateDefault();
+
+        var namingSettings =
+            new NamingSettingsLoader().Load();
+
         var cutApplicationSettings =
             new CutApplicationSettingsStore().Load()
             ?? CutApplicationSettings.CreateDefault();
@@ -1122,6 +1125,7 @@ public partial class MainWindow : Window
             _cutNamingState is null
                 ? CutlistGenerationViewModelFactory.Create(
                     settings,
+                    namingSettings,
                     fileName,
                     analysis)
                 : CutlistGenerationViewModelFactory.Create(

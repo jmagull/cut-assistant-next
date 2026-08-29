@@ -28,6 +28,16 @@ public partial class CutOutputDialog : Window
             EventArgs.Empty);
     }
 
+    private void GenerateFromTemplateButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (DataContext is CutOutputViewModel viewModel)
+        {
+            viewModel.GenerateSuggestedMovieName();
+        }
+    }
+
     private void CancelButton_Click(
         object sender,
         RoutedEventArgs e)

@@ -22,8 +22,7 @@ public sealed class CutlistSettingsStoreTests
 
             var settings = new CutlistSettings
             {
-                DefaultNameTemplate =
-                    "%Name% %Staffel:S%%Folge:E% [%Tag%.%Monat%.%YYYY%]",
+
                 QuickTexts =
                 [
                     "Mit Cut Assistant Next geschnitten.",
@@ -36,9 +35,7 @@ public sealed class CutlistSettingsStoreTests
             var loaded = store.Load();
 
             Assert.NotNull(loaded);
-            Assert.Equal(
-                settings.DefaultNameTemplate,
-                loaded.DefaultNameTemplate);
+
             Assert.Equal(
                 settings.QuickTexts,
                 loaded.QuickTexts);
@@ -55,13 +52,9 @@ public sealed class CutlistSettingsStoreTests
     }
 
     [Fact]
-    public void CreateDefault_ReturnsDefaultTemplateAndQuickTexts()
+    public void CreateDefault_ReturnsDefaultQuickTexts()
     {
         var settings = CutlistSettings.CreateDefault();
-
-        Assert.Equal(
-            "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]",
-            settings.DefaultNameTemplate);
 
         Assert.Contains(
             "Mit Cut Assistant Next geschnitten.",
@@ -149,7 +142,7 @@ public sealed class CutlistSettingsStoreTests
 
             var settings = new CutlistSettings
             {
-                DefaultNameTemplate = "%Name%",
+
                 QuickTexts =
                 [
                     "Werbung vollständig entfernt.",
@@ -239,7 +232,7 @@ public sealed class CutlistSettingsStoreTests
             var settings = new CutlistSettings
             {
                 DefaultAuthor = "joerg",
-                DefaultNameTemplate = "%Name%",
+
                 QuickTexts = []
             };
 
@@ -262,4 +255,63 @@ public sealed class CutlistSettingsStoreTests
             }
         }
     }
+    [Fact]
+    public void Load_WithLegacyNameTemplate_LoadsRemainingSettings()
+    {
+        var tempDirectory = Path.Combine(
+            Path.GetTempPath(),
+            "CutAssistantNext.Tests",
+            Guid.NewGuid().ToString("N"));
+
+        Directory.CreateDirectory(
+            tempDirectory);
+
+        var settingsPath = Path.Combine(
+            tempDirectory,
+            "cutlist-settings.json");
+
+        try
+        {
+            File.WriteAllText(
+                settingsPath,
+                """
+                {
+                  "DefaultNameTemplate": "%Name% legacy",
+                  "DefaultAuthor": "joerg",
+                  "QuickTexts": [
+                    "Werbung vollständig entfernt."
+                  ]
+                }
+                """);
+
+            var store =
+                new CutlistSettingsStore(
+                    settingsPath);
+
+            var loaded =
+                store.Load();
+
+            Assert.NotNull(
+                loaded);
+
+            Assert.Equal(
+                "joerg",
+                loaded.DefaultAuthor);
+
+            Assert.Equal(
+                ["Werbung vollständig entfernt."],
+                loaded.QuickTexts);
+        }
+        finally
+        {
+            if (Directory.Exists(
+                    tempDirectory))
+            {
+                Directory.Delete(
+                    tempDirectory,
+                    recursive: true);
+            }
+        }
+    }
+
 }

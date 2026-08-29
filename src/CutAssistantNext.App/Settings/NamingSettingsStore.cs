@@ -5,48 +5,40 @@ using CutAssistantNext.Core;
 
 namespace CutAssistantNext.App.Settings;
 
-internal sealed class CutlistSettings
+internal sealed class NamingSettings
 {
-
-    public string DefaultAuthor { get; init; } =
+    public string DefaultNameTemplate { get; init; } =
         string.Empty;
 
-    public List<string> QuickTexts { get; init; } =
-        [];
-
-    public static CutlistSettings CreateDefault()
+    public static NamingSettings CreateDefault()
     {
-        return new CutlistSettings
+        return new NamingSettings
         {
-
-            QuickTexts =
-            [
-                "Mit Cut Assistant Next geschnitten.",
-                "Werbung vollst√§ndig entfernt."
-            ]
+            DefaultNameTemplate =
+                "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]"
         };
     }
 }
 
-internal sealed class CutlistSettingsStore
+internal sealed class NamingSettingsStore
 {
     private const string SettingsDirectoryName =
         "Settings";
 
     private const string SettingsFileName =
-        "cutlist-settings.json";
+        "naming-settings.json";
 
     private static readonly UTF8Encoding Utf8WithoutBom =
         new(encoderShouldEmitUTF8Identifier: false);
 
     private readonly string _settingsFilePath;
 
-    public CutlistSettingsStore()
+    public NamingSettingsStore()
         : this(GetDefaultSettingsFilePath())
     {
     }
 
-    internal CutlistSettingsStore(
+    internal NamingSettingsStore(
         string settingsFilePath)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
@@ -56,7 +48,7 @@ internal sealed class CutlistSettingsStore
             Path.GetFullPath(settingsFilePath);
     }
 
-    public CutlistSettings? Load()
+    public NamingSettings? Load()
     {
         try
         {
@@ -65,11 +57,12 @@ internal sealed class CutlistSettingsStore
                 return null;
             }
 
-            var json = File.ReadAllText(
-                _settingsFilePath,
-                Utf8WithoutBom);
+            var json =
+                File.ReadAllText(
+                    _settingsFilePath,
+                    Utf8WithoutBom);
 
-            return JsonSerializer.Deserialize<CutlistSettings>(
+            return JsonSerializer.Deserialize<NamingSettings>(
                 json);
         }
         catch
@@ -79,26 +72,31 @@ internal sealed class CutlistSettingsStore
     }
 
     public void Save(
-        CutlistSettings settings)
+        NamingSettings settings)
     {
-        ArgumentNullException.ThrowIfNull(settings);
+        ArgumentNullException.ThrowIfNull(
+            settings);
 
         try
         {
             var directoryPath =
-                Path.GetDirectoryName(_settingsFilePath);
+                Path.GetDirectoryName(
+                    _settingsFilePath);
 
-            if (!string.IsNullOrWhiteSpace(directoryPath))
+            if (!string.IsNullOrWhiteSpace(
+                    directoryPath))
             {
-                Directory.CreateDirectory(directoryPath);
+                Directory.CreateDirectory(
+                    directoryPath);
             }
 
-            var json = JsonSerializer.Serialize(
-                settings,
-                new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                });
+            var json =
+                JsonSerializer.Serialize(
+                    settings,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
 
             File.WriteAllText(
                 _settingsFilePath,
@@ -107,8 +105,8 @@ internal sealed class CutlistSettingsStore
         }
         catch
         {
-            // Einstellungsfehler d√ºrfen die Anwendung
-            // nicht beeintr√§chtigen.
+            // Einstellungsfehler d¸rfen die Anwendung
+            // nicht beeintr‰chtigen.
         }
     }
 

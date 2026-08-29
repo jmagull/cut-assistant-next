@@ -24,7 +24,7 @@ public sealed class CutOutputViewModelTests
     }
 
     [Fact]
-    public void ChangingNamingValues_UpdatesSuggestedMovieName()
+    public void ChangingNamingValues_PreservesSuggestedMovieName()
     {
         var nameContext =
             NameTemplateContextFactory.Create(
@@ -40,12 +40,12 @@ public sealed class CutOutputViewModelTests
         viewModel.EpisodeTitle = "Der Test";
 
         Assert.Equal(
-            "Sliders Perfekte Piloten S1E2 - Der Test [13.08.2026]",
+            "Sliders Perfekte Piloten [13.08.2026]",
             viewModel.SuggestedMovieName);
     }
 
     [Fact]
-    public void ChangingNameTemplate_UpdatesSuggestedMovieName()
+    public void ChangingNameTemplate_PreservesSuggestedMovieName()
     {
         var nameContext =
             NameTemplateContextFactory.Create(
@@ -60,12 +60,12 @@ public sealed class CutOutputViewModelTests
             "%Name% [%Tag%.%Monat%.%YYYY%]";
 
         Assert.Equal(
-            "Sliders Perfekte Piloten [13.08.2026]",
+            "Sliders Perfekte Piloten",
             viewModel.SuggestedMovieName);
     }
 
     [Fact]
-    public void ChangingEpisodeTitle_RaisesPropertyChangedForValueAndSuggestion()
+    public void ChangingEpisodeTitle_RaisesPropertyChangedOnlyForValue()
     {
         var nameContext =
             NameTemplateContextFactory.Create(
@@ -91,7 +91,7 @@ public sealed class CutOutputViewModelTests
             nameof(viewModel.EpisodeTitle),
             changedProperties);
 
-        Assert.Contains(
+        Assert.DoesNotContain(
             nameof(viewModel.SuggestedMovieName),
             changedProperties);
     }

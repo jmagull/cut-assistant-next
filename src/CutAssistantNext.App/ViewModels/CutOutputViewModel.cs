@@ -10,6 +10,7 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
     private NameTemplateContext _nameContext;
     private string _nameTemplate;
     private string _suggestedMovieName;
+    private string _defaultNameTemplate;
 
     public CutOutputViewModel(
         string nameTemplate,
@@ -22,6 +23,9 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
             nameContext);
 
         _nameTemplate =
+            nameTemplate;
+
+        _defaultNameTemplate =
             nameTemplate;
 
         _nameContext =
@@ -40,6 +44,32 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
 
         _nameTemplate =
             namingState.NameTemplate;
+
+        _defaultNameTemplate =
+            namingState.NameTemplate;
+
+        _nameContext =
+            namingState.NameContext;
+
+        _suggestedMovieName =
+            namingState.SuggestedMovieName;
+    }
+
+    public CutOutputViewModel(
+        CutNamingState namingState,
+        string defaultNameTemplate)
+    {
+        ArgumentNullException.ThrowIfNull(
+            namingState);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            defaultNameTemplate);
+
+        _nameTemplate =
+            namingState.NameTemplate;
+
+        _defaultNameTemplate =
+            defaultNameTemplate;
 
         _nameContext =
             namingState.NameContext;
@@ -60,20 +90,10 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
                 return;
             }
 
-            var suggestedMovieName =
-                NameTemplateRenderer.Render(
-                    value,
-                    _nameContext);
-
             _nameTemplate =
                 value;
 
-            _suggestedMovieName =
-                suggestedMovieName;
-
             OnPropertyChanged();
-            OnPropertyChanged(
-                nameof(SuggestedMovieName));
         }
     }
 
@@ -121,6 +141,25 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
                 });
     }
 
+    public void GenerateSuggestedMovieName()
+    {
+        var suggestedMovieName =
+            NameTemplateRenderer.Render(
+                _defaultNameTemplate,
+                _nameContext);
+
+        if (_suggestedMovieName == suggestedMovieName)
+        {
+            return;
+        }
+
+        _suggestedMovieName =
+            suggestedMovieName;
+
+        OnPropertyChanged(
+            nameof(SuggestedMovieName));
+    }
+
     public CutNamingState CreateNamingState()
     {
         return new CutNamingState(
@@ -142,22 +181,11 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
             return;
         }
 
-        var suggestedMovieName =
-            NameTemplateRenderer.Render(
-                _nameTemplate,
-                nameContext);
-
         _nameContext =
             nameContext;
 
-        _suggestedMovieName =
-            suggestedMovieName;
-
         OnPropertyChanged(
             propertyName);
-
-        OnPropertyChanged(
-            nameof(SuggestedMovieName));
     }
 
     private void OnPropertyChanged(

@@ -9,13 +9,18 @@ namespace CutAssistantNext.App.ViewModels;
 
 internal static class CutlistGenerationViewModelFactory
 {
+
     public static CutlistGenerationViewModel Create(
         CutlistSettings settings,
+        NamingSettings namingSettings,
         string fileName,
         MediaAnalysisResult analysis)
     {
         ArgumentNullException.ThrowIfNull(
             settings);
+
+        ArgumentNullException.ThrowIfNull(
+            namingSettings);
 
         ArgumentException.ThrowIfNullOrWhiteSpace(
             fileName);
@@ -24,7 +29,8 @@ internal static class CutlistGenerationViewModelFactory
             analysis);
 
         var originalFileName =
-            Path.GetFileName(fileName);
+            Path.GetFileName(
+                fileName);
 
         var nameContext =
             NameTemplateContextFactory.Create(
@@ -37,9 +43,11 @@ internal static class CutlistGenerationViewModelFactory
 
         return new CutlistGenerationViewModel(
             settings,
+            namingSettings,
             nameContext,
             technicalNotices);
     }
+
     public static CutlistGenerationViewModel Create(
         CutlistSettings settings,
         string fileName,

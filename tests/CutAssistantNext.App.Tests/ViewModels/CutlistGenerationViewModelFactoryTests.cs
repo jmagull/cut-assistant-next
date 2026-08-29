@@ -13,11 +13,17 @@ public sealed class CutlistGenerationViewModelFactoryTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate =
-                "%Name% [%Tag%.%Monat%.%YYYY%]",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
+
+        var namingSettings =
+            new NamingSettings
+            {
+                DefaultNameTemplate =
+                    "%Name% [%Tag%.%Monat%.%YYYY%]"
+            };
 
         var analysis =
             new MediaAnalysisResult(
@@ -31,6 +37,7 @@ public sealed class CutlistGenerationViewModelFactoryTests
         var viewModel =
             CutlistGenerationViewModelFactory.Create(
                 settings,
+                namingSettings,
                 "Sliders_Perfekte_Piloten_26.08.13_17-10_tele5_60_TVOON_DE.HQ.avi",
                 analysis);
 
@@ -56,11 +63,17 @@ public sealed class CutlistGenerationViewModelFactoryTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate =
-                "%Name% | %OriginalName%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
+
+        var namingSettings =
+            new NamingSettings
+            {
+                DefaultNameTemplate =
+                    "%Name% | %OriginalName%"
+            };
 
         var analysis =
             new MediaAnalysisResult(
@@ -77,6 +90,7 @@ public sealed class CutlistGenerationViewModelFactoryTests
         var viewModel =
             CutlistGenerationViewModelFactory.Create(
                 settings,
+                namingSettings,
                 fileName,
                 analysis);
 
@@ -94,7 +108,7 @@ public sealed class CutlistGenerationViewModelFactoryTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
