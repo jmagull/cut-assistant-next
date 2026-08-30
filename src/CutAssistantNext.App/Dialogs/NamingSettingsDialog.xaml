@@ -1,0 +1,289 @@
+<Window x:Class="CutAssistantNext.App.Dialogs.NamingSettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Namensmaske"
+        Width="1100"
+        Height="760"
+        MinWidth="980"
+        MinHeight="700"
+        WindowStartupLocation="CenterOwner"
+        Background="#F4F6F8">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+                    Margin="0,0,0,18">
+
+            <TextBlock FontSize="26"
+                       FontWeight="SemiBold"
+                       Foreground="#111827"
+                       Text="Standard-Namensmaske" />
+
+            <TextBlock Margin="0,5,0,0"
+                       FontSize="14"
+                       Foreground="#6B7280"
+                       Text="Standard für die Erzeugung vorgeschlagener Dateinamen konfigurieren" />
+        </StackPanel>
+
+        <Border Grid.Row="1"
+                Padding="18"
+                Background="White"
+                BorderBrush="#D9DEE5"
+                BorderThickness="1"
+                CornerRadius="8">
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Margin="0,0,0,5"
+                               FontWeight="SemiBold"
+                               Foreground="#4B5563"
+                               Text="Namensmaske" />
+
+                    <TextBox x:Name="NameTemplateTextBox"
+                             MinHeight="32"
+                             Padding="8,4"
+                             Background="#F4F6F8"
+                             IsReadOnly="True"
+                             Text="{Binding DefaultNameTemplate}" />
+
+                    <ListBox x:Name="NameTemplateBlockListBox"
+                             Margin="0,12,0,0"
+                             Padding="0"
+                             AllowDrop="True"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Drop="NameTemplateBlockListBox_Drop"
+                             ItemsSource="{Binding TemplateBlocks}"
+                             KeyDown="NameTemplateBlockListBox_KeyDown"
+                             PreviewDragOver="NameTemplateBlockListBox_PreviewDragOver"
+                             PreviewMouseMove="NameTemplateBlockListBox_PreviewMouseMove"
+                             SelectionMode="Single">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding"
+                                        Value="0" />
+                                <Setter Property="Margin"
+                                        Value="0" />
+                                <Setter Property="Background"
+                                        Value="Transparent" />
+                                <Setter Property="BorderThickness"
+                                        Value="0" />
+                                <Setter Property="FocusVisualStyle"
+                                        Value="{x:Null}" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,0,6,6"
+                                        Padding="10,6"
+                                        BorderThickness="1"
+                                        CornerRadius="5"
+                                        ToolTip="{Binding Value}">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background"
+                                                    Value="#F4F6F8" />
+                                            <Setter Property="BorderBrush"
+                                                    Value="#9CA3AF" />
+
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}"
+                                                             Value="True">
+                                                    <Setter Property="Background"
+                                                            Value="#DBEAFE" />
+                                                    <Setter Property="BorderBrush"
+                                                            Value="#2563EB" />
+                                                    <Setter Property="BorderThickness"
+                                                            Value="2" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+
+                                    <TextBlock FontWeight="SemiBold"
+                                               Foreground="#374151"
+                                               Text="{Binding DisplayText}" />
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <TextBlock Margin="0,8,0,0"
+                               FontSize="12"
+                               Foreground="#6B7280"
+                               TextWrapping="Wrap"
+                               Text="Die Maske wird dauerhaft als Standard gespeichert. Einzelne Vorgänge können davon unabhängig bleiben." />
+
+                    <TextBlock Margin="0,22,0,5"
+                               FontWeight="SemiBold"
+                               Foreground="#4B5563"
+                               Text="Originaldateiname" />
+
+                    <Border Padding="10"
+                            Background="#F4F6F8"
+                            BorderBrush="#D9DEE5"
+                            BorderThickness="1"
+                            CornerRadius="5">
+
+                        <TextBlock Foreground="#374151"
+                                   TextWrapping="Wrap"
+                                   Text="{Binding OriginalFileName}" />
+                    </Border>
+
+                    <TextBlock Margin="0,18,0,5"
+                               FontWeight="SemiBold"
+                               Foreground="#4B5563"
+                               Text="Vorschau" />
+
+                    <Border Padding="10"
+                            Background="#F4F6F8"
+                            BorderBrush="#D9DEE5"
+                            BorderThickness="1"
+                            CornerRadius="5">
+
+                        <TextBlock FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="#111827"
+                                   TextWrapping="Wrap"
+                                   Text="{Binding Preview}" />
+                    </Border>
+
+                    <TextBlock Margin="0,22,0,5"
+                               FontWeight="SemiBold"
+                               Foreground="#4B5563"
+                               Text="Verfügbare Elemente" />
+
+                    <WrapPanel>
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%Name%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Name" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%Staffel:S%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Staffel (S)" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%Folge:E%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Folge (E)" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%Folgentitel: - %"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Folgentitel (-)" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%Tag%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Tag" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%Monat%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Monat" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%YY%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Jahr (2-stellig)" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%YYYY%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Jahr (4-stellig)" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%Stunde%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Stunde" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%Minute%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Minute" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%Sender%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Sender" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%Serie%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Serie" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="%OriginalName%"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Originalname" />
+                    </WrapPanel>
+
+                    <TextBlock Margin="0,4,0,0"
+                               FontSize="12"
+                               Foreground="#6B7280"
+                               TextWrapping="Wrap"
+                               Text="Baustein mit gedrückter linker Maustaste an die gewünschte Stelle der Namensmaske ziehen." />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <StackPanel Grid.Row="2"
+                    Margin="0,18,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+
+            <Button MinWidth="130"
+                    Height="36"
+                    Margin="0,0,10,0"
+                    Padding="14,0"
+                    Click="SaveButton_Click"
+                    Content="Speichern" />
+
+            <Button MinWidth="110"
+                    Height="36"
+                    Padding="14,0"
+                    Click="CancelButton_Click"
+                    Content="Abbrechen" />
+        </StackPanel>
+    </Grid>
+</Window>

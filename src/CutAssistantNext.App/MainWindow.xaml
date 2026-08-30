@@ -472,6 +472,13 @@
                                 Height="36"
                                 Margin="10,0,0,0"
                                 Padding="14,0"
+                                Click="NamingSettingsButton_Click"
+                                Content="Namensmaske …" />
+
+                        <Button MinWidth="170"
+                                Height="36"
+                                Margin="10,0,0,0"
+                                Padding="14,0"
                                 Click="FfmpegSettingsButton_Click"
                                 Content="FFmpeg-Werkzeuge …" />
 

@@ -660,6 +660,54 @@ public partial class MainWindow : Window
             viewModel.CreateSettings());
     }
 
+    private void NamingSettingsButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var store =
+            new NamingSettingsStore();
+
+        var settings =
+            new NamingSettingsLoader().Load();
+
+        var nameContext =
+            string.IsNullOrWhiteSpace(
+                _viewModel.FileName)
+            ? new NameTemplateContext(
+                Name: "Sliders",
+                Year: "2026",
+                Month: "08",
+                Day: "28",
+                Season: "05",
+                Episode: "05",
+                OriginalName:
+                    "Sliders__Das_Wasser_des_Lebens_26.08.28_17-10_tele5_60_TVOON_DE.HQ.mp4",
+                EpisodeTitle:
+                    "Das Wasser des Lebens")
+            : NameTemplateContextFactory.Create(
+                _viewModel.FileName);
+
+        var viewModel =
+            new NamingSettingsViewModel(
+                settings,
+                nameContext);
+
+        var dialog =
+            new NamingSettingsDialog(
+                viewModel)
+            {
+                Owner = this
+            };
+
+        if (dialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        store.Save(
+            viewModel.CreateSettings());
+    }
+
     private void FfmpegSettingsButton_Click(
         object sender,
         RoutedEventArgs e)
