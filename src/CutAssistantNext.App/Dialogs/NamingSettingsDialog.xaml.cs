@@ -49,7 +49,7 @@ public partial class NamingSettingsDialog : Window
 
         if (sender is not FrameworkElement element ||
             element.Tag is not string templateElement ||
-            string.IsNullOrWhiteSpace(templateElement))
+            string.IsNullOrEmpty(templateElement))
         {
             return;
         }
@@ -375,6 +375,39 @@ public partial class NamingSettingsDialog : Window
         }
 
         e.Handled = true;
+    }
+
+    private void ResetButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (DataContext is not NamingSettingsViewModel viewModel)
+        {
+            return;
+        }
+
+        viewModel.ResetDefaultNameTemplate();
+
+        NameTemplateBlockListBox.SelectedIndex = -1;
+    }
+
+    private void NerdButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var isVisible =
+            NerdDetailsPanel.Visibility ==
+            Visibility.Visible;
+
+        NerdDetailsPanel.Visibility =
+            isVisible
+            ? Visibility.Collapsed
+            : Visibility.Visible;
+
+        NerdButton.Content =
+            isVisible
+            ? "Ich will es genau wissen …"
+            : "Codebuch zuklappen.";
     }
 
     private void SaveButton_Click(

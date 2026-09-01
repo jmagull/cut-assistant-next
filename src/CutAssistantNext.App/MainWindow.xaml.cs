@@ -671,21 +671,24 @@ public partial class MainWindow : Window
             new NamingSettingsLoader().Load();
 
         var nameContext =
-            string.IsNullOrWhiteSpace(
-                _viewModel.FileName)
-            ? new NameTemplateContext(
-                Name: "Sliders",
+            new NameTemplateContext(
+                Name:
+                    "Hunting Party - Die Moerderjagd",
                 Year: "2026",
                 Month: "08",
-                Day: "28",
-                Season: "05",
-                Episode: "05",
+                Day: "25",
+                Season: "02",
+                Episode: "13",
                 OriginalName:
-                    "Sliders__Das_Wasser_des_Lebens_26.08.28_17-10_tele5_60_TVOON_DE.HQ.mp4",
+                    "Hunting_Party_-_Die_Moerderjagd__Xander_Wax_S02E13_26.08.25_22-10_sat1_60_TVOON_DE.HQ.mp4",
+                ShortYear: "26",
+                Hour: "22",
+                Minute: "10",
+                Sender: "sat1",
+                Series:
+                    "Hunting Party - Die Moerderjagd",
                 EpisodeTitle:
-                    "Das Wasser des Lebens")
-            : NameTemplateContextFactory.Create(
-                _viewModel.FileName);
+                    "Xander Wax");
 
         var viewModel =
             new NamingSettingsViewModel(

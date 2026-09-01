@@ -44,12 +44,31 @@
                                Foreground="#4B5563"
                                Text="Namensmaske" />
 
-                    <TextBox x:Name="NameTemplateTextBox"
-                             MinHeight="32"
-                             Padding="8,4"
-                             Background="#F4F6F8"
-                             IsReadOnly="True"
-                             Text="{Binding DefaultNameTemplate}" />
+                    <Button x:Name="NerdButton"
+                            HorizontalAlignment="Left"
+                            Padding="10,5"
+                            Background="#B91C1C"
+                            BorderBrush="#991B1B"
+                            Foreground="White"
+                            FontWeight="SemiBold"
+                            Click="NerdButton_Click"
+                            Content="Ich will es genau wissen …" />
+
+                    <StackPanel x:Name="NerdDetailsPanel"
+                                Margin="0,8,0,0"
+                                Visibility="Collapsed">
+                        <TextBlock Margin="0,0,0,5"
+                                   FontSize="12"
+                                   Foreground="#6B7280"
+                                   Text="Technische Namensmaske" />
+
+                        <TextBox x:Name="NameTemplateTextBox"
+                                 MinHeight="32"
+                                 Padding="8,4"
+                                 Background="#F4F6F8"
+                                 IsReadOnly="True"
+                                 Text="{Binding DefaultNameTemplate}" />
+                    </StackPanel>
 
                     <ListBox x:Name="NameTemplateBlockListBox"
                              Margin="0,12,0,0"
@@ -129,7 +148,7 @@
                     <TextBlock Margin="0,22,0,5"
                                FontWeight="SemiBold"
                                Foreground="#4B5563"
-                               Text="Originaldateiname" />
+                               Text="Beispieldateiname" />
 
                     <Border Padding="10"
                             Background="#F4F6F8"
@@ -258,6 +277,69 @@
                                 Content="Originalname" />
                     </WrapPanel>
 
+                    <TextBlock Margin="0,10,0,5"
+                               FontWeight="SemiBold"
+                               Foreground="#4B5563"
+                               Text="Trennzeichen und Abstände" />
+
+                    <WrapPanel>
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="&#x20;"
+                                ToolTip="Leerzeichen in die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="Leerzeichen" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="["
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="[" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="]"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="]" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="("
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="(" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag=")"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content=")" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="-"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="-" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="_"
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="_" />
+
+                        <Button Margin="0,0,8,8"
+                                Padding="10,5"
+                                Tag="."
+                                ToolTip="In die Namensmaske ziehen"
+                                PreviewMouseMove="TemplateElement_PreviewMouseMove"
+                                Content="." />
+                    </WrapPanel>
+
                     <TextBlock Margin="0,4,0,0"
                                FontSize="12"
                                Foreground="#6B7280"
@@ -271,6 +353,13 @@
                     Margin="0,18,0,0"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
+
+            <Button MinWidth="140"
+                    Height="36"
+                    Margin="0,0,10,0"
+                    Padding="14,0"
+                    Click="ResetButton_Click"
+                    Content="Zurück auf Anfang" />
 
             <Button MinWidth="130"
                     Height="36"

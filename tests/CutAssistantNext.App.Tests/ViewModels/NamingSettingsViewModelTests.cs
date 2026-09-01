@@ -310,4 +310,96 @@ public sealed class NamingSettingsViewModelTests
             "Sliderstele5E05",
             viewModel.Preview);
     }
+    [Fact]
+    public void InsertTemplateBlock_AllowsSpaceLiteral()
+    {
+        var settings =
+            new NamingSettings
+            {
+                DefaultNameTemplate =
+                    "%Name%%Folge:E%"
+            };
+
+        var viewModel =
+            new NamingSettingsViewModel(
+                settings,
+                new NameTemplateContext(
+                    Name: "Sliders",
+                    Episode: "05",
+                    OriginalName: "Sliders_original.mp4"));
+
+        var insertedIndex =
+            viewModel.InsertTemplateBlock(
+                " ",
+                insertionIndex: 1);
+
+        Assert.Equal(
+            1,
+            insertedIndex);
+
+        Assert.Equal(
+            "%Name% %Folge:E%",
+            viewModel.DefaultNameTemplate);
+
+        Assert.Equal(
+            [
+                "%Name%",
+                " ",
+                "%Folge:E%"
+            ],
+            viewModel.TemplateBlocks.Select(
+                block => block.Value));
+
+        Assert.Equal(
+            "Sliders E05",
+            viewModel.Preview);
+    }
+    [Fact]
+    public void ResetDefaultNameTemplate_RestoresTemplateFromDialogStart()
+    {
+        var settings =
+            new NamingSettings
+            {
+                DefaultNameTemplate =
+                    "%Name% [%Tag%.%Monat%.%YYYY%]"
+            };
+
+        var viewModel =
+            new NamingSettingsViewModel(
+                settings,
+                new NameTemplateContext(
+                    Name: "Sliders",
+                    Year: "2026",
+                    Month: "08",
+                    Day: "28",
+                    OriginalName: "Sliders_original.mp4"));
+
+        viewModel.DefaultNameTemplate =
+            "%Sender%%Name%---%Stunde%";
+
+        viewModel.ResetDefaultNameTemplate();
+
+        Assert.Equal(
+            settings.DefaultNameTemplate,
+            viewModel.DefaultNameTemplate);
+
+        Assert.Equal(
+            [
+                "%Name%",
+                " ",
+                "[",
+                "%Tag%",
+                ".",
+                "%Monat%",
+                ".",
+                "%YYYY%",
+                "]"
+            ],
+            viewModel.TemplateBlocks.Select(
+                block => block.Value));
+
+        Assert.Equal(
+            "Sliders [28.08.2026]",
+            viewModel.Preview);
+    }
 }

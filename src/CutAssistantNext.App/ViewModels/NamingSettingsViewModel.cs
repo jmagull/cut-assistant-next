@@ -11,6 +11,8 @@ internal sealed class NamingSettingsViewModel :
 {
     private readonly NameTemplateContext _nameContext;
 
+    private readonly string _initialDefaultNameTemplate;
+
     private string _defaultNameTemplate;
 
     internal NamingSettingsViewModel(
@@ -27,6 +29,9 @@ internal sealed class NamingSettingsViewModel :
             nameContext;
 
         _defaultNameTemplate =
+            settings.DefaultNameTemplate;
+
+        _initialDefaultNameTemplate =
             settings.DefaultNameTemplate;
 
         OriginalFileName =
@@ -177,7 +182,7 @@ internal sealed class NamingSettingsViewModel :
         string templateElement,
         int insertionIndex)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(
+        ArgumentException.ThrowIfNullOrEmpty(
             templateElement);
 
         var blocks =
@@ -205,6 +210,12 @@ internal sealed class NamingSettingsViewModel :
                 blocks);
 
         return insertionIndex;
+    }
+
+    internal void ResetDefaultNameTemplate()
+    {
+        DefaultNameTemplate =
+            _initialDefaultNameTemplate;
     }
 
      internal NamingSettings CreateSettings()
