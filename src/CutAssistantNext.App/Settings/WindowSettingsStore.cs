@@ -12,6 +12,8 @@ internal sealed class WindowSettings
     public double Height { get; init; }
 
     public bool IsMaximized { get; init; }
+
+    public double? Volume { get; init; }
 }
 
 internal sealed class WindowSettingsStore

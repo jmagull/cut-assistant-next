@@ -123,6 +123,16 @@ public partial class MainWindow : Window
         {
             await _mediaPlayerService.InitializeAsync(
                 videoWindowHandle);
+
+            var windowSettings =
+                _windowSettingsStore.Load();
+
+            if (windowSettings?.Volume is double savedVolume &&
+                double.IsFinite(savedVolume))
+            {
+                await _playbackViewModel.SetVolumeAsync(
+                    savedVolume);
+            }
         }
         catch (Exception exception)
         {
@@ -254,7 +264,9 @@ public partial class MainWindow : Window
                 Height = height,
                 IsMaximized =
                     WindowState ==
-                    System.Windows.WindowState.Maximized
+                    System.Windows.WindowState.Maximized,
+                Volume =
+                    _playbackViewModel.Volume
             });
     }
 
@@ -461,7 +473,7 @@ public partial class MainWindow : Window
             () => _playbackViewModel.StepForwardTenFramesAsync());
     }
 
-    private void RemoveSegmentsDataGrid_PreviewMouseLeftButtonDown(
+    private async void RemoveSegmentsDataGrid_PreviewMouseLeftButtonDown(
         object sender,
         MouseButtonEventArgs e)
     {
@@ -476,18 +488,79 @@ public partial class MainWindow : Window
                 dataGrid,
                 source) as DataGridRow;
 
-        if (clickedRow is null ||
-            !ReferenceEquals(
+        if (clickedRow is null)
+        {
+            return;
+        }
+
+        var clickedCell =
+            FindVisualParent<DataGridCell>(
+                source);
+
+        if (clickedCell is not null &&
+            clickedRow.Item is RemoveSegment segment)
+        {
+            TimeSpan? seekPosition =
+                null;
+
+            if (ReferenceEquals(
+                    clickedCell.Column,
+                    RemoveSegmentStartColumn))
+            {
+                seekPosition =
+                    segment.Start;
+            }
+            else if (ReferenceEquals(
+                         clickedCell.Column,
+                         RemoveSegmentEndColumn))
+            {
+                seekPosition =
+                    segment.End;
+            }
+
+            if (seekPosition.HasValue)
+            {
+                e.Handled =
+                    true;
+
+                dataGrid.SelectedItem =
+                    clickedRow.Item;
+
+                _cutPlanViewModel.SelectedRemoveSegment =
+                    segment;
+
+                _playbackViewModel.BeginSeek();
+
+                if (!_playbackViewModel.IsSeeking)
+                {
+                    return;
+                }
+
+                _playbackViewModel.UpdateSeekPosition(
+                    seekPosition.Value.TotalSeconds);
+
+                await ExecutePlaybackActionAsync(
+                    () => _playbackViewModel.CommitSeekAsync());
+
+                return;
+            }
+        }
+
+        if (!ReferenceEquals(
                 dataGrid.SelectedItem,
                 clickedRow.Item))
         {
             return;
         }
 
-        e.Handled = true;
+        e.Handled =
+            true;
 
-        dataGrid.SelectedItem = null;
-        _cutPlanViewModel.SelectedRemoveSegment = null;
+        dataGrid.SelectedItem =
+            null;
+
+        _cutPlanViewModel.SelectedRemoveSegment =
+            null;
     }
 
     private void SetCutStartButton_Click(
@@ -607,6 +680,28 @@ public partial class MainWindow : Window
                     MessageBoxImage.Warning);
             }
         }
+    }
+
+    private static T? FindVisualParent<T>(
+        DependencyObject source)
+        where T : DependencyObject
+    {
+        var current =
+            source;
+
+        while (current is not null)
+        {
+            if (current is T matchingParent)
+            {
+                return matchingParent;
+            }
+
+            current =
+                System.Windows.Media.VisualTreeHelper.GetParent(
+                    current);
+        }
+
+        return null;
     }
 
     private async Task ExecutePlaybackActionAsync(

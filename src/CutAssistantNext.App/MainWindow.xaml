@@ -457,11 +457,13 @@
                                   SelectedItem="{Binding SelectedRemoveSegment, Mode=TwoWay}"
                                   ItemsSource="{Binding RemoveSegments}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Anfang"
+                                <DataGridTextColumn x:Name="RemoveSegmentStartColumn"
+                                                    Header="Anfang"
                                                     Width="*"
                                                     Binding="{Binding Start}" />
 
-                                <DataGridTextColumn Header="Ende"
+                                <DataGridTextColumn x:Name="RemoveSegmentEndColumn"
+                                                    Header="Ende"
                                                     Width="*"
                                                     Binding="{Binding End}" />
 

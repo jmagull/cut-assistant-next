@@ -119,18 +119,28 @@ Dieser Befund unterstützt zugleich die geplante V1-Strategie für echte AVI-Dat
 
 ## Aktueller Bauabschnitt
 
-Cutlist-Server und Cutlist-Komfort:
+CCutlist-Server und Cutlist-Komfort:
 
 - persistente persönliche Server-URL
 - Validierung der persönlichen Server-URL
 - Verbindungstest
-- automatische Suche nach dem Laden eines Videos
+- automatische Suche nach erfolgreicher Medienanalyse
 - robuste Behandlung von 0, 1 und mehreren Treffern
 - breiter Cutlist-Auswahldialog
 - Anzeige technischer und qualitativer Serverinformationen
 - neutrale Darstellung unterschiedlicher Formate und Autoren
 - Sortierung neuerer Serverfassungen über die numerische Cutlist-ID
-- nächster Schritt: Download der ausgewählten Cutlist und Übergabe an den bestehenden lokalen Cutlist-Lade- und Prüfweg
+- Download der ausgewählten Cutlist über ihre Cutlist-ID
+- bytegenauer Download ohne vorschnelle Zeichenkodierungsumwandlung
+- gemeinsame Verarbeitung lokaler und heruntergeladener Cutlists über denselben Lade- und Prüfweg
+- erfolgreicher Praxistest mit MP4- und AVI-Cutlists derselben Aufnahme
+- Klick auf `Anfang` oder `Ende` eines Schnittbereichs springt den Player exakt auf die jeweilige Schnittposition
+- die Bereichsauswahl bleibt beim Anspringen erhalten, sodass unmittelbar per Frame-Navigation feinjustiert werden kann
+- die zuletzt eingestellte Wiedergabelautstärke wird global in `window-settings.json` gespeichert und nach dem nächsten Start wiederhergestellt
+- ältere `window-settings.json` ohne Lautstärkewert bleiben kompatibel
+- Lautstärke-Wiederherstellung im Praxistest mehrfach erfolgreich geprüft
+- Shutdown nach der Änderung praktisch geprüft; kein reproduzierbarer Shutdownfehler festgestellt
+- aktueller Teststand: **222/222 grün**
 
 ## Schnittsemantik
 
@@ -142,27 +152,18 @@ Das Bedienmodell bleibt damit auf das Entfernen von Werbung, Vorlauf, Nachlauf o
 
 ## Nächster geplanter Bauabschnitt
 
-Die im Server-Auswahldialog gewählte Cutlist soll über ihre Cutlist-ID vom persönlichen Cutlist-Server heruntergeladen werden.
+Als nächster kleiner V1-Baustein soll das Überschreiben bereits vorhandener Ausgabedateien über einen ausdrücklichen Bestätigungsdialog ermöglicht werden. Eine bestehende Datei darf weiterhin niemals still überschrieben werden.
 
-Die heruntergeladene Cutlist soll anschließend nicht über einen zweiten Ladealgorithmus verarbeitet werden. Stattdessen soll der bereits vorhandene lokale Cutlist-Ladeweg gemeinsam genutzt werden, einschließlich:
+Danach soll der direkte Upload neu erzeugter Cutlists auf den persönlichen Cutlist-Server folgen. Die dafür benötigte Servergrundlage ist inzwischen vorhanden: persistente persönliche Server-URL, Verbindungstest, automatische Suche, Auswahldialog, Download über Cutlist-ID und gemeinsamer lokaler Lade- und Prüfweg.
 
-- Medien-Dauerprüfung
-- Dateigrößen-Plausibilitätsprüfung
-- Erkennung kleiner Endfragmente
-- Aufbau des `CutPlan`
-- Übernahme von `SuggestedMovieName` in den vorhandenen Naming-State
-
-Der provisorische manuelle Button für die Serversuche wurde nach erfolgreicher gemeinsamer Ladeintegration entfernt; die Serversuche läuft nun ausschließlich automatisch nach erfolgreicher Medienanalyse.
+Der provisorische manuelle Button für die Serversuche wurde nach erfolgreicher gemeinsamer Ladeintegration entfernt; die Serversuche läuft ausschließlich automatisch nach erfolgreicher Medienanalyse.
 
 
 
 ## Noch offen
 
-- Download einer ausgewählten Cutlist vom Cutlist-Server
 - direkter Upload neu erzeugter Cutlists auf den Cutlist-Server
 - Bestätigungsdialog zum Überschreiben vorhandener Ausgabedateien
-- persistente globale Wiedergabelautstärke
-- Doppelklick auf eine Schnittposition zum Anspringen im Player
 - echte klassische AVI-Dateien über einen geeigneten V1-Workflow schneiden
 - integrierte Unterstützung mehrteiliger Aufnahmen
 - spätere Smart-Rendering-Verfahren
