@@ -1019,13 +1019,6 @@ public partial class MainWindow : Window
         dialog.ShowDialog();
     }
 
-    private async void SearchCutlistsOnServerButton_Click(
-        object sender,
-        RoutedEventArgs e)
-    {
-        await SearchCutlistsForCurrentMediaAsync();
-    }
-
     private async Task SearchCutlistsForCurrentMediaAsync(
         bool skipIfNotConfigured = false)
     {
@@ -1092,9 +1085,6 @@ public partial class MainWindow : Window
 
             return;
         }
-
-        SearchCutlistsOnServerButton.IsEnabled =
-            false;
 
         try
         {
@@ -1215,11 +1205,6 @@ public partial class MainWindow : Window
                 "Cutlist-Server",
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
-        }
-        finally
-        {
-            SearchCutlistsOnServerButton.IsEnabled =
-                true;
         }
     }
 

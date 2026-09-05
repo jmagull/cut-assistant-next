@@ -152,7 +152,7 @@ Die heruntergeladene Cutlist soll anschließend nicht über einen zweiten Ladeal
 - Aufbau des `CutPlan`
 - Übernahme von `SuggestedMovieName` in den vorhandenen Naming-State
 
-Erst nach dieser gemeinsamen Ladeintegration wird der provisorische manuelle Button für die Serversuche entfernt.
+Der provisorische manuelle Button für die Serversuche wurde nach erfolgreicher gemeinsamer Ladeintegration entfernt; die Serversuche läuft nun ausschließlich automatisch nach erfolgreicher Medienanalyse.
 
 
 
