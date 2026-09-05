@@ -44,6 +44,67 @@ Stand: 05.09.2026
 - Das Format wird aus dem Cutlist-Dateinamen abgeleitet, beispielsweise `MP4 HQ`, `MP4 HD`, `AVI HQ` oder `AVI`.
 - Der tatsächliche Download einer ausgewählten Server-Cutlist ist noch nicht umgesetzt.
 - Aktueller vollständiger Testlauf: **218 von 218 Tests erfolgreich**.
+### Cutlist-Server: Download und gemeinsamer Ladeweg
+
+Die automatische Cutlist-Serversuche wurde bis zum vollständigen Download erweitert.
+
+Technischer Ablauf:
+
+- Suche weiterhin über `getxml.php?name=<vollständiger Originaldateiname>`.
+- Die vom Benutzer ausgewählte Cutlist wird über `getfile.php?id=<Cutlist-ID>` heruntergeladen.
+- Der Download erfolgt als rohe Bytes (`byte[]`), damit historische Cutlists nicht durch eine vorschnelle Zeichenkodierungsumwandlung verändert werden.
+- Die Bytes werden ausschließlich als temporäre `.cutlist`-Datei abgelegt.
+- Anschließend wird derselbe `LoadCutlistFromFile(...)`-Pfad verwendet wie beim manuellen Laden einer lokalen Cutlist.
+- Dadurch gelten für lokale und vom Server geladene Cutlists identisch:
+  - Dateigrößen-Plausibilitätsprüfung,
+  - Endfragment-Prüfung und gegebenenfalls Korrektur,
+  - CutPlan-Erzeugung,
+  - Übernahme von `SuggestedMovieName`,
+  - bestehende Fehlerbehandlung.
+- Die temporäre Datei wird nach dem Ladeversuch wieder entfernt.
+- Der auf dem Server angegebene Cutlist-Dateiname wird nicht als lokaler Temp-Pfad verwendet.
+
+Der bisherige lokale Ladealgorithmus wurde hierfür ohne fachliche Verhaltensänderung in `LoadCutlistFromFile(...)` herausgelöst.
+
+Tests nach der Erweiterung: **220/220 grün**.
+
+#### Produktiver Praxistest mit Grey's Anatomy
+
+Die automatische Suche und der anschließende Download einer MP4-Cutlist vom persönlichen cutlist.at-Zugang wurden erfolgreich getestet.
+
+Die vom Server heruntergeladene Cutlist und dieselbe lokal vorhandene Cutlist ergaben identisch:
+
+- vier Behaltebereiche,
+- geschnittene Laufzeit `00:41:05.320`,
+- denselben übernommenen `SuggestedMovieName`,
+- dieselbe Namensvorschau im Schneiden-Dialog.
+
+Damit ist praktisch bestätigt, dass vom Server geladene Cutlists denselben fachlichen Ladeweg durchlaufen wie lokale Cutlists.
+
+Zusätzlich wurde für dieselbe MP4-Mediendatei eine auf dem Server vorhandene AVI-Cutlist getestet.
+
+CAN zeigte erwartungsgemäß die vorhandene Dateigrößenwarnung:
+
+- Größe laut AVI-Cutlist: `555.678.064 Bytes`
+- geladene MP4-Datei: `667.888.009 Bytes`
+- Abweichung: `20,2 %`
+
+Nach bewusster Bestätigung ließ sich die AVI-Cutlist dennoch laden. Die Timeline erwies sich als praktisch deckungsgleich mit der MP4-Cutlist:
+
+- Filmende bei beiden Cutlists: `01:29:58.080`
+- Unterschiede ausschließlich an einzelnen Werbegrenzen,
+- größte beobachtete Abweichung etwa `1,35 s`,
+- Gesamtdifferenz der geschnittenen Laufzeit etwa `4,215 s`.
+
+Die kleinen Unterschiede sind mit unterschiedlich gesetzten Schnittmarken bzw. menschlichem Augenmaß bei der Werbung vereinbar und sprechen nicht für eine grundsätzlich andere Timeline.
+
+Praxisfolgerung:
+
+**Eine abweichende Dateigröße oder ein anderes Container-/Ausgabeformat bedeutet nicht automatisch eine inkompatible Schnitt-Timeline.**
+
+Die Dateigrößenprüfung bleibt deshalb bewusst eine Plausibilitätswarnung mit Benutzerentscheidung und kein hartes Inkompatibilitätskriterium. AVI-Cutlists werden in der formatneutralen Serversuche weiterhin nicht ausgefiltert.
+
+Dieser Befund unterstützt zugleich die geplante V1-Strategie für echte AVI-Dateien: Wenn eine AVI-Datei verlustfrei für MP4Box vorbereitet werden kann und dabei ihre Timeline erhalten bleibt, können vorhandene historische AVI-Cutlists grundsätzlich weiterverwendbar sein. Dies muss später mit echten alten OTR-AVI-Dateien praktisch verifiziert werden.
 
 ## Vorhandene Projekte
 
@@ -92,6 +153,8 @@ Die heruntergeladene Cutlist soll anschließend nicht über einen zweiten Ladeal
 - Übernahme von `SuggestedMovieName` in den vorhandenen Naming-State
 
 Erst nach dieser gemeinsamen Ladeintegration wird der provisorische manuelle Button für die Serversuche entfernt.
+
+
 
 ## Noch offen
 

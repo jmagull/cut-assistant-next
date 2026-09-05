@@ -321,6 +321,82 @@ public async Task SearchAsync_ReturnsEmptyListForEmptyResponse()
             uri.AbsoluteUri);
     }
 
+    [Fact]
+    public void BuildDownloadUri_UsesPersonalServerUrlAndCutlistId()
+    {
+        var personalServerUrl =
+            "http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/";
+
+        var cutlistId =
+            "2078205";
+
+        var uri =
+            CutlistServerClient.BuildDownloadUri(
+                personalServerUrl,
+                cutlistId);
+
+        Assert.Equal(
+            personalServerUrl
+            + "getfile.php"
+            + "?id=2078205",
+            uri.AbsoluteUri);
+    }
+
+    [Fact]
+    public async Task DownloadBytesAsync_SendsGetAndReturnsResponseBytes()
+    {
+        var personalServerUrl =
+            "http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/";
+
+        var cutlistId =
+            "2078205";
+
+        var responseBytes =
+            new byte[]
+            {
+                0x5B,
+                0x47,
+                0x65,
+                0x6E,
+                0x5D,
+                0x0D,
+                0x0A,
+                0xE4,
+                0xF6,
+                0xFC
+            };
+
+        using var handler =
+            new RecordingByteHttpMessageHandler(
+                responseBytes);
+
+        using var httpClient =
+            new HttpClient(
+                handler);
+
+        var client =
+            new CutlistServerClient(
+                httpClient);
+
+        var result =
+            await client.DownloadBytesAsync(
+                personalServerUrl,
+                cutlistId);
+
+        Assert.Equal(
+            responseBytes,
+            result);
+
+        Assert.Equal(
+            HttpMethod.Get,
+            handler.RequestMethod);
+
+        Assert.Equal(
+            personalServerUrl
+            + "getfile.php"
+            + "?id=2078205",
+            handler.RequestUri?.AbsoluteUri);
+    }
     private sealed class RecordingHttpMessageHandler
         : HttpMessageHandler
     {
@@ -353,6 +429,46 @@ public async Task SearchAsync_ReturnsEmptyListForEmptyResponse()
                 {
                     Content =
                         new StringContent(
+                            _responseBody)
+                };
+
+            return Task.FromResult(
+                response);
+        }
+    }
+
+    private sealed class RecordingByteHttpMessageHandler
+        : HttpMessageHandler
+    {
+        private readonly byte[] _responseBody;
+
+        internal RecordingByteHttpMessageHandler(
+            byte[] responseBody)
+        {
+            _responseBody =
+                responseBody;
+        }
+
+        internal HttpMethod? RequestMethod { get; private set; }
+
+        internal Uri? RequestUri { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            RequestMethod =
+                request.Method;
+
+            RequestUri =
+                request.RequestUri;
+
+            var response =
+                new HttpResponseMessage(
+                    System.Net.HttpStatusCode.OK)
+                {
+                    Content =
+                        new ByteArrayContent(
                             _responseBody)
                 };
 

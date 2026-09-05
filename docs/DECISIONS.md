@@ -136,3 +136,17 @@ Begründung und Regeln:
 - Der spätere Download einer ausgewählten Server-Cutlist soll keinen eigenen parallelen Cutlist-Ladealgorithmus erhalten. Die heruntergeladene Datei soll den bestehenden lokalen Prüf- und Ladeweg verwenden.
 
 Damit bleiben Serversuche, Benutzerauswahl, Download und fachliche Cutlist-Verarbeitung voneinander getrennt.
+
+#### Praxisbestätigung: unterschiedliche Formate können dieselbe Timeline besitzen
+
+Ein Praxistest am 05.09.2026 bestätigte die Entscheidung, Suchergebnisse nicht nach dem Containerformat der aktuell geladenen Mediendatei zu filtern.
+
+Für dieselbe OTR-Aufnahme wurden sowohl eine MP4- als auch eine AVI-Cutlist vom Server geladen. Obwohl die AVI-Cutlist aufgrund einer Dateigrößenabweichung von 20,2 % die bestehende Plausibilitätswarnung auslöste, lag ihre Schnitt-Timeline praktisch auf derselben Zeitachse wie die MP4-Cutlist. Insbesondere war das Filmende mit `01:29:58.080` identisch. Die beobachteten Unterschiede von maximal etwa 1,35 Sekunden lagen ausschließlich an einzelnen Werbegrenzen und sind mit unterschiedlich gesetzten Schnittmarken vereinbar.
+
+Daraus folgt:
+
+- Containerformat und Dateigröße sind keine ausreichenden Kriterien zur Beurteilung der Timeline-Kompatibilität.
+- Die Dateigrößenprüfung bleibt eine Warnung und kein automatischer Ausschluss.
+- Server-Cutlists anderer Formate bleiben sichtbar und können nach Benutzerbestätigung geladen werden.
+- Die tatsächliche fachliche Prüfung erfolgt weiterhin im gemeinsamen Cutlist-Ladeweg.
+- Dieser Ansatz ist zugleich Grundlage für die spätere AVI-Vorbereitung für MP4Box, sofern die ursprüngliche Timeline beim Remux erhalten bleibt.

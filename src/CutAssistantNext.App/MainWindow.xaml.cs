@@ -1041,6 +1041,22 @@ public partial class MainWindow : Window
             return;
         }
 
+        var mediaDuration =
+            _viewModel.MediaDuration;
+
+        if (!mediaDuration.HasValue ||
+            mediaDuration.Value <= TimeSpan.Zero)
+        {
+            MessageBox.Show(
+                this,
+                "Die Laufzeit der geladenen Mediendatei konnte nicht ermittelt werden.",
+                "Cutlist-Server",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
         var serverSettings =
             new CutlistServerSettingsStore().Load();
 
@@ -1129,10 +1145,43 @@ public partial class MainWindow : Window
             if (dialogResult == true &&
                 dialog.SelectedResult is not null)
             {
+                var selectedResult =
+                    dialog.SelectedResult;
+
                 _logger.Information(
                     $"Cutlist auf Server ausgewählt: " +
-                    $"{dialog.SelectedResult.CutlistFileName} | " +
-                    $"ID: {dialog.SelectedResult.Id}");
+                    $"{selectedResult.CutlistFileName} | " +
+                    $"ID: {selectedResult.Id}");
+
+                var cutlistBytes =
+                    await client.DownloadBytesAsync(
+                        serverSettings.PersonalServerUrl,
+                        selectedResult.Id);
+
+                var temporaryCutlistFileName =
+                    Path.Combine(
+                        Path.GetTempPath(),
+                        $"{Guid.NewGuid():N}.cutlist");
+
+                try
+                {
+                    await File.WriteAllBytesAsync(
+                        temporaryCutlistFileName,
+                        cutlistBytes);
+
+                    LoadCutlistFromFile(
+                        temporaryCutlistFileName,
+                        mediaDuration.Value);
+                }
+                finally
+                {
+                    if (File.Exists(
+                            temporaryCutlistFileName))
+                    {
+                        File.Delete(
+                            temporaryCutlistFileName);
+                    }
+                }
             }
         }
         catch (HttpRequestException)
@@ -1210,11 +1259,19 @@ public partial class MainWindow : Window
             return;
         }
 
+        LoadCutlistFromFile(
+            dialog.FileName,
+            mediaDuration.Value);
+    }
+    private void LoadCutlistFromFile(
+        string fileName,
+        TimeSpan mediaDuration)
+    {
         try
         {
             var document =
                 CutlistFileReader.Read(
-                    dialog.FileName);
+                    fileName);
 
             var fileSizeMismatch =
                 CutlistFileSizeCompatibilityDetector.FindMismatch(
@@ -1252,7 +1309,7 @@ public partial class MainWindow : Window
             var endFragment =
                 CutlistEndFragmentDetector.Find(
                     document,
-                    mediaDuration.Value);
+                    mediaDuration);
 
             CutPlan cutPlan;
 
@@ -1288,7 +1345,7 @@ public partial class MainWindow : Window
                 cutPlan =
                     CutlistEndFragmentCorrector.BuildCutPlan(
                         document,
-                        mediaDuration.Value,
+                        mediaDuration,
                         endFragment);
             }
             else
@@ -1296,7 +1353,7 @@ public partial class MainWindow : Window
                 cutPlan =
                     CutlistCutPlanBuilder.Build(
                         document,
-                        mediaDuration.Value);
+                        mediaDuration);
             }
 
             _cutPlanViewModel.LoadCutPlan(
@@ -1321,8 +1378,9 @@ public partial class MainWindow : Window
                     _cutNamingState.UseSuggestedMovieName(
                         suggestedMovieName);
             }
+
             _logger.Information(
-                $"Cutlist wurde geladen: {dialog.FileName}");
+                $"Cutlist wurde geladen: {fileName}");
 
             MessageBox.Show(
                 this,
@@ -1342,6 +1400,7 @@ public partial class MainWindow : Window
                 MessageBoxImage.Error);
         }
     }
+
     private void GenerateCutlistButton_Click(
         object sender,
         RoutedEventArgs e)

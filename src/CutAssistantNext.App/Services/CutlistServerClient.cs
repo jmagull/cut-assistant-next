@@ -41,6 +41,52 @@ internal sealed class CutlistServerClient
             + encodedMovieName);
     }
 
+    internal static Uri BuildDownloadUri(
+        string personalServerUrl,
+        string cutlistId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            personalServerUrl);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            cutlistId);
+
+        var baseUri =
+            new Uri(
+                personalServerUrl,
+                UriKind.Absolute);
+
+        var encodedCutlistId =
+            Uri.EscapeDataString(
+                cutlistId);
+
+        return new Uri(
+            baseUri,
+            "getfile.php?id="
+            + encodedCutlistId);
+    }
+
+    internal async Task<byte[]> DownloadBytesAsync(
+        string personalServerUrl,
+        string cutlistId,
+        CancellationToken cancellationToken = default)
+    {
+        var uri =
+            BuildDownloadUri(
+                personalServerUrl,
+                cutlistId);
+
+        using var response =
+            await _httpClient.GetAsync(
+                uri,
+                cancellationToken);
+
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadAsByteArrayAsync(
+            cancellationToken);
+    }
+
     internal async Task<string> SearchRawAsync(
         string personalServerUrl,
         string movieName,
