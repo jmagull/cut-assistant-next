@@ -18,7 +18,8 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
     private string _nameTemplate;
     private string _suggestedMovieName;
     private string _author;
-    private string _userComment = string.Empty;
+    private string _userComment =
+        "Mit Cut Assistant Next geschnitten.";
     private int? _selectedRating;
     private bool _epgError;
     private string? _actualContent;

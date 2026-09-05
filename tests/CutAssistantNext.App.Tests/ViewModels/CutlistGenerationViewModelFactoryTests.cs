@@ -54,7 +54,7 @@ public sealed class CutlistGenerationViewModelFactoryTests
             notice.Description);
 
         Assert.Equal(
-            string.Empty,
+            "Mit Cut Assistant Next geschnitten.",
             viewModel.UserComment);
     }
 

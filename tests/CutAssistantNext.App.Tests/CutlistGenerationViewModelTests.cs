@@ -360,7 +360,7 @@ public sealed class CutlistGenerationViewModelTests
             DefaultAuthor = "joerg",
             QuickTexts =
             [
-                "Mit Cut Assistant Next geschnitten.",
+                "Keine Werbung gefunden.",
                 "Werbung vollständig entfernt."
             ]
         };
@@ -377,14 +377,14 @@ public sealed class CutlistGenerationViewModelTests
             settings.QuickTexts[0]);
 
         Assert.Equal(
-            "Mit Cut Assistant Next geschnitten.",
+            "Mit Cut Assistant Next geschnitten. Keine Werbung gefunden.",
             viewModel.UserComment);
 
         viewModel.ApplyQuickText(
             settings.QuickTexts[1]);
 
         Assert.Equal(
-            "Mit Cut Assistant Next geschnitten. Werbung vollständig entfernt.",
+            "Mit Cut Assistant Next geschnitten. Keine Werbung gefunden. Werbung vollständig entfernt.",
             viewModel.UserComment);
 
         Assert.DoesNotContain(
@@ -430,7 +430,7 @@ public sealed class CutlistGenerationViewModelTests
             notice.Description);
 
         Assert.Equal(
-            string.Empty,
+            "Mit Cut Assistant Next geschnitten.",
             viewModel.UserComment);
     }
 

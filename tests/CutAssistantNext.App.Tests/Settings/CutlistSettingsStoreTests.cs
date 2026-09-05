@@ -52,16 +52,19 @@ public sealed class CutlistSettingsStoreTests
     }
 
     [Fact]
-    public void CreateDefault_ReturnsDefaultQuickTexts()
+    public void CreateDefault_ReturnsFiveSuggestedQuickTexts()
     {
-        var settings = CutlistSettings.CreateDefault();
+        var settings =
+            CutlistSettings.CreateDefault();
 
-        Assert.Contains(
-            "Mit Cut Assistant Next geschnitten.",
-            settings.QuickTexts);
-
-        Assert.Contains(
-            "Werbung vollständig entfernt.",
+        Assert.Equal(
+            [
+                "Keine Werbung gefunden.",
+                "Werbung vollständig entfernt.",
+                "Unter Verwendung von MP4Box aus dem GPAC Paket, Version 26.07 geschnitten.",
+                "Teil 1 von 2",
+                "Teil 2 von 2"
+            ],
             settings.QuickTexts);
     }
 
