@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
 using System.IO;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CutAssistantNext.App.Dialogs;
+using CutAssistantNext.App.Services;
 using CutAssistantNext.App.Services.Analysis;
 using CutAssistantNext.App.Services.Cutting;
 using CutAssistantNext.App.Settings;
@@ -629,6 +631,55 @@ public partial class MainWindow : Window
         }
     }
 
+    private void QuitMenuItem_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        Close();
+    }
+
+    private void CutlistSettingsMenuItem_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var cutlistSettingsStore =
+            new CutlistSettingsStore();
+
+        var cutlistSettings =
+            cutlistSettingsStore.Load()
+            ?? CutlistSettings.CreateDefault();
+
+        var serverSettingsStore =
+            new CutlistServerSettingsStore();
+
+        var serverSettings =
+            serverSettingsStore.Load()
+            ?? CutlistServerSettings.CreateDefault();
+
+        var viewModel =
+            new CutlistSettingsViewModel(
+                cutlistSettings,
+                serverSettings);
+
+        var dialog =
+            new CutlistSettingsDialog(
+                viewModel)
+            {
+                Owner = this
+            };
+
+        if (dialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        cutlistSettingsStore.Save(
+            viewModel.CreateSettings());
+
+        serverSettingsStore.Save(
+            viewModel.CreateServerSettings());
+    }
+
     private void CutApplicationSettingsButton_Click(
         object sender,
         RoutedEventArgs e)
@@ -967,6 +1018,162 @@ public partial class MainWindow : Window
 
         dialog.ShowDialog();
     }
+
+    private async void SearchCutlistsOnServerButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        await SearchCutlistsForCurrentMediaAsync();
+    }
+
+    private async Task SearchCutlistsForCurrentMediaAsync(
+        bool skipIfNotConfigured = false)
+    {
+        if (_viewModel.AnalysisResult is null)
+        {
+            MessageBox.Show(
+                this,
+                "Bitte zuerst eine Mediendatei auswählen und erfolgreich analysieren.",
+                "Cutlist-Server",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        var serverSettings =
+            new CutlistServerSettingsStore().Load();
+
+        if (serverSettings is null ||
+            string.IsNullOrWhiteSpace(
+                serverSettings.PersonalServerUrl))
+        {
+            if (skipIfNotConfigured)
+            {
+                return;
+            }
+
+            MessageBox.Show(
+                this,
+                "Bitte zuerst unter Cutlist-Einstellungen die persönliche Server-URL eintragen.",
+                "Cutlist-Server",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        if (!CutlistServerSettingsValidator.TryValidatePersonalServerUrl(
+                serverSettings.PersonalServerUrl,
+                out var errorMessage))
+        {
+            MessageBox.Show(
+                this,
+                errorMessage,
+                "Cutlist-Server",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
+            return;
+        }
+
+        SearchCutlistsOnServerButton.IsEnabled =
+            false;
+
+        try
+        {
+            using var httpClient =
+                new HttpClient
+                {
+                    Timeout =
+                        TimeSpan.FromSeconds(15)
+                };
+
+            var client =
+                new CutlistServerClient(
+                    httpClient);
+
+            var results =
+                await client.SearchAsync(
+                    serverSettings.PersonalServerUrl,
+                    _viewModel.FileName);
+
+            _logger.Information(
+                $"Cutlist-Serversuche abgeschlossen: {_viewModel.FileName} | " +
+                $"Treffer: {results.Count}");
+
+            if (results.Count == 0)
+            {
+                MessageBox.Show(
+                    this,
+                    $"Für {_viewModel.FileName} wurde keine Cutlist gefunden.",
+                    "Cutlist-Server",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
+                return;
+            }
+
+            var dialog =
+                new CutlistSearchResultsDialog(
+                    _viewModel.FileName,
+                    results)
+                {
+                    Owner =
+                        this
+                };
+
+            var dialogResult =
+                dialog.ShowDialog();
+
+            if (dialogResult == true &&
+                dialog.SelectedResult is not null)
+            {
+                _logger.Information(
+                    $"Cutlist auf Server ausgewählt: " +
+                    $"{dialog.SelectedResult.CutlistFileName} | " +
+                    $"ID: {dialog.SelectedResult.Id}");
+            }
+        }
+        catch (HttpRequestException)
+        {
+            MessageBox.Show(
+                this,
+                "Die Anfrage an den Cutlist-Server ist fehlgeschlagen.",
+                "Cutlist-Server",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
+        catch (TaskCanceledException)
+        {
+            MessageBox.Show(
+                this,
+                "Der Cutlist-Server hat nicht rechtzeitig geantwortet.",
+                "Cutlist-Server",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
+        catch (Exception exception)
+        {
+            _logger.Error(
+                $"Cutlist-Serverfehler: {exception}");
+
+            MessageBox.Show(
+                this,
+                $"Die Cutlist-Serversuche ist fehlgeschlagen:" +
+                $"{Environment.NewLine}{Environment.NewLine}" +
+                exception.Message,
+                "Cutlist-Server",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
+        finally
+        {
+            SearchCutlistsOnServerButton.IsEnabled =
+                true;
+        }
+    }
+
     private void LoadCutlistButton_Click(
         object sender,
         RoutedEventArgs e)
@@ -1311,6 +1518,8 @@ public partial class MainWindow : Window
             await _mediaPlayerService.LoadAsync(
                 dialog.FileName);
 
+            await SearchCutlistsForCurrentMediaAsync(
+                skipIfNotConfigured: true);
         }
         catch (Exception exception)
         {

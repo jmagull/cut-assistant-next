@@ -112,3 +112,27 @@ Begründung und Regeln:
 - Die Architektur legt keinen bestimmten Schnittmotor fest. MP4Box, FFmpeg oder spätere Smart-Rendering-Verfahren können auf derselben Cutlist- und Namensgrundlage aufbauen.
 
 Damit bleiben Namensbildung, Benutzereinstellungen, Cutlist-Dateiformat und tatsächliche Medienverarbeitung voneinander getrennt und können unabhängig weiterentwickelt werden.
+
+## ADR-009 – Cutlist-Server-Suche erfolgt automatisch und formatneutral
+
+**Status:** entschieden
+
+Nach dem erfolgreichen Laden einer Mediendatei sucht Cut Assistant Next automatisch auf dem konfigurierten persönlichen Cutlist-Server nach passenden Cutlists.
+
+Begründung und Regeln:
+
+- Die persönliche Server-URL ist eine lokale Benutzereinstellung und gehört nicht in Cutlist-Metadaten oder Programmcode.
+- Ist keine persönliche Server-URL eingerichtet, wird die automatische Serversuche still übersprungen.
+- Die Suche verwendet den vollständigen Originaldateinamen der geladenen Mediendatei.
+- `ApplyToFile` und die Identität der Originaldatei werden durch die Serversuche nicht verändert.
+- Ein erfolgreicher HTTP-Aufruf ohne Antwortinhalt bedeutet fachlich `0 Treffer` und ist kein technischer Fehler.
+- Bei einem oder mehreren Treffern entscheidet der Benutzer selbst, ob und welche Cutlist verwendet wird.
+- Mehrere verfügbare Cutlists werden neutral dargestellt. Eine Bevorzugung bestimmter Autoren findet nicht statt.
+- Unterschiedliche Formate derselben Aufnahme, beispielsweise MP4 und AVI, werden nicht allein aufgrund ihres Formats ausgefiltert.
+- Das Format wird für die Benutzeroberfläche aus dem Cutlist-Dateinamen abgeleitet und sichtbar gemacht.
+- Kommentare, Bewertungen und andere Serverinformationen sollen dem Benutzer die Auswahl zwischen mehreren Schnittfassungen erleichtern.
+- Die Cutlist-ID wird intern für Auswahl und späteren Download benötigt, aber nicht als fachliche Information im Dialog hervorgehoben.
+- Solange der Server kein verlässlich nutzbares Upload-Datum über die verwendete Suchschnittstelle liefert, werden numerische Cutlist-IDs absteigend sortiert. Eine höhere ID wird dabei ausschließlich als praktischer Näherungswert für eine neuere Serverfassung behandelt; aus der ID selbst wird kein Datum abgeleitet.
+- Der spätere Download einer ausgewählten Server-Cutlist soll keinen eigenen parallelen Cutlist-Ladealgorithmus erhalten. Die heruntergeladene Datei soll den bestehenden lokalen Prüf- und Ladeweg verwenden.
+
+Damit bleiben Serversuche, Benutzerauswahl, Download und fachliche Cutlist-Verarbeitung voneinander getrennt.

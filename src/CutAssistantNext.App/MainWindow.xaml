@@ -67,7 +67,39 @@
         </Style>
     </Window.Resources>
 
-    <Grid Margin="24">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0"
+              Background="White">
+            <MenuItem Header="Einstellungen">
+                <MenuItem Header="Cutlist-Einstellungen …"
+                          Click="CutlistSettingsMenuItem_Click" />
+
+                <Separator />
+
+                <MenuItem Header="Namensmaske …"
+                          Click="NamingSettingsButton_Click" />
+            </MenuItem>
+
+            <MenuItem Header="Hilfe"
+                      IsEnabled="False" />
+
+            <MenuItem Header="Credits"
+                      IsEnabled="False" />
+
+            <MenuItem Header="Update/GitHub"
+                      IsEnabled="False" />
+
+            <MenuItem Header="Quit"
+                      Click="QuitMenuItem_Click" />
+        </Menu>
+
+        <Grid Grid.Row="1"
+              Margin="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -461,6 +493,14 @@
                                 Click="LoadCutlistButton_Click"
                                 Content="Cutlist laden …" />
 
+                        <Button x:Name="SearchCutlistsOnServerButton"
+                                MinWidth="190"
+                                Height="36"
+                                Margin="10,0,0,0"
+                                Padding="14,0"
+                                Click="SearchCutlistsOnServerButton_Click"
+                                Content="Vom Server suchen …" />
+
                         <Button MinWidth="170"
                                 Height="36"
                                 Margin="10,0,0,0"
@@ -714,5 +754,6 @@
 
             </StackPanel>
         </ScrollViewer>
+    </Grid>
     </Grid>
 </Window>
