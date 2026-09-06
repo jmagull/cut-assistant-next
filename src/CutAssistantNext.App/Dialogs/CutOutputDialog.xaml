@@ -94,16 +94,11 @@
                              Padding="8,4"
                              Text="{Binding EpisodeTitle, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBlock Margin="0,14,0,5"
-                               FontWeight="SemiBold"
-                               Foreground="#4B5563"
-                               Text="Standard-Namensmaske" />
-
                     <Button Height="32"
                             Padding="12,0"
                             HorizontalAlignment="Left"
                             Click="GenerateFromTemplateButton_Click"
-                            Content="Aus Namensmaske generieren" />
+                            Content="Aus obigen Eingaben neu erzeugen" />
 
                     <TextBlock Margin="0,16,0,5"
                                FontWeight="SemiBold"
@@ -116,11 +111,15 @@
                             BorderThickness="1"
                             CornerRadius="5">
 
-                        <TextBlock FontSize="15"
-                                   FontWeight="SemiBold"
-                                   Foreground="#111827"
-                                   TextWrapping="Wrap"
-                                   Text="{Binding SuggestedMovieName}" />
+                        <TextBox Padding="0"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 FontSize="15"
+                                 FontWeight="SemiBold"
+                                 Foreground="#111827"
+                                 IsReadOnly="True"
+                                 TextWrapping="Wrap"
+                                 Text="{Binding SuggestedMovieName, Mode=OneWay}" />
                     </Border>
                 </StackPanel>
             </ScrollViewer>

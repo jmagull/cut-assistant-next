@@ -150,6 +150,86 @@ public sealed class Mp4BoxCutServiceTests
                     update.Message));
     }
 
+    [Fact]
+    public async Task RunAsync_WithExistingOutputAndOverwrite_ForwardsOverwritePermission()
+    {
+        var tempDirectory =
+            Path.Combine(
+                Path.GetTempPath(),
+                $"cut-assistant-next-{Guid.NewGuid():N}");
+
+        Directory.CreateDirectory(
+            tempDirectory);
+
+        try
+        {
+            var runner =
+                new RecordingMp4BoxRunner
+                {
+                    ConcatOutputContent =
+                        "replacement"
+                };
+
+            var service =
+                new Mp4BoxCutService(
+                    runner);
+
+            var cutPlan =
+                new CutPlan(
+                    TimeSpan.FromSeconds(100));
+
+            cutPlan.Add(
+                new RemoveSegment(
+                    TimeSpan.FromSeconds(20),
+                    TimeSpan.FromSeconds(30)));
+
+            var sourceFilePath =
+                Path.Combine(
+                    tempDirectory,
+                    "source.mp4");
+
+            var outputFilePath =
+                Path.Combine(
+                    tempDirectory,
+                    "output.mp4");
+
+            File.WriteAllText(
+                outputFilePath,
+                "existing");
+
+            await service.RunAsync(
+                sourceFilePath,
+                outputFilePath,
+                cutPlan,
+                25,
+                overwriteExistingOutput: true);
+
+            Assert.Equal(
+                1,
+                runner.ConcatCallCount);
+
+            Assert.NotNull(
+                runner.ConcatOutputFilePath);
+
+            Assert.NotEqual(
+                Path.GetFullPath(
+                    outputFilePath),
+                Path.GetFullPath(
+                    runner.ConcatOutputFilePath));
+
+            Assert.Equal(
+                "replacement",
+                File.ReadAllText(
+                    outputFilePath));
+        }
+        finally
+        {
+            Directory.Delete(
+                tempDirectory,
+                recursive: true);
+        }
+    }
+
     private sealed class InlineProgress<T> :
         IProgress<T>
     {
@@ -181,6 +261,8 @@ public sealed class Mp4BoxCutServiceTests
 
         public string? ConcatOutputFilePath { get; private set; }
 
+        public string? ConcatOutputContent { get; init; }
+
         public Task RunSplitAsync(
             string sourceFilePath,
             string outputFilePath,
@@ -202,6 +284,13 @@ public sealed class Mp4BoxCutServiceTests
 
             ConcatOutputFilePath =
                 outputFilePath;
+
+            if (ConcatOutputContent is not null)
+            {
+                File.WriteAllText(
+                    outputFilePath,
+                    ConcatOutputContent);
+            }
 
             return Task.CompletedTask;
         }

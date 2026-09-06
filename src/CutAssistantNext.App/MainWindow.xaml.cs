@@ -963,25 +963,11 @@ public partial class MainWindow : Window
                         DefaultExt = ".mp4",
                         AddExtension = true,
                         Filter = "MP4-Datei (*.mp4)|*.mp4",
-                        OverwritePrompt = false
                     };
 
                 if (saveDialog.ShowDialog(
                     dialog) != true)
                 {
-                    return;
-                }
-
-                if (File.Exists(
-                    saveDialog.FileName))
-                {
-                    MessageBox.Show(
-                        dialog,
-                        "Die gewählte Zieldatei existiert bereits. Bitte einen anderen Dateinamen wählen.",
-                        "Schneiden",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
-
                     return;
                 }
 
@@ -1061,7 +1047,8 @@ public partial class MainWindow : Window
                             cutPlan,
                             framesPerSecond,
                             progress,
-                            cancellationTokenSource.Token);
+                            cancellationTokenSource.Token,
+                            overwriteExistingOutput: true);
 
                         cutSucceeded = true;
 

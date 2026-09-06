@@ -17,14 +17,16 @@ public sealed class Mp4BoxCutWorkflow
         string sourceFilePath,
         string outputFilePath,
         IReadOnlyList<Mp4BoxSplitRange> ranges,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        bool overwriteExistingOutput = false)
     {
         return RunAsync(
             sourceFilePath,
             outputFilePath,
             ranges,
             progress: null,
-            cancellationToken);
+            cancellationToken,
+            overwriteExistingOutput);
     }
 
     public async Task RunAsync(
@@ -32,7 +34,8 @@ public sealed class Mp4BoxCutWorkflow
         string outputFilePath,
         IReadOnlyList<Mp4BoxSplitRange> ranges,
         IProgress<Mp4BoxProgressUpdate>? progress,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        bool overwriteExistingOutput = false)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
             sourceFilePath);
@@ -68,7 +71,12 @@ public sealed class Mp4BoxCutWorkflow
                 nameof(outputFilePath));
         }
 
-        if (File.Exists(fullOutputFilePath))
+        var outputFileExists =
+            File.Exists(
+                fullOutputFilePath);
+
+        if (outputFileExists &&
+            !overwriteExistingOutput)
         {
             throw new IOException(
                 $"Die Zieldatei existiert bereits: {fullOutputFilePath}");
@@ -79,6 +87,25 @@ public sealed class Mp4BoxCutWorkflow
                 fullOutputFilePath)
             ?? throw new InvalidOperationException(
                 "Das Zielverzeichnis konnte nicht bestimmt werden.");
+
+
+        string? replacementOutputFilePath =
+            null;
+
+        var concatOutputFilePath =
+            fullOutputFilePath;
+
+        if (outputFileExists &&
+            overwriteExistingOutput)
+        {
+            replacementOutputFilePath =
+                Path.Combine(
+                    outputDirectoryPath,
+                    $".cut-assistant-next-{Guid.NewGuid():N}-output.mp4");
+
+            concatOutputFilePath =
+                replacementOutputFilePath;
+        }
 
         var segmentFilePaths =
             new List<string>(
@@ -115,8 +142,19 @@ public sealed class Mp4BoxCutWorkflow
 
             await _runner.RunConcatAsync(
                 segmentFilePaths,
-                fullOutputFilePath,
+                concatOutputFilePath,
                 cancellationToken);
+
+            if (replacementOutputFilePath is not null)
+            {
+                File.Move(
+                    replacementOutputFilePath,
+                    fullOutputFilePath,
+                    overwrite: true);
+
+                replacementOutputFilePath =
+                    null;
+            }
 
             progress?.Report(
                 new Mp4BoxProgressUpdate(
@@ -125,6 +163,12 @@ public sealed class Mp4BoxCutWorkflow
         }
         finally
         {
+            if (replacementOutputFilePath is not null)
+            {
+                File.Delete(
+                    replacementOutputFilePath);
+            }
+
             foreach (var segmentFilePath in segmentFilePaths)
             {
                 File.Delete(

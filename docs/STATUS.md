@@ -140,7 +140,10 @@ CCutlist-Server und Cutlist-Komfort:
 - ältere `window-settings.json` ohne Lautstärkewert bleiben kompatibel
 - Lautstärke-Wiederherstellung im Praxistest mehrfach erfolgreich geprüft
 - Shutdown nach der Änderung praktisch geprüft; kein reproduzierbarer Shutdownfehler festgestellt
-- aktueller Teststand: **222/222 grün**
+- Überschreiben vorhandener Ausgabedateien über den nativen Windows-Speicherdialog erfolgreich umgesetzt und praktisch getestet; ohne ausdrückliche Bestätigung wird niemals überschrieben
+- bei bestätigtem Überschreiben bleibt die vorhandene Zieldatei bis zum erfolgreichen finalen MP4Box-Join erhalten; auch ein fehlgeschlagener Join lässt die vorhandene Datei unangetastet
+- Schneiden-Dialog nachgeschärft: „Aus obigen Eingaben neu erzeugen“; Vorschau ist read-only, markierbar und kopierbar
+- aktueller Teststand: **393/393 grün**
 
 ## Schnittsemantik
 
@@ -152,10 +155,7 @@ Das Bedienmodell bleibt damit auf das Entfernen von Werbung, Vorlauf, Nachlauf o
 
 ## Nächster geplanter Bauabschnitt
 
-Als nächster kleiner V1-Baustein soll das Überschreiben bereits vorhandener Ausgabedateien über einen ausdrücklichen Bestätigungsdialog ermöglicht werden. Eine bestehende Datei darf weiterhin niemals still überschrieben werden.
-
-Danach soll der direkte Upload neu erzeugter Cutlists auf den persönlichen Cutlist-Server folgen. Die dafür benötigte Servergrundlage ist inzwischen vorhanden: persistente persönliche Server-URL, Verbindungstest, automatische Suche, Auswahldialog, Download über Cutlist-ID und gemeinsamer lokaler Lade- und Prüfweg.
-
+Als nächster V1-Baustein soll der direkte Upload neu erzeugter Cutlists auf den persönlichen Cutlist-Server folgen. Die dafür benötigte Servergrundlage ist inzwischen vorhanden: persistente persönliche Server-URL, Verbindungstest, automatische Suche, Auswahldialog, Download über Cutlist-ID und gemeinsamer lokaler Lade- und Prüfweg.
 Der provisorische manuelle Button für die Serversuche wurde nach erfolgreicher gemeinsamer Ladeintegration entfernt; die Serversuche läuft ausschließlich automatisch nach erfolgreicher Medienanalyse.
 
 
@@ -163,7 +163,6 @@ Der provisorische manuelle Button für die Serversuche wurde nach erfolgreicher 
 ## Noch offen
 
 - direkter Upload neu erzeugter Cutlists auf den Cutlist-Server
-- Bestätigungsdialog zum Überschreiben vorhandener Ausgabedateien
 - echte klassische AVI-Dateien über einen geeigneten V1-Workflow schneiden
 - integrierte Unterstützung mehrteiliger Aufnahmen
 - spätere Smart-Rendering-Verfahren
