@@ -2,7 +2,7 @@
 
 ## Aktueller Stand
 
-Stand: 05.09.2026
+Stand: 11.09.2026
 
 - GitHub-Repository `cut-assistant-next` ist angelegt und derzeit privat.
 - Der aktuelle Arbeitsbranch ist `feature/cut-application-configuration`.
@@ -42,8 +42,7 @@ Stand: 05.09.2026
 - Beim Wechsel der ausgewählten Cutlist werden vorgeschlagener Filmname und Kommentar unmittelbar aktualisiert.
 - Der Dialog zeigt unter anderem Format, Autor, Community-Bewertung, Stimmen, Autorenbewertung, Anzahl der Schnitte, Dauer und Downloadzahl.
 - Das Format wird aus dem Cutlist-Dateinamen abgeleitet, beispielsweise `MP4 HQ`, `MP4 HD`, `AVI HQ` oder `AVI`.
-- Der tatsächliche Download einer ausgewählten Server-Cutlist ist noch nicht umgesetzt.
-- Aktueller vollständiger Testlauf: **218 von 218 Tests erfolgreich**.
+
 ### Cutlist-Server: Download und gemeinsamer Ladeweg
 
 Die automatische Cutlist-Serversuche wurde bis zum vollständigen Download erweitert.
@@ -106,6 +105,38 @@ Die Dateigrößenprüfung bleibt deshalb bewusst eine Plausibilitätswarnung mit
 
 Dieser Befund unterstützt zugleich die geplante V1-Strategie für echte AVI-Dateien: Wenn eine AVI-Datei verlustfrei für MP4Box vorbereitet werden kann und dabei ihre Timeline erhalten bleibt, können vorhandene historische AVI-Cutlists grundsätzlich weiterverwendbar sein. Dies muss später mit echten alten OTR-AVI-Dateien praktisch verifiziert werden.
 
+
+### Cutlist-Server: direkter Upload
+
+Der direkte Upload lokal gespeicherter Cutlists auf den persönlichen Cutlist-Server ist umgesetzt und praktisch bestätigt.
+
+Technischer und fachlicher Ablauf:
+
+- Für Suche, Download und Upload wird dieselbe konfigurierte persönliche Server-URL verwendet.
+- Eine Cutlist muss vor dem Upload lokal gespeichert worden sein oder bewusst über `Cutlist laden …` von einem lokalen Pfad geladen werden.
+- Beim Laden einer neuen Mediendatei wird ein zuvor gemerkter Upload-Kandidat verworfen.
+- Vor dem Upload wird `ApplyToFile` nochmals gegen den vollständigen Originaldateinamen der aktuell geladenen Mediendatei geprüft.
+- Eine automatisch vom Server heruntergeladene temporäre Cutlist wird nicht unmittelbar als eigener Upload-Kandidat behandelt.
+- Eine Server-Cutlist kann jedoch als Vorlage geladen, bearbeitet und anschließend als eigene Cutlist lokal gespeichert und hochgeladen werden.
+- Der Upload erzeugt im Speicher eine serverkompatible Kopie; die lokal gespeicherte Original-Cutlist wird nicht verändert.
+- Für die Serverkopie werden `Application=Cut Assistant`, `Version=0.26.5.6` und `Author=joerg` verwendet.
+- Benutzerkommentar, Bewertung, `SuggestedMovieName`, Fehlerangaben, Schnittbereiche und weitere fachliche Metadaten bleiben aus der gespeicherten Cutlist erhalten.
+- Die Übertragung erfolgt als klassischer Multipart-POST einschließlich der vom bisherigen Cut Assistant verwendeten Formularfelder.
+- Ein Doppelupload während eines laufenden Uploads wird verhindert.
+- Der Server muss eine gültige numerische Cutlist-ID zurückgeben; andernfalls gilt der Upload als fehlgeschlagen.
+
+#### Produktiver Praxistest am 11.09.2026
+
+Der erste direkte Upload aus Cut Assistant Next auf den persönlichen cutlist.at-Zugang war erfolgreich.
+
+- Server-ID: `2078572`
+- Autor auf dem Server: `joerg`
+- Autorenbewertung: `5`
+- Benutzerkommentar und vorgeschlagener Filmname wurden korrekt übernommen.
+- Die hochgeladene Cutlist erschien anschließend regulär in der persönlichen Upload-Übersicht.
+
+Damit ist der vollständige Server-Workflow von automatischer Suche über Download und Bearbeitung bis zum erneuten Upload praktisch nachgewiesen.
+
 ## Vorhandene Projekte
 
 - `CutAssistantNext.App`
@@ -119,7 +150,7 @@ Dieser Befund unterstützt zugleich die geplante V1-Strategie für echte AVI-Dat
 
 ## Aktueller Bauabschnitt
 
-CCutlist-Server und Cutlist-Komfort:
+Cutlist-Server, Upload und Cutlist-Komfort:
 
 - persistente persönliche Server-URL
 - Validierung der persönlichen Server-URL
@@ -143,7 +174,7 @@ CCutlist-Server und Cutlist-Komfort:
 - Überschreiben vorhandener Ausgabedateien über den nativen Windows-Speicherdialog erfolgreich umgesetzt und praktisch getestet; ohne ausdrückliche Bestätigung wird niemals überschrieben
 - bei bestätigtem Überschreiben bleibt die vorhandene Zieldatei bis zum erfolgreichen finalen MP4Box-Join erhalten; auch ein fehlgeschlagener Join lässt die vorhandene Datei unangetastet
 - Schneiden-Dialog nachgeschärft: „Aus obigen Eingaben neu erzeugen“; Vorschau ist read-only, markierbar und kopierbar
-- aktueller Teststand: **393/393 grün**
+- aktueller Teststand: **399/399 grün**
 
 ## Schnittsemantik
 
@@ -155,14 +186,13 @@ Das Bedienmodell bleibt damit auf das Entfernen von Werbung, Vorlauf, Nachlauf o
 
 ## Nächster geplanter Bauabschnitt
 
-Als nächster V1-Baustein soll der direkte Upload neu erzeugter Cutlists auf den persönlichen Cutlist-Server folgen. Die dafür benötigte Servergrundlage ist inzwischen vorhanden: persistente persönliche Server-URL, Verbindungstest, automatische Suche, Auswahldialog, Download über Cutlist-ID und gemeinsamer lokaler Lade- und Prüfweg.
+Als nächster zwingender V1-Baustein steht die Unterstützung echter klassischer OTR-AVI-Dateien an. Der Cutlist-Server-Workflow von automatischer Suche über Download bis zum direkten Upload ist inzwischen vollständig umgesetzt und praktisch bestätigt.
 Der provisorische manuelle Button für die Serversuche wurde nach erfolgreicher gemeinsamer Ladeintegration entfernt; die Serversuche läuft ausschließlich automatisch nach erfolgreicher Medienanalyse.
 
 
 
 ## Noch offen
 
-- direkter Upload neu erzeugter Cutlists auf den Cutlist-Server
 - echte klassische AVI-Dateien über einen geeigneten V1-Workflow schneiden
 - integrierte Unterstützung mehrteiliger Aufnahmen
 - spätere Smart-Rendering-Verfahren

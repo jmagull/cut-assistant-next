@@ -47,9 +47,11 @@
 - `CutlistDocument` einschließlich Konsistenzprüfung zwischen Metadaten und Keep-Bereichen
 - `CutlistSerializer` einschließlich klassischer Kompatibilitätszeilen, kulturunabhängiger Zahlenwerte und Golden-Master-Test
 - `CutlistFileWriter` einschließlich UTF-8 ohne BOM, CRLF-Zeilenenden und Umlauten
+- `CutlistParser` einschließlich des Einlesens klassischer Cutlist-Strukturen
+- `CutlistFileReader` einschließlich UTF-8 und historischem Windows-1252-/ANSI-Fallback
 
-Aktueller vollständiger Solution-Testlauf: **162 von 162 Tests erfolgreich**.
+Aktueller vollständiger Testlauf: **399 von 399 Tests erfolgreich**.
 
 Zusätzlich wurde die lokale Cutlist-Dateiausgabe in einem Smoke-Test praktisch geprüft. Dabei wurde eine vollständige `.cutlist`-Datei erzeugt und anschließend explizit als UTF-8 eingelesen; auch Umlaute wurden korrekt erhalten.
 
-Ein Cutlist-Reader/Parser ist noch nicht umgesetzt. Die Unterstützung historischer Windows-1252-/ANSI-Cutlists wird beim späteren Einlese-Bauabschnitt ergänzt.
+Cutlist-Reader und Parser sind umgesetzt und automatisiert getestet. Beim Einlesen wird zunächst UTF-8 verwendet; historische Windows-1252-/ANSI-Cutlists werden als Kompatibilitätsfall unterstützt.

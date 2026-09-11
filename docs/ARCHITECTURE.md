@@ -12,7 +12,7 @@ Anwendungslogik / ViewModels
 | mpv/libmpv           | ffprobe              |
 +----------------------+----------------------+
       |
-Cutlists            | später: Schnittmotoren | Server | Renamer | Stapel
+Cutlists            | Schnittmotoren | Server | später: Renamer | Stapel
 ```
 
 ## Vorgesehene Projekte
@@ -20,7 +20,7 @@ Cutlists            | später: Schnittmotoren | Server | Renamer | Stapel
 - `CutAssistantNext.App` – WPF-Oberfläche und Startpunkt
 - `CutAssistantNext.Core` – Modelle, Verträge und Anwendungslogik
 - `CutAssistantNext.Media` – mpv/libmpv und ffprobe
-- `CutAssistantNext.Cutlists` – Cutlist-Modell, Metadaten, Serialisierung und Dateiausgabe; ein Reader/Parser folgt später
+- `CutAssistantNext.Cutlists` – Cutlist-Modell, Metadaten, Parser, Serialisierung sowie Datei-Ein- und -Ausgabe
 - passende Testprojekte unter `tests/`
 
 ## Architekturregeln
@@ -120,8 +120,10 @@ CutAssistantNext.Cutlists
 ├── Model
 │   └── CutlistDocument
 ├── Serialization
+│   ├── CutlistParser
 │   └── CutlistSerializer
 └── IO
+    ├── CutlistFileReader
     └── CutlistFileWriter
 ```
 
@@ -139,7 +141,11 @@ Architekturregeln:
 - Die Namensbildung liegt in `CutAssistantNext.Core.Naming`, weil derselbe erzeugte Basisname für `SuggestedMovieName` und später für den Ausgabedateinamen verwendet werden soll.
 - Namensmaske, Standardautor und Schnelltexte sind Benutzereinstellungen und keine fest codierten Cutlist-Werte.
 - Die Identität eines Schnittprogramms wird über `CutApplicationInfo` beschrieben. Der lokale Installationspfad eines Schnittmotors gehört nicht in die Cutlist-Metadaten.
-- Ein Cutlist-Reader/Parser sowie Server- und Upload-Funktionen sind noch nicht umgesetzt.
+- Cutlist-Reader und Parser sind umgesetzt. Beim Einlesen wird zunächst UTF-8 verwendet; historische Windows-1252-/ANSI-Dateien werden als Kompatibilitätsfall unterstützt.
+- Serversuche, Download und direkter Upload sind in `CutAssistantNext.App` gekapselt und verwenden dieselbe konfigurierte persönliche Server-URL.
+- Heruntergeladene Server-Cutlists verwenden denselben fachlichen Lade- und Prüfweg wie lokale Cutlists.
+- Der direkte Upload arbeitet ausschließlich mit einer zuvor lokal gespeicherten oder bewusst lokal geladenen Cutlist.
+- Für den Server-Upload wird aus dem gespeicherten `CutlistDocument` eine separate kompatible Kopie erzeugt; die lokale Original-Cutlist wird nicht verändert.
 
 Die Kompatibilitätsdetails der erzeugten Dateien sind in ADR-007 festgelegt und durch automatisierte Tests abgesichert.
 
