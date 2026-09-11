@@ -14,6 +14,7 @@ using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Cutlists.Compatibility;
 using CutAssistantNext.Cutlists.Editing;
 using CutAssistantNext.Cutlists.IO;
+using CutAssistantNext.Cutlists.Model;
 using CutAssistantNext.Core.Editing;
 using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Core.Naming;
@@ -33,6 +34,8 @@ public partial class MainWindow : Window
     private readonly PlaybackViewModel _playbackViewModel;
     private readonly CutPlanViewModel _cutPlanViewModel;
     private CutNamingState? _cutNamingState;
+    private string? _lastSavedCutlistFilePath;
+    private bool _cutlistUploadInProgress;
 
     private Task? _mediaPlayerInitializationTask;
     private bool _isClosed;
@@ -1243,7 +1246,8 @@ public partial class MainWindow : Window
 
                     LoadCutlistFromFile(
                         temporaryCutlistFileName,
-                        mediaDuration.Value);
+                        mediaDuration.Value,
+                        rememberAsUploadCandidate: false);
                 }
                 finally
                 {
@@ -1328,11 +1332,13 @@ public partial class MainWindow : Window
 
         LoadCutlistFromFile(
             dialog.FileName,
-            mediaDuration.Value);
+            mediaDuration.Value,
+            rememberAsUploadCandidate: true);
     }
     private void LoadCutlistFromFile(
         string fileName,
-        TimeSpan mediaDuration)
+        TimeSpan mediaDuration,
+        bool rememberAsUploadCandidate)
     {
         try
         {
@@ -1444,6 +1450,13 @@ public partial class MainWindow : Window
                 _cutNamingState =
                     _cutNamingState.UseSuggestedMovieName(
                         suggestedMovieName);
+            }
+
+            if (rememberAsUploadCandidate)
+            {
+                _lastSavedCutlistFilePath =
+                    Path.GetFullPath(
+                        fileName);
             }
 
             _logger.Information(
@@ -1576,6 +1589,10 @@ public partial class MainWindow : Window
                         saveDialog.FileName,
                         document);
 
+                    _lastSavedCutlistFilePath =
+                        Path.GetFullPath(
+                            saveDialog.FileName);
+
                     _cutNamingState =
                         cutlistViewModel.CreateNamingState();
 
@@ -1604,6 +1621,219 @@ public partial class MainWindow : Window
         dialog.ShowDialog();
     }
 
+    private async void UploadCutlistButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (_cutlistUploadInProgress)
+        {
+            return;
+        }
+
+        if (_viewModel.AnalysisResult is null)
+        {
+            MessageBox.Show(
+                this,
+                "Bitte zuerst eine Mediendatei auswählen und erfolgreich analysieren.",
+                "Cutlist hochladen",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(
+                _lastSavedCutlistFilePath) ||
+            !File.Exists(
+                _lastSavedCutlistFilePath))
+        {
+            MessageBox.Show(
+                this,
+                "Bitte zuerst über „Cutlist erzeugen …“ eine Cutlist erstellen und speichern.",
+                "Cutlist hochladen",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        var originalFileName =
+            Path.GetFileName(
+                _viewModel.FileName);
+
+        CutlistDocument document;
+
+        try
+        {
+            document =
+                CutlistFileReader.Read(
+                    _lastSavedCutlistFilePath);
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(
+                this,
+                $"Die gespeicherte Cutlist konnte nicht gelesen werden:" +
+                $"{Environment.NewLine}{exception.Message}",
+                "Cutlist hochladen",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+
+            return;
+        }
+
+        if (!string.Equals(
+                document.General.ApplyToFile,
+                originalFileName,
+                StringComparison.Ordinal))
+        {
+            MessageBox.Show(
+                this,
+                "Die zuletzt gespeicherte Cutlist gehört nicht zur aktuell geladenen Mediendatei." +
+                $"{Environment.NewLine}{Environment.NewLine}" +
+                "Bitte zuerst für diese Mediendatei eine neue Cutlist erzeugen und speichern.",
+                "Cutlist hochladen",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
+            return;
+        }
+
+        var serverSettings =
+            new CutlistServerSettingsStore().Load();
+
+        if (serverSettings is null ||
+            string.IsNullOrWhiteSpace(
+                serverSettings.PersonalServerUrl))
+        {
+            MessageBox.Show(
+                this,
+                "Bitte zuerst unter Cutlist-Einstellungen die persönliche Server-URL eintragen.",
+                "Cutlist hochladen",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
+
+        if (!CutlistServerSettingsValidator.TryValidatePersonalServerUrl(
+                serverSettings.PersonalServerUrl,
+                out var errorMessage))
+        {
+            MessageBox.Show(
+                this,
+                errorMessage,
+                "Cutlist hochladen",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
+            return;
+        }
+
+        var cutlistFileName =
+            Path.GetFileName(
+                _lastSavedCutlistFilePath);
+
+        var confirmation =
+            MessageBox.Show(
+                this,
+                $"Die gespeicherte Cutlist{Environment.NewLine}" +
+                $"{cutlistFileName}{Environment.NewLine}{Environment.NewLine}" +
+                $"für{Environment.NewLine}" +
+                $"{originalFileName}{Environment.NewLine}{Environment.NewLine}" +
+                "wird auf den persönlichen Cutlist-Server hochgeladen." +
+                $"{Environment.NewLine}{Environment.NewLine}" +
+                "Möchten Sie fortfahren?",
+                "Cutlist hochladen",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+        if (confirmation !=
+            MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        _cutlistUploadInProgress =
+            true;
+
+        if (sender is Button uploadButton)
+        {
+            uploadButton.IsEnabled =
+                false;
+        }
+
+        try
+        {
+            var cutlistBytes =
+                CutlistServerUploadPayloadFactory.CreateBytes(
+                    document);
+
+            using var httpClient =
+                new HttpClient
+                {
+                    Timeout =
+                        TimeSpan.FromSeconds(15)
+                };
+
+            var client =
+                new CutlistServerClient(
+                    httpClient);
+
+            var uploadResult =
+                await client.UploadAsync(
+                    serverSettings.PersonalServerUrl,
+                    cutlistFileName,
+                    cutlistBytes,
+                    "0.26.5.6");
+
+            if (string.IsNullOrWhiteSpace(
+                    uploadResult.CutlistId))
+            {
+                throw new InvalidDataException(
+                    "Der Cutlist-Server hat keine gültige Cutlist-ID zurückgegeben.");
+            }
+
+            var serverMessage =
+                string.IsNullOrWhiteSpace(
+                    uploadResult.Message)
+                    ? "Upload erfolgreich."
+                    : uploadResult.Message;
+
+            MessageBox.Show(
+                this,
+                "Die Cutlist wurde erfolgreich hochgeladen." +
+                $"{Environment.NewLine}{Environment.NewLine}" +
+                $"Server-ID: {uploadResult.CutlistId}" +
+                $"{Environment.NewLine}" +
+                serverMessage,
+                "Cutlist hochladen",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(
+                this,
+                $"Die Cutlist konnte nicht hochgeladen werden:" +
+                $"{Environment.NewLine}{exception.Message}",
+                "Cutlist hochladen",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            _cutlistUploadInProgress =
+                false;
+
+            if (sender is Button uploadButtonToEnable)
+            {
+                uploadButtonToEnable.IsEnabled =
+                    true;
+            }
+        }
+    }
+
     private async void SelectMediaFileButton_Click(
         object sender,
         RoutedEventArgs e)
@@ -1627,6 +1857,7 @@ public partial class MainWindow : Window
         _cutPlanViewModel.Reset();
 
         _cutNamingState = null;
+        _lastSavedCutlistFilePath = null;
 
         await _viewModel.AnalyzeAsync(dialog.FileName);
 

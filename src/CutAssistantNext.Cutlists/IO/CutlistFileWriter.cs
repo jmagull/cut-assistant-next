@@ -30,15 +30,31 @@ public static class CutlistFileWriter
                 directoryPath);
         }
 
-        var content =
-            CutlistSerializer.Serialize(document);
+        var bytes =
+            CreateBytes(
+                document);
 
-        content = NormalizeToCrLf(content);
-
-        File.WriteAllText(
+        File.WriteAllBytes(
             fullPath,
-            content,
-            Utf8WithoutBom);
+            bytes);
+    }
+
+    public static byte[] CreateBytes(
+        CutlistDocument document)
+    {
+        ArgumentNullException.ThrowIfNull(
+            document);
+
+        var content =
+            CutlistSerializer.Serialize(
+                document);
+
+        content =
+            NormalizeToCrLf(
+                content);
+
+        return Utf8WithoutBom.GetBytes(
+            content);
     }
 
     private static string NormalizeToCrLf(

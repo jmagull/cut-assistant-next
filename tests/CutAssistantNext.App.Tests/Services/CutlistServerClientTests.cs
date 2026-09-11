@@ -397,6 +397,181 @@ public async Task SearchAsync_ReturnsEmptyListForEmptyResponse()
             + "?id=2078205",
             handler.RequestUri?.AbsoluteUri);
     }
+    [Fact]
+    public async Task UploadBytesAsync_SendsLegacyMultipartRequestToPersonalServerUrl()
+    {
+        var personalServerUrl =
+            "http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/";
+
+        var cutlistFileName =
+            "Test_26.09.08_20-15_sender_60_TVOON_DE.HQ.mp4.cutlist";
+
+        var cutlistBytes =
+            new byte[]
+            {
+                0x5B,
+                0x47,
+                0x65,
+                0x6E,
+                0x65,
+                0x72,
+                0x61,
+                0x6C,
+                0x5D,
+                0x0D,
+                0x0A
+            };
+
+        using var handler =
+            new RecordingUploadHttpMessageHandler();
+
+        using var httpClient =
+            new HttpClient(
+                handler);
+
+        var client =
+            new CutlistServerClient(
+                httpClient);
+
+        var response =
+            await client.UploadBytesAsync(
+                personalServerUrl,
+                cutlistFileName,
+                cutlistBytes,
+                "1.0.0");
+
+        Assert.Equal(
+            HttpMethod.Post,
+            handler.RequestMethod);
+
+        Assert.Equal(
+            personalServerUrl,
+            handler.RequestUri?.AbsoluteUri);
+
+        Assert.StartsWith(
+            "multipart/form-data;",
+            handler.ContentType);
+
+        Assert.Equal(
+            "1587200",
+            handler.FormFields["MAX_FILE_SIZE"]);
+
+        Assert.Equal(
+            "True",
+            handler.FormFields["confirm"]);
+
+        Assert.Equal(
+            "blank",
+            handler.FormFields["type"]);
+
+        Assert.Equal(
+            "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+            handler.FormFields["userid"]);
+
+        Assert.Equal(
+            "CutAssistant",
+            handler.FormFields["app"]);
+
+        Assert.Equal(
+            "1.0.0",
+            handler.FormFields["version"]);
+
+        Assert.Equal(
+            "userfile[]",
+            handler.FileFieldName);
+
+        Assert.Equal(
+            cutlistFileName,
+            handler.FileName);
+
+        Assert.Equal(
+            cutlistBytes,
+            handler.FileBytes);
+
+        Assert.Equal(
+            "id=2079999\nUpload erfolgreich",
+            response);
+    }
+
+    [Fact]
+    public void ParseUploadResponse_ReturnsCutlistIdAndLastNonEmptyMessage()
+    {
+        const string responseBody =
+            "result=ok\r\n" +
+            "id=2079999\r\n" +
+            "Upload erfolgreich\r\n";
+
+        var result =
+            CutlistServerClient.ParseUploadResponse(
+                responseBody);
+
+        Assert.Equal(
+            "2079999",
+            result.CutlistId);
+
+        Assert.Equal(
+            "Upload erfolgreich",
+            result.Message);
+    }
+
+    [Fact]
+    public async Task UploadAsync_SendsUploadAndReturnsParsedResult()
+    {
+        var personalServerUrl =
+            "http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/";
+
+        var cutlistFileName =
+            "Test_26.09.08_20-15_sender_60_TVOON_DE.HQ.mp4.cutlist";
+
+        var cutlistBytes =
+            new byte[]
+            {
+                0x5B,
+                0x47,
+                0x65,
+                0x6E,
+                0x65,
+                0x72,
+                0x61,
+                0x6C,
+                0x5D
+            };
+
+        using var handler =
+            new RecordingUploadHttpMessageHandler();
+
+        using var httpClient =
+            new HttpClient(
+                handler);
+
+        var client =
+            new CutlistServerClient(
+                httpClient);
+
+        var result =
+            await client.UploadAsync(
+                personalServerUrl,
+                cutlistFileName,
+                cutlistBytes,
+                "1.0.0");
+
+        Assert.Equal(
+            "2079999",
+            result.CutlistId);
+
+        Assert.Equal(
+            "Upload erfolgreich",
+            result.Message);
+
+        Assert.Equal(
+            HttpMethod.Post,
+            handler.RequestMethod);
+
+        Assert.Equal(
+            personalServerUrl,
+            handler.RequestUri?.AbsoluteUri);
+    }
+
     private sealed class RecordingHttpMessageHandler
         : HttpMessageHandler
     {
@@ -474,6 +649,90 @@ public async Task SearchAsync_ReturnsEmptyListForEmptyResponse()
 
             return Task.FromResult(
                 response);
+        }
+    }
+
+    private sealed class RecordingUploadHttpMessageHandler :
+        HttpMessageHandler
+    {
+        internal HttpMethod? RequestMethod { get; private set; }
+
+        internal Uri? RequestUri { get; private set; }
+
+        internal string? ContentType { get; private set; }
+
+        internal Dictionary<string, string> FormFields { get; } =
+            new(StringComparer.Ordinal);
+
+        internal string? FileFieldName { get; private set; }
+
+        internal string? FileName { get; private set; }
+
+        internal byte[] FileBytes { get; private set; } =
+            [];
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            RequestMethod =
+                request.Method;
+
+            RequestUri =
+                request.RequestUri;
+
+            ContentType =
+                request.Content?.Headers.ContentType?.ToString();
+
+            if (request.Content is MultipartFormDataContent multipartContent)
+            {
+                foreach (var part in multipartContent)
+                {
+                    var contentDisposition =
+                        part.Headers.ContentDisposition;
+
+                    var fieldName =
+                        contentDisposition?.Name?.Trim('"');
+
+                    if (string.IsNullOrWhiteSpace(
+                            fieldName))
+                    {
+                        continue;
+                    }
+
+                    var fileName =
+                        (contentDisposition?.FileNameStar
+                         ?? contentDisposition?.FileName)?.Trim('"');
+
+                    if (!string.IsNullOrWhiteSpace(
+                            fileName))
+                    {
+                        FileFieldName =
+                            fieldName;
+
+                        FileName =
+                            fileName;
+
+                        FileBytes =
+                            await part.ReadAsByteArrayAsync(
+                                cancellationToken);
+
+                        continue;
+                    }
+
+                    FormFields[fieldName] =
+                        await part.ReadAsStringAsync(
+                            cancellationToken);
+                }
+            }
+
+            return new HttpResponseMessage(
+                System.Net.HttpStatusCode.OK)
+            {
+                Content =
+                    new StringContent(
+                        "id=2079999\nUpload erfolgreich")
+            };
         }
     }
 }

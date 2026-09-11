@@ -94,15 +94,6 @@
                              Padding="8,4"
                              Text="{Binding EpisodeTitle, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBlock Margin="0,14,0,5"
-                               FontWeight="SemiBold"
-                               Foreground="#4B5563"
-                               Text="Namensmaske" />
-
-                    <TextBox Height="32"
-                             Padding="8,4"
-                             Text="{Binding NameTemplate, UpdateSourceTrigger=PropertyChanged}" />
-
                     <TextBlock Margin="0,16,0,5"
                                FontWeight="SemiBold"
                                Foreground="#4B5563"

@@ -1,6 +1,10 @@
 using System.Net.Http;
 using System.Xml.Linq;
 namespace CutAssistantNext.App.Services;
+internal sealed record CutlistUploadResult(
+    string CutlistId,
+    string Message);
+
 
 internal sealed class CutlistServerClient
 {
@@ -85,6 +89,170 @@ internal sealed class CutlistServerClient
 
         return await response.Content.ReadAsByteArrayAsync(
             cancellationToken);
+    }
+
+    internal static CutlistUploadResult ParseUploadResponse(
+        string responseBody)
+    {
+        ArgumentNullException.ThrowIfNull(
+            responseBody);
+
+        var lines =
+            responseBody
+                .Replace(
+                    "\r\n",
+                    "\n",
+                    StringComparison.Ordinal)
+                .Split('\n')
+                .Select(
+                    line =>
+                        line.Trim())
+                .Where(
+                    line =>
+                        line.Length > 0)
+                .ToArray();
+
+        var cutlistId =
+            string.Empty;
+
+        foreach (var line in lines)
+        {
+            var separatorIndex =
+                line.IndexOf(
+                    '=');
+
+            if (separatorIndex <= 0)
+            {
+                continue;
+            }
+
+            var name =
+                line[..separatorIndex].Trim();
+
+            var value =
+                line[(separatorIndex + 1)..].Trim();
+
+            if (string.Equals(
+                    name,
+                    "id",
+                    StringComparison.OrdinalIgnoreCase) &&
+                long.TryParse(
+                    value,
+                    out _))
+            {
+                cutlistId =
+                    value;
+            }
+        }
+
+        var message =
+            lines.Length > 0
+                ? lines[^1]
+                : string.Empty;
+
+        return new CutlistUploadResult(
+            cutlistId,
+            message);
+    }
+
+    internal async Task<string> UploadBytesAsync(
+        string personalServerUrl,
+        string cutlistFileName,
+        byte[] cutlistBytes,
+        string applicationVersion,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            personalServerUrl);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            cutlistFileName);
+
+        ArgumentNullException.ThrowIfNull(
+            cutlistBytes);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            applicationVersion);
+
+        var uploadUri =
+            new Uri(
+                personalServerUrl,
+                UriKind.Absolute);
+
+        var userId =
+            uploadUri.AbsolutePath.Trim('/');
+
+        using var content =
+            new MultipartFormDataContent();
+
+        content.Add(
+            new StringContent(
+                "1587200"),
+            "MAX_FILE_SIZE");
+
+        content.Add(
+            new StringContent(
+                "True"),
+            "confirm");
+
+        content.Add(
+            new StringContent(
+                "blank"),
+            "type");
+
+        content.Add(
+            new StringContent(
+                userId),
+            "userid");
+
+        content.Add(
+            new StringContent(
+                "CutAssistant"),
+            "app");
+
+        content.Add(
+            new StringContent(
+                applicationVersion),
+            "version");
+
+        using var fileContent =
+            new ByteArrayContent(
+                cutlistBytes);
+
+        content.Add(
+            fileContent,
+            "userfile[]",
+            cutlistFileName);
+
+        using var response =
+            await _httpClient.PostAsync(
+                uploadUri,
+                content,
+                cancellationToken);
+
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadAsStringAsync(
+            cancellationToken);
+    }
+
+    internal async Task<CutlistUploadResult> UploadAsync(
+        string personalServerUrl,
+        string cutlistFileName,
+        byte[] cutlistBytes,
+        string applicationVersion,
+        CancellationToken cancellationToken = default)
+    {
+        var responseBody =
+            await UploadBytesAsync(
+                personalServerUrl,
+                cutlistFileName,
+                cutlistBytes,
+                applicationVersion,
+                cancellationToken);
+
+        return ParseUploadResponse(
+            responseBody);
     }
 
     internal async Task<string> SearchRawAsync(

@@ -79,10 +79,16 @@
                 <MenuItem Header="Cutlist-Einstellungen …"
                           Click="CutlistSettingsMenuItem_Click" />
 
-                <Separator />
-
                 <MenuItem Header="Namensmaske …"
                           Click="NamingSettingsButton_Click" />
+
+                <Separator />
+
+                <MenuItem Header="Schnittanwendung …"
+                          Click="CutApplicationSettingsButton_Click" />
+
+                <MenuItem Header="FFmpeg-Werkzeuge …"
+                          Click="FfmpegSettingsButton_Click" />
             </MenuItem>
 
             <MenuItem Header="Hilfe"
@@ -492,6 +498,13 @@
                                 Height="36"
                                 Margin="10,0,0,0"
                                 Padding="14,0"
+                                Click="UploadCutlistButton_Click"
+                                Content="Cutlist hochladen …" />
+
+                        <Button MinWidth="170"
+                                Height="36"
+                                Margin="10,0,0,0"
+                                Padding="14,0"
                                 Click="LoadCutlistButton_Click"
                                 Content="Cutlist laden …" />
 
@@ -499,22 +512,8 @@
                                 Height="36"
                                 Margin="10,0,0,0"
                                 Padding="14,0"
-                                Click="CutApplicationSettingsButton_Click"
-                                Content="Schnittanwendung …" />
-
-                        <Button MinWidth="170"
-                                Height="36"
-                                Margin="10,0,0,0"
-                                Padding="14,0"
                                 Click="NamingSettingsButton_Click"
                                 Content="Namensmaske …" />
-
-                        <Button MinWidth="170"
-                                Height="36"
-                                Margin="10,0,0,0"
-                                Padding="14,0"
-                                Click="FfmpegSettingsButton_Click"
-                                Content="FFmpeg-Werkzeuge …" />
 
                         <Button MinWidth="170"
                                 Height="36"
