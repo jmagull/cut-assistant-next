@@ -177,7 +177,12 @@ public sealed class CutTimelineTrack : FrameworkElement
                 continue;
             }
 
-            SelectedRemoveSegment = segment;
+            SelectedRemoveSegment =
+                ReferenceEquals(
+                    SelectedRemoveSegment,
+                    segment)
+                    ? null
+                    : segment;
             e.Handled = true;
             return;
         }
