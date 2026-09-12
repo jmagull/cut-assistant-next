@@ -176,6 +176,19 @@ Cutlist-Server, Upload und Cutlist-Komfort:
 - Schneiden-Dialog nachgeschärft: „Aus obigen Eingaben neu erzeugen“; Vorschau ist read-only, markierbar und kopierbar
 - aktueller Teststand: **399/399 grün**
 
+### UI-Feinschliff und Timeline-Auswahl am 12.09.2026
+
+- Ein Klick auf einen Schnittbereich in der Timeline wählt diesen weiterhin dunkelrot aus.
+- Ein erneuter Klick auf denselben bereits ausgewählten Schnittbereich hebt die Auswahl nun wieder auf.
+- Der Klick auf einen Schnittbereich in der Schnitttabelle springt weiterhin korrekt zur Schnittposition; die Auswahl kann anschließend auch über die Timeline wieder aufgehoben werden.
+- Die Hauptfenster-Beschriftungen wurden für die V1-Oberfläche vereinfacht:
+  - „MP4-Medienanalyse mit ffprobe“ → „Analyse, Schnitt und mehr“
+  - „Videowiedergabe – technischer Host“ → „Player“
+  - „Schnittbereiche – entfernen“ → „Schnittliste“
+- Die Änderungen wurden im laufenden Cut Assistant Next praktisch geprüft; die Oberfläche wirkt damit klarer und produktnäher.
+- Teststand nach den Änderungen: **399/399 grün**.
+- Zugehörige Commits: `2ec111b` und `f8576cd`.
+
 ## Schnittsemantik
 
 Die Benutzeroberfläche beschreibt Bereiche, die entfernt werden sollen.
@@ -186,8 +199,9 @@ Das Bedienmodell bleibt damit auf das Entfernen von Werbung, Vorlauf, Nachlauf o
 
 ## Nächster geplanter Bauabschnitt
 
-Als nächster zwingender V1-Baustein steht die Unterstützung echter klassischer OTR-AVI-Dateien an. Der Cutlist-Server-Workflow von automatischer Suche über Download bis zum direkten Upload ist inzwischen vollständig umgesetzt und praktisch bestätigt.
-Der provisorische manuelle Button für die Serversuche wurde nach erfolgreicher gemeinsamer Ladeintegration entfernt; die Serversuche läuft ausschließlich automatisch nach erfolgreicher Medienanalyse.
+Vor dem nächsten größeren V1-Baustein wird zunächst der V1-Feinschliff der Hauptoberfläche abgeschlossen. Als nächster UI-Schritt werden die technischen Diagnoseblöcke „Datei und Container“, „Video“ und „Audio“ aus dem Hauptfenster entfernt und über „Video-Informationen …“ in einen eigenen Dialog verlagert.
+
+Danach steht als nächster größerer V1-Baustein die Unterstützung echter klassischer OTR-AVI-Dateien an. Der Cutlist-Server-Workflow von automatischer Suche über Download bis zum direkten Upload ist inzwischen vollständig umgesetzt und praktisch bestätigt. Der provisorische manuelle Button für die Serversuche wurde nach erfolgreicher gemeinsamer Ladeintegration entfernt; die Serversuche läuft ausschließlich automatisch nach erfolgreicher Medienanalyse.
 
 
 
