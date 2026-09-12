@@ -189,6 +189,26 @@ Cutlist-Server, Upload und Cutlist-Komfort:
 - Teststand nach den Änderungen: **399/399 grün**.
 - Zugehörige Commits: `2ec111b` und `f8576cd`.
 
+### Video-Informationen und Hauptfenster-Layout am 12.09.2026
+
+- Die technischen Diagnoseblöcke „Datei und Container“, „Video“ und „Audio“ wurden aus dem Hauptfenster entfernt.
+- Über den neuen Menüpunkt „Video-Informationen …“ werden diese Angaben nun in einem eigenen Dialog angezeigt.
+- Der Dialog verwendet direkt das vorhandene `MainWindowViewModel`; Analysewerte werden nicht kopiert und es wurde keine zusätzliche Daten- oder Analyselogik eingeführt.
+- Der Dialog zeigt bei normaler Fenstergröße sämtliche technischen Informationen vollständig an.
+- Bei kleinerer Fenstergröße übernimmt ein ScrollViewer automatisch die Navigation durch die technischen Informationen.
+- Die Schnittliste wurde neu strukturiert:
+  - obere Schnittmarken-Bedienzeile bleibt dauerhaft sichtbar
+  - untere Aktionsleiste mit „Bereich löschen“, „Cutlist erzeugen …“, „Cutlist hochladen …“, „Cutlist laden …“, „Namensmaske …“ und „Schneiden …“ bleibt dauerhaft sichtbar
+  - nur die eigentliche Schnitt-Tabelle scrollt bei längeren Schnittlisten
+- Die vertikalen Abstände im Hauptfenster wurden gezielt reduziert, ohne die Videofläche zu verkleinern.
+- Dadurch sind bei normaler Fenstergröße mehrere Schnittbereiche gleichzeitig sichtbar, während sämtliche wichtigen Bedienfunktionen dauerhaft erreichbar bleiben.
+- Nicht mehr verwendete Styles im Hauptfenster wurden entfernt.
+- Build und vollständiger Testlauf erfolgreich: **399/399 Tests grün**.
+- Der Umbau wurde mehrfach im laufenden Cut Assistant Next praktisch geprüft.
+- Zugehöriger Commit: `1446f2e`.
+
+**Liebes Tagebuch:** Der junge Padawan war sehr fleißig und heute voll auf Cupertino-Style fixiert. Redmond blieb außen vor.
+
 ## Schnittsemantik
 
 Die Benutzeroberfläche beschreibt Bereiche, die entfernt werden sollen.
