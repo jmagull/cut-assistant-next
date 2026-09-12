@@ -130,7 +130,7 @@
                 <TextBlock Margin="0,5,0,0"
                            FontSize="15"
                            Foreground="#6B7280"
-                           Text="MP4-Medienanalyse mit ffprobe" />
+                           Text="Analyse, Schnitt und mehr" />
             </StackPanel>
 
             <Button Grid.Column="1"
@@ -208,7 +208,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Style="{StaticResource SectionHeaderStyle}"
-                           Text="Videowiedergabe – technischer Host" />
+                           Text="Player" />
 
                 <Border Grid.Row="1"
                         Background="Black"
@@ -402,7 +402,7 @@
                         Style="{StaticResource SectionBorderStyle}">
                     <StackPanel>
                         <TextBlock Style="{StaticResource SectionHeaderStyle}"
-                                   Text="Schnittbereiche – entfernen" />
+                                   Text="Schnittliste" />
 
                         <WrapPanel>
                             <Button MinWidth="110"
