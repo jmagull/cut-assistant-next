@@ -729,6 +729,20 @@ public partial class MainWindow : Window
         }
     }
 
+    private void VideoInformationMenuItem_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var dialog =
+            new VideoInformationDialog(
+                _viewModel)
+            {
+                Owner = this
+            };
+
+        dialog.ShowDialog();
+    }
+
     private void QuitMenuItem_Click(
         object sender,
         RoutedEventArgs e)
