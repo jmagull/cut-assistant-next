@@ -1,451 +1,70 @@
-# Cut Assistant Next – Proof of Concept
+# Cut Assistant Next
 
-Moderner Nachfolger des Cut Assistant für Windows 11 – ohne DirectShow und ohne Abhängigkeit von installierten Windows-Codecs.
+Cut Assistant Next (CAN) ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box. Die Oberfläche verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codec-Pakete vorauszusetzen.
 
-## Ziel des Proof of Concept
+Stand: 13.09.2026. Der aktuelle Funktionsumfang liegt auf `feature/cut-application-configuration`; die Übernahme nach `main` steht noch aus. CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer.
 
-**Proof of Concept 0.1: Medienwiedergabe und Navigation**
+## Einstieg
 
-Der erste Prototyp soll nachweisen, dass typische OTR-MP4-Dateien zuverlässig geöffnet, analysiert, abgespielt und präzise navigiert werden können.
+- [Nutzeranleitung](docs/NUTZERANLEITUNG.md): Einrichtung, Bedienung, Cutlists, Schneiden und Hilfe bei Fehlern.
+- [Projektstatus](docs/STATUS.md): umgesetzter Umfang, bestätigte Tests und offene Aufgaben.
+- [Testplan](docs/TESTPLAN.md): reproduzierbare Prüfungen und Testbasis.
+- [Architektur](docs/ARCHITECTURE.md) und [Entscheidungen](docs/DECISIONS.md): technische Hintergründe und Entwicklungsgeschichte.
 
-## Aktueller Entwicklungsstand
+## Was CAN derzeit kann
 
-Die .NET-Solution und die grundlegenden Projekte sind eingerichtet:
+- Videos laden, mit ffprobe analysieren und mit mpv wiedergeben.
+- Play/Pause, Seeking, Einzelbildschritte und Lautstärkeregelung.
+- Zu entfernende Bereiche markieren, auswählen, korrigieren und löschen.
+- Cutlists lokal laden, erzeugen und speichern.
+- Passende Server-Cutlists automatisch suchen und die Suche erneut per Button öffnen.
+- Lokal gespeicherte Cutlists nach Bestätigung auf den konfigurierten Server hochladen.
+- Ausgabenamen über Namensmasken und Cutlist-Namensvorschläge vorbereiten.
+- MP4-Inhalte direkt mit MP4Box schneiden, auch bei abweichender Dateiendung.
+- Andere Container nach Bestätigung experimentell mit FFmpeg verlustfrei nach MP4 umpacken und anschließend mit MP4Box schneiden.
+- Fortschritt und Protokoll anzeigen, kopieren und den Vorgang abbrechen.
+- Fenstergröße, Maximierung und Lautstärke speichern; Inhalte bei kleinen Fenstern umbrechen bzw. scrollbar halten.
 
-- `CutAssistantNext.Core`
-- `CutAssistantNext.Media`
-- `CutAssistantNext.App`
-- `CutAssistantNext.Core.Tests`
-- `CutAssistantNext.Media.Tests`
-- `CutAssistantNext.App.Tests`
+Die reine Cutlist-Erstellung benötigt keine Video-Umwandlung. Erst beim Schneiden wird eine gegebenenfalls notwendige MP4-Arbeitsdatei erzeugt. Serversuche und Cutlist-Zuordnung beziehen sich dabei weiterhin auf die Originaldatei.
 
-Die ffprobe-Medienanalyse, die eingebettete libmpv-Wiedergabe, die Player-Steuerung und die erste Schnittmarkierung sind inzwischen bis in die WPF-Anwendung integriert.
+## Grenzen
 
-MP4-Dateien sowie OTR-Dateien mit tatsächlichem MP4-Inhalt und Dateiendung `.avi` können über einen Dateiauswahldialog ausgewählt, asynchron analysiert und anschließend direkt im eingebetteten Videofenster mit Bild und Ton wiedergegeben werden. Geladene Medien starten zuverlässig im pausierten Zustand.
+MP4 ist ein Container, keine Bezeichnung für einen bestimmten Videocodec. Ob sich ein anderes Format verlustfrei vorbereiten lässt, hängt von seinen Streams ab. CAN verwendet Stream-Copy und führt keine automatische Neukodierung durch. Ungeeignete Dateien oder deutliche Abweichungen werden mit einer Fehlermeldung gestoppt.
 
-Die Analyse ist über `IMediaAnalysisRunner` abstrahiert. Das testbare `MainWindowViewModel` verwaltet Status, Fehleranzeige, Auslastungszustand und die formatierten Medieninformationen.
+Die Prüfung der Arbeitsdatei ist eine Plausibilitätsprüfung anhand der Medieninformationen. Sie ersetzt nicht die Kontrolle der Schnittstellen und der Ton-Synchronität. Smart Rendering, Stapelverarbeitung, integrierte mehrteilige Aufnahmen sowie Installer/portable Veröffentlichung sind noch nicht umgesetzt.
 
-Die Wiedergabe ist über `IMediaPlayerService` und `MpvMediaPlayerService` gekapselt. Ein eigener WPF-Host auf Basis von `HwndHost` stellt das native Fensterhandle für libmpv bereit.
+## Für Anwender
 
-Das testbare `PlaybackViewModel` bildet Player-Zustand, aktuelle Position, Gesamtdauer, Frameinformationen, Lautstärke und die Verfügbarkeit der Bedienelemente ab. Die Oberfläche bietet eine gemeinsame Play/Pause-Schaltfläche, eine formatierte Zeit- und Frameanzeige, eine automatisch mitlaufende Zeitleiste mit Seeking, die Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames sowie eine Lautstärkeregelung von `0` bis `100 Prozent`. Die Frame-Schaltflächen sind nur im pausierten Zustand verfügbar.
+Vorgesehene Umgebung ist Windows 11 x64. Die derzeitige Build-Ausgabe benötigt die passende .NET-10-Desktop-Laufzeit und die mitgelieferte `libmpv-2.dll` neben dem Programm. ffprobe, FFmpeg und MP4Box werden über die Einstellungen konfiguriert. Eine fertige Installationsroutine gehört noch nicht zum Projektstand.
 
-Zusätzlich stehen Tastaturkürzel zur Verfügung: Leertaste für Play/Pause, `←` und `→` für die Navigation um ein Bild sowie `Strg+←` und `Strg+→` für zehn Bilder.
+Die [Nutzeranleitung](docs/NUTZERANLEITUNG.md) erklärt die Einrichtung ohne Entwicklungswerkzeuge.
 
-Während der Benutzer den Slider bewegt, überschreiben automatische Positionsmeldungen von libmpv nicht den gewählten Vorschauwert. Erst beim Loslassen wird die neue Position an den MediaPlayer-Service übergeben.
+## Aus dem Quellcode bauen
 
-Für die Schnittplanung beschreibt `RemoveSegment` einen Bereich, der aus dem Video entfernt werden soll. `CutPlan` verwaltet diese Bereiche chronologisch und verhindert ungültige oder überlappende Segmente. Das testbare `CutPlanViewModel` verbindet diese Logik mit der Oberfläche.
+Voraussetzungen: Windows 11 x64, .NET-10-SDK und 7-Zip für die Einrichtung der nativen Wiedergabebibliothek. Das Setup-Skript lädt die im Repository festgelegte libmpv-Version und prüft den Archiv-Hash. Restore und erstmalige Einrichtung benötigen Netzwerkzugriff.
 
-Schnittanfang und Schnittende können an der aktuellen Videoposition gesetzt werden. Mehrere Entfernungsbereiche werden proportional als rote Bereiche auf einer eigenen Schnitt-Timeline dargestellt. Bestehende Bereiche lassen sich über Tabelle oder Timeline auswählen, am Anfang oder Ende framegenau korrigieren und vollständig löschen. Erfassungs- und Korrekturmodus sind dabei bewusst voneinander getrennt.
-
-Die Benutzeroberfläche arbeitet damit aus Sicht des Benutzers mit zu entfernenden Bereichen. Eine spätere klassische Cutlist-Ausgabe wird daraus die komplementären Behaltebereiche berechnen.
-
-Die zuletzt verwendete Fenstergröße sowie der maximierte Zustand werden lokal gespeichert und beim nächsten Programmstart wiederhergestellt.
-
-Die native Laufzeitbibliothek wird fest versioniert, per SHA-256 kontrolliert und beim Build automatisch in den Ausgabeordner kopiert. Beim Schließen der Anwendung wird libmpv vollständig freigegeben, bevor das native Videofenster zerstört wird.
-
-Eine zentrale Protokollierung hinter `IAppLogger` erfasst wichtige Programmabläufe und Fehler in verständlicher Form. Die UTF-8-Protokolldatei liegt unter `%LOCALAPPDATA%\Cut Assistant Next\Logs\CutAssistantNext.log`. Sie wird ab einer Größe von 2 MiB rotiert; bis zu drei ältere Protokolldateien bleiben erhalten. Häufige Positions-, Frame- und Lautstärkeereignisse werden bewusst nicht protokolliert.
-## ffprobe-Medienanalyse
-
-Der `FfprobeRunner` startet `ffprobe.exe` als externen Prozess.
-
-Standardpfad:
-
-```text
-C:\Tools\ffmpeg\bin\ffprobe.exe
-```
-
-Der Pfad kann beim Erzeugen des `FfprobeRunner` durch einen anderen Pfad ersetzt werden.
-
-Für die Analyse wird sinngemäß folgender Aufruf verwendet:
-
-```text
-ffprobe.exe
--v error
--show_streams
--show_format
--of json
-<Media-Datei>
-```
-
-Der technische Ablauf:
-
-```text
-Mediendatei
-    ↓
-FfprobeRunner
-    ↓
-ffprobe.exe
-    ↓
-JSON-Ausgabe
-    ↓
-FfprobeJsonParser
-    ↓
-MediaAnalysisResult
-```
-
-Ermittelt werden unter anderem:
-
-- Containerformat
-- Dateigröße
-- Laufzeit
-- Video- und Audiostreams
-- Video- und Audiocodecs
-- Auflösung
-- Sample Aspect Ratio
-- Display Aspect Ratio
-- Bildrate
-- Field Order
-- Samplerate
-- Kanalanzahl
-- Kanallayout
-
-Der Runner behandelt außerdem:
-
-- fehlende `ffprobe.exe`
-- fehlende Mediendateien
-- fehlerhafte ffprobe-Prozessaufrufe
-- leere JSON-Ausgaben
-- Prozessabbrüche über `CancellationToken`
-
-Dateipfade mit Leerzeichen werden über `ProcessStartInfo.ArgumentList` sicher übergeben.
-
-## WPF-Medienanalyse
-
-Eine MP4-Datei kann direkt über die WPF-Oberfläche ausgewählt und analysiert werden.
-
-Der Ablauf:
-
-```text
-MainWindow
-    ↓
-MainWindowViewModel
-    ↓
-IMediaAnalysisRunner
-    ↓
-FfprobeRunner
-    ↓
-FfprobeJsonParser
-    ↓
-MediaAnalysisResult
-```
-
-Während der Analyse:
-
-- bleibt die Oberfläche reaktionsfähig
-- wird die Dateiauswahl vorübergehend deaktiviert
-- erscheint der Status `Datei wird analysiert …`
-- wird ein unbestimmter Fortschrittsbalken angezeigt
-
-Nach erfolgreicher Analyse werden dargestellt:
-
-- Dateiname und vollständiger Pfad
-- Containerformat
-- Dateigröße
-- Laufzeit
-- Video-Codec
-- Auflösung
-- SAR und DAR
-- Bildrate
-- Field Order
-- Audio-Codec
-- Samplerate
-- Kanalanzahl
-- Kanallayout
-
-Für den Proof of Concept werden jeweils der erste Video- und Audiostream angezeigt.
-Fehlende Werte erscheinen als `Nicht verfügbar`.
-Fehler des Runners werden verständlich in der Oberfläche dargestellt.
-
-## Einzelbildnavigation und Frameanzeige
-
-Im pausierten Zustand stehen vier Schaltflächen für die Navigation zur Verfügung:
-
-- `−10 Frames`
-- `−1 Frame`
-- `+1 Frame`
-- `+10 Frames`
-
-Die Vorwärtsnavigation verwendet die Frame-Step-Funktion von mpv. Für die Rückwärtsnavigation wird die Zielposition über einen relativen Seek-Befehl angesteuert.
-
-Unterhalb der Zeitanzeige zeigt die Oberfläche die aktuelle Frame-Nummer und die von mpv geschätzte Gesamtzahl der Frames an. Die aktuelle Frame-Nummer wird aus Wiedergabeposition, Gesamtdauer und geschätzter Frameanzahl berechnet und auf den gültigen Bereich begrenzt.
-
-Beispiel:
-
-```text
-Frame 89 / ca. 121.211
-```
-
-Solange noch keine ausreichenden Werte vorliegen, erscheint ein Gedankenstrich als Ersatzanzeige.
-
-## Manueller Praxistest
-
-Der vollständige ffprobe-Ablauf wurde mit einer realen MP4-Datei erfolgreich über die WPF-Oberfläche geprüft.
-
-```text
-Datei:
-  Frieren Nach dem Ende der Reise S02E05
-  Ein ganz normaler Kerl [26.07.2026].mp4
-
-Container:
-  QuickTime / MOV
-  Dateigröße: 1,10 GiB
-  Laufzeit:   00:25:13.035
-
-Video:
-  Codec:       H.264 / AVC
-  Auflösung:   1920 × 1080
-  SAR:         1:1
-  DAR:         16:9
-  Bildrate:    25 fps
-  Field Order: progressive
-
-Audio:
-  Codec:       AAC
-  Samplerate:  44.100 Hz
-  Kanäle:      2
-  Layout:      stereo
-```
-
-Der Status wechselte nach Abschluss auf `Analyse erfolgreich abgeschlossen.` Die Oberfläche blieb während der asynchronen Analyse reaktionsfähig.
-
-Zusätzlich wurde die eingebettete Wiedergabe mit der realen Datei `2068756_60422686.mp4` geprüft. libmpv zeigte das Video innerhalb des WPF-Fensters an und gab den Ton korrekt aus.
-
-Auch die Wiedergabesteuerung wurde praktisch geprüft:
-
-- Play und Pause funktionieren zuverlässig
-- aktuelle Position und Gesamtdauer werden korrekt angezeigt
-- die Zeitleiste läuft während der Wiedergabe automatisch mit
-- Seeking funktioniert während laufender und pausierter Wiedergabe
-- während des manuellen Ziehens springt der Slider nicht zur Player-Position zurück
-- der Ablauf `Pause → Seeking → Play → Pause → Play` funktioniert stabil
-- die Frame-Schaltflächen sind während der Wiedergabe deaktiviert
-- im pausierten Zustand funktionieren Schritte um `−10`, `−1`, `+1` und `+10` Frames
-- die Frameanzeige ändert sich bei jedem Schritt um die erwartete Anzahl
-- die aktuelle Frame-Nummer läuft während der normalen Wiedergabe automatisch mit
-- die Lautstärke lässt sich während der Wiedergabe und im pausierten Zustand von `0` bis `100 Prozent` einstellen
-- die Prozentanzeige folgt dem Lautstärkeregler
-- die gewählte Lautstärke bleibt beim Laden einer anderen Datei erhalten
-- die Protokolldatei enthält Start, Dateiauswahl, Analyse, mpv-Ladevorgang, ausgewählte Bedienaktionen und Programmende
-- häufige Positions-, Frame- und Lautstärkeereignisse erzeugen keine Logflut
-- libmpv wird nachvollziehbar und vollständig freigegeben
-
-Nach dem normalen Schließen der Anwendung wurde der Prozess vollständig beendet. Damit ist die vollständige Kette von der Dateiauswahl über ffprobe bis zur eingebetteten Bild- und Tonwiedergabe einschließlich Play/Pause, Seeking, Einzelbildnavigation, Frameanzeige und Lautstärkeregelung praktisch nachgewiesen.
-
-## Tests
-
-Parser, Runner, `FileAppLogger`, `MainWindowViewModel`, `PlaybackViewModel`, `CutPlanViewModel`, die Core-Schnittlogik und der MediaPlayer-Service sind durch automatisierte xUnit-Tests abgesichert.
-
-Die Tests prüfen unter anderem:
-
-- Übernahme und Formatierung erfolgreicher Analyseergebnisse
-- verständliche Fehleranzeige
-- `IsAnalyzing` und `CanAnalyze` während einer laufenden Analyse
-- Ersatzanzeige `Nicht verfügbar` bei fehlenden Werten
-- Initialisierung und Zustandswechsel des MediaPlayer-Service
-- Laden, Wiedergabe, Pause, Seeking und Stoppen
-- Verarbeitung von libmpv-Ereignissen und Fehlern
-- Play-/Pause-Zustände bei unterschiedlichen libmpv-Ereignisreihenfolgen
-
-- stabile Beibehaltung des angeforderten Pausenzustands während des Ladens
-
-- gemeinsames Umschalten zwischen Play und Pause
-- Positions-, Dauer- und Slider-Verhalten des `PlaybackViewModel`
-- Seeking-Vorschau, Begrenzung und Abbruch
-- Freigabe der Frame-Schaltflächen nur im pausierten Zustand
-- Vorwärts- und Rückwärtsschritte um ein und zehn Frames
-- Berechnung, Begrenzung und Formatierung der Frameanzeige
-- stabile Beibehaltung des Pausenzustands nach Frame-Schritten
-- Projektion und Formatierung der Lautstärke im `PlaybackViewModel`
-- Aktivierung des Lautstärkereglers in den geeigneten Player-Zuständen
-- Übergabe der Lautstärke an die mpv-Eigenschaft `volume`
-- Begrenzung der Lautstärke auf den Bereich von `0` bis `100`
-- Ereignisbehandlung bei Lautstärkeänderungen
-
-- Validierung von `RemoveSegment`
-
-- chronologische Verwaltung mehrerer Entfernungsbereiche im `CutPlan`
-
-- Schutz vor ungültigen und überlappenden Schnittbereichen
-
-- Zulässigkeit direkt angrenzender Schnittbereiche
-
-- Hinzufügen, Entfernen und Ersetzen von Schnittbereichen
-
-- Erfassungszustand und Auswahl bestehender Bereiche im `CutPlanViewModel`
-
-- Trennung von Erfassungs- und Korrekturmodus
-
-- Zurücksetzen einer vorgemerkten Schnittmarke beim Wechsel in den Korrekturmodus
-
-- Auswahlverhalten nach Korrektur, Löschen und Zurücksetzen
-
-- UTF-8-Protokollierung einschließlich Umlauten und technischen Fehlerdetails
-- Größenbegrenzung und Rotation der Protokolldateien
-- störungsfreies Verhalten bei einem nicht beschreibbaren Protokollpfad
-- Protokollierung von Analysebeginn, Erfolg, Abbruch und Fehlern
-- Protokollierung von libmpv-Initialisierung, Ladevorgängen, ausgewählten Bedienaktionen und Fehlern
-- Schutz vor Logfluten durch häufige Positions-, Frame- und Lautstärkeereignisse
-
-```text
-Tests insgesamt:  107
-Erfolgreich:      107
-Fehlgeschlagen:   0
-Übersprungen:     0
-```
-
-Tests ausführen:
+Im Repository-Verzeichnis:
 
 ```powershell
-dotnet test .\CutAssistantNext.sln
+.\tools\setup-libmpv.ps1
+dotnet restore .\CutAssistantNext.sln
+dotnet build .\CutAssistantNext.sln --configuration Release --no-restore
+dotnet test .\CutAssistantNext.sln --configuration Release --no-build
 ```
 
-Release-Build ausführen:
+Die Anwendung liegt danach unter `src\CutAssistantNext.App\bin\Release\net10.0-windows\CutAssistantNext.App.exe`. Der Build kopiert die vorbereitete libmpv-Bibliothek in das Ausgabeverzeichnis. Für Analyse, experimentelles Umpacken und Schnitt sind zusätzlich die konfigurierten externen Werkzeuge erforderlich.
 
-```powershell
-dotnet build .\CutAssistantNext.sln --configuration Release
-```
+## Projektstruktur
 
-## Technische Grundlage
+| Bereich | Aufgabe |
+|---|---|
+| `src/CutAssistantNext.App` | WPF, Dialoge, ViewModels, Einstellungen und Ablaufsteuerung |
+| `src/CutAssistantNext.Core` | Medienmodelle, Schnittplan, Namensbildung und Verträge |
+| `src/CutAssistantNext.Media` | ffprobe, mpv und Prozessausführung für FFmpeg/MP4Box |
+| `src/CutAssistantNext.Cutlists` | Cutlist-Import, Export, Metadaten und Bereichsumrechnung |
+| `tests` | vier automatisierte Testsuiten |
+| `samples` | kleine Referenzdaten |
+| `tools` | Einrichtung von libmpv |
+| `docs` | Anleitung, Status, Testplan und technische Dokumentation |
 
-- C# und .NET 10
-- WPF
-- ffprobe für Medieninformationen
-- mpv/libmpv für die eingebettete Videowiedergabe
-- `HanumanInstitute.LibMpv` 0.10.1 als .NET-Anbindung
-- eigener `HwndHost` für die Windows-HWND-Einbettung
-- xUnit für automatisierte Tests
-- Git und GitHub für Versionsverwaltung
-- Codex als Programmierwerkstatt
-- ChatGPT für Architektur, Planung, Testauswertung und Dokumentation
-
-## POC-0.1-Funktionsumfang
-
-Bereits umgesetzt:
-
-- Visual-Studio-Solution und Projektstruktur
-- Datenmodell für Medieninformationen
-- Parser für ffprobe-JSON
-- Behandlung unvollständiger und ungültiger JSON-Daten
-- tatsächliche Ausführung von `ffprobe.exe`
-- Übergabe der JSON-Ausgabe an den vorhandenen Parser
-- Abstraktion über `IMediaAnalysisRunner`
-- Auswahl von MP4-Dateien sowie OTR-Dateien mit tatsächlichem MP4-Inhalt und Dateiendung `.avi`
-- asynchrone Analyse ohne Blockierung der Oberfläche
-- Status- und Fortschrittsanzeige während der Analyse
-- verständliche Fehleranzeige
-- Anzeige der wichtigsten Datei-, Container-, Video- und Audiowerte
-- testbares `MainWindowViewModel`
-- eigene Wiedergabeschnittstelle `IMediaPlayerService`
-- testbarer `MpvMediaPlayerService`
-- interne Kapselung der libmpv-Aufrufe
-- `HanumanInstitute.LibMpv` als .NET-Wrapper
-- reproduzierbares Setup der fest versionierten `libmpv-2.dll`
-- SHA-256-Prüfung des heruntergeladenen libmpv-Archivs
-- automatische Übernahme der nativen DLL in Build- und Publish-Ordner
-- eigener WPF-Video-Host auf Basis von `HwndHost`
-- Einbettung über die mpv-Option `wid`
-- kontrollierte Initialisierung und Freigabe von libmpv
-- eingebettete Videowiedergabe mit Bild und Ton
-- zuverlässiger Start geladener Medien im pausierten Zustand
-- testbares `PlaybackViewModel` für Player-Zustand, Position und Dauer
-- gemeinsame Play/Pause-Schaltfläche
-- Positionsanzeige und automatisch mitlaufende Zeitleiste
-- Seeking während laufender und pausierter Wiedergabe
-- Schutz vor zurückspringendem Slider während des manuellen Seeking
-- Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames
-- Frame-Schaltflächen nur im pausierten Zustand
-- Anzeige der aktuellen Frame-Nummer und der geschätzten Gesamtzahl
-- automatische Aktualisierung der Frameanzeige während der Wiedergabe
-- Tastatursteuerung mit Leertaste, Pfeiltasten und `Strg`+Pfeiltasten
-- Lautstärkeregelung von `0` bis `100 Prozent`
-- Beibehaltung der gewählten Lautstärke beim Dateiwechsel
-- zentrale Logging-Schnittstelle `IAppLogger` mit stiller Standardimplementierung
-- UTF-8-Protokolldatei im lokalen Benutzerprofil
-- Größenbegrenzung auf 2 MiB und Rotation von bis zu drei älteren Protokollen
-- verständliche Einträge für Programmstart und -ende, Dateiauswahl, Analyse, mpv-Ladevorgänge und ausgewählte Bedienaktionen
-- technische Fehlerdetails ohne Beeinträchtigung der Anwendung
-- Schutz vor Logfluten bei häufigen Player-Ereignissen
-- fachliches Modell `RemoveSegment` für zu entfernende Videobereiche
-- `CutPlan` zur chronologischen Verwaltung und Validierung mehrerer Entfernungsbereiche
-- Schutz vor ungültigen und überlappenden Schnittbereichen
-- testbares `CutPlanViewModel`
-- Setzen von Schnittanfang und Schnittende an der aktuellen Videoposition
-- Erfassung mehrerer Schnittbereiche nacheinander
-- eigene Schnitt-Timeline mit proportional dargestellten roten Entfernungsbereichen
-- Auswahl bestehender Bereiche über Tabelle und Timeline
-- bidirektionale Synchronisierung der Auswahl zwischen Tabelle und Timeline
-- getrennte Erfassungs- und Korrekturmodi
-- framegenaue Korrektur von Anfang und Ende eines ausgewählten Bereichs
-- Löschen ausgewählter Schnittbereiche
-- verständliche Meldungen bei ungültigen Korrekturpositionen
-- Speicherung der zuletzt verwendeten Fenstergröße und des maximierten Zustands
-- automatisierte Tests für Parser, Runner, Logger, ViewModels, Core-Schnittlogik und MediaPlayer-Service
-- vollständiger Solution-Testlauf mit 107 von 107 erfolgreichen Tests
-- erfolgreicher Praxistest mit realen MP4- und OTR-Dateien in der WPF-Anwendung
-- praktische Prüfung von Wiedergabe, Tastatursteuerung, Schnittmarkierung, Korrektur, Löschen und Fensterwiederherstellung
-
-Die Schnittbearbeitung arbeitet bewusst mit Bereichen, die entfernt werden sollen. Eine spätere klassische Cutlist-Ausgabe wird daraus die komplementären Behaltebereiche berechnen.
-
-Der nächste Bauabschnitt wird nach Abschluss und Übernahme dieses Feature-Branches festgelegt.
-
-Noch nicht enthalten sind das Schreiben und Einlesen vollständiger Cutlists, Cutlist-Server, MP4Box-/FFmpeg-Schnitt, Smart Rendering, Stapelverarbeitung und automatische Umbenennung.
-## Repository-Struktur
-
-```text
-cut-assistant-next/
-├── CutAssistantNext.sln
-├── AGENTS.md
-├── README.md
-├── docs/
-├── src/
-│   ├── CutAssistantNext.App/
-│   │   └── ViewModels/
-│   ├── CutAssistantNext.Core/
-│   └── CutAssistantNext.Media/
-├── tests/
-│   ├── CutAssistantNext.App.Tests/
-│   ├── CutAssistantNext.Core.Tests/
-│   └── CutAssistantNext.Media.Tests/
-├── samples/
-│   └── cutlists/
-└── tools/
-```
-
-## Entwicklungsstand
-
-Die tatsächliche ffprobe-Ausführung wurde mit Pull Request **#3** in `main` übernommen.
-
-Die zugehörige Dokumentation folgte mit Pull Request **#4**.
-
-Die WPF-Integration der Medienanalyse wurde mit Pull Request **#5** übernommen.
-
-Die eingebettete libmpv-Wiedergabe mit Bild, Ton, eigener HWND-Einbettung und kontrolliertem Shutdown wurde mit Pull Request **#6** integriert.
-
-Play, Pause, Positionsanzeige, Gesamtdauer und Zeitleiste mit Seeking wurden mit Pull Request **#7** in `main` übernommen.
-
-Die zugehörige README-Dokumentation wurde mit Pull Request **#8** aktualisiert.
-
-Die Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames sowie die aktuelle Frameanzeige wurden mit Pull Request **#9** in `main` übernommen.
-
-Die zugehörige README-Dokumentation wurde mit Pull Request **#10** aktualisiert.
-
-Die Lautstärkeregelung wurde mit Pull Request **#11** in `main` übernommen. Die Statusdokumentation folgte mit Pull Request **#12**.
-
-Die verständliche Protokolldatei wurde mit Pull Request **#13** in `main` übernommen.
-
-Aktueller Merge-Commit von `main` und `origin/main`: `d0f3ed1`.
-
-Der aktuelle Arbeitsbranch ist `feature/cut-markers` und basiert direkt auf diesem Stand.
-
-Auf `feature/cut-markers` sind die erste Schnittplanung mit `RemoveSegment` und `CutPlan`, die visuelle Schnitt-Timeline, Auswahl und Korrektur vorhandener Bereiche, Tastatursteuerung, die gemeinsame Play/Pause-Schaltfläche, Unterstützung von OTR-Dateien mit Dateiendung `.avi`, der zuverlässige Start im pausierten Zustand sowie die Wiederherstellung der Fenstergröße umgesetzt.
-
-Die Benutzeroberfläche markiert dabei bewusst die zu entfernenden Bereiche. Eine spätere klassische Cutlist-Ausgabe wird daraus die komplementären Behaltebereiche erzeugen.
-
-Der vollständige Solution-Testlauf ist mit 107 von 107 erfolgreichen Tests grün. `git diff --check` meldet keine Beanstandungen. Die Funktionen wurden zusätzlich praktisch unter Windows mit realen Mediendateien geprüft.
-
-Der Feature-Stand ist noch nicht committed und noch nicht in `main` übernommen.
-
-Der nächste Entwicklungsschritt wird nach Abschluss, Commit und Übernahme dieses Bauabschnitts festgelegt.
-## Arbeitsgrundsatz
-
-> Eine Funktion planen, umsetzen, testen, dokumentieren und erst danach den nächsten Schritt beginnen.
+Letzter bestätigter Stand: Release-Build ohne Fehler oder Warnungen, **430/430 Tests bestanden**. Die Diplomatin und Rubikon wurden mit jeweils zwei Cutlists im integrierten AVI-Ablauf erfolgreich geschnitten und vom Nutzer im Player geprüft. Einzelheiten und Einschränkungen stehen im [Testplan](docs/TESTPLAN.md).
