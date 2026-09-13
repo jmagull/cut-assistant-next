@@ -256,6 +256,7 @@
                                 MinWidth="90"
                                 Height="36"
                                 Padding="14,0"
+                                Margin="0,0,10,8"
                                 IsEnabled="{Binding CanTogglePlayback}"
                                 Click="PlayButton_Click"
                                 Content="Play/Pause" />
