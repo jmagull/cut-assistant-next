@@ -758,6 +758,11 @@ public partial class MainWindow : Window
         dialog.ShowDialog();
     }
 
+    private void CreditsMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        new CreditsDialog(OpenHelpLink) { Owner = this }.ShowDialog();
+    }
+
     private void UserGuideMenuItem_Click(object sender, RoutedEventArgs e)
     {
         OpenHelpLink("https://github.com/jmagull/cut-assistant-next/blob/main/docs/NUTZERANLEITUNG.md");

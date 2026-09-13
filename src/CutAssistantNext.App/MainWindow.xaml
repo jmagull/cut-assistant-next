@@ -80,10 +80,10 @@
             </MenuItem>
 
             <MenuItem Header="Credits"
-                      IsEnabled="False" />
+                      Click="CreditsMenuItem_Click" />
 
             <MenuItem Header="Update/GitHub"
-                      IsEnabled="False" />
+                      Click="GitHubProjectMenuItem_Click" />
 
             <MenuItem Header="Quit"
                       Click="QuitMenuItem_Click" />

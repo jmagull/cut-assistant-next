@@ -128,7 +128,9 @@ Bei geringer Breite umbrechen Bediengruppen. Bei geringer Höhe erreichst du die
 
 Die lokalen Einstellungen liegen unter `%LOCALAPPDATA%\Cut Assistant Next\Settings`. Das allgemeine Anwendungsprotokoll liegt unter `%LOCALAPPDATA%\Cut Assistant Next\Logs\CutAssistantNext.log`. Das technische Schnittprotokoll kannst du im Fortschrittsdialog kopieren, bevor du ihn schließt.
 
-Über **Hilfe → Nutzeranleitung (GitHub)** öffnest du diese Anleitung im Standardbrowser. **Hilfe → GitHub-Projekt** führt zur Projektseite. Beide Links benötigen eine Internetverbindung.
+Über **Hilfe → Nutzeranleitung (GitHub)** öffnest du diese Anleitung im Standardbrowser. **Hilfe → GitHub-Projekt** führt zur Projektseite. Auch **Update/GitHub** öffnet die Projektseite im Browser. Diese Links benötigen eine Internetverbindung.
+
+Unter **Credits** findest du die Danksagung mit Links zu den beteiligten Projekten und Informationsseiten. Der Text lässt sich scrollen; die Links öffnen sich im Standardbrowser.
 
 ## 9. Häufige Probleme
 

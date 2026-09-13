@@ -78,7 +78,7 @@ Die aktuellen automatisierten Suiten umfassen 40 Core-, 65 Cutlists-, 86 Media- 
 
 - Vorbereitung mit „Nein“ ablehnen: Original und Schnittmarken bleiben verfügbar.
 - Während eines längeren FFmpeg-Laufs abbrechen: Prozess endet, MP4Box startet nicht, temporäre Datei wird aufgeräumt.
-- Während MP4Box abbrechen: Abbruchmeldung prüfen, eventuelle neue Zieldatei nicht als fertigen Schnitt behandeln.
+- Während MP4Box abbrechen: Abbruchmeldung prüfen; keine neue endgültige Ausgabe, vorhandene Ausgabe unverändert und temporäre Dateien aufgeräumt.
 - Ungültigen FFmpeg-/MP4Box-Pfad sowie nicht MP4-kompatible Streams prüfen: verständlicher Fehler, keine automatische Neukodierung.
 - Ziel bereits vorhanden: Bestätigung und Erhalt der alten Ausgabe bei Fehlschlag vor dem Ersetzen prüfen.
 - Fehleranzeige bei eingeklapptem Protokoll prüfen; Kopieren und erneuten Versuch kontrollieren.

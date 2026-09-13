@@ -8,6 +8,7 @@ Stand: 13.09.2026. CAN ist weiterhin ein Proof of Concept mit experimenteller Un
 
 - [Nutzeranleitung](docs/NUTZERANLEITUNG.md): Einrichtung, Bedienung, Cutlists, Schneiden und Hilfe bei Fehlern.
 - [Projektstatus](docs/STATUS.md): umgesetzter Umfang, bestätigte Tests und offene Aufgaben.
+- [Setup-Merkliste](docs/SETUP-MERKLISTE.md): geplantes Gesamtpaket und vorgemerkte V2-Funktionen.
 - [Testplan](docs/TESTPLAN.md): reproduzierbare Prüfungen und Testbasis.
 - [Architektur](docs/ARCHITECTURE.md) und [Entscheidungen](docs/DECISIONS.md): technische Hintergründe und Entwicklungsgeschichte.
 

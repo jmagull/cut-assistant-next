@@ -15,9 +15,17 @@ Umgesetzt sind Medienanalyse und Wiedergabe, Frame-Navigation, manuelle Schnittp
 - Lokale und heruntergeladene Cutlists verwenden denselben Importweg. Dateigrößenabweichungen lösen eine Warnung aus und können bewusst akzeptiert werden.
 - Null-Längen-Einträge werden beim Import ignoriert und NoOfCuts wird intern angepasst. Negative Dauern, widersprüchliche Frame-Dauern und ausschließlich leere Bereiche bleiben Fehler.
 - Die Oberfläche zeigt Entfernbereiche; klassische Cutlists speichern die komplementären Behaltebereiche.
-- Technische Medieninformationen stehen im Dialog „Video-Informationen …“.
+- Technische Medieninformationen stehen im Dialog „Video-Informationen“.
 - Bei geringer Breite umbrechen die Bediengruppen, bei geringer Höhe scrollt der Hauptbereich. Das native Videofenster wird auf den sichtbaren Scrollbereich begrenzt.
 - Fenstergröße wird auch ohne Videoladen gespeichert; Erfolg oder Fehler wird protokolliert.
+
+## Hilfe, Credits und Versionsanzeige
+
+- Hilfe verlinkt Nutzeranleitung und GitHub-Projekt; Update/GitHub öffnet ebenfalls die Projektseite.
+- Credits zeigt die abgestimmte Danksagung in einem scrollbaren Dialog mit Projektlinks.
+- Version und lokale Buildnummer stehen im Fenstertitel und in der Hauptüberschrift. Ausgangsversion: 0.2.0; zuletzt gebauter lokaler Stand: Build 4.
+- Vollständige Builds über `tools/build.ps1` erhöhen den Zähler nur nach Erfolg. Fehlgeschlagener Build und anschließendes Weiterzählen wurden geprüft.
+- Hilfe-Links, Credits-Dialog und Update/GitHub wurden vom Nutzer live bestätigt.
 
 ## Experimentelle Video-Vorbereitung
 
@@ -57,8 +65,9 @@ Weitere Prüfschritte stehen im [Testplan](TESTPLAN.md). Aus diesen Beispielen f
 
 ## Nächste Schritte
 
-1. Veröffentlichung vorbereiten: Installer oder portable Ausgabe, Programmsymbol und finale Produktgestaltung.
+1. Weitere Praxistests durch Jörg in dieser Woche; auftretende Fehler auswerten.
+2. Anschließend das vereinbarte Rundum-sorglos-Paket vorbereiten: siehe [Setup-Merkliste](SETUP-MERKLISTE.md).
 
-Spätere Funktionswünsche: mehrteilige Aufnahmen, Stapelverarbeitung und Smart Rendering. Eine automatische Neukodierung ist nicht Teil des aktuellen Vorbereitungsablaufs.
+Für V2 vorgemerkt: Klebezentrum (experimentell) für mehrteilige Aufnahmen und Feinabstimmung der Schnittbereiche gemäß chrisdudes Hinweisen. Stapelverarbeitung und Smart Rendering bleiben spätere Wünsche. Eine automatische Neukodierung ist nicht Teil des aktuellen Vorbereitungsablaufs.
 
 Das abschließende Code-Review ist erledigt. Beide Befunde wurden behoben und getestet: widersprüchliche Cutlist-Bereiche werden mit einer verständlichen Meldung abgelehnt (`fde1970`); MP4-Ausgaben werden erst nach erfolgreichem Zusammenfügen übernommen (`cdcff86`). Bei Fehler oder Abbruch wird die temporäre Ausgabe gelöscht, eine vorhandene Zieldatei bleibt erhalten.
