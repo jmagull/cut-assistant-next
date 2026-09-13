@@ -17,6 +17,14 @@ Stand: 13.09.2026. Vereinbarter Umfang für die Veröffentlichung nach der weite
 
 Zusätzliche Werkzeug-Downloadlinks unter Hilfe sind für dieses Konzept nicht vorgesehen. Die Projektlinks in den Credits bleiben erhalten. Der Menüpunkt Update/GitHub öffnet derzeit nur die Projektseite; ein automatischer Updater ist damit nicht umgesetzt.
 
+## Projektlizenz und Entstehung
+
+- [ ] Allgemeine Lizenzbedingungen für CAN festlegen: GPL 3.0 oder eine geeignete Alternative prüfen. Die endgültige Auswahl und Freigabe stehen noch aus; dieser Merkpunkt ändert die derzeitige Lizenz nicht.
+- [ ] Nach der Entscheidung die Projektlizenz und zugehörigen Hinweise in Repository, Dokumentation und Veröffentlichung einheitlich aufnehmen; die Bedingungen mitgelieferter Komponenten gesondert berücksichtigen.
+- [ ] Einen Hinweis zur KI-unterstützten Entwicklung in Credits und Dokumentation aufnehmen. Vorgesehener Wortlaut nach Angabe des Projektverantwortlichen:
+
+  „Cut Assistant Next entstand mit Unterstützung von ChatGPT/Codex unter Einsatz von GPT-5.6 Sol (Denkaufwand: hoch) und GPT-6 Astra (Denkaufwand: mittel). Die abschließende Entscheidung über Vorschläge, Änderungen und deren Übernahme lag stets beim Nutzer und Projektverantwortlichen Jörg.“
+
 ## Vorher
 
 Jörg nimmt sich in dieser Woche Zeit für weitere Praxistests. Erkenntnisse und Fehler werden mit CAN-Version, Buildnummer und gegebenenfalls Schnittprotokoll festgehalten. Die Veröffentlichung folgt nach Auswertung dieser Tests und Freigabe.
