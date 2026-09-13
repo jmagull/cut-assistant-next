@@ -89,23 +89,10 @@ public sealed class Mp4BoxCutWorkflow
                 "Das Zielverzeichnis konnte nicht bestimmt werden.");
 
 
-        string? replacementOutputFilePath =
-            null;
-
         var concatOutputFilePath =
-            fullOutputFilePath;
-
-        if (outputFileExists &&
-            overwriteExistingOutput)
-        {
-            replacementOutputFilePath =
-                Path.Combine(
-                    outputDirectoryPath,
-                    $".cut-assistant-next-{Guid.NewGuid():N}-output.mp4");
-
-            concatOutputFilePath =
-                replacementOutputFilePath;
-        }
+            Path.Combine(
+                outputDirectoryPath,
+                $".cut-assistant-next-{Guid.NewGuid():N}-output.mp4");
 
         var segmentFilePaths =
             new List<string>(
@@ -145,16 +132,12 @@ public sealed class Mp4BoxCutWorkflow
                 concatOutputFilePath,
                 cancellationToken);
 
-            if (replacementOutputFilePath is not null)
-            {
-                File.Move(
-                    replacementOutputFilePath,
-                    fullOutputFilePath,
-                    overwrite: true);
+            cancellationToken.ThrowIfCancellationRequested();
 
-                replacementOutputFilePath =
-                    null;
-            }
+            File.Move(
+                concatOutputFilePath,
+                fullOutputFilePath,
+                overwrite: outputFileExists && overwriteExistingOutput);
 
             progress?.Report(
                 new Mp4BoxProgressUpdate(
@@ -163,11 +146,8 @@ public sealed class Mp4BoxCutWorkflow
         }
         finally
         {
-            if (replacementOutputFilePath is not null)
-            {
-                File.Delete(
-                    replacementOutputFilePath);
-            }
+            File.Delete(
+                concatOutputFilePath);
 
             foreach (var segmentFilePath in segmentFilePaths)
             {

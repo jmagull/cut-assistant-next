@@ -4,8 +4,14 @@ using CutAssistantNext.Media.Cutting;
 
 namespace CutAssistantNext.App.Tests.Services.Cutting;
 
-public sealed class Mp4BoxCutServiceTests
+public sealed class Mp4BoxCutServiceTests : IDisposable
 {
+    private readonly string _directory = Path.Combine(Path.GetTempPath(), $"can-service-{Guid.NewGuid():N}");
+
+    public Mp4BoxCutServiceTests() => Directory.CreateDirectory(_directory);
+
+    public void Dispose() => Directory.Delete(_directory, recursive: true);
+
     [Fact]
     public async Task RunAsync_PeacemakerCutPlan_PassesExpectedRangesToWorkflow()
     {
@@ -80,7 +86,7 @@ public sealed class Mp4BoxCutServiceTests
                 1,
                 runner.ConcatCallCount);
 
-            Assert.Equal(
+            Assert.NotEqual(
                 Path.GetFullPath(outputFilePath),
                 runner.ConcatOutputFilePath);
         }
@@ -120,7 +126,7 @@ public sealed class Mp4BoxCutServiceTests
 
         var outputFilePath =
             Path.Combine(
-                Path.GetTempPath(),
+                _directory,
                 $"{Guid.NewGuid():N}.mp4");
 
         await service.RunAsync(
@@ -261,7 +267,7 @@ public sealed class Mp4BoxCutServiceTests
 
         public string? ConcatOutputFilePath { get; private set; }
 
-        public string? ConcatOutputContent { get; init; }
+        public string? ConcatOutputContent { get; init; } = "complete";
 
         public Task RunSplitAsync(
             string sourceFilePath,

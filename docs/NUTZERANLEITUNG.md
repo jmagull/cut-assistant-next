@@ -138,7 +138,7 @@ Die lokalen Einstellungen liegen unter `%LOCALAPPDATA%\Cut Assistant Next\Settin
 | Dateigröße laut Cutlist weicht ab | Aufnahme/Qualitätsstufe vergleichen; nur bewusst fortfahren und Grenzen kontrollieren. |
 | Vorbereitung nicht möglich oder Prüfung gestoppt | Konkreten Fehler lesen und das Protokoll kopieren. Nicht jeder Codec lässt sich verlustfrei nach MP4 übernehmen. |
 | Temporäre Datei konnte nicht gelöscht werden | Den im Protokoll genannten Pfad notieren; nach Ende des Vorgangs prüfen, ob die Datei noch von einem Programm verwendet wird. |
-| Schnittlauf abgebrochen oder fehlgeschlagen | Eine eventuell vorhandene neue Zieldatei ist nicht als fertiges Ergebnis bestätigt. Vor weiterer Verwendung prüfen. |
+| Schnittlauf abgebrochen oder fehlgeschlagen | Die Ausgabe wird erst nach erfolgreichem Zusammenfügen übernommen. Bei Fehler oder Abbruch wird die temporäre Ausgabe aufgeräumt; eine bereits vorhandene Zieldatei bleibt erhalten. |
 
 ## 10. Experimenteller Umfang und Testbasis
 

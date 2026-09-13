@@ -2,8 +2,14 @@ using CutAssistantNext.Media.Cutting;
 
 namespace CutAssistantNext.Media.Tests.Cutting;
 
-public sealed class Mp4BoxCutWorkflowTests
+public sealed class Mp4BoxCutWorkflowTests : IDisposable
 {
+    private readonly string _directory = Path.Combine(Path.GetTempPath(), $"can-workflow-{Guid.NewGuid():N}");
+
+    public Mp4BoxCutWorkflowTests() => Directory.CreateDirectory(_directory);
+
+    public void Dispose() => Directory.Delete(_directory, recursive: true);
+
     [Fact]
     public async Task RunAsync_WithTwoRanges_SplitsAndConcatenatesInOrder()
     {
@@ -27,7 +33,7 @@ public sealed class Mp4BoxCutWorkflowTests
 
         await workflow.RunAsync(
             "source.mp4",
-            "output.mp4",
+            Path.Combine(_directory, "output.mp4"),
             ranges);
 
         Assert.Equal(
@@ -50,8 +56,8 @@ public sealed class Mp4BoxCutWorkflowTests
                 call => call.OutputFilePath),
             runner.ConcatCalls[0].SegmentFilePaths);
 
-        Assert.Equal(
-            Path.GetFullPath("output.mp4"),
+        Assert.NotEqual(
+            Path.Combine(_directory, "output.mp4"),
             runner.ConcatCalls[0].OutputFilePath);
     }
 
@@ -141,7 +147,7 @@ public sealed class Mp4BoxCutWorkflowTests
 
         var outputFilePath =
             Path.Combine(
-                Path.GetTempPath(),
+                _directory,
                 $"{Guid.NewGuid():N}.mp4");
 
         await workflow.RunAsync(
@@ -249,6 +255,8 @@ public sealed class Mp4BoxCutWorkflowTests
             string outputFilePath,
             CancellationToken cancellationToken = default)
         {
+            File.WriteAllText(outputFilePath, "complete");
+
             ConcatCalls.Add(
                 new ConcatCall(
                     segmentFilePaths.ToArray(),
