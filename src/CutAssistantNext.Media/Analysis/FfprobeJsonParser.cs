@@ -35,7 +35,11 @@ public static class FfprobeJsonParser
                         GetString(stream, "sample_aspect_ratio"),
                         GetString(stream, "display_aspect_ratio"),
                         ParseFrameRate(GetString(stream, "avg_frame_rate")),
-                        GetString(stream, "field_order")));
+                        GetString(stream, "field_order"))
+                    {
+                        StartTimeSeconds = GetDouble(stream, "start_time"),
+                        FrameCount = GetInt64(stream, "nb_frames")
+                    });
                 }
                 else if (streamType == "audio")
                 {
@@ -45,7 +49,10 @@ public static class FfprobeJsonParser
                         GetString(stream, "codec_long_name"),
                         GetInt32(stream, "sample_rate"),
                         GetInt32(stream, "channels"),
-                        GetString(stream, "channel_layout")));
+                        GetString(stream, "channel_layout"))
+                    {
+                        StartTimeSeconds = GetDouble(stream, "start_time")
+                    });
                 }
             }
         }
@@ -76,7 +83,11 @@ public static class FfprobeJsonParser
             fileSizeBytes,
             duration,
             videoStreams,
-            audioStreams);
+            audioStreams)
+        {
+            StartTimeSeconds = root.TryGetProperty("format", out var formatInfo)
+                ? GetDouble(formatInfo, "start_time") : null
+        };
     }
 
     private static string? GetString(JsonElement element, string propertyName)

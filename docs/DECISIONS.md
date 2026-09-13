@@ -80,7 +80,7 @@ Begründung und Regeln:
 - `StartFrame` und `DurationFrames` sind optionale Kompatibilitätsfelder. Sie werden nicht zwingend ausgegeben und erst ergänzt, wenn ein Schnittmotor oder ein konkreter Kompatibilitätsfall sie benötigt.
 - Zeit- und Zahlenwerte werden kulturunabhängig mit einem Punkt als Dezimaltrenner geschrieben.
 - Der Writer speichert neu erzeugte Cutlists als UTF-8 ohne BOM mit CRLF-Zeilenenden.
-- Ein späterer Cutlist-Reader soll zusätzlich historische Windows-1252-/ANSI-Dateien lesen können, da solche Bestandsdateien nachgewiesen wurden.
+- Der Cutlist-Reader unterstützt neben UTF-8 auch historische Windows-1252-/ANSI-Dateien, da solche Bestandsdateien nachgewiesen wurden.
 - Die klassischen Kompatibilitätszeilen werden in der historisch verbreiteten Form geschrieben:
   - `comment1=The following parts of the movie will be kept, the rest will be cut out.`
   - `comment2=All values are given in seconds.`
@@ -112,3 +112,66 @@ Begründung und Regeln:
 - Die Architektur legt keinen bestimmten Schnittmotor fest. MP4Box, FFmpeg oder spätere Smart-Rendering-Verfahren können auf derselben Cutlist- und Namensgrundlage aufbauen.
 
 Damit bleiben Namensbildung, Benutzereinstellungen, Cutlist-Dateiformat und tatsächliche Medienverarbeitung voneinander getrennt und können unabhängig weiterentwickelt werden.
+
+## ADR-009 – Cutlist-Server-Suche erfolgt automatisch und formatneutral
+
+**Status:** entschieden
+
+Nach dem erfolgreichen Laden einer Mediendatei sucht Cut Assistant Next automatisch auf dem konfigurierten persönlichen Cutlist-Server nach passenden Cutlists.
+
+Begründung und Regeln:
+
+- Die persönliche Server-URL ist eine lokale Benutzereinstellung und gehört nicht in Cutlist-Metadaten oder Programmcode.
+- Ist keine persönliche Server-URL eingerichtet, wird die automatische Serversuche still übersprungen.
+- Die Suche verwendet den vollständigen Originaldateinamen der geladenen Mediendatei.
+- `ApplyToFile` und die Identität der Originaldatei werden durch die Serversuche nicht verändert.
+- Ein erfolgreicher HTTP-Aufruf ohne Antwortinhalt bedeutet fachlich `0 Treffer` und ist kein technischer Fehler.
+- Bei einem oder mehreren Treffern entscheidet der Benutzer selbst, ob und welche Cutlist verwendet wird.
+- Mehrere verfügbare Cutlists werden neutral dargestellt. Eine Bevorzugung bestimmter Autoren findet nicht statt.
+- Unterschiedliche Formate derselben Aufnahme, beispielsweise MP4 und AVI, werden nicht allein aufgrund ihres Formats ausgefiltert.
+- Das Format wird für die Benutzeroberfläche aus dem Cutlist-Dateinamen abgeleitet und sichtbar gemacht.
+- Kommentare, Bewertungen und andere Serverinformationen sollen dem Benutzer die Auswahl zwischen mehreren Schnittfassungen erleichtern.
+- Die Cutlist-ID wird intern für Auswahl und Download benötigt, aber nicht als fachliche Information im Dialog hervorgehoben.
+- Solange der Server kein verlässlich nutzbares Upload-Datum über die verwendete Suchschnittstelle liefert, werden numerische Cutlist-IDs absteigend sortiert. Eine höhere ID wird dabei ausschließlich als praktischer Näherungswert für eine neuere Serverfassung behandelt; aus der ID selbst wird kein Datum abgeleitet.
+- Der Download einer ausgewählten Server-Cutlist verwendet keinen eigenen parallelen Ladealgorithmus. Die heruntergeladene Datei durchläuft den bestehenden lokalen Prüf- und Ladeweg.
+
+Damit bleiben Serversuche, Benutzerauswahl, Download und fachliche Cutlist-Verarbeitung voneinander getrennt.
+
+#### Praxisbestätigung: unterschiedliche Formate können dieselbe Timeline besitzen
+
+Ein Praxistest am 05.09.2026 bestätigte die Entscheidung, Suchergebnisse nicht nach dem Containerformat der aktuell geladenen Mediendatei zu filtern.
+
+Für dieselbe OTR-Aufnahme wurden sowohl eine MP4- als auch eine AVI-Cutlist vom Server geladen. Obwohl die AVI-Cutlist aufgrund einer Dateigrößenabweichung von 20,2 % die bestehende Plausibilitätswarnung auslöste, lag ihre Schnitt-Timeline praktisch auf derselben Zeitachse wie die MP4-Cutlist. Insbesondere war das Filmende mit `01:29:58.080` identisch. Die beobachteten Unterschiede von maximal etwa 1,35 Sekunden lagen ausschließlich an einzelnen Werbegrenzen und sind mit unterschiedlich gesetzten Schnittmarken vereinbar.
+
+Daraus folgt:
+
+- Containerformat und Dateigröße sind keine ausreichenden Kriterien zur Beurteilung der Timeline-Kompatibilität.
+- Die Dateigrößenprüfung bleibt eine Warnung und kein automatischer Ausschluss.
+- Server-Cutlists anderer Formate bleiben sichtbar und können nach Benutzerbestätigung geladen werden.
+- Die tatsächliche fachliche Prüfung erfolgt weiterhin im gemeinsamen Cutlist-Ladeweg.
+- Dieser Ansatz ist zugleich Grundlage für die spätere AVI-Vorbereitung für MP4Box, sofern die ursprüngliche Timeline beim Remux erhalten bleibt.
+
+## ADR-010 – Direkter Cutlist-Upload basiert auf einer bewusst gespeicherten lokalen Fassung
+
+**Status:** entschieden
+
+Der direkte Upload auf den persönlichen Cutlist-Server erfolgt nicht aus einem flüchtigen Bearbeitungszustand, sondern aus einer zuvor lokal gespeicherten oder bewusst lokal wieder geladenen Cutlist.
+
+Begründung und Regeln:
+
+- Eine über `Cutlist erzeugen …` erfolgreich gespeicherte Cutlist wird als möglicher Upload-Kandidat gemerkt.
+- Eine über `Cutlist laden …` bewusst vom lokalen Dateisystem geladene Cutlist kann ebenfalls als Upload-Kandidat verwendet werden.
+- Beim Laden einer neuen Mediendatei wird ein zuvor gemerkter Upload-Kandidat verworfen.
+- Vor dem Upload wird `ApplyToFile` erneut gegen den vollständigen Originaldateinamen der aktuell geladenen Mediendatei geprüft.
+- Eine automatisch vom Server heruntergeladene temporäre Cutlist wird nicht unmittelbar als eigener Upload-Kandidat behandelt.
+- Eine Server-Cutlist darf ausdrücklich als Vorlage dienen. Sie kann geladen, geprüft und verändert werden. Soll daraus eine eigene Fassung entstehen, wird diese zunächst lokal gespeichert und anschließend hochgeladen.
+- Dadurch können beispielsweise korrigierte Schnittfassungen mit eigenem Autor und einem Hinweis wie `Vorlage von <Autor>, Ende korrigiert.` veröffentlicht werden.
+- Der Upload verändert die lokale Cutlist nicht. Stattdessen wird im Speicher eine separate serverkompatible Kopie erzeugt.
+- Die Serverkopie verwendet das derzeit benötigte Kompatibilitätsprofil des klassischen Cut Assistant.
+- Fachliche Inhalte wie Schnittbereiche, Bewertung, `SuggestedMovieName`, Fehlerangaben und Benutzerkommentar werden aus der gespeicherten Cutlist übernommen.
+- Der Benutzerkommentar wird beim Upload nicht automatisch durch einen technischen Standardtext ersetzt.
+- Der Upload erfolgt erst nach ausdrücklicher Bestätigung durch den Benutzer.
+- Während eines laufenden Uploads wird ein zweiter paralleler Upload verhindert.
+- Nur eine Serverantwort mit gültiger numerischer Cutlist-ID gilt als erfolgreicher Upload.
+
+Damit bleiben Bearbeitung, lokale Speicherung, Serverkompatibilität und Veröffentlichung klar voneinander getrennt. Eine heruntergeladene Fremd-Cutlist kann als Arbeitsgrundlage dienen, wird aber nicht unbeabsichtigt als eigene Fassung veröffentlicht.

@@ -212,7 +212,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
             ApplyResult(result);
 
-            StatusMessage = "Analyse erfolgreich abgeschlossen.";
+            StatusMessage = "Analyse erfolgreich abgeschlossen, geladen:";
 
             _logger.Information(
                 $"Medienanalyse wurde erfolgreich abgeschlossen: " +

@@ -6,7 +6,7 @@ Der bestehende Cut Assistant 2018 basiert auf Delphi/VCL, DirectShow und install
 
 ## Ziel
 
-Der POC soll nachweisen, dass typische OTR-MP4-Dateien ohne DirectShow zuverlässig wiedergegeben und präzise navigiert werden können. Dieser Nachweis ist inzwischen erbracht. Darauf aufbauend wird der POC schrittweise zum Schnittassistenten erweitert. Die manuelle Schnittplanung mit markierten Entfernungsbereichen und die technische Grundlage für die Erzeugung klassischer Cutlists sind inzwischen umgesetzt. Die Anbindung tatsächlicher Schnittverfahren mit MP4Box oder FFmpeg, Serverfunktionen und Dateiumbenennung folgen in späteren Bauabschnitten.
+Der POC soll nachweisen, dass typische OTR-MP4-Dateien ohne DirectShow zuverlässig wiedergegeben und präzise navigiert werden können. Dieser Nachweis ist inzwischen erbracht. Darauf aufbauend wird der POC schrittweise zum Schnittassistenten erweitert. Die manuelle Schnittplanung mit markierten Entfernungsbereichen, die Erzeugung und Verarbeitung klassischer Cutlists, die Anbindung an MP4Box, die Dateinamenslogik sowie der vollständige Cutlist-Server-Workflow mit automatischer Suche, Download und direktem Upload sind inzwischen umgesetzt und praktisch bestätigt. Als wesentlicher V1-Baustein ist noch die Unterstützung echter klassischer OTR-AVI-Dateien offen.
 
 ## Erreichter Zwischenstand
 
@@ -18,6 +18,10 @@ Der POC soll nachweisen, dass typische OTR-MP4-Dateien ohne DirectShow zuverläs
 - Eine eigene Schnitt-Timeline visualisiert die markierten Bereiche.
 - Aus den Remove-Bereichen werden komplementäre Keep-Bereiche für klassische Cutlists erzeugt.
 - Cutlist-Metadaten, Dokumentmodell, Serialisierung und lokale Dateiausgabe sind umgesetzt und automatisiert getestet.
+
+- Bestehende lokale und vom Server geladene Cutlists durchlaufen denselben fachlichen Lade- und Prüfweg.
+- Die automatische Cutlist-Serversuche einschließlich Download ist umgesetzt und praktisch bestätigt.
+- Lokal gespeicherte oder bewusst lokal wieder geladene Cutlists können nach Benutzerbestätigung direkt auf den persönlichen Cutlist-Server hochgeladen werden.
 
 ## Grundentscheidungen
 

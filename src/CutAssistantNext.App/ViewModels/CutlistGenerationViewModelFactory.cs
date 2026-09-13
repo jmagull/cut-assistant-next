@@ -1,4 +1,5 @@
 using System.IO;
+using CutAssistantNext.App.State;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.Core.Media;
 using CutAssistantNext.Core.Metadata;
@@ -8,10 +9,50 @@ namespace CutAssistantNext.App.ViewModels;
 
 internal static class CutlistGenerationViewModelFactory
 {
+
+    public static CutlistGenerationViewModel Create(
+        CutlistSettings settings,
+        NamingSettings namingSettings,
+        string fileName,
+        MediaAnalysisResult analysis)
+    {
+        ArgumentNullException.ThrowIfNull(
+            settings);
+
+        ArgumentNullException.ThrowIfNull(
+            namingSettings);
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            fileName);
+
+        ArgumentNullException.ThrowIfNull(
+            analysis);
+
+        var originalFileName =
+            Path.GetFileName(
+                fileName);
+
+        var nameContext =
+            NameTemplateContextFactory.Create(
+                originalFileName);
+
+        var technicalNotices =
+            TechnicalNoticeDetector.Detect(
+                originalFileName,
+                analysis);
+
+        return new CutlistGenerationViewModel(
+            settings,
+            namingSettings,
+            nameContext,
+            technicalNotices);
+    }
+
     public static CutlistGenerationViewModel Create(
         CutlistSettings settings,
         string fileName,
-        MediaAnalysisResult analysis)
+        MediaAnalysisResult analysis,
+        CutNamingState namingState)
     {
         ArgumentNullException.ThrowIfNull(
             settings);
@@ -22,18 +63,12 @@ internal static class CutlistGenerationViewModelFactory
         ArgumentNullException.ThrowIfNull(
             analysis);
 
-        var originalFileName =
-            Path.GetFileName(fileName);
+        ArgumentNullException.ThrowIfNull(
+            namingState);
 
-        var nameContext =
-            OtrFileNameParser.TryParse(
-                originalFileName,
-                out var parsedContext)
-                ? parsedContext
-                : new NameTemplateContext(
-                    Name: Path.GetFileNameWithoutExtension(
-                        originalFileName),
-                    OriginalName: originalFileName);
+        var originalFileName =
+            Path.GetFileName(
+                fileName);
 
         var technicalNotices =
             TechnicalNoticeDetector.Detect(
@@ -42,7 +77,7 @@ internal static class CutlistGenerationViewModelFactory
 
         return new CutlistGenerationViewModel(
             settings,
-            nameContext,
+            namingState,
             technicalNotices);
     }
 }

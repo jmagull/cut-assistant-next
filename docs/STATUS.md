@@ -1,102 +1,64 @@
 # Projektstatus
 
-## Aktueller Stand
+Stand: 13.09.2026. Dieser Überblick beschreibt den aktuellen Feature-Stand; ältere Projektdefinitionen und Architekturentscheidungen dokumentieren teilweise frühere Entwicklungsphasen.
 
-Stand: 11.08.2026
+## Aktueller Umfang
 
-- GitHub-Repository `cut-assistant-next` ist angelegt und derzeit privat.
-- Der aktuelle Arbeitsbranch ist `feature/cutlist-naming-metadata`.
-- `main` und `origin/main` sind synchron und stehen auf Commit `4754462`.
-- Die Repository-Grundstruktur und `AGENTS.md` sind vorhanden.
-- Das Projekt verwendet C#, .NET 10 und WPF.
-- ffprobe ist über eine eigene Schnittstelle eingebunden.
-- MP4-Dateien sowie OTR-Dateien mit tatsächlichem MP4-Inhalt und Dateiendung `.avi` können ausgewählt und analysiert werden.
-- Container-, Video- und Audiodaten werden in der WPF-Oberfläche angezeigt.
-- mpv/libmpv ist als eingebetteter MediaPlayer integriert.
-- Play/Pause, Seeking und Einzelbildnavigation um `−10`, `−1`, `+1` und `+10` Frames sind umgesetzt.
-- Positionsanzeige, geschätzte Framezahl, Zeitleiste und Lautstärkeregelung sind umgesetzt.
-- Eine verständliche UTF-8-Protokolldatei mit Größenbegrenzung und Rotation ist umgesetzt.
-- Fenstergröße und maximierter Zustand werden lokal gespeichert und wiederhergestellt.
-- Manuelle Schnittplanung mit Remove-Bereichen ist umgesetzt.
-- Schnittbereiche können gesetzt, ausgewählt, korrigiert und gelöscht werden.
-- Eine eigene Schnitt-Timeline visualisiert die markierten Bereiche.
-- Die technische Grundlage zur Erzeugung klassischer Cutlists ist umgesetzt.
-- Konfigurierbare Namensmasken, Standardautor und Schnelltexte sind als Cutlist-Einstellungen vorbereitet.
-- Automatische technische Hinweise können aus der Medienanalyse abgeleitet werden, unter anderem bei einer `.avi`-Dateiendung und tatsächlich erkanntem MP4/ISO-BMFF-Container.
-- Remove-Bereiche werden für die Cutlist-Ausgabe in komplementäre Keep-Bereiche umgerechnet.
-- `NoOfCuts` wird aus der tatsächlichen Anzahl der Keep-Bereiche abgeleitet.
-- Cutlist-Metadaten für `[General]` und `[Info]` sowie ein typisiertes `CutlistDocument` sind umgesetzt.
-- Der Cutlist-Serializer erzeugt klassische `[General]`-, `[CutN]`- und `[Info]`-Bereiche.
-- Die klassischen Kompatibilitätsfelder `comment1` und `comment2` werden ausgegeben.
-- Zeit- und Zahlenwerte werden kulturunabhängig mit Punkt als Dezimaltrenner geschrieben.
-- Der `CutlistFileWriter` schreibt `.cutlist`-Dateien als UTF-8 ohne BOM mit CRLF-Zeilenenden.
-- Ein vollständiger Smoke-Test hat eine reale `.cutlist`-Datei erfolgreich erzeugt.
-- Umlaute wurden in der erzeugten Datei explizit als UTF-8 erfolgreich geprüft.
-- Die erzeugte Struktur wurde mit eigenen und fremden historischen HD-/HQ-Cutlists verschiedener Programme abgeglichen.
-- Historische Null- oder Negativsegmente werden bewusst nicht nachgebildet.
-- `StartFrame` und `DurationFrames` bleiben optionale spätere Kompatibilitätsfelder.
-- Aktueller vollständiger Solution-Testlauf: **162 von 162 Tests erfolgreich**.
-- Der aktuelle Feature-Stand ist noch nicht in `main` übernommen.
+CAN verwendet C#, .NET 10 und WPF unter Windows 11 x64. ffprobe liefert Medieninformationen, mpv/libmpv übernimmt die Wiedergabe, MP4Box den Schnitt. FFmpeg bereitet bei Bedarf eine MP4-Arbeitsdatei vor.
 
-## Vorhandene Projekte
+Umgesetzt sind Medienanalyse und Wiedergabe, Frame-Navigation, manuelle Schnittplanung, lokale Cutlists, Server-Suche/-Download/-Upload, Namensmasken, MP4Box-Schnitt und experimentelle Vorbereitung anderer Container. Die Bedienung ist in der [Nutzeranleitung](NUTZERANLEITUNG.md) beschrieben.
 
-- `CutAssistantNext.App`
-- `CutAssistantNext.Core`
-- `CutAssistantNext.Media`
-- `CutAssistantNext.Cutlists`
-- `CutAssistantNext.App.Tests`
-- `CutAssistantNext.Core.Tests`
-- `CutAssistantNext.Media.Tests`
-- `CutAssistantNext.Cutlists.Tests`
+## Oberfläche und Cutlist-Ablauf
 
-## Aktueller Bauabschnitt
+- „Videodatei laden“ bietet MP4, AVI, MKV und weitere Dateiendungen an. Entscheidend ist die Containeranalyse, nicht der Dateiname.
+- Nach dem Laden wird bei konfiguriertem Server automatisch gesucht. „Cutlist vom Server laden“ öffnet die Suche erneut, ohne die Originaldatei neu laden zu müssen.
+- Lokale und heruntergeladene Cutlists verwenden denselben Importweg. Dateigrößenabweichungen lösen eine Warnung aus und können bewusst akzeptiert werden.
+- Null-Längen-Einträge werden beim Import ignoriert und NoOfCuts wird intern angepasst. Negative Dauern, widersprüchliche Frame-Dauern und ausschließlich leere Bereiche bleiben Fehler.
+- Die Oberfläche zeigt Entfernbereiche; klassische Cutlists speichern die komplementären Behaltebereiche.
+- Technische Medieninformationen stehen im Dialog „Video-Informationen …“.
+- Bei geringer Breite umbrechen die Bediengruppen, bei geringer Höhe scrollt der Hauptbereich. Das native Videofenster wird auf den sichtbaren Scrollbereich begrenzt.
+- Fenstergröße wird auch ohne Videoladen gespeichert; Erfolg oder Fehler wird protokolliert.
 
-Cutlist-Namensbildung, Metadaten und lokale Cutlist-Erzeugung:
+## Experimentelle Video-Vorbereitung
 
-- allgemeine, testbare Namensbildung in `CutAssistantNext.Core.Naming`
-- frei konfigurierbare Namensmaske
-- optionale Präfixsyntax wie `%Staffel:S%` und `%Folge:E%`
-- fehlende bekannte Werte werden tolerant behandelt
-- unbekannte Variablen werden als Fehler erkannt
-- derselbe erzeugte Basisname soll für `SuggestedMovieName` und später für den Ausgabedateinamen verwendet werden
-- persistente Cutlist-Einstellungen für Namensmaske, Standardautor und Schnelltexte
-- technische Hinweise getrennt von frei editierbaren Benutzerkommentaren
-- automatische Erkennung des Sonderfalls `.avi` mit tatsächlich erkanntem MP4/ISO-BMFF-Container
-- Umrechnung von `CutPlan`-Remove-Bereichen in positive Keep-Bereiche
-- typisierte Metadatenmodelle für `[General]` und `[Info]`
-- abstrakte Beschreibung des vorgesehenen Schnittprogramms über `CutApplicationInfo`
-- kein fest codierter lokaler Installationspfad eines Schnittmotors in den Cutlist-Metadaten
-- `CutlistDocument` als typisiertes Gesamtmodell
-- `CutlistSerializer` unabhängig vom Dateisystem
-- `CutlistFileWriter` für lokale `.cutlist`-Dateien
-- UTF-8 ohne BOM und CRLF als Ausgabeformat
-- Golden-Master-Test für das vollständige erzeugte Cutlist-Format
-- Abgleich gegen reale historische Bestands-Cutlists mit 25 und 50 fps
-- optionale Framefelder und Legacy-Encoding als dokumentierte spätere Kompatibilitätsthemen
-- ADR-007 dokumentiert die Regeln für kompatible Cutlist-Erzeugung
+Originaldatei → Analyse → Server-/lokale Cutlist oder eigene Marken → „Schneiden“ → gegebenenfalls Ja/Nein-Abfrage → FFmpeg-Arbeitsdatei → Plausibilitätsprüfung → MP4Box → MP4-Ausgabe.
 
-## Schnittsemantik
+Die Originaldatei bleibt geladen und unverändert. Cutlist-Namen und Dateigrößen beziehen sich weiterhin auf das Original. Die temporäre MP4 wird nicht als neue Nutzerdatei geladen und nicht Grundlage einer automatisch erzeugten Server-Cutlist.
 
-Die Benutzeroberfläche beschreibt Bereiche, die entfernt werden sollen.
+FFmpeg verwendet Stream-Copy für alle Streams. Nicht kompatible Streams werden nicht still entfernt oder neu kodiert. Nach Abschluss, Fehler oder Abbruch versucht CAN die temporäre MP4 zu löschen; Fehler beim Aufräumen erscheinen im Protokoll. MP4Box legt seine Schnittsegmente im Ausgabeordner ab und räumt sie am Ende auf.
 
-`RemoveSegment` und `CutPlan` bilden diese Semantik in `CutAssistantNext.Core` ab. Für klassische Cutlists erzeugt `CutlistKeepSegmentBuilder` daraus die komplementären Behaltebereiche.
+Geprüft werden Container, Streamanzahl, Codecs, Auflösung, Bildrate, Dauer und verfügbare Start-/Frame-Angaben. Kleine Abweichungen werden nur im Protokoll vermerkt:
 
-Das Bedienmodell bleibt damit auf das Entfernen von Werbung, Vorlauf, Nachlauf oder anderen unerwünschten Abschnitten ausgerichtet, während das klassische Cutlist-Format weiterhin seine Keep-Segmente erhält.
+| Merkmal | Aktuelle Toleranz |
+|---|---|
+| Gemeldete Frame-Anzahl | bis zu zwei Frames |
+| Mittlere Bildrate | rechnerisch höchstens zwei Frames über die Original-Laufzeit |
+| Containerlaufzeit | zwei Frames, mindestens 100 ms |
+| Relativer Videostart | zwei Frames |
+| Relativer Audiostart | 100 ms |
+| Fehlende Start-/Frame-Anzahl-Metadaten | Detailhinweis; übrige Prüfungen gelten weiter |
 
-## Nächster geplanter Bauabschnitt
+Dies ist eine Metadaten-Plausibilitätsprüfung, kein vollständiger Nachweis der Timeline oder Ton-Synchronität. Die Diplomatin zeigte 317399 gegenüber 317397 Frames und 6347,98 gegenüber 6348 Sekunden. Dieser akzeptierte Grenzfall ist durch einen Regressionstest abgesichert.
 
-Der aktuelle Bauabschnitt wird zunächst vollständig dokumentiert, geprüft und anschließend versioniert.
+## Fortschritt und Fehler
 
-Danach stehen insbesondere die Integration der Cutlist-Erzeugung in die WPF-Oberfläche und die Vorbereitung der späteren Anbindung eines tatsächlichen Schnittmotors an.
+Das Protokoll ist standardmäßig aufgeklappt, kann eingeklappt und in die Zwischenablage kopiert werden. Es zeigt sowohl FFmpeg als auch MP4Box. Ein konkreter Fehlergrund bleibt im Statusbereich sichtbar, selbst wenn nachgereichte Fortschrittsmeldungen eintreffen. Bei Fehler gibt es kein automatisches Schließen.
 
-## Noch nicht umgesetzt
+## Verifikation
 
-- Cutlist-Reader/Parser
-- Unterstützung historischer Windows-1252-/ANSI-Cutlists beim Einlesen
-- Cutlist-Server und Upload
-- WPF-Dialog zum Erzeugen und Bearbeiten der Cutlist-Metadaten
-- MP4Box-Schnitt
-- FFmpeg-Schnitt
-- Smart Rendering
-- Renamer
-- Stapelverarbeitung
+- Release-Build: 0 Fehler, 0 Warnungen; **443/443 Tests bestanden**.
+- Diplomatin und Rubikon: integrierter AVI-Ablauf mit jeweils zwei Cutlists erfolgreich; Wiedergabe einschließlich Anfang, Ende und Ton-Synchronität vom Nutzer bestätigt.
+- Zusätzlich bestätigter Diplomatin-Schnitt mit HQ-Cutlist trotz unterschiedlicher Quelldateigröße.
+- Fehleranzeige mit absichtlich ungültigem ffprobe-Pfad live bestätigt.
+- Kleine künstliche AVI-/MKV-Dateien: Prozessaufruf und Ergebnisprüfung, Ablehnung existierender Arbeitsdateien und vorab abgebrochener Aufträge geprüft.
+- Leere Cutlist-Endbereiche sind automatisiert mit den Diplomatin-Schnittwerten abgesichert. Ein separater ausdrücklicher Live-Nachweis für genau den zuvor fehlerhaften Originaleintrag ist nicht protokolliert.
+
+Weitere Prüfschritte stehen im [Testplan](TESTPLAN.md). Aus diesen Beispielen folgt keine allgemeine Unterstützung aller AVI-/Codec-Kombinationen.
+
+## Nächste Schritte
+
+1. Veröffentlichung vorbereiten: Installer oder portable Ausgabe, Programmsymbol und finale Produktgestaltung.
+
+Spätere Funktionswünsche: mehrteilige Aufnahmen, Stapelverarbeitung und Smart Rendering. Eine automatische Neukodierung ist nicht Teil des aktuellen Vorbereitungsablaufs.
+
+Das abschließende Code-Review ist erledigt. Beide Befunde wurden behoben und getestet: widersprüchliche Cutlist-Bereiche werden mit einer verständlichen Meldung abgelehnt (`fde1970`); MP4-Ausgaben werden erst nach erfolgreichem Zusammenfügen übernommen (`cdcff86`). Bei Fehler oder Abbruch wird die temporäre Ausgabe gelöscht, eine vorhandene Zieldatei bleibt erhalten.

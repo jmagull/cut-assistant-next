@@ -23,6 +23,16 @@ public sealed class CutlistDocument
                 nameof(cuts));
         }
 
+        for (var index = 1; index < cuts.Count; index++)
+        {
+            if (cuts[index].Start < cuts[index - 1].End)
+            {
+                throw new InvalidDataException(
+                    "Diese Cutlist enthält überlappende oder falsch sortierte Schnittbereiche " +
+                    "und wurde nicht geladen. Bitte wähle eine andere Cutlist.");
+            }
+        }
+
         General = general;
         _cuts = cuts;
         Info = info;

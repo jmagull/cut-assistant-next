@@ -1,0 +1,155 @@
+<Window x:Class="CutAssistantNext.App.Dialogs.CutlistSettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Cutlist-Einstellungen"
+        Width="860"
+        Height="780"
+        MinWidth="760"
+        MinHeight="680"
+        WindowStartupLocation="CenterOwner"
+        Background="#F4F6F8">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock FontSize="24"
+                           FontWeight="SemiBold"
+                           Foreground="#111827"
+                           Text="Cutlist-Einstellungen" />
+
+                <TextBlock Margin="0,6,0,20"
+                           Foreground="#6B7280"
+                           TextWrapping="Wrap"
+                           Text="Standardwerte und Schnellbausteine für neu erzeugte Cutlists." />
+
+                <Border Padding="18"
+                        Background="White"
+                        BorderBrush="#D9DEE5"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <StackPanel>
+                        <TextBlock Margin="0,0,0,12"
+                                   FontSize="17"
+                                   FontWeight="SemiBold"
+                                   Foreground="#1F2937"
+                                   Text="Allgemein" />
+
+                        <TextBlock Margin="0,0,0,5"
+                                   FontWeight="SemiBold"
+                                   Foreground="#4B5563"
+                                   Text="Standard-Autor" />
+
+                        <TextBox MinHeight="32"
+                                 Padding="8,4"
+                                 Text="{Binding DefaultAuthor}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Margin="0,16,0,0"
+                        Padding="18"
+                        Background="White"
+                        BorderBrush="#D9DEE5"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <StackPanel>
+                        <TextBlock Margin="0,0,0,5"
+                                   FontSize="17"
+                                   FontWeight="SemiBold"
+                                   Foreground="#1F2937"
+                                   Text="Schnellbausteine" />
+
+                        <TextBlock Margin="0,0,0,14"
+                                   FontSize="12"
+                                   Foreground="#6B7280"
+                                   TextWrapping="Wrap"
+                                   Text="Bis zu fünf eigene Kommentartexte. Leere Felder werden im Dialog „Cutlist erzeugen“ nicht angezeigt." />
+
+                        <TextBox MinHeight="32"
+                                 Margin="0,0,0,8"
+                                 Padding="8,4"
+                                 Text="{Binding QuickText1}" />
+
+                        <TextBox MinHeight="32"
+                                 Margin="0,0,0,8"
+                                 Padding="8,4"
+                                 Text="{Binding QuickText2}" />
+
+                        <TextBox MinHeight="32"
+                                 Margin="0,0,0,8"
+                                 Padding="8,4"
+                                 Text="{Binding QuickText3}" />
+
+                        <TextBox MinHeight="32"
+                                 Margin="0,0,0,8"
+                                 Padding="8,4"
+                                 Text="{Binding QuickText4}" />
+
+                        <TextBox MinHeight="32"
+                                 Padding="8,4"
+                                 Text="{Binding QuickText5}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Margin="0,16,0,0"
+                        Padding="18"
+                        Background="#F9FAFB"
+                        BorderBrush="#D9DEE5"
+                        BorderThickness="1"
+                        CornerRadius="8">
+                    <StackPanel>
+                        <TextBlock FontSize="17"
+                                   FontWeight="SemiBold"
+                                   Foreground="#1F2937"
+                                   Text="Cutlist-Server" />
+
+                        <TextBlock Margin="0,12,0,4"
+                                   FontWeight="SemiBold"
+                                   Foreground="#374151"
+                                   Text="Persönliche Server-URL" />
+
+                        <TextBox MinHeight="32"
+                                 Padding="8,4"
+                                 Text="{Binding PersonalServerUrl, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <TextBlock Margin="0,6,0,0"
+                                   Foreground="#6B7280"
+                                   TextWrapping="Wrap"
+                                   Text="Die persönliche URL aus dem Cutlist-Cockpit. Leer lassen, wenn der Cutlist-Server nicht verwendet wird." />
+
+                        <Button x:Name="TestConnectionButton"
+                                Width="160"
+                                Height="34"
+                                Margin="0,12,0,0"
+                                HorizontalAlignment="Left"
+                                Click="TestConnectionButton_Click"
+                                Content="Verbindung testen" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1"
+                    Margin="0,18,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+
+            <Button MinWidth="130"
+                    Height="36"
+                    Margin="0,0,10,0"
+                    Padding="14,0"
+                    Click="SaveButton_Click"
+                    Content="Speichern" />
+
+            <Button MinWidth="110"
+                    Height="36"
+                    Padding="14,0"
+                    Click="CancelButton_Click"
+                    Content="Abbrechen" />
+        </StackPanel>
+    </Grid>
+</Window>

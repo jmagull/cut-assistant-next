@@ -55,7 +55,7 @@ public class MainWindowViewModelTests
         Assert.Equal("stereo", viewModel.ChannelLayout);
 
         Assert.Equal(
-            "Analyse erfolgreich abgeschlossen.",
+            "Analyse erfolgreich abgeschlossen, geladen:",
             viewModel.StatusMessage);
 
         Assert.False(viewModel.IsAnalyzing);
@@ -171,7 +171,7 @@ public class MainWindowViewModelTests
         Assert.False(viewModel.IsAnalyzing);
         Assert.True(viewModel.CanAnalyze);
         Assert.Equal(
-            "Analyse erfolgreich abgeschlossen.",
+            "Analyse erfolgreich abgeschlossen, geladen:",
             viewModel.StatusMessage);
     }
 

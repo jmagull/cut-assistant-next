@@ -5,16 +5,15 @@ namespace CutAssistantNext.Media.Analysis;
 
 public sealed class FfprobeRunner : IMediaAnalysisRunner
 {
-    public const string DefaultFfprobePath =
-        @"C:\Tools\ffmpeg\bin\ffprobe.exe";
-
     private readonly string _ffprobePath;
 
-    public FfprobeRunner(string? ffprobePath = null)
+    public FfprobeRunner(string ffprobePath)
     {
-        _ffprobePath = string.IsNullOrWhiteSpace(ffprobePath)
-            ? DefaultFfprobePath
-            : ffprobePath;
+        ArgumentException.ThrowIfNullOrWhiteSpace(
+            ffprobePath);
+
+        _ffprobePath =
+            ffprobePath;
     }
 
     public async Task<MediaAnalysisResult> RunAsync(

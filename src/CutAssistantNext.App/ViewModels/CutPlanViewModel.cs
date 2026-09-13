@@ -25,14 +25,41 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public TimeSpan? MediaDuration =>
         _cutPlan?.MediaDuration;
 
+    public TimeSpan? EstimatedOutputDuration
+    {
+        get
+        {
+            if (_cutPlan is null)
+            {
+                return null;
+            }
+
+            var removedDuration =
+                TimeSpan.FromTicks(
+                    _cutPlan.RemoveSegments.Sum(
+                        segment => segment.Duration.Ticks));
+
+            return
+                _cutPlan.MediaDuration -
+                removedDuration;
+        }
+    }
+
+    public string EstimatedOutputDurationText =>
+        EstimatedOutputDuration.HasValue
+            ? FormatTime(
+                EstimatedOutputDuration.Value)
+            : "–";
+
     public bool CanSetStart =>
-        _cutPlan is not null &&
-        SelectedRemoveSegment is null;
+        _cutPlan is not null;
 
     public bool CanSetEnd =>
         _cutPlan is not null &&
-        PendingStart.HasValue &&
-        SelectedRemoveSegment is null;
+        (
+            PendingStart.HasValue ||
+            SelectedRemoveSegment is not null
+        );
 
     public bool CanModifySelectedSegment =>
         SelectedRemoveSegment is not null;
@@ -96,10 +123,50 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         _removeSegments.Clear();
 
         OnPropertyChanged(nameof(MediaDuration));
+        OnPropertyChanged(
+            nameof(EstimatedOutputDuration));
+
+        OnPropertyChanged(
+            nameof(EstimatedOutputDurationText));
         OnPropertyChanged(nameof(CanSetStart));
         OnPropertyChanged(nameof(CanSetEnd));
     }
 
+    public void LoadCutPlan(
+        CutPlan cutPlan)
+    {
+        ArgumentNullException.ThrowIfNull(
+            cutPlan);
+
+        var importedPlan =
+            new CutPlan(
+                cutPlan.MediaDuration);
+
+        foreach (var segment in cutPlan.RemoveSegments)
+        {
+            importedPlan.Add(
+                new RemoveSegment(
+                    segment.Start,
+                    segment.End));
+        }
+
+        _cutPlan =
+            importedPlan;
+
+        PendingStart = null;
+        SelectedRemoveSegment = null;
+
+        SynchronizeSegments();
+
+        OnPropertyChanged(
+            nameof(MediaDuration));
+
+        OnPropertyChanged(
+            nameof(CanSetStart));
+
+        OnPropertyChanged(
+            nameof(CanSetEnd));
+    }
     public void Reset()
     {
         _cutPlan = null;
@@ -108,6 +175,11 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         _removeSegments.Clear();
 
         OnPropertyChanged(nameof(MediaDuration));
+        OnPropertyChanged(
+            nameof(EstimatedOutputDuration));
+
+        OnPropertyChanged(
+            nameof(EstimatedOutputDurationText));
         OnPropertyChanged(nameof(CanSetStart));
         OnPropertyChanged(nameof(CanSetEnd));
     }
@@ -121,6 +193,19 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             position,
             cutPlan.MediaDuration);
 
+        if (SelectedRemoveSegment is not null)
+        {
+            var selectedSegment =
+                SelectedRemoveSegment;
+
+            Replace(
+                selectedSegment,
+                position,
+                selectedSegment.End);
+
+            return;
+        }
+
         PendingStart = position;
     }
 
@@ -129,15 +214,29 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     {
         var cutPlan = GetInitializedCutPlan();
 
+        ValidatePosition(
+            position,
+            cutPlan.MediaDuration);
+
+        if (SelectedRemoveSegment is not null)
+        {
+            var selectedSegment =
+                SelectedRemoveSegment;
+
+            Replace(
+                selectedSegment,
+                selectedSegment.Start,
+                position);
+
+            SelectedRemoveSegment = null;
+            return;
+        }
+
         if (!PendingStart.HasValue)
         {
             throw new InvalidOperationException(
                 "Es wurde noch kein Schnittanfang gesetzt.");
         }
-
-        ValidatePosition(
-            position,
-            cutPlan.MediaDuration);
 
         var segment = new RemoveSegment(
             PendingStart.Value,
@@ -247,6 +346,12 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         {
             _removeSegments.Add(segment);
         }
+
+        OnPropertyChanged(
+            nameof(EstimatedOutputDuration));
+
+        OnPropertyChanged(
+            nameof(EstimatedOutputDurationText));
     }
 
     private static string FormatTime(

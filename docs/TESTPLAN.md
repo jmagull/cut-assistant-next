@@ -1,4 +1,4 @@
-# Testplan – POC 0.1
+# Testplan – aktueller Funktionsstand
 
 ## Testumgebung
 
@@ -47,9 +47,44 @@
 - `CutlistDocument` einschließlich Konsistenzprüfung zwischen Metadaten und Keep-Bereichen
 - `CutlistSerializer` einschließlich klassischer Kompatibilitätszeilen, kulturunabhängiger Zahlenwerte und Golden-Master-Test
 - `CutlistFileWriter` einschließlich UTF-8 ohne BOM, CRLF-Zeilenenden und Umlauten
+- `CutlistParser` einschließlich des Einlesens klassischer Cutlist-Strukturen
+- `CutlistFileReader` einschließlich UTF-8 und historischem Windows-1252-/ANSI-Fallback
 
-Aktueller vollständiger Solution-Testlauf: **162 von 162 Tests erfolgreich**.
+Aktueller vollständiger Testlauf: **443 von 443 Tests erfolgreich**.
 
 Zusätzlich wurde die lokale Cutlist-Dateiausgabe in einem Smoke-Test praktisch geprüft. Dabei wurde eine vollständige `.cutlist`-Datei erzeugt und anschließend explizit als UTF-8 eingelesen; auch Umlaute wurden korrekt erhalten.
 
-Ein Cutlist-Reader/Parser ist noch nicht umgesetzt. Die Unterstützung historischer Windows-1252-/ANSI-Cutlists wird beim späteren Einlese-Bauabschnitt ergänzt.
+Cutlist-Reader und Parser sind umgesetzt und automatisiert getestet. Beim Einlesen wird zunächst UTF-8 verwendet; historische Windows-1252-/ANSI-Cutlists werden als Kompatibilitätsfall unterstützt.
+
+## Integrierter AVI-Ablauf und UI – Stand 13.09.2026
+
+| Prüfung | Ergebnis / Stand |
+|---|---|
+| Diplomatin AVI, zwei Cutlists, Vorbereitung bis MP4-Ausgabe | Live erfolgreich; Wiedergabe, Anfang/Ende und Ton-Synchronität bestätigt |
+| Rubikon AVI, zwei Cutlists, Vorbereitung bis MP4-Ausgabe | Live erfolgreich; Wiedergabe und Ton-Synchronität bestätigt |
+| Diplomatin HD-AVI mit HQ-Cutlist | Dateigrößenwarnung bewusst akzeptiert; Schnitt erfolgreich |
+| Zwei Frames Unterschied bei Diplomatin | Akzeptiert und protokolliert; 20-ms-Containerverlängerung als Regression abgesichert |
+| Fehlender ffprobe-Pfad | Konkreter Fehlergrund direkt im Fortschrittsfenster live bestätigt; ursprünglichen Pfad nach dem Test wiederherstellen |
+| Server-Cutlist erneut auswählen | Ohne erneutes Videoladen live bestätigt |
+| Schmales/kurzes Fenster | Umbruch, Scrollen, Videobegrenzung und sichtbare Zeitangaben live bestätigt |
+| Fenstergröße ohne Videoladen speichern | Live bestätigt |
+| Leerer ColdCut-Endmarker | Import-/Schnittplan-/Roundtrip-Tests mit Diplomatin-Werten bestanden; separater Live-Nachweis des konkreten Originaleintrags nicht festgehalten |
+| Künstliche AVI ohne Ton, AVI mit MP3 und H.264/AAC-MKV | Remux und Metadatenprüfung technisch ausgeführt und bestanden |
+| Vorhandene Remux-Zieldatei / vorab abgebrochener Auftrag | Im technischen Integrationstest abgewiesen |
+
+Die aktuellen automatisierten Suiten umfassen 40 Core-, 65 Cutlists-, 86 Media- und 252 App-Tests: insgesamt 443. Es sind keine vollständigen automatisierten GUI- oder Video-Synchronitätstests.
+
+### Weitere manuelle Fehler- und Grenzfallprüfungen
+
+- Vorbereitung mit „Nein“ ablehnen: Original und Schnittmarken bleiben verfügbar.
+- Während eines längeren FFmpeg-Laufs abbrechen: Prozess endet, MP4Box startet nicht, temporäre Datei wird aufgeräumt.
+- Während MP4Box abbrechen: Abbruchmeldung prüfen, eventuelle neue Zieldatei nicht als fertigen Schnitt behandeln.
+- Ungültigen FFmpeg-/MP4Box-Pfad sowie nicht MP4-kompatible Streams prüfen: verständlicher Fehler, keine automatische Neukodierung.
+- Ziel bereits vorhanden: Bestätigung und Erhalt der alten Ausgabe bei Fehlschlag vor dem Ersetzen prüfen.
+- Fehleranzeige bei eingeklapptem Protokoll prüfen; Kopieren und erneuten Versuch kontrollieren.
+- Andere Eingangscontainer, weitere Audio-/Videostreams und verschiedene Bildraten getrennt erproben.
+- Bei Erfolg immer Filmgrenzen, Werbeschnitte und Ton-Synchronität der tatsächlichen Ausgabe kontrollieren.
+
+Diese Liste kennzeichnet noch zu vertiefende Prüfungen; sie behauptet keine bereits erfolgte vollständige Abdeckung. Keine realen Filmdateien ins Repository aufnehmen.
+
+Die Review-Korrekturen sind durch Tests für widersprüchliche Cutlist-Bereiche sowie die Ausgabeübernahme nach erfolgreichem Zusammenfügen abgesichert. Fehler, Abbruch, vorhandene Ausgaben und während des Schnitts neu angelegte Zieldateien werden geprüft.

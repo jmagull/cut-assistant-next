@@ -15,8 +15,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate =
-                "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]",
+
             DefaultAuthor = "joerg",
             QuickTexts =
             [
@@ -35,12 +34,14 @@ public sealed class CutlistGenerationViewModelTests
             EpisodeTitle: "Borowski und das Haupt der Medusa");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
-                context);
+                context,
+                nameTemplate:
+                    "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]");
 
         Assert.Equal(
-            settings.DefaultNameTemplate,
+            "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]",
             viewModel.NameTemplate);
 
         Assert.Equal(
@@ -61,8 +62,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate =
-                "%Name% [%Tag%.%Monat%.%YYYY%]",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -74,9 +74,11 @@ public sealed class CutlistGenerationViewModelTests
             Day: "13");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
-                context);
+                context,
+                nameTemplate:
+                    "%Name% [%Tag%.%Monat%.%YYYY%]");
 
         viewModel.NameTemplate =
             "%Name% - %YYYY%";
@@ -91,8 +93,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate =
-                "%Name% [%Tag%.%Monat%.%YYYY%]",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -104,9 +105,11 @@ public sealed class CutlistGenerationViewModelTests
             Day: "13");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
-                context);
+                context,
+                nameTemplate:
+                    "%Name% [%Tag%.%Monat%.%YYYY%]");
 
         var originalTemplate =
             viewModel.NameTemplate;
@@ -132,8 +135,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate =
-                "%Name% [%Tag%.%Monat%.%YYYY%]",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -145,9 +147,11 @@ public sealed class CutlistGenerationViewModelTests
             Day: "13");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
-                context);
+                context,
+                nameTemplate:
+                    "%Name% [%Tag%.%Monat%.%YYYY%]");
 
         var changedProperties =
             new List<string?>();
@@ -174,8 +178,6 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate =
-                "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]",
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -190,9 +192,11 @@ public sealed class CutlistGenerationViewModelTests
             EpisodeTitle: "Alter Titel");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
-                context);
+                context,
+                nameTemplate:
+                    "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]");
 
         viewModel.Name = "Frieren";
         viewModel.Season = "02";
@@ -205,11 +209,107 @@ public sealed class CutlistGenerationViewModelTests
     }
 
     [Fact]
+    public void CreateNamingState_UsesCompleteCurrentNamingData()
+    {
+        var settings = new CutlistSettings
+        {
+            DefaultAuthor = "joerg",
+            QuickTexts = []
+        };
+
+        var context =
+            new NameTemplateContext(
+                Name: "Alter Name",
+                Year: "2026",
+                Month: "08",
+                Day: "19",
+                Season: "01",
+                Episode: "01",
+                OriginalName: "Sliders_original.mp4",
+                Hour: "17",
+                Minute: "15",
+                Sender: "tele5",
+                Series: "Sliders",
+                EpisodeTitle: "Alter Titel");
+
+        var viewModel =
+            CreateViewModel(
+                settings,
+                context,
+                nameTemplate:
+                    "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]");
+
+        viewModel.Name = "Sliders";
+        viewModel.Season = "04";
+        viewModel.Episode = "20";
+        viewModel.EpisodeTitle = "Der Abgrund";
+
+        var state =
+            viewModel.CreateNamingState();
+
+        Assert.Equal(
+            viewModel.NameTemplate,
+            state.NameTemplate);
+
+        Assert.Equal(
+            viewModel.SuggestedMovieName,
+            state.SuggestedMovieName);
+
+        Assert.Equal(
+            "Sliders",
+            state.NameContext.Name);
+
+        Assert.Equal(
+            "04",
+            state.NameContext.Season);
+
+        Assert.Equal(
+            "20",
+            state.NameContext.Episode);
+
+        Assert.Equal(
+            "Der Abgrund",
+            state.NameContext.EpisodeTitle);
+
+        Assert.Equal(
+            "2026",
+            state.NameContext.Year);
+
+        Assert.Equal(
+            "08",
+            state.NameContext.Month);
+
+        Assert.Equal(
+            "19",
+            state.NameContext.Day);
+
+        Assert.Equal(
+            "Sliders_original.mp4",
+            state.NameContext.OriginalName);
+
+        Assert.Equal(
+            "17",
+            state.NameContext.Hour);
+
+        Assert.Equal(
+            "15",
+            state.NameContext.Minute);
+
+        Assert.Equal(
+            "tele5",
+            state.NameContext.Sender);
+
+        Assert.Equal(
+            "Sliders",
+            state.NameContext.Series);
+    }
+
+    [Fact]
     public void ChangingAuthorAndUserComment_RaisesPropertyChanged()
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -218,7 +318,7 @@ public sealed class CutlistGenerationViewModelTests
             Name: "Tatort");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context);
 
@@ -256,11 +356,11 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts =
             [
-                "Mit Cut Assistant Next geschnitten.",
+                "Keine Werbung gefunden.",
                 "Werbung vollständig entfernt."
             ]
         };
@@ -269,7 +369,7 @@ public sealed class CutlistGenerationViewModelTests
             Name: "Tatort");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context);
 
@@ -277,14 +377,14 @@ public sealed class CutlistGenerationViewModelTests
             settings.QuickTexts[0]);
 
         Assert.Equal(
-            "Mit Cut Assistant Next geschnitten.",
+            "Mit Cut Assistant Next geschnitten. Keine Werbung gefunden.",
             viewModel.UserComment);
 
         viewModel.ApplyQuickText(
             settings.QuickTexts[1]);
 
         Assert.Equal(
-            "Mit Cut Assistant Next geschnitten. Werbung vollständig entfernt.",
+            "Mit Cut Assistant Next geschnitten. Keine Werbung gefunden. Werbung vollständig entfernt.",
             viewModel.UserComment);
 
         Assert.DoesNotContain(
@@ -301,7 +401,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -316,7 +416,7 @@ public sealed class CutlistGenerationViewModelTests
         ];
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context,
                 technicalNotices);
@@ -330,7 +430,7 @@ public sealed class CutlistGenerationViewModelTests
             notice.Description);
 
         Assert.Equal(
-            string.Empty,
+            "Mit Cut Assistant Next geschnitten.",
             viewModel.UserComment);
     }
 
@@ -339,7 +439,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -354,25 +454,28 @@ public sealed class CutlistGenerationViewModelTests
         ];
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context,
-                technicalNotices)
-            {
-                UserComment =
-                    "Mit Cut Assistant Next geschnitten.",
-                SelectedRating = 3,
-                EpgError = true,
-                ActualContent =
-                    "Andere Sendung als angekündigt",
-                MissingBeginning = true,
-                MissingEnding = true,
-                MissingVideo = true,
-                MissingAudio = true,
-                OtherError = true,
-                OtherErrorDescription =
-                    "Bildstörung während der Aufnahme."
-            };
+                technicalNotices);
+
+        viewModel.UserComment =
+            "Mit Cut Assistant Next geschnitten.";
+
+        viewModel.SelectedRating = 3;
+        viewModel.EpgError = true;
+
+        viewModel.ActualContent =
+            "Andere Sendung als angekündigt";
+
+        viewModel.MissingBeginning = true;
+        viewModel.MissingEnding = true;
+        viewModel.MissingVideo = true;
+        viewModel.MissingAudio = true;
+        viewModel.OtherError = true;
+
+        viewModel.OtherErrorDescription =
+            "Bildstörung während der Aufnahme.";
 
         var cutPlan =
             new CutPlan(
@@ -496,7 +599,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -505,7 +608,7 @@ public sealed class CutlistGenerationViewModelTests
             Name: "Tatort");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context);
 
@@ -527,7 +630,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -536,7 +639,7 @@ public sealed class CutlistGenerationViewModelTests
             Name: "Tatort");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context);
 
@@ -549,7 +652,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -558,7 +661,7 @@ public sealed class CutlistGenerationViewModelTests
             Name: "Tatort");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context);
 
@@ -593,7 +696,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -602,7 +705,7 @@ public sealed class CutlistGenerationViewModelTests
             Name: "Tatort");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context);
 
@@ -629,7 +732,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -638,7 +741,7 @@ public sealed class CutlistGenerationViewModelTests
             Name: "Tatort");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context);
 
@@ -663,7 +766,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -672,7 +775,7 @@ public sealed class CutlistGenerationViewModelTests
             Name: "Tatort");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context);
 
@@ -697,7 +800,7 @@ public sealed class CutlistGenerationViewModelTests
     {
         var settings = new CutlistSettings
         {
-            DefaultNameTemplate = "%Name%",
+
             DefaultAuthor = "joerg",
             QuickTexts = []
         };
@@ -706,7 +809,7 @@ public sealed class CutlistGenerationViewModelTests
             Name: "Tatort");
 
         var viewModel =
-            new CutlistGenerationViewModel(
+            CreateViewModel(
                 settings,
                 context);
 
@@ -727,4 +830,25 @@ public sealed class CutlistGenerationViewModelTests
             "Bildstörung während der Aufnahme",
             viewModel.OtherErrorDescription);
     }
+
+    private static CutlistGenerationViewModel CreateViewModel(
+        CutlistSettings settings,
+        NameTemplateContext context,
+        IReadOnlyCollection<TechnicalNotice>? technicalNotices = null,
+        string nameTemplate = "%Name%")
+    {
+        var namingSettings =
+            new NamingSettings
+            {
+                DefaultNameTemplate =
+                    nameTemplate
+            };
+
+        return new CutlistGenerationViewModel(
+            settings,
+            namingSettings,
+            context,
+            technicalNotices);
+    }
+
 }

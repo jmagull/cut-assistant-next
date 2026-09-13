@@ -7,8 +7,6 @@ namespace CutAssistantNext.App.Settings;
 
 internal sealed class CutlistSettings
 {
-    public string DefaultNameTemplate { get; init; } =
-        string.Empty;
 
     public string DefaultAuthor { get; init; } =
         string.Empty;
@@ -20,12 +18,14 @@ internal sealed class CutlistSettings
     {
         return new CutlistSettings
         {
-            DefaultNameTemplate =
-                "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]",
+
             QuickTexts =
             [
-                "Mit Cut Assistant Next geschnitten.",
-                "Werbung vollständig entfernt."
+                "Keine Werbung gefunden.",
+                "Werbung vollständig entfernt.",
+                "Unter Verwendung von MP4Box aus dem GPAC Paket, Version 26.07 geschnitten.",
+                "Teil 1 von 2",
+                "Teil 2 von 2"
             ]
         };
     }

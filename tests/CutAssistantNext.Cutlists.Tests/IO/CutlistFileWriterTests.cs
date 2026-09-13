@@ -92,4 +92,111 @@ public sealed class CutlistFileWriterTests
             }
         }
     }
+    [Fact]
+    public void CreateBytes_ReturnsExactlyTheBytesWrittenByWrite()
+    {
+        var tempDirectory =
+            Path.Combine(
+                Path.GetTempPath(),
+                "CutAssistantNext.Tests",
+                Guid.NewGuid().ToString("N"));
+
+        var filePath =
+            Path.Combine(
+                tempDirectory,
+                "Umlaut-Test.cutlist");
+
+        try
+        {
+            var analysis =
+                new MediaAnalysisResult(
+                    FormatName: "mov,mp4,m4a,3gp,3g2,mj2",
+                    FormatLongName: "QuickTime / MOV",
+                    FileSizeBytes: 123456789,
+                    Duration: TimeSpan.FromSeconds(60),
+                    VideoStreams: [],
+                    AudioStreams: []);
+
+            var cuts =
+                new[]
+                {
+                    new CutlistKeepSegment(
+                        TimeSpan.Zero,
+                        TimeSpan.FromSeconds(60))
+                };
+
+            var general =
+                CutlistGeneralMetadata.Create(
+                    applyToFile: "Überraschung.avi",
+                    applicationVersion: "1.0.0",
+                    analysis: analysis,
+                    keepSegments: cuts);
+
+            var info =
+                CutlistInfoMetadata.Create(
+                    suggestedMovieName:
+                        "Überraschung für Schüler",
+                    userComment:
+                        "Werbung vollständig entfernt.",
+                    technicalNotices: [],
+                    author: "joerg");
+
+            var document =
+                new CutlistDocument(
+                    general,
+                    cuts,
+                    info);
+
+            var expectedBytes =
+                CutlistFileWriter.CreateBytes(
+                    document);
+
+            CutlistFileWriter.Write(
+                filePath,
+                document);
+
+            var writtenBytes =
+                File.ReadAllBytes(
+                    filePath);
+
+            Assert.Equal(
+                expectedBytes,
+                writtenBytes);
+
+            Assert.False(
+                expectedBytes.Length >= 3 &&
+                expectedBytes[0] == 0xEF &&
+                expectedBytes[1] == 0xBB &&
+                expectedBytes[2] == 0xBF);
+
+            var text =
+                new UTF8Encoding(
+                    encoderShouldEmitUTF8Identifier: false,
+                    throwOnInvalidBytes: true)
+                .GetString(
+                    expectedBytes);
+
+            Assert.Contains(
+                "ApplyToFile=Überraschung.avi\r\n",
+                text);
+
+            Assert.Contains(
+                "UserComment=Werbung vollständig entfernt.\r\n",
+                text);
+
+            Assert.Contains(
+                "\r\n[Info]\r\n",
+                text);
+        }
+        finally
+        {
+            if (Directory.Exists(
+                    tempDirectory))
+            {
+                Directory.Delete(
+                    tempDirectory,
+                    recursive: true);
+            }
+        }
+    }
 }

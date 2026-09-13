@@ -73,7 +73,7 @@ public partial class CutlistGenerationDialog : Window
         {
             MessageBox.Show(
                 this,
-                "Bitte vor dem Speichern eine Bewertung von 0 bis 5 auswählen.",
+                "Bitte eine Bewertung von 0 bis 5 auswählen.",
                 "Cutlist speichern",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
