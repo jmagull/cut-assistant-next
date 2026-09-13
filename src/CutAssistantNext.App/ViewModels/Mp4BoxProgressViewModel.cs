@@ -18,6 +18,7 @@ public sealed class Mp4BoxProgressViewModel :
         "Bereit.";
 
     private bool _canCancel;
+    private bool _hasFailed;
 
     private bool _shouldAutoClose;
 
@@ -121,7 +122,7 @@ public sealed class Mp4BoxProgressViewModel :
         ArgumentNullException.ThrowIfNull(
             update);
 
-        if (update.Kind == Mp4BoxProgressKind.Status)
+        if (update.Kind == Mp4BoxProgressKind.Status && !_hasFailed)
         {
             StatusText =
                 update.Message;
@@ -141,6 +142,7 @@ public sealed class Mp4BoxProgressViewModel :
 
     public void MarkRunning()
     {
+        _hasFailed = false;
         CanCancel = true;
         ShouldAutoClose = false;
         AutoCloseSecondsRemaining = 0;
@@ -156,8 +158,13 @@ public sealed class Mp4BoxProgressViewModel :
         ShouldAutoClose = true;
     }
 
-    public void MarkFailed()
+    public void MarkFailed(string? reason = null)
     {
+        _hasFailed = true;
+        StatusText = string.IsNullOrWhiteSpace(reason)
+            ? "Vorbereitung oder Schnitt fehlgeschlagen. Weitere Informationen stehen im Protokoll."
+            : $"Vorbereitung oder Schnitt fehlgeschlagen:{Environment.NewLine}{reason.Trim()}";
+        ApplyProgress(new Mp4BoxProgressUpdate(Mp4BoxProgressKind.Output, StatusText));
         CanCancel = false;
         ShouldAutoClose = false;
         AutoCloseSecondsRemaining = 0;

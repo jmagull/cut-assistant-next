@@ -1,5 +1,11 @@
 # Projektstatus
 
+## Fehleranzeige im Fortschrittsfenster
+
+- Der konkrete Fehlergrund erscheint direkt im Statusbereich, auch bei eingeklapptem Protokoll. Derselbe Text wird im kopierbaren Protokoll festgehalten.
+- Nachgereichte Fortschrittsmeldungen überschreiben die Fehleranzeige nicht. Bei Fehler bleibt das Fenster offen; fehlt ein Fehlertext, wird auf das Protokoll verwiesen.
+- Release-Build ohne Fehler/Warnungen; 430/430 Tests bestanden. Live-Test bestätigt: Bei ungültigem ffprobe-Pfad erscheint der konkrete Hinweis auf die FFmpeg-Werkzeuge direkt im Fortschrittsfenster. Auch ein erneuter erfolgreicher Diplomatin-Schnitt mit HQ-Cutlist ist bestätigt.
+
 ## Bestätigung des integrierten AVI-Ablaufs
 
 - Live-Test erfolgreich: Die Diplomatin und Rubikon mit jeweils zwei Cutlists. FFmpeg-Vorbereitung, Prüfung und MP4Box-Schnitt abgeschlossen; Anfang, Ende und Ton-Synchronität vom Nutzer als einwandfrei bestätigt.

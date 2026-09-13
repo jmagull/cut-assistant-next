@@ -1133,17 +1133,7 @@ public partial class MainWindow : Window
                     }
                     catch (Exception exception)
                     {
-                        progressViewModel.ApplyProgress(
-                            new Mp4BoxProgressUpdate(
-                                Mp4BoxProgressKind.Status,
-                                "Fehler."));
-
-                        progressViewModel.ApplyProgress(
-                            new Mp4BoxProgressUpdate(
-                                Mp4BoxProgressKind.Output,
-                                $"Der Schnitt ist fehlgeschlagen: {exception.Message}"));
-
-                        progressViewModel.MarkFailed();
+                        progressViewModel.MarkFailed(exception.Message);
 
                         progressDialog.MarkOperationCompleted(
                             startAutoClose: false);

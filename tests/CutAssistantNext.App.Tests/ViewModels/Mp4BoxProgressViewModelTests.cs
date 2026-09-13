@@ -6,6 +6,38 @@ namespace CutAssistantNext.App.Tests.ViewModels;
 public sealed class Mp4BoxProgressViewModelTests
 {
     [Fact]
+    public void FailureReasonRemainsVisibleAfterQueuedProgress()
+    {
+        var viewModel = new Mp4BoxProgressViewModel();
+        viewModel.MarkRunning();
+        viewModel.MarkFailed("FFmpeg wurde nicht gefunden.");
+        var failure = viewModel.StatusText;
+        viewModel.ApplyProgress(new Mp4BoxProgressUpdate(Mp4BoxProgressKind.Status, "Alte Fortschrittsmeldung"));
+
+        Assert.Contains("FFmpeg wurde nicht gefunden.", failure);
+        Assert.Equal(failure, viewModel.StatusText);
+        Assert.Contains(failure, viewModel.ProtocolText);
+        Assert.Contains("Alte Fortschrittsmeldung", viewModel.ProtocolText);
+        Assert.False(viewModel.CanCancel);
+        Assert.False(viewModel.ShouldAutoClose);
+
+        viewModel.MarkRunning();
+        viewModel.ApplyProgress(new Mp4BoxProgressUpdate(Mp4BoxProgressKind.Status, "Neuer Versuch"));
+        Assert.Equal("Neuer Versuch", viewModel.StatusText);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData(" ")]
+    public void MissingFailureReasonShowsProtocolHint(string? reason)
+    {
+        var viewModel = new Mp4BoxProgressViewModel();
+        viewModel.MarkFailed(reason);
+        Assert.Contains("fehlgeschlagen", viewModel.StatusText);
+        Assert.Contains("Protokoll", viewModel.StatusText);
+    }
+
+    [Fact]
     public void ApplyProgress_StatusAndOutput_UpdateDisplayAndProtocol()
     {
         var viewModel =
