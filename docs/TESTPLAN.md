@@ -50,7 +50,7 @@
 - `CutlistParser` einschließlich des Einlesens klassischer Cutlist-Strukturen
 - `CutlistFileReader` einschließlich UTF-8 und historischem Windows-1252-/ANSI-Fallback
 
-Aktueller vollständiger Testlauf: **430 von 430 Tests erfolgreich**.
+Aktueller vollständiger Testlauf: **443 von 443 Tests erfolgreich**.
 
 Zusätzlich wurde die lokale Cutlist-Dateiausgabe in einem Smoke-Test praktisch geprüft. Dabei wurde eine vollständige `.cutlist`-Datei erzeugt und anschließend explizit als UTF-8 eingelesen; auch Umlaute wurden korrekt erhalten.
 
@@ -72,7 +72,7 @@ Cutlist-Reader und Parser sind umgesetzt und automatisiert getestet. Beim Einles
 | Künstliche AVI ohne Ton, AVI mit MP3 und H.264/AAC-MKV | Remux und Metadatenprüfung technisch ausgeführt und bestanden |
 | Vorhandene Remux-Zieldatei / vorab abgebrochener Auftrag | Im technischen Integrationstest abgewiesen |
 
-Die aktuellen automatisierten Suiten umfassen 40 Core-, 59 Cutlists-, 79 Media- und 252 App-Tests: insgesamt 430. Es sind keine vollständigen automatisierten GUI- oder Video-Synchronitätstests.
+Die aktuellen automatisierten Suiten umfassen 40 Core-, 65 Cutlists-, 86 Media- und 252 App-Tests: insgesamt 443. Es sind keine vollständigen automatisierten GUI- oder Video-Synchronitätstests.
 
 ### Weitere manuelle Fehler- und Grenzfallprüfungen
 
@@ -86,3 +86,5 @@ Die aktuellen automatisierten Suiten umfassen 40 Core-, 59 Cutlists-, 79 Media- 
 - Bei Erfolg immer Filmgrenzen, Werbeschnitte und Ton-Synchronität der tatsächlichen Ausgabe kontrollieren.
 
 Diese Liste kennzeichnet noch zu vertiefende Prüfungen; sie behauptet keine bereits erfolgte vollständige Abdeckung. Keine realen Filmdateien ins Repository aufnehmen.
+
+Die Review-Korrekturen sind durch Tests für widersprüchliche Cutlist-Bereiche sowie die Ausgabeübernahme nach erfolgreichem Zusammenfügen abgesichert. Fehler, Abbruch, vorhandene Ausgaben und während des Schnitts neu angelegte Zieldateien werden geprüft.

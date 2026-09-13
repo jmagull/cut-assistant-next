@@ -2,7 +2,7 @@
 
 Cut Assistant Next (CAN) ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box. Die Oberfläche verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codec-Pakete vorauszusetzen.
 
-Stand: 13.09.2026. Der aktuelle Funktionsumfang liegt auf `feature/cut-application-configuration`; die Übernahme nach `main` steht noch aus. CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer.
+Stand: 13.09.2026. CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer.
 
 ## Einstieg
 
@@ -67,4 +67,4 @@ Die Anwendung liegt danach unter `src\CutAssistantNext.App\bin\Release\net10.0-w
 | `tools` | Einrichtung von libmpv |
 | `docs` | Anleitung, Status, Testplan und technische Dokumentation |
 
-Letzter bestätigter Stand: Release-Build ohne Fehler oder Warnungen, **430/430 Tests bestanden**. Die Diplomatin und Rubikon wurden mit jeweils zwei Cutlists im integrierten AVI-Ablauf erfolgreich geschnitten und vom Nutzer im Player geprüft. Einzelheiten und Einschränkungen stehen im [Testplan](docs/TESTPLAN.md).
+Letzter bestätigter Stand: Release-Build ohne Fehler oder Warnungen, **443/443 Tests bestanden**. Die Diplomatin und Rubikon wurden mit jeweils zwei Cutlists im integrierten AVI-Ablauf erfolgreich geschnitten und vom Nutzer im Player geprüft. Einzelheiten und Einschränkungen stehen im [Testplan](docs/TESTPLAN.md).

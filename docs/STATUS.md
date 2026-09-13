@@ -46,7 +46,7 @@ Das Protokoll ist standardmäßig aufgeklappt, kann eingeklappt und in die Zwisc
 
 ## Verifikation
 
-- Release-Build: 0 Fehler, 0 Warnungen; **430/430 Tests bestanden**.
+- Release-Build: 0 Fehler, 0 Warnungen; **443/443 Tests bestanden**.
 - Diplomatin und Rubikon: integrierter AVI-Ablauf mit jeweils zwei Cutlists erfolgreich; Wiedergabe einschließlich Anfang, Ende und Ton-Synchronität vom Nutzer bestätigt.
 - Zusätzlich bestätigter Diplomatin-Schnitt mit HQ-Cutlist trotz unterschiedlicher Quelldateigröße.
 - Fehleranzeige mit absichtlich ungültigem ffprobe-Pfad live bestätigt.
@@ -57,10 +57,8 @@ Weitere Prüfschritte stehen im [Testplan](TESTPLAN.md). Aus diesen Beispielen f
 
 ## Nächste Schritte
 
-1. Abschließendes Review des Feature-Branches.
-2. Pull Request und Übernahme nach `main` nach Freigabe.
-3. Veröffentlichung vorbereiten: Installer oder portable Ausgabe, Programmsymbol und finale Produktgestaltung.
+1. Veröffentlichung vorbereiten: Installer oder portable Ausgabe, Programmsymbol und finale Produktgestaltung.
 
 Spätere Funktionswünsche: mehrteilige Aufnahmen, Stapelverarbeitung und Smart Rendering. Eine automatische Neukodierung ist nicht Teil des aktuellen Vorbereitungsablaufs.
 
-Der Implementierungsstand bis zur Fehleranzeige ist unter `9f04f19` auf `feature/cut-application-configuration` committed und gepusht. Die aktuelle Dokumentationsüberarbeitung wird gesondert abgeschlossen.
+Das abschließende Code-Review ist erledigt. Beide Befunde wurden behoben und getestet: widersprüchliche Cutlist-Bereiche werden mit einer verständlichen Meldung abgelehnt (`fde1970`); MP4-Ausgaben werden erst nach erfolgreichem Zusammenfügen übernommen (`cdcff86`). Bei Fehler oder Abbruch wird die temporäre Ausgabe gelöscht, eine vorhandene Zieldatei bleibt erhalten.
