@@ -48,7 +48,7 @@ Sobald `CutAssistantNext.sln` vorhanden ist:
 
 ```powershell
 dotnet restore .\CutAssistantNext.sln
-dotnet build .\CutAssistantNext.sln --configuration Release --no-restore
+.\tools\build.ps1 -Configuration Release -NoRestore
 dotnet test .\CutAssistantNext.sln --configuration Release --no-build
 ```
 

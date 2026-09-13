@@ -402,3 +402,6 @@ FodyWeavers.xsd
 
 # Local native runtime dependencies
 /external/libmpv/win-x64/
+
+# Local successful full-build counter
+/.build/

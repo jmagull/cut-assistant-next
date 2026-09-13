@@ -758,6 +758,40 @@ public partial class MainWindow : Window
         dialog.ShowDialog();
     }
 
+    private void UserGuideMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        OpenHelpLink("https://github.com/jmagull/cut-assistant-next/blob/main/docs/NUTZERANLEITUNG.md");
+    }
+
+    private void GitHubProjectMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        OpenHelpLink("https://github.com/jmagull/cut-assistant-next");
+    }
+
+    private void OpenHelpLink(string address)
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(
+                new System.Diagnostics.ProcessStartInfo(address)
+                {
+                    UseShellExecute = true
+                });
+        }
+        catch (Exception exception)
+        {
+            _logger.Error("Der Hilfe-Link konnte nicht geöffnet werden.", exception);
+            MessageBox.Show(
+                this,
+                "Der Browser konnte nicht geöffnet werden. " +
+                "Bitte öffne diese Adresse in deinem Browser:" +
+                Environment.NewLine + Environment.NewLine + address,
+                "Hilfe",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
+    }
+
     private void QuitMenuItem_Click(
         object sender,
         RoutedEventArgs e)

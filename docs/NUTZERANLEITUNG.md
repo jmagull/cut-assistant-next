@@ -2,6 +2,8 @@
 
 Stand: 13.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, zum Beispiel **Cut Assistant Next · 0.2.0 · Build 1**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
+
 ## 1. Einmalig einrichten
 
 Starte die aktuelle Programmversion aus ihrem vollständigen Ausgabeordner. Die Datei `libmpv-2.dll` gehört neben das Programm; kopiere nicht nur die EXE allein. Auf dem Rechner muss die passende .NET-10-Desktop-Laufzeit vorhanden sein. Ein Installer ist noch nicht Teil dieses Standes.
@@ -125,6 +127,8 @@ Fenstergröße und Maximierung werden beim Schließen gespeichert und beim näch
 Bei geringer Breite umbrechen Bediengruppen. Bei geringer Höhe erreichst du die unteren Bereiche über die rechte Scrollleiste.
 
 Die lokalen Einstellungen liegen unter `%LOCALAPPDATA%\Cut Assistant Next\Settings`. Das allgemeine Anwendungsprotokoll liegt unter `%LOCALAPPDATA%\Cut Assistant Next\Logs\CutAssistantNext.log`. Das technische Schnittprotokoll kannst du im Fortschrittsdialog kopieren, bevor du ihn schließt.
+
+Über **Hilfe → Nutzeranleitung (GitHub)** öffnest du diese Anleitung im Standardbrowser. **Hilfe → GitHub-Projekt** führt zur Projektseite. Beide Links benötigen eine Internetverbindung.
 
 ## 9. Häufige Probleme
 

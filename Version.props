@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <Version>0.2.0</Version>
+    <CanBuildNumber Condition="'$(CanBuildNumber)' == '' and Exists('$(MSBuildThisFileDirectory).build/build-number.txt')">$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory).build/build-number.txt').Trim())</CanBuildNumber>
+    <CanBuildNumber Condition="'$(CanBuildNumber)' == ''">0</CanBuildNumber>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <FileVersion>$(Version).$(CanBuildNumber)</FileVersion>
+    <InformationalVersion>$(Version)+build.$(CanBuildNumber)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+</Project>
