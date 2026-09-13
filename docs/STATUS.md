@@ -1,5 +1,28 @@
 # Projektstatus
 
+## Bestätigung des integrierten AVI-Ablaufs
+
+- Live-Test erfolgreich: Die Diplomatin und Rubikon mit jeweils zwei Cutlists. FFmpeg-Vorbereitung, Prüfung und MP4Box-Schnitt abgeschlossen; Anfang, Ende und Ton-Synchronität vom Nutzer als einwandfrei bestätigt.
+- Das Protokoll im gemeinsamen Fortschrittsdialog ist standardmäßig aufgeklappt. Es kann eingeklappt und weiterhin in die Zwischenablage kopiert werden.
+
+## Leere Cutlist-Bereiche
+
+- Import ignoriert Null-Längen-Einträge historischer Cutlists (z. B. den leeren Cut1-Endmarker der Diplomatin-ColdCut-Datei). NoOfCuts wird im eingelesenen Dokument angepasst; die Quelldatei bleibt unverändert.
+- Negative Dauern, widersprüchliche DurationFrames und ausschließlich leere Bereiche werden weiterhin abgelehnt. Regressionstests prüfen den unveränderten gültigen Filmabschnitt, die Entfernbereiche und erneutes Serialisieren/Einlesen.
+- Release-Build ohne Fehler/Warnungen; 427/427 Tests bestanden. Live-Prüfung der zuvor abgelehnten Cutlist steht aus.
+
+## Experimentelle Video-Vorbereitung am 13.09.2026
+
+- „Videodatei laden“ öffnet MP4, AVI, MKV und weitere Videoformate. Originaldatei und Originalanalyse bleiben Grundlage für Serversuche, Schnittmarken und Cutlist-Erstellung.
+- Erst „Schneiden“ bietet bei einem anderen erkannten Container die experimentelle FFmpeg-Vorbereitung mit Ja/Nein an. MP4-Inhalt wird anhand der Analyse erkannt, auch bei AVI-Dateiendung.
+- FFmpeg kopiert alle Streams ohne Neukodierung in eine eindeutig benannte temporäre MP4. Nicht MP4-kompatible Streams führen zum Fehler statt zu stiller Konvertierung oder Entfernung.
+- Vor MP4Box prüft CAN Container, Video-/Audiostreams, Codecs, Auflösung, Bildrate, Laufzeit und relative Stream-Startzeiten. Bis zu zwei Frames Unterschied und mittlere Bildratenabweichungen von rechnerisch höchstens zwei Frames über die gesamte Laufzeit sind erlaubt und werden im Detailprotokoll vermerkt. Laufzeittoleranz: zwei Frames, mindestens 100 ms; Startzeittoleranz: zwei Videoframes beziehungsweise 100 ms für Audio. Fehlende Frame-/Startzeit-Metadaten werden nur protokolliert. Deutliche Abweichungen oder veränderte Streams stoppen weiterhin den Schnitt. Das ist eine Metadaten-Plausibilitätsprüfung, kein vollständiger Nachweis jedes Bildzeitstempels oder der Ton-Synchronität.
+- Der gemeinsame Fortschrittsdialog bietet das standardmäßig aufgeklappte „Protokoll“, Live-Ausgabe, Kopieren und Abbruch. Temporäre MP4-Dateien werden nach Ende, Fehler oder Abbruch entfernt; fehlgeschlagenes Aufräumen wird angezeigt. Die Originaldatei wird nicht verändert.
+- Frühere manuelle Testbasis laut Gespräch: „Rubikon“ und „Die Diplomatin“, jeweils OTR-HD-AVI, per FFmpeg remuxt und mit MP4Box geschnitten. Auch der neue integrierte Dialog-/Schnittablauf wurde mit beiden Dateien erfolgreich live geprüft.
+- Aktuelle technische Integrationstests: künstliche MPEG-4-AVI ohne Ton und H.264/AAC-MKV wurden über den neuen Runner remuxt und bestanden die Ergebnisprüfung. Existierende Zieldateien und vorab abgebrochene Aufträge werden abgewiesen. Auch die künstliche AVI mit MP3-Ton besteht jetzt: 51 gegenüber 50 gemeldeten Frames bei gleicher decodierter Bildanzahl; die kleine Metadaten-/Bildratenabweichung wird protokolliert.
+- Diplomatin-Grenzfall korrigiert: Die Bildratentoleranz wird über die Original-Laufzeit berechnet. Die um 20 ms längere MP4-Containerlaufzeit hatte zwei Frames fälschlich als 2,000006 Frames erscheinen lassen. Mit Original-AVI und vorhandener remuxter MP4 direkt geprüft: bestanden. Regressionstest mit 317399/317397 Frames und 6347,98/6348 Sekunden ergänzt.
+- Abschließender Release-Build: keine Fehler/Warnungen. 427/427 Tests bestanden.
+
 ## UX-Ergänzung am 13.09.2026
 
 - Rückmeldung: Fenstergröße wird ohne geladenes Video nicht zuverlässig wiederhergestellt. Beim Speichern werden für normale Fenster jetzt ActualWidth/ActualHeight verwendet; für maximierte/minimierte Fenster weiterhin RestoreBounds. Speichererfolg oder -fehler wird protokolliert. Live bestätigt: Größenänderung, Schließen ohne Videoladen und Wiederherstellung beim Neustart funktionieren. Die ursprüngliche Ursache wurde nicht abschließend reproduziert. Ergänzte Tests prüfen den Einstellungs-Rundlauf ohne Wiedergabedaten und einen Schreibfehler. Build ohne Fehler/Warnungen, 402/402 Tests bestanden.

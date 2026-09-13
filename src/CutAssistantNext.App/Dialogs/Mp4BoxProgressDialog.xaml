@@ -1,7 +1,7 @@
 <Window x:Class="CutAssistantNext.App.Dialogs.Mp4BoxProgressDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MP4Box – Schnittfortschritt"
+        Title="Video vorbereiten und schneiden"
         Width="900"
         Height="620"
         MinWidth="700"
@@ -22,12 +22,12 @@
             <TextBlock FontSize="26"
                        FontWeight="SemiBold"
                        Foreground="#111827"
-                       Text="MP4Box – Schnittfortschritt" />
+                       Text="Video vorbereiten und schneiden" />
 
             <TextBlock Margin="0,5,0,0"
                        FontSize="14"
                        Foreground="#6B7280"
-                       Text="Technisches Protokoll der Schnittanwendung" />
+                       Text="Fortschritt und optionales Protokoll" />
         </StackPanel>
 
         <Border Grid.Row="1"
@@ -45,7 +45,8 @@
                        Text="{Binding StatusText}" />
         </Border>
 
-        <Border Grid.Row="2"
+        <Expander Grid.Row="2" Header="Protokoll" IsExpanded="True">
+        <Border
                 Padding="1"
                 Background="White"
                 BorderBrush="#D9DEE5"
@@ -68,6 +69,7 @@
                      TextChanged="ProtocolTextBox_TextChanged"
                      Text="{Binding ProtocolText, Mode=OneWay}" />
         </Border>
+        </Expander>
 
         <Grid Grid.Row="3"
               Margin="0,18,0,0">

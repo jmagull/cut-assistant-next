@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
 using System.Windows;
@@ -938,6 +938,20 @@ public partial class MainWindow : Window
             return;
         }
 
+        var requiresPreparation = !VideoPreparation.IsMp4(analysis);
+        if (requiresPreparation && MessageBox.Show(
+                this,
+                "CAN kann derzeit Videos im MP4-Container schneiden. " +
+                $"Deine Datei wurde als {VideoPreparation.ContainerName(analysis)} erkannt.\n\n" +
+                "Soll CAN versuchen, das Video mit FFmpeg verlustfrei in eine temporäre MP4-Datei " +
+                "umzupacken und anschließend zu schneiden?\n\n" +
+                "Die Originaldatei bleibt unverändert.\n\n" +
+                "Dieses Feature ist experimentell. Es wurde an einigen Beispielvideodateien getestet.",
+                "Experimentelle Video-Vorbereitung", MessageBoxButton.YesNo,
+                MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
+        {
+            return;
+        }
         var namingSettings =
             new NamingSettingsLoader().Load();
 
@@ -1009,6 +1023,10 @@ public partial class MainWindow : Window
                         CutMediaAnalysisValidator.GetFramesPerSecond(
                             analysis);
 
+                    if (string.Equals(Path.GetFullPath(_viewModel.FilePath),
+                            Path.GetFullPath(saveDialog.FileName), StringComparison.OrdinalIgnoreCase))
+                        throw new InvalidOperationException("Die Ausgabedatei darf nicht die Originaldatei überschreiben.");
+
                     var cutPlan =
                         _cutPlanViewModel.CreateCutPlanSnapshot();
 
@@ -1071,10 +1089,22 @@ public partial class MainWindow : Window
 
                     progressDialog.Show();
 
+                    string? temporaryVideo = null;
                     try
                     {
+                        var sourceForCut = _viewModel.FilePath;
+                        if (requiresPreparation)
+                        {
+                            temporaryVideo = Path.Combine(Path.GetTempPath(), $"can-{Guid.NewGuid():N}.mp4");
+                            var tools = new FfmpegSettingsStore().Load() ?? FfmpegSettings.CreateDefault();
+                            await VideoPreparation.PrepareAsync(sourceForCut, temporaryVideo, analysis,
+                                tools.FfmpegExecutablePath, tools.FfprobeExecutablePath,
+                                progress, cancellationTokenSource.Token);
+                            sourceForCut = temporaryVideo;
+                        }
+
                         await cutService.RunAsync(
-                            _viewModel.FilePath,
+                            sourceForCut,
                             saveDialog.FileName,
                             cutPlan,
                             framesPerSecond,
@@ -1117,6 +1147,20 @@ public partial class MainWindow : Window
 
                         progressDialog.MarkOperationCompleted(
                             startAutoClose: false);
+                    }
+                    finally
+                    {
+                        if (temporaryVideo is not null)
+                        {
+                            try { File.Delete(temporaryVideo); }
+                            catch (Exception cleanupError)
+                            {
+                                progressViewModel.ApplyProgress(new Mp4BoxProgressUpdate(
+                                    Mp4BoxProgressKind.Output,
+                                    $"Temporäre Datei konnte nicht gelöscht werden: {temporaryVideo} ({cleanupError.Message})"));
+                                _logger.Error($"Temporäre MP4-Datei konnte nicht gelöscht werden: {cleanupError.Message}");
+                            }
+                        }
                     }
                 }
                 catch (Exception exception)
@@ -1922,8 +1966,8 @@ public partial class MainWindow : Window
     {
         var dialog = new OpenFileDialog
         {
-            Title = "MP4-Datei auswählen",
-            Filter = "OTR-Videodateien (*.mp4;*.avi)|*.mp4;*.avi|Alle Dateien (*.*)|*.*",
+            Title = "Videodatei laden",
+            Filter = "Videodateien (*.mp4;*.avi;*.mkv;*.mov;*.ts;*.m2ts;*.mpg;*.mpeg;*.wmv;*.webm)|*.mp4;*.avi;*.mkv;*.mov;*.ts;*.m2ts;*.mpg;*.mpeg;*.wmv;*.webm|Alle Dateien (*.*)|*.*",
             CheckFileExists = true,
             Multiselect = false
         };

@@ -6,7 +6,10 @@ public sealed record MediaAnalysisResult(
     long? FileSizeBytes,
     TimeSpan? Duration,
     IReadOnlyList<VideoStreamInfo> VideoStreams,
-    IReadOnlyList<AudioStreamInfo> AudioStreams);
+    IReadOnlyList<AudioStreamInfo> AudioStreams)
+{
+    public double? StartTimeSeconds { get; init; }
+}
 
 public sealed record VideoStreamInfo(
     int Index,
@@ -17,7 +20,11 @@ public sealed record VideoStreamInfo(
     string? SampleAspectRatio,
     string? DisplayAspectRatio,
     double? FramesPerSecond,
-    string? FieldOrder);
+    string? FieldOrder)
+{
+    public double? StartTimeSeconds { get; init; }
+    public long? FrameCount { get; init; }
+}
 
 public sealed record AudioStreamInfo(
     int Index,
@@ -25,4 +32,7 @@ public sealed record AudioStreamInfo(
     string? CodecLongName,
     int? SampleRate,
     int? Channels,
-    string? ChannelLayout);
+    string? ChannelLayout)
+{
+    public double? StartTimeSeconds { get; init; }
+}

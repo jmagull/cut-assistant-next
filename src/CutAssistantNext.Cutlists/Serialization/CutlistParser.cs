@@ -62,6 +62,16 @@ public static class CutlistParser
                         "Duration"),
                     $"Cut{index}.Duration");
 
+            // Some legacy cutlists contain an empty end marker, not a keep range.
+            if (duration == 0 && double.IsFinite(start) && start >= 0)
+            {
+                var frameDuration = GetValue(cutSection, "DurationFrames");
+                if (!string.IsNullOrWhiteSpace(frameDuration) &&
+                    ParseDouble(frameDuration, $"Cut{index}.DurationFrames") != 0)
+                    throw new FormatException($"Cut{index}: Duration und DurationFrames widersprechen sich.");
+                continue;
+            }
+
             cuts.Add(
                 new CutlistKeepSegment(
                     TimeSpan.FromSeconds(
@@ -69,6 +79,9 @@ public static class CutlistParser
                     TimeSpan.FromSeconds(
                         duration)));
         }
+
+        if (numberOfCuts > 0 && cuts.Count == 0)
+            throw new FormatException("Die Cutlist enthält ausschließlich leere Bereiche und keinen nutzbaren Schnitt.");
 
         var general =
             new CutlistGeneralMetadata
@@ -116,7 +129,7 @@ public static class CutlistParser
                         "IntendedCutApplicationOptions"),
 
                 NoOfCuts =
-                    numberOfCuts,
+                    cuts.Count,
 
                 ApplyToFile =
                     GetValue(

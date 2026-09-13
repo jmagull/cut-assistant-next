@@ -126,7 +126,7 @@
                     VerticalAlignment="Center"
                     IsEnabled="{Binding CanAnalyze}"
                     Click="SelectMediaFileButton_Click"
-                    Content="MP4-Datei auswählen" />
+                    Content="Videodatei laden" />
         </Grid>
 
         <Border Grid.Row="1"
