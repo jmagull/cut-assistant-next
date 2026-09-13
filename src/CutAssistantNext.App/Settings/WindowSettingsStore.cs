@@ -68,7 +68,7 @@ internal sealed class WindowSettingsStore
         }
     }
 
-    public void Save(
+    public bool Save(
         WindowSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
@@ -94,11 +94,14 @@ internal sealed class WindowSettingsStore
                 _settingsFilePath,
                 json,
                 Utf8WithoutBom);
+
+            return true;
         }
         catch
         {
             // Einstellungsfehler dürfen die Anwendung
             // nicht beeinträchtigen.
+            return false;
         }
     }
 

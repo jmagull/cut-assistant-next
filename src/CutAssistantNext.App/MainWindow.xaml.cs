@@ -36,6 +36,8 @@ public partial class MainWindow : Window
     private CutNamingState? _cutNamingState;
     private string? _lastSavedCutlistFilePath;
     private bool _cutlistUploadInProgress;
+    private bool _cutlistSearchInProgress;
+    private bool _mediaLoadInProgress;
 
     private Task? _mediaPlayerInitializationTask;
     private bool _isClosed;
@@ -246,7 +248,9 @@ public partial class MainWindow : Window
 
     private void SaveWindowSettings()
     {
-        var bounds = RestoreBounds;
+        var bounds = WindowState == System.Windows.WindowState.Normal
+            ? new Rect(0, 0, ActualWidth, ActualHeight)
+            : RestoreBounds;
 
         var width =
             double.IsFinite(bounds.Width) &&
@@ -260,7 +264,7 @@ public partial class MainWindow : Window
                 ? bounds.Height
                 : ActualHeight;
 
-        _windowSettingsStore.Save(
+        var saved = _windowSettingsStore.Save(
             new WindowSettings
             {
                 Width = width,
@@ -271,6 +275,17 @@ public partial class MainWindow : Window
                 Volume =
                     _playbackViewModel.Volume
             });
+
+        if (saved)
+        {
+            _logger.Information(
+                $"Fenstergröße gespeichert: {width:0.##} × {height:0.##} | " +
+                $"Fensterzustand: {WindowState}.");
+        }
+        else
+        {
+            _logger.Error("Die Fenstereinstellungen konnten nicht gespeichert werden.");
+        }
     }
 
     private void TimelineSlider_PreviewMouseLeftButtonDown(
@@ -1118,7 +1133,41 @@ public partial class MainWindow : Window
         dialog.ShowDialog();
     }
 
+    private async void LoadServerCutlistButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (_mediaLoadInProgress)
+        {
+            return;
+        }
+
+        await SearchCutlistsForCurrentMediaAsync();
+    }
+
     private async Task SearchCutlistsForCurrentMediaAsync(
+        bool skipIfNotConfigured = false)
+    {
+        if (_cutlistSearchInProgress)
+        {
+            return;
+        }
+
+        _cutlistSearchInProgress = true;
+        LoadServerCutlistButton.IsEnabled = false;
+
+        try
+        {
+            await SearchCutlistsForCurrentMediaCoreAsync(skipIfNotConfigured);
+        }
+        finally
+        {
+            _cutlistSearchInProgress = false;
+            LoadServerCutlistButton.IsEnabled = true;
+        }
+    }
+
+    private async Task SearchCutlistsForCurrentMediaCoreAsync(
         bool skipIfNotConfigured = false)
     {
         if (_viewModel.AnalysisResult is null)
@@ -1851,6 +1900,25 @@ public partial class MainWindow : Window
     private async void SelectMediaFileButton_Click(
         object sender,
         RoutedEventArgs e)
+    {
+        if (_cutlistSearchInProgress || _mediaLoadInProgress)
+        {
+            return;
+        }
+
+        _mediaLoadInProgress = true;
+
+        try
+        {
+            await SelectMediaFileAsync();
+        }
+        finally
+        {
+            _mediaLoadInProgress = false;
+        }
+    }
+
+    private async Task SelectMediaFileAsync()
     {
         var dialog = new OpenFileDialog
         {

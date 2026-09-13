@@ -84,8 +84,13 @@
                       Click="QuitMenuItem_Click" />
         </Menu>
 
-        <Grid Grid.Row="1"
-              Margin="24,18,24,18">
+        <ScrollViewer x:Name="MainContentScrollViewer"
+                      Grid.Row="1"
+                      Margin="24,18,24,18"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      CanContentScroll="False">
+        <Grid MinHeight="{Binding ViewportHeight, ElementName=MainContentScrollViewer}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -240,137 +245,131 @@
                                                    SelectedRemoveSegment="{Binding SelectedRemoveSegment, Mode=TwoWay}" />
                     </StackPanel>
 
-                    <Button Grid.Row="1"
-                            MinWidth="90"
-                            Height="36"
-                            Padding="14,0"
-                            IsEnabled="{Binding CanTogglePlayback}"
-                            Click="PlayButton_Click"
-                            Content="Play/Pause" />
+                    <WrapPanel Grid.Row="1" Grid.ColumnSpan="8">
+                        <Button
+                                MinWidth="90"
+                                Height="36"
+                                Padding="14,0"
+                                IsEnabled="{Binding CanTogglePlayback}"
+                                Click="PlayButton_Click"
+                                Content="Play/Pause" />
 
-                    <Button x:Name="StepBackwardFramesButton"
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            MinWidth="90"
-                            Height="36"
-                            Margin="10,0,0,0"
-                            Padding="14,0"
-                            IsEnabled="{Binding CanStepFrame}"
-                            Click="StepBackwardFramesButton_Click"
-                            Content="−10 Bilder" />
+                        <Button x:Name="StepBackwardFramesButton"
+                                MinWidth="90"
+                                Height="36"
+                                Margin="0,0,10,8"
+                                Padding="14,0"
+                                IsEnabled="{Binding CanStepFrame}"
+                                Click="StepBackwardFramesButton_Click"
+                                Content="−10 Bilder" />
 
-                    <Button Grid.Row="1"
-                            Grid.Column="2"
-                            MinWidth="110"
-                            Height="36"
-                            Margin="10,0,0,0"
-                            Padding="14,0"
-                            IsEnabled="{Binding CanStepFrame}"
-                            Click="StepBackwardButton_Click"
-                            Content="Bild zurück" />
+                        <Button
+                                MinWidth="110"
+                                Height="36"
+                                Margin="0,0,10,8"
+                                Padding="14,0"
+                                IsEnabled="{Binding CanStepFrame}"
+                                Click="StepBackwardButton_Click"
+                                Content="Bild zurück" />
 
-                    <Button Grid.Row="1"
-                            Grid.Column="3"
-                            MinWidth="110"
-                            Height="36"
-                            Margin="10,0,0,0"
-                            Padding="14,0"
-                            IsEnabled="{Binding CanStepFrame}"
-                            Click="StepForwardButton_Click"
-                            Content="Bild vor" />
+                        <Button
+                                MinWidth="110"
+                                Height="36"
+                                Margin="0,0,10,8"
+                                Padding="14,0"
+                                IsEnabled="{Binding CanStepFrame}"
+                                Click="StepForwardButton_Click"
+                                Content="Bild vor" />
 
-                    <Button x:Name="StepForwardFramesButton"
-                            Grid.Row="1"
-                            Grid.Column="4"
-                            MinWidth="90"
-                            Height="36"
-                            Margin="10,0,0,0"
-                            Padding="14,0"
-                            IsEnabled="{Binding CanStepFrame}"
-                            Click="StepForwardFramesButton_Click"
-                            Content="+10 Bilder" />
+                        <Button x:Name="StepForwardFramesButton"
+                                MinWidth="90"
+                                Height="36"
+                                Margin="0,0,10,8"
+                                Padding="14,0"
+                                IsEnabled="{Binding CanStepFrame}"
+                                Click="StepForwardFramesButton_Click"
+                                Content="+10 Bilder" />
 
-                    <StackPanel Grid.Row="1"
-                                Grid.Column="6"
-                                Margin="20,0,20,0"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                Orientation="Horizontal">
-                        <TextBlock Margin="0,0,10,0"
-                                   VerticalAlignment="Center"
-                                   FontWeight="SemiBold"
-                                   Foreground="#4B5563"
-                                   Text="Lautstärke" />
-
-                        <Slider x:Name="VolumeSlider"
-                                Width="180"
-                                Minimum="0"
-                                Maximum="100"
-                                TickFrequency="5"
-                                IsSnapToTickEnabled="False"
-                                IsEnabled="{Binding CanSetVolume}"
-                                Value="{Binding Volume, Mode=OneWay}"
-                                ValueChanged="VolumeSlider_ValueChanged" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="1"
-                                Grid.Column="7"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center">
-                        <StackPanel HorizontalAlignment="Right"
-                                    Orientation="Horizontal">
-
-                            <TextBlock Width="55"
-                                       Margin="0,0,18,0"
-                                       VerticalAlignment="Center"
-                                       FontFamily="Consolas"
-                                       FontWeight="SemiBold"
-                                       TextAlignment="Right"
-                                       Text="{Binding VolumeText}" />
-
-                            <TextBlock Margin="0,0,6,0"
-                                       FontSize="15"
-                                       Foreground="#6B7280"
-                                       Text="Position:" />
-
-                            <TextBlock FontFamily="Consolas"
-                                       FontSize="15"
-                                       FontWeight="SemiBold"
-                                       Text="{Binding PositionText}" />
-
-                            <TextBlock Margin="6,0"
-                                       FontSize="15"
-                                       Foreground="#6B7280"
-                                       Text="/" />
-
-                            <TextBlock FontFamily="Consolas"
-                                       FontSize="15"
-                                       FontWeight="SemiBold"
-                                       Text="{Binding DurationText}" />
-                        </StackPanel>
-
-                        <StackPanel Margin="0,3,0,0"
+                        <StackPanel
+                                    Margin="0,0,20,8"
                                     HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
                                     Orientation="Horizontal">
-                            <TextBlock Margin="0,0,6,0"
-                                       FontSize="13"
-                                       Foreground="#6B7280"
-                                       Text="Geschnitten:" />
-
-                            <TextBlock FontFamily="Consolas"
-                                       FontSize="13"
+                            <TextBlock Margin="0,0,10,0"
+                                       VerticalAlignment="Center"
                                        FontWeight="SemiBold"
-                                       Text="{Binding DataContext.EstimatedOutputDurationText,
-                                           ElementName=CutTimelineTrack}" />
+                                       Foreground="#4B5563"
+                                       Text="Lautstärke" />
+
+                            <Slider x:Name="VolumeSlider"
+                                    Width="180"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    TickFrequency="5"
+                                    IsSnapToTickEnabled="False"
+                                    IsEnabled="{Binding CanSetVolume}"
+                                    Value="{Binding Volume, Mode=OneWay}"
+                                    ValueChanged="VolumeSlider_ValueChanged" />
                         </StackPanel>
 
-                        <TextBlock Margin="0,3,0,0"
-                                   HorizontalAlignment="Right"
-                                   FontFamily="Consolas"
-                                   FontSize="13"
-                                   Foreground="#6B7280"
-                                   Text="{Binding FrameText}" />
-                    </StackPanel>
+                        <StackPanel
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center">
+                            <StackPanel HorizontalAlignment="Right"
+                                        Orientation="Horizontal">
+
+                                <TextBlock Width="55"
+                                           Margin="0,0,18,0"
+                                           VerticalAlignment="Center"
+                                           FontFamily="Consolas"
+                                           FontWeight="SemiBold"
+                                           TextAlignment="Right"
+                                           Text="{Binding VolumeText}" />
+
+                                <TextBlock Margin="0,0,6,0"
+                                           FontSize="15"
+                                           Foreground="#6B7280"
+                                           Text="Position:" />
+
+                                <TextBlock FontFamily="Consolas"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Text="{Binding PositionText}" />
+
+                                <TextBlock Margin="6,0"
+                                           FontSize="15"
+                                           Foreground="#6B7280"
+                                           Text="/" />
+
+                                <TextBlock FontFamily="Consolas"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Text="{Binding DurationText}" />
+                            </StackPanel>
+
+                            <StackPanel Margin="0,3,0,0"
+                                        HorizontalAlignment="Right"
+                                        Orientation="Horizontal">
+                                <TextBlock Margin="0,0,6,0"
+                                           FontSize="13"
+                                           Foreground="#6B7280"
+                                           Text="Geschnitten:" />
+
+                                <TextBlock FontFamily="Consolas"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Text="{Binding DataContext.EstimatedOutputDurationText,
+                                               ElementName=CutTimelineTrack}" />
+                            </StackPanel>
+
+                            <TextBlock Margin="0,3,0,0"
+                                       HorizontalAlignment="Right"
+                                       FontFamily="Consolas"
+                                       FontSize="13"
+                                       Foreground="#6B7280"
+                                       Text="{Binding FrameText}" />
+                        </StackPanel>
+                    </WrapPanel>
                 </Grid>
             </Grid>
         </Border>
@@ -468,52 +467,69 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <WrapPanel Grid.Row="3"
-                           Margin="0,12,0,0">
-                    <Button MinWidth="150"
-                            Height="36"
-                            Padding="14,0"
-                            IsEnabled="{Binding CanModifySelectedSegment}"
-                            Click="RemoveCutSegmentButton_Click"
-                            Content="Bereich löschen" />
+                <DockPanel Grid.Row="3"
+                           Margin="0,12,0,0"
+                           LastChildFill="True">
+                    <StackPanel DockPanel.Dock="Right"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Top"
+                                Margin="12,0,0,0">
+                        <Button MinWidth="110"
+                                Height="36"
+                                Padding="10,0"
+                                Click="NamingSettingsButton_Click"
+                                Content="Namensmaske" />
 
-                    <Button MinWidth="170"
-                            Height="36"
-                            Margin="10,0,0,0"
-                            Padding="14,0"
-                            Click="GenerateCutlistButton_Click"
-                            Content="Cutlist erzeugen …" />
+                        <Button MinWidth="100"
+                                Height="36"
+                                Margin="8,0,0,0"
+                                Padding="10,0"
+                                Click="CutOutputButton_Click"
+                                Content="Schneiden" />
+                    </StackPanel>
 
-                    <Button MinWidth="170"
-                            Height="36"
-                            Margin="10,0,0,0"
-                            Padding="14,0"
-                            Click="UploadCutlistButton_Click"
-                            Content="Cutlist auf Server hochladen …" />
+                    <WrapPanel>
+                        <Button MinWidth="110"
+                                Height="36"
+                                Margin="0,0,8,6"
+                                Padding="10,0"
+                                IsEnabled="{Binding CanModifySelectedSegment}"
+                                Click="RemoveCutSegmentButton_Click"
+                                Content="Bereich löschen" />
 
-                    <Button MinWidth="170"
-                            Height="36"
-                            Margin="10,0,0,0"
-                            Padding="14,0"
-                            Click="LoadCutlistButton_Click"
-                            Content="Lokale Cutlist laden …" />
+                        <Button MinWidth="110"
+                                Height="36"
+                                Margin="0,0,8,6"
+                                Padding="10,0"
+                                Click="GenerateCutlistButton_Click"
+                                Content="Cutlist erzeugen" />
 
-                    <Button MinWidth="170"
-                            Height="36"
-                            Margin="10,0,0,0"
-                            Padding="14,0"
-                            Click="NamingSettingsButton_Click"
-                            Content="Namensmaske …" />
+                        <Button MinWidth="170"
+                                Height="36"
+                                Margin="0,0,8,6"
+                                Padding="10,0"
+                                Click="UploadCutlistButton_Click"
+                                Content="Cutlist auf Server hochladen" />
 
-                    <Button MinWidth="170"
-                            Height="36"
-                            Margin="10,0,0,0"
-                            Padding="14,0"
-                            Click="CutOutputButton_Click"
-                            Content="Schneiden …" />
-                </WrapPanel>
+                        <Button MinWidth="130"
+                                Height="36"
+                                Margin="0,0,8,6"
+                                Padding="10,0"
+                                Click="LoadCutlistButton_Click"
+                                Content="Lokale Cutlist laden" />
+
+                        <Button x:Name="LoadServerCutlistButton"
+                                MinWidth="160"
+                                Height="36"
+                                Margin="0,0,8,6"
+                                Padding="10,0"
+                                Click="LoadServerCutlistButton_Click"
+                                Content="Cutlist vom Server laden" />
+                    </WrapPanel>
+                </DockPanel>
             </Grid>
         </Border>
     </Grid>
+        </ScrollViewer>
     </Grid>
 </Window>

@@ -1,5 +1,19 @@
 # Projektstatus
 
+## UX-Ergänzung am 13.09.2026
+
+- Rückmeldung: Fenstergröße wird ohne geladenes Video nicht zuverlässig wiederhergestellt. Beim Speichern werden für normale Fenster jetzt ActualWidth/ActualHeight verwendet; für maximierte/minimierte Fenster weiterhin RestoreBounds. Speichererfolg oder -fehler wird protokolliert. Live bestätigt: Größenänderung, Schließen ohne Videoladen und Wiederherstellung beim Neustart funktionieren. Die ursprüngliche Ursache wurde nicht abschließend reproduziert. Ergänzte Tests prüfen den Einstellungs-Rundlauf ohne Wiedergabedaten und einen Schreibfehler. Build ohne Fehler/Warnungen, 402/402 Tests bestanden.
+
+- Die untere Aktionsleiste bietet nach „Lokale Cutlist laden“ den Button „Cutlist vom Server laden“.
+- Er startet für die aktuell geladene Mediendatei erneut die vorhandene Serversuche mit demselben Treffer-Dialog und Download-/Ladeweg wie beim Öffnen einer Mediendatei. Auch nach Abbruch oder Ablehnen einer Cutlist kann erneut gesucht werden.
+- Gleichzeitige Serversuchen und ein Dateiwechsel während der Suche werden verhindert.
+- „Namensmaske“ und „Schneiden“ stehen rechts. Die Buttons sind kompakter und ohne Auslassungspunkte; bei schmalen Fenstern bricht die linke Gruppe um.
+- Live bestätigt: Wechsel zwischen zwei Server-Cutlists ohne erneutes Öffnen der MP4, aktualisierte Schnittzeiten und Übernahme des Namensvorschlags. Der Button-Umbruch bei schmalen Fenstern funktioniert.
+- Bei kurzen Fenstern wurde die Schnittliste durch die feste Player-Höhe aus dem sichtbaren Bereich gedrückt. Der Hauptbereich hat jetzt eine automatische vertikale Scrollleiste, damit die unteren Aktionen erreichbar bleiben. Im Live-Test bestätigt.
+- Release-Build: 0 Warnungen, 0 Fehler. Tests einschließlich der ergänzten Einstellungsprüfungen: 402/402 bestanden.
+- Live bestätigt: flüssiges Scrollen bis zu allen unteren Buttons sowie Wiederherstellung der letzten Fenstergröße.
+- Zwei dabei sichtbare Folgefehler sind korrigiert: Das native Videofenster wird über eine Windows-Fensterregion auf den Scroll-Anzeigebereich begrenzt (einschließlich DPI-Skalierung); die Player-Bedienelemente einschließlich Lautstärke und Zeitangaben können bei geringer Breite umbrechen. Beide Korrekturen sind im Live-Test bestätigt: Die Menüleiste bleibt frei und die Zeitangaben sind vollständig sichtbar.
+
 ## Aktueller Stand
 
 Stand: 11.09.2026

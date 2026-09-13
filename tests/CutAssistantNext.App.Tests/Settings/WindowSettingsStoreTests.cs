@@ -5,6 +5,50 @@ namespace CutAssistantNext.App.Tests.Settings;
 
 public sealed class WindowSettingsStoreTests
 {
+    [Theory]
+    [InlineData(820, 640, false)]
+    [InlineData(1280, 900, true)]
+    public void SaveAndLoad_WithoutPlayback_PreservesWindowSize(
+        double width, double height, bool maximized)
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
+        try
+        {
+            var store = new WindowSettingsStore(path);
+            Assert.True(store.Save(new WindowSettings
+            {
+                Width = width,
+                Height = height,
+                IsMaximized = maximized
+            }));
+
+            var saved = Assert.IsType<WindowSettings>(store.Load());
+            Assert.Equal(width, saved.Width);
+            Assert.Equal(height, saved.Height);
+            Assert.Equal(maximized, saved.IsMaximized);
+            Assert.Null(saved.Volume);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void Save_WhenParentIsAFile_ReportsFailure()
+    {
+        var path = Path.GetTempFileName();
+        try
+        {
+            var store = new WindowSettingsStore(Path.Combine(path, "settings.json"));
+            Assert.False(store.Save(new WindowSettings { Width = 900, Height = 700 }));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
     [Fact]
     public void Load_OldSettingsWithoutVolume_LeavesVolumeUnset()
     {
