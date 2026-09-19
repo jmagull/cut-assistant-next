@@ -2,7 +2,7 @@
 
 Cut Assistant Next (CAN) ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box. Die Oberfläche verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codec-Pakete vorauszusetzen.
 
-Stand: 13.09.2026. CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer.
+Stand: 19.09.2026. CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer.
 
 ## Einstieg
 
@@ -20,6 +20,8 @@ Stand: 13.09.2026. CAN ist weiterhin ein Proof of Concept mit experimenteller Un
 - Cutlists lokal laden, erzeugen und speichern.
 - Passende Server-Cutlists automatisch suchen und die Suche erneut per Button öffnen.
 - Lokal gespeicherte Cutlists nach Bestätigung auf den konfigurierten Server hochladen.
+- Fremde Cutlists als Vorlage verwenden, deren Namensvorschlag bewusst beibehalten oder neu erzeugen und die Herkunft bei abweichendem Autor im Kommentar dokumentieren.
+- Schnittzeiten einheitlich anzeigen und die Namensvorschau markieren und kopieren.
 - Ausgabenamen über Namensmasken und Cutlist-Namensvorschläge vorbereiten.
 - MP4-Inhalte direkt mit MP4Box schneiden, auch bei abweichender Dateiendung.
 - Andere Container nach Bestätigung experimentell mit FFmpeg verlustfrei nach MP4 umpacken und anschließend mit MP4Box schneiden.
@@ -33,6 +35,8 @@ Die reine Cutlist-Erstellung benötigt keine Video-Umwandlung. Erst beim Schneid
 MP4 ist ein Container, keine Bezeichnung für einen bestimmten Videocodec. Ob sich ein anderes Format verlustfrei vorbereiten lässt, hängt von seinen Streams ab. CAN verwendet Stream-Copy und führt keine automatische Neukodierung durch. Ungeeignete Dateien oder deutliche Abweichungen werden mit einer Fehlermeldung gestoppt.
 
 Die Prüfung der Arbeitsdatei ist eine Plausibilitätsprüfung anhand der Medieninformationen. Sie ersetzt nicht die Kontrolle der Schnittstellen und der Ton-Synchronität. Smart Rendering, Stapelverarbeitung, integrierte mehrteilige Aufnahmen sowie Installer/portable Veröffentlichung sind noch nicht umgesetzt.
+
+Insbesondere bei historischen AVI-Dateien können bereits im Original Probleme mit Zeitstempeln, Bildaktualisierung oder Ton-Synchronität auftreten. Eine irreführende Dateiendung wie `.avi.mp4` ändert nichts am tatsächlich erkannten Container. Für solche Fälle sind weitere Praxistests und ein deutlicherer Warnhinweis vorgesehen.
 
 ## Für Anwender
 
@@ -71,7 +75,7 @@ Die inhaltliche Version steht zentral in `Version.props`: Patch für Korrekturen
 | `src/CutAssistantNext.Cutlists` | Cutlist-Import, Export, Metadaten und Bereichsumrechnung |
 | `tests` | vier automatisierte Testsuiten |
 | `samples` | kleine Referenzdaten |
-| `tools` | Einrichtung von libmpv |
+| `tools` | Einrichtung von libmpv und versionierte Builds |
 | `docs` | Anleitung, Status, Testplan und technische Dokumentation |
 
-Letzter bestätigter Stand: Release-Build ohne Fehler oder Warnungen, **443/443 Tests bestanden**. Die Diplomatin und Rubikon wurden mit jeweils zwei Cutlists im integrierten AVI-Ablauf erfolgreich geschnitten und vom Nutzer im Player geprüft. Einzelheiten und Einschränkungen stehen im [Testplan](docs/TESTPLAN.md).
+Letzter bestätigter Stand (19.09.2026): **450/450 automatisierte Tests bestanden**, Debug-Build erfolgreich. Der zuvor geprüfte Release-Build mit 443 Tests war fehler- und warnungsfrei; ein erneuter Release-Build mit 450 Tests steht noch aus. P1 zur Cutlist-Bedienung ist abgeschlossen. Diplomatin, Rubikon und Enigma wurden im integrierten AVI-Ablauf erfolgreich geschnitten und praktisch geprüft. Die AVI-Unterstützung bleibt experimentell. Einzelheiten, Auffälligkeiten und Einschränkungen stehen im [Testplan](docs/TESTPLAN.md).

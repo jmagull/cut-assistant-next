@@ -49,14 +49,26 @@
 - `CutlistFileWriter` einschließlich UTF-8 ohne BOM, CRLF-Zeilenenden und Umlauten
 - `CutlistParser` einschließlich des Einlesens klassischer Cutlist-Strukturen
 - `CutlistFileReader` einschließlich UTF-8 und historischem Windows-1252-/ANSI-Fallback
+- `CutlistGenerationViewModel` einschließlich Herkunftsübernahme, Duplikatschutz, fehlendem beziehungsweise eigenem Autor und Erhalt vorhandener Benutzerkommentare
 
-Aktueller vollständiger Testlauf: **443 von 443 Tests erfolgreich**.
+Aktueller vollständiger Testlauf vom 19.09.2026: **450 von 450 Tests erfolgreich** (Debug-Build). Ein erneuter Release-Testlauf mit diesem Stand steht noch aus.
 
 Zusätzlich wurde die lokale Cutlist-Dateiausgabe in einem Smoke-Test praktisch geprüft. Dabei wurde eine vollständige `.cutlist`-Datei erzeugt und anschließend explizit als UTF-8 eingelesen; auch Umlaute wurden korrekt erhalten.
 
 Cutlist-Reader und Parser sind umgesetzt und automatisiert getestet. Beim Einlesen wird zunächst UTF-8 verwendet; historische Windows-1252-/ANSI-Cutlists werden als Kompatibilitätsfall unterstützt.
 
-## Integrierter AVI-Ablauf und UI – Stand 13.09.2026
+## P1 – Cutlist-Bedienung, praktisch abgenommen am 19.09.2026
+
+| Prüfung | Ergebnis |
+|---|---|
+| Fremde Namensvorschau übernehmen | Ursprünglicher Vorschlag bleibt beim Ändern der Namensfelder erhalten |
+| „Aus obigen Eingaben neu erzeugen“ | Bewusste Umschaltung auf die eigene Namensmaske funktioniert; danach aktualisiert sich die Vorschau |
+| Herkunftshinweis bei Fremdautor | Wird automatisch ergänzt; eigener Autor bleibt erhalten |
+| Wiederholtes Öffnen und fehlender Autor | Keine doppelten Hinweise und keine leeren Herkunftsangaben |
+| Zeitdarstellung | Anfang, Ende und Dauer einheitlich mit drei Nachkommastellen |
+| Namensvorschau kopieren | Markierung und Strg+C praktisch geprüft; Vorschau aktualisiert sich weiterhin bei Änderungen |
+
+## Integrierter AVI-Ablauf und UI – Stand 19.09.2026
 
 | Prüfung | Ergebnis / Stand |
 |---|---|
@@ -71,8 +83,10 @@ Cutlist-Reader und Parser sind umgesetzt und automatisiert getestet. Beim Einles
 | Leerer ColdCut-Endmarker | Import-/Schnittplan-/Roundtrip-Tests mit Diplomatin-Werten bestanden; separater Live-Nachweis des konkreten Originaleintrags nicht festgehalten |
 | Künstliche AVI ohne Ton, AVI mit MP3 und H.264/AAC-MKV | Remux und Metadatenprüfung technisch ausgeführt und bestanden |
 | Vorhandene Remux-Zieldatei / vorab abgebrochener Auftrag | Im technischen Integrationstest abgewiesen |
+| Enigma AVI, H.264/MP3, 25 fps | Remux und MP4Box-Schnitt erfolgreich; praktische Filmkontrolle und Decoderlauf mit normalisierten Ausgabezeitstempeln bestanden; PTS-/DTS-Auffälligkeiten dokumentiert |
+| Wo die Liebe hinfällt, Full-HD-AVI mit Endung `.avi.mp4` | Bildfehler und fehlerhafte Bildaktualisierung bei Frame-Sprüngen in CAN beobachtet; Tonversatz in MPC-HC berichtet; kein erfolgreicher Schnittnachweis |
 
-Die aktuellen automatisierten Suiten umfassen 40 Core-, 65 Cutlists-, 86 Media- und 252 App-Tests: insgesamt 443. Es sind keine vollständigen automatisierten GUI- oder Video-Synchronitätstests.
+Der letzte vollständige automatisierte Testlauf umfasst 450 erfolgreiche Tests. Die frühere Aufschlüsselung auf die vier Testsuiten bezog sich auf den Stand mit 443 Tests und wurde für diesen Dokumentationsstand nicht erneut einzeln erhoben. Vollständige automatisierte GUI- oder Video-Synchronitätstests sind nicht nachgewiesen.
 
 ### Weitere manuelle Fehler- und Grenzfallprüfungen
 

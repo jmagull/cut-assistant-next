@@ -1,6 +1,6 @@
 # Nutzeranleitung – Cut Assistant Next
 
-Stand: 13.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand: 19.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
 Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, zum Beispiel **Cut Assistant Next · 0.2.0 · Build 1**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
 
@@ -61,6 +61,8 @@ CAN markiert **Bereiche, die entfernt werden sollen**. Die roten Abschnitte der 
 
 Mit **Videoanfang** bzw. **Videoende** kannst du die entsprechende Dateigrenze verwenden. Bestehende Bereiche lassen sich in der Tabelle oder Timeline auswählen und korrigieren. **Bereich löschen** entfernt die ausgewählte Markierung aus dem Schnittplan; es löscht keine Videodatei.
 
+Ein Klick auf einen Schnittbereich wählt ihn aus und hebt ihn hervor. Ein erneuter Klick auf denselben Bereich hebt die Auswahl wieder auf. In der Schnittliste werden Anfang, Ende und Dauer einheitlich als Stunden:Minuten:Sekunden mit drei Nachkommastellen dargestellt. Die interne Genauigkeit der Schnittmarken wird dadurch nicht verändert.
+
 Play/Pause, Zeitleiste, **−10 Bilder**, **Bild zurück**, **Bild vor** und **+10 Bilder** helfen bei der Positionierung. Einzelbildschritte sind im pausierten Zustand verfügbar. Tastatur: Leertaste für Play/Pause, Pfeil links/rechts für ein Bild, Strg+Pfeil links/rechts für zehn Bilder.
 
 Die Anzeige **Geschnitten** ist eine Vorschau der geplanten Ausgabelaufzeit. Prüfe das tatsächliche Schnittergebnis im Player; Schnittmotor und Videostruktur können die exakten Grenzen beeinflussen.
@@ -72,6 +74,18 @@ Mit **Cutlist erzeugen** öffnest du den Erstellungsdialog. Prüfe die Metadaten
 Dafür muss das Video nicht geschnitten oder nach MP4 vorbereitet werden. CAN kann somit auch ausschließlich zum Erstellen und Korrigieren von Cutlists verwendet werden.
 
 Das klassische Cutlist-Format beschreibt die zu behaltenden Abschnitte. CAN rechnet seine Entfernbereiche beim Erzeugen entsprechend um. Der Bezug zur Originaldatei bleibt bestehen.
+
+### Fremde Cutlists als Vorlage verwenden
+
+Cut Assistant Next ermöglicht es, vorhandene Schnittpunkte schnell zu kontrollieren und bei Bedarf framegenau nach den eigenen Vorstellungen nachzuarbeiten.
+
+Wenn du aus einer fremden Cutlist eine eigene Fassung erzeugst, bleibt deren vorgeschlagener Filmname zunächst in der Namensvorschau erhalten. Änderungen an den Namensfeldern überschreiben diesen Vorschlag nicht automatisch. Erst mit **Aus obigen Eingaben neu erzeugen** wechselst du bewusst zur eigenen Namensmaske. Anschließend berücksichtigt die Vorschau die aktuellen Eingaben.
+
+Die Namensvorschau lässt sich markieren und mit **Strg+C** kopieren.
+
+Bei einer Vorlage mit einem anderen Autor ergänzt CAN den Kommentar der neu erzeugten Cutlist um einen Herkunftshinweis, beispielsweise „Vorlage von KukiDent“. Dein eigener Autor bleibt erhalten. Bei fehlendem oder identischem Vorlagenautor wird kein Herkunftshinweis ergänzt; doppelte Angaben werden vermieden.
+
+Prüfe Schnittpunkte, Filmnamen, Bewertung und Kommentar vor dem Speichern. Wenn du deine Fassung veröffentlichen möchtest, speichere sie zunächst lokal und lade anschließend diese eigene Version hoch.
 
 ## 6. Video schneiden
 
@@ -151,3 +165,9 @@ Unter **Credits** findest du die Danksagung mit Links zu den beteiligten Projekt
 Der integrierte AVI-Ablauf wurde mit **Die Diplomatin – Tod einer Nonne** und **Rubikon**, jeweils OTR-HD-AVI, mit jeweils zwei Cutlists erfolgreich geprüft. Die ausgegebenen MP4-Dateien enthielten H.264 mit 1280×720 bei 50 fps sowie MP3-Stereoton. Der Nutzer bestätigte Schnittgrenzen und Ton-Synchronität.
 
 Das sind konkrete Beispiele, keine Garantie für alle historischen AVI-, MKV- oder sonstigen Codec-Kombinationen. Weitere technische Prüfergebnisse stehen im [Testplan](TESTPLAN.md), die genauen aktuellen Toleranzen im [Projektstatus](STATUS.md).
+
+Ein weiterer Praxistest mit „Enigma – Das Geheimnis“ (AVI, H.264/MP3, 25 fps) führte erfolgreich über FFmpeg-Vorbereitung und MP4Box-Schnitt zur fertigen MP4. Anfang, Mitte, Ende, Abspann und Ton wurden kontrolliert. Dabei aufgetretene Zeitstempel-Auffälligkeiten sind im Testplan dokumentiert.
+
+Bei einer anderen Full-HD-Aufnahme („Wo die Liebe hinfällt“) wurden dagegen bereits bei der Wiedergabe und Frame-Navigation Auffälligkeiten festgestellt. Die Datei besitzt einen AVI-Container, obwohl ihr Name auf `.avi.mp4` endet. Für diese Aufnahme liegt keine erfolgreiche Schnittabnahme vor.
+
+Besonders bei solchen älteren AVI-Aufnahmen können Bild-, Ton- oder Navigationsprobleme schon in der unveränderten Originaldatei vorliegen. CAN verändert das Original beim Einlesen nicht. Kontrolliere vor dem Schneiden die Wiedergabe und anschließend das tatsächliche Schnittergebnis sorgfältig.
