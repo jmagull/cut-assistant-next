@@ -56,33 +56,93 @@ public sealed class ConfiguredFfprobeRunnerTests
     [Fact]
     public async Task RunAsync_RejectsMissingFfprobeConfiguration()
     {
-        var runnerFactoryCalled =
-            false;
+        var root = Path.Combine(
+            Path.GetTempPath(),
+            "can-missing-ffprobe-" +
+            Guid.NewGuid().ToString("N"));
 
-        var runner =
-            new ConfiguredFfprobeRunner(
+        Directory.CreateDirectory(root);
+
+        try
+        {
+            var resolver = new ToolPathResolver(root);
+
+            var runnerFactoryCalled = false;
+
+            var runner = new ConfiguredFfprobeRunner(
                 () => FfmpegSettings.CreateDefault(),
                 path =>
                 {
-                    runnerFactoryCalled =
-                        true;
+                    runnerFactoryCalled = true;
 
                     return new RecordingMediaAnalysisRunner();
-                });
+                },
+                resolver);
 
-        var exception =
-            await Assert.ThrowsAsync<InvalidOperationException>(
-                () => runner.RunAsync(
-                    "example.mp4"));
+            var exception =
+                await Assert.ThrowsAsync<InvalidOperationException>(
+                    () => runner.RunAsync("example.mp4"));
 
-        Assert.Contains(
-            "ffprobe",
-            exception.Message,
-            StringComparison.OrdinalIgnoreCase);
+            Assert.Contains(
+                "ffprobe",
+                exception.Message,
+                StringComparison.OrdinalIgnoreCase);
 
-        Assert.False(
-            runnerFactoryCalled);
+            Assert.False(runnerFactoryCalled);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
     }
+
+    [Fact]
+    public async Task RunAsync_UsesBundledFfprobeWhenConfigurationIsEmpty()
+    {
+        var root = Path.Combine(
+            Path.GetTempPath(),
+            "can-ffprobe-tests-" +
+            Guid.NewGuid().ToString("N"));
+
+        try
+        {
+            var resolver = new ToolPathResolver(root);
+
+            var bundledPath = resolver.GetBundledPath(
+                BundledToolKind.Ffprobe);
+
+            Directory.CreateDirectory(
+                Path.GetDirectoryName(bundledPath)!);
+
+            File.WriteAllText(
+                bundledPath,
+                string.Empty);
+
+            string? usedPath = null;
+
+            var runner = new ConfiguredFfprobeRunner(
+                () => FfmpegSettings.CreateDefault(),
+                path =>
+                {
+                    usedPath = path;
+
+                    return new RecordingMediaAnalysisRunner();
+                },
+                resolver);
+
+            await runner.RunAsync("example.mp4");
+
+            Assert.Equal(bundledPath, usedPath);
+        }
+        finally
+        {
+            if (Directory.Exists(root))
+            {
+                Directory.Delete(root, recursive: true);
+            }
+        }
+    }
+
     private sealed class RecordingMediaAnalysisRunner :
         IMediaAnalysisRunner
     {

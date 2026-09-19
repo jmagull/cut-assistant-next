@@ -54,6 +54,28 @@
                              Padding="8,4"
                              Text="{Binding FfprobeExecutablePath, UpdateSourceTrigger=PropertyChanged}" />
 
+                    <TextBlock Grid.Column="0"
+                               Margin="9,0,9,0"
+                               VerticalAlignment="Center"
+                               Foreground="#9CA3AF"
+                               IsHitTestVisible="False"
+                               TextTrimming="CharacterEllipsis"
+                               Text="{Binding BundledFfprobeExecutablePath}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FfprobeExecutablePath}"
+                                                 Value="">
+                                        <Setter Property="Visibility"
+                                                Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
                     <Button Grid.Column="2"
                             MinWidth="110"
                             Height="32"
@@ -78,6 +100,28 @@
                              Height="32"
                              Padding="8,4"
                              Text="{Binding FfmpegExecutablePath, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <TextBlock Grid.Column="0"
+                               Margin="9,0,9,0"
+                               VerticalAlignment="Center"
+                               Foreground="#9CA3AF"
+                               IsHitTestVisible="False"
+                               TextTrimming="CharacterEllipsis"
+                               Text="{Binding BundledFfmpegExecutablePath}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding FfmpegExecutablePath}"
+                                                 Value="">
+                                        <Setter Property="Visibility"
+                                                Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
 
                     <Button Grid.Column="2"
                             MinWidth="110"

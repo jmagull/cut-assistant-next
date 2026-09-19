@@ -51,36 +51,96 @@ public sealed class ConfiguredMp4BoxCutServiceFactoryTests
     }
 
     [Fact]
-    public void Create_RejectsMissingCutApplicationConfiguration()
+    public void Create_RejectsMissingBundledMp4Box()
     {
-        var runnerFactoryCalled =
-            false;
+        var root = Path.Combine(
+            Path.GetTempPath(),
+            "can-missing-mp4box-" +
+            Guid.NewGuid().ToString("N"));
 
-        var factory =
-            new ConfiguredMp4BoxCutServiceFactory(
-                () => CutApplicationSettings.CreateDefault(),
-                path =>
-                {
-                    runnerFactoryCalled =
-                        true;
+        Directory.CreateDirectory(root);
 
-                    return new RecordingMp4BoxRunner();
-                });
+        try
+        {
+            var resolver = new ToolPathResolver(root);
 
-        var exception =
-            Assert.Throws<InvalidOperationException>(
-                () =>
-                {
-                    _ = factory.Create();
-                });
+            var runnerFactoryCalled = false;
 
-        Assert.Contains(
-            "Schnittanwendung",
-            exception.Message,
-            StringComparison.OrdinalIgnoreCase);
+            var factory =
+                new ConfiguredMp4BoxCutServiceFactory(
+                    () => CutApplicationSettings.CreateDefault(),
+                    path =>
+                    {
+                        runnerFactoryCalled = true;
 
-        Assert.False(
-            runnerFactoryCalled);
+                        return new RecordingMp4BoxRunner();
+                    },
+                    resolver);
+
+            var exception =
+                Assert.Throws<InvalidOperationException>(
+                    () => factory.Create());
+
+            Assert.Contains(
+                "MP4Box.exe",
+                exception.Message,
+                StringComparison.OrdinalIgnoreCase);
+
+            Assert.False(runnerFactoryCalled);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Create_UsesBundledMp4BoxWhenConfigurationIsEmpty()
+    {
+        var root = Path.Combine(
+            Path.GetTempPath(),
+            "can-bundled-mp4box-" +
+            Guid.NewGuid().ToString("N"));
+
+        Directory.CreateDirectory(root);
+
+        try
+        {
+            var resolver = new ToolPathResolver(root);
+
+            var bundledPath = resolver.GetBundledPath(
+                BundledToolKind.Mp4Box);
+
+            Directory.CreateDirectory(
+                Path.GetDirectoryName(bundledPath)!);
+
+            File.WriteAllText(
+                bundledPath,
+                string.Empty);
+
+            string? usedPath = null;
+
+            var factory =
+                new ConfiguredMp4BoxCutServiceFactory(
+                    () => CutApplicationSettings.CreateDefault(),
+                    path =>
+                    {
+                        usedPath = path;
+
+                        return new RecordingMp4BoxRunner();
+                    },
+                    resolver);
+
+            _ = factory.Create();
+
+            Assert.Equal(
+                bundledPath,
+                usedPath);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
     }
 
     [Fact]

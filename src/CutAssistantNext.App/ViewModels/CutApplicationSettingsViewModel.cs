@@ -13,9 +13,16 @@ internal sealed class CutApplicationSettingsViewModel :
     private string _options;
 
     internal CutApplicationSettingsViewModel(
-        CutApplicationSettings settings)
+        CutApplicationSettings settings,
+        ToolPathResolver? resolver = null)
     {
         ArgumentNullException.ThrowIfNull(settings);
+
+        resolver ??= new ToolPathResolver();
+
+        BundledMp4BoxExecutablePath =
+            resolver.GetBundledPath(
+                BundledToolKind.Mp4Box);
 
         _name =
             settings.Name;
@@ -31,6 +38,8 @@ internal sealed class CutApplicationSettingsViewModel :
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    public string BundledMp4BoxExecutablePath { get; }
 
     public string Name
     {

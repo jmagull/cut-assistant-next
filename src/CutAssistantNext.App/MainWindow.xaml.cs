@@ -1136,10 +1136,31 @@ public partial class MainWindow : Window
                         if (requiresPreparation)
                         {
                             temporaryVideo = Path.Combine(Path.GetTempPath(), $"can-{Guid.NewGuid():N}.mp4");
-                            var tools = new FfmpegSettingsStore().Load() ?? FfmpegSettings.CreateDefault();
-                            await VideoPreparation.PrepareAsync(sourceForCut, temporaryVideo, analysis,
-                                tools.FfmpegExecutablePath, tools.FfprobeExecutablePath,
-                                progress, cancellationTokenSource.Token);
+                            var tools =
+                                new FfmpegSettingsStore().Load()
+                                ?? FfmpegSettings.CreateDefault();
+
+                            var resolver =
+                                new ToolPathResolver();
+
+                            var ffmpegPath =
+                                resolver.Resolve(
+                                    BundledToolKind.Ffmpeg,
+                                    tools.FfmpegExecutablePath);
+
+                            var ffprobePath =
+                                resolver.Resolve(
+                                    BundledToolKind.Ffprobe,
+                                    tools.FfprobeExecutablePath);
+
+                            await VideoPreparation.PrepareAsync(
+                                sourceForCut,
+                                temporaryVideo,
+                                analysis,
+                                ffmpegPath,
+                                ffprobePath,
+                                progress,
+                                cancellationTokenSource.Token);
                             sourceForCut = temporaryVideo;
                         }
 

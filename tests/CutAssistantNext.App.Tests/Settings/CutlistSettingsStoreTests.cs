@@ -61,7 +61,7 @@ public sealed class CutlistSettingsStoreTests
             [
                 "Keine Werbung gefunden.",
                 "Werbung vollständig entfernt.",
-                "Unter Verwendung von MP4Box aus dem GPAC Paket, Version 26.07 geschnitten.",
+                "Unter Verwendung von MP4Box aus dem GPAC Paket geschnitten.",
                 "Teil 1 von 2",
                 "Teil 2 von 2"
             ],
