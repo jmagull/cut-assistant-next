@@ -19,7 +19,8 @@ public sealed class CutNamingState
     private CutNamingState(
         string nameTemplate,
         NameTemplateContext nameContext,
-        string suggestedMovieName)
+        string suggestedMovieName,
+        bool preserveSuggestedMovieName = false)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
             nameTemplate);
@@ -38,6 +39,9 @@ public sealed class CutNamingState
 
         SuggestedMovieName =
             suggestedMovieName;
+
+        PreserveSuggestedMovieName =
+            preserveSuggestedMovieName;
     }
 
     public string NameTemplate { get; }
@@ -46,20 +50,25 @@ public sealed class CutNamingState
 
     public string SuggestedMovieName { get; }
 
+    public bool PreserveSuggestedMovieName { get; }
+
     public CutNamingState UseSuggestedMovieName(
-        string suggestedMovieName)
+        string suggestedMovieName,
+        bool preserveSuggestedMovieName = false)
     {
         return new CutNamingState(
             NameTemplate,
             NameContext,
-            suggestedMovieName);
+            suggestedMovieName,
+            preserveSuggestedMovieName || PreserveSuggestedMovieName);
     }
+
     public CutNamingState UseNaming(
         string nameTemplate,
         NameTemplateContext nameContext)
-{
+    {
         return new CutNamingState(
             nameTemplate,
             nameContext);
-}
+    }
 }

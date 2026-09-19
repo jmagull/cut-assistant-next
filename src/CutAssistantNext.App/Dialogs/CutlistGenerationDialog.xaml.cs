@@ -60,6 +60,18 @@ public partial class CutlistGenerationDialog : Window
             quickText);
     }
 
+    private void GenerateSuggestedMovieNameButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (DataContext is not CutlistGenerationViewModel viewModel)
+        {
+            return;
+        }
+
+        viewModel.GenerateSuggestedMovieName();
+    }
+
     private void SaveButton_Click(
         object sender,
         RoutedEventArgs e)

@@ -352,6 +352,88 @@ public sealed class CutlistGenerationViewModelTests
     }
 
     [Fact]
+    public void ApplyTemplateAuthor_AppendsForeignAuthorOnlyOnce()
+    {
+        var settings = new CutlistSettings
+        {
+            DefaultAuthor = "Joerg",
+            QuickTexts = []
+        };
+
+        var viewModel =
+            CreateViewModel(
+                settings,
+                new NameTemplateContext(
+                    Name: "Mean Girls"));
+
+        viewModel.ApplyTemplateAuthor(" oxefrosch ");
+        viewModel.ApplyTemplateAuthor("oxefrosch");
+
+        Assert.Equal(
+            "Mit Cut Assistant Next geschnitten. Vorlage von oxefrosch.",
+            viewModel.UserComment);
+
+        Assert.Equal(
+            "Joerg",
+            viewModel.Author);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("joerg")]
+    [InlineData("JOERG")]
+    public void ApplyTemplateAuthor_IgnoresMissingOrOwnAuthor(
+        string? templateAuthor)
+    {
+        var settings = new CutlistSettings
+        {
+            DefaultAuthor = "Joerg",
+            QuickTexts = []
+        };
+
+        var viewModel =
+            CreateViewModel(
+                settings,
+                new NameTemplateContext(
+                    Name: "Mean Girls"));
+
+        viewModel.ApplyTemplateAuthor(
+            templateAuthor);
+
+        Assert.Equal(
+            "Mit Cut Assistant Next geschnitten.",
+            viewModel.UserComment);
+    }
+
+    [Fact]
+    public void ApplyTemplateAuthor_PreservesExistingComment()
+    {
+        var settings = new CutlistSettings
+        {
+            DefaultAuthor = "Joerg",
+            QuickTexts = []
+        };
+
+        var viewModel =
+            CreateViewModel(
+                settings,
+                new NameTemplateContext(
+                    Name: "Mean Girls"));
+
+        viewModel.UserComment =
+            "Schnitte kontrolliert.";
+
+        viewModel.ApplyTemplateAuthor(
+            "oxefrosch");
+
+        Assert.Equal(
+            "Schnitte kontrolliert. Vorlage von oxefrosch.",
+            viewModel.UserComment);
+    }
+
+    [Fact]
     public void ApplyQuickText_AppendsTextsToUserCommentOnSingleLine()
     {
         var settings = new CutlistSettings

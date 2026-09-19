@@ -34,6 +34,7 @@ public partial class MainWindow : Window
     private readonly PlaybackViewModel _playbackViewModel;
     private readonly CutPlanViewModel _cutPlanViewModel;
     private CutNamingState? _cutNamingState;
+    private string? _loadedCutlistAuthor;
     private string? _lastSavedCutlistFilePath;
     private bool _cutlistUploadInProgress;
     private bool _cutlistSearchInProgress;
@@ -1585,7 +1586,8 @@ public partial class MainWindow : Window
 
                 _cutNamingState =
                     _cutNamingState.UseSuggestedMovieName(
-                        suggestedMovieName);
+                        suggestedMovieName,
+                        preserveSuggestedMovieName: true);
             }
 
             if (rememberAsUploadCandidate)
@@ -1594,6 +1596,9 @@ public partial class MainWindow : Window
                     Path.GetFullPath(
                         fileName);
             }
+
+            _loadedCutlistAuthor =
+                document.Info.Author;
 
             _logger.Information(
                 $"Cutlist wurde geladen: {fileName}");
@@ -1666,6 +1671,9 @@ public partial class MainWindow : Window
                     fileName,
                     analysis,
                     _cutNamingState);
+
+        cutlistViewModel.ApplyTemplateAuthor(
+            _loadedCutlistAuthor);
 
         var cutPlan =
             _cutPlanViewModel.CreateCutPlanSnapshot();
@@ -2012,6 +2020,7 @@ public partial class MainWindow : Window
         _cutPlanViewModel.Reset();
 
         _cutNamingState = null;
+        _loadedCutlistAuthor = null;
         _lastSavedCutlistFilePath = null;
 
         await _viewModel.AnalyzeAsync(dialog.FileName);

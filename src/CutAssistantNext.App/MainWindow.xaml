@@ -460,17 +460,29 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="RemoveSegmentStartColumn"
                                             Header="Anfang"
-                                            Width="*"
-                                            Binding="{Binding Start}" />
+                                            Width="*">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="Start"
+                                         StringFormat="hh\:mm\:ss\.fff" />
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
 
                         <DataGridTextColumn x:Name="RemoveSegmentEndColumn"
                                             Header="Ende"
-                                            Width="*"
-                                            Binding="{Binding End}" />
+                                            Width="*">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="End"
+                                         StringFormat="hh\:mm\:ss\.fff" />
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
 
                         <DataGridTextColumn Header="Dauer"
-                                            Width="*"
-                                            Binding="{Binding Duration}" />
+                                            Width="*">
+                            <DataGridTextColumn.Binding>
+                                <Binding Path="Duration"
+                                         StringFormat="hh\:mm\:ss\.fff" />
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
 
