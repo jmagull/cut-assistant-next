@@ -1,12 +1,12 @@
 # Nutzeranleitung – Cut Assistant Next
 
-Stand: 13.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand: 27.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
-Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, zum Beispiel **Cut Assistant Next · 0.2.0 · Build 1**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, zum Beispiel **Cut Assistant Next · 0.2.0 · Build 6**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
 
 ## 1. Einmalig einrichten
 
-Starte die aktuelle Programmversion aus ihrem vollständigen Ausgabeordner. Die Datei `libmpv-2.dll` gehört neben das Programm; kopiere nicht nur die EXE allein. Auf dem Rechner muss die passende .NET-10-Desktop-Laufzeit vorhanden sein. Ein Installer ist noch nicht Teil dieses Standes.
+Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE allein. Der bisherige selbstenthaltene Build-6-Teststand bringt die .NET-Laufzeit mit. Die neue laufzeitabhängige Testausgabe benötigt dagegen die separat installierte [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). Ein internes Test-Setup ist vorhanden; eine öffentliche Ausgabe ist noch nicht freigegeben.
 
 Öffne die Einstellungen und hinterlege die benötigten Werkzeuge:
 
@@ -22,6 +22,40 @@ Starte die aktuelle Programmversion aus ihrem vollständigen Ausgabeordner. Die 
 Wähle jeweils die ausführbare Datei, nicht nur ihren Ordner. Der aktuelle Schnittablauf erwartet MP4Box als Schnittanwendung. Ein beliebiges anderes Programm wird durch Eintragen seines Pfades nicht zu einem unterstützten Schnittmotor.
 
 Ohne Server-Konfiguration kannst du Videos weiterhin bearbeiten und lokale Cutlists verwenden. Ohne MP4Box kannst du Schnittmarken vorbereiten und Cutlists speichern, aber keine Videoausgabe schneiden.
+
+### Portable-Version aus dem ZIP verwenden
+
+Das Portable-Paket vollständig in einen beliebigen Ordner entpacken und
+`CutAssistantNext.App.exe` dort starten. Der bisherige selbstenthaltene
+Build-6-Teststand bringt die .NET-Desktop-Laufzeit mit; die neue kleinere
+laufzeitabhängige Vorschau benötigt eine separate Installation.
+
+Für Wiedergabe und Schnitt werden die benötigten Programme so eingerichtet:
+
+1. **Nur für die laufzeitabhängige Ausgabe:** Die
+   [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+   installieren. Die einfache ".NET Runtime" ohne Desktop-Komponenten genügt nicht.
+2. FFmpeg einschließlich ffprobe von
+   https://www.gyan.dev/ffmpeg/builds/ herunterladen und entpacken.
+   Die bisher getestete Version ist 8.1.2 (Essentials Build).
+3. GPAC einschließlich MP4Box von
+   https://gpac.io/downloads/gpac-nightly-builds/ herunterladen und
+   installieren. Getestet wurde GPAC 26.07.
+4. Unter **Einstellungen → FFmpeg-Werkzeuge …** die beiden ausführbaren
+   Dateien `ffprobe.exe` und `ffmpeg.exe` auswählen. Sie liegen
+   normalerweise im Unterordner `bin` des entpackten FFmpeg-Pakets.
+5. CAN erkennt eine regulär installierte GPAC-Version automatisch,
+   solange kein eigener MP4Box-Pfad eingetragen ist. Falls die Erkennung
+   nicht gelingt, unter **Einstellungen → Schnittanwendung …** die
+   `MP4Box.exe` selbst auswählen.
+
+Die Einstellungen werden weiterhin im Benutzerprofil gespeichert.
+„Portable“ bezeichnet hier die entpackbare Programmausgabe, nicht eine
+vom Benutzerprofil unabhängige Speicherung aller Einstellungen.
+
+Der bisherige selbstenthaltene Build-6-Teststand wurde unter Windows 11
+praktisch geprüft. Der VM-Test der neuen laufzeitabhängigen Ausgabe steht
+noch aus.
 
 ## 2. Video laden
 
@@ -61,6 +95,8 @@ CAN markiert **Bereiche, die entfernt werden sollen**. Die roten Abschnitte der 
 
 Mit **Videoanfang** bzw. **Videoende** kannst du die entsprechende Dateigrenze verwenden. Bestehende Bereiche lassen sich in der Tabelle oder Timeline auswählen und korrigieren. **Bereich löschen** entfernt die ausgewählte Markierung aus dem Schnittplan; es löscht keine Videodatei.
 
+Ein Klick auf einen Schnittbereich wählt ihn aus und hebt ihn hervor. Ein erneuter Klick auf denselben Bereich hebt die Auswahl wieder auf. In der Schnittliste werden Anfang, Ende und Dauer einheitlich als Stunden:Minuten:Sekunden mit drei Nachkommastellen dargestellt. Die interne Genauigkeit der Schnittmarken wird dadurch nicht verändert.
+
 Play/Pause, Zeitleiste, **−10 Bilder**, **Bild zurück**, **Bild vor** und **+10 Bilder** helfen bei der Positionierung. Einzelbildschritte sind im pausierten Zustand verfügbar. Tastatur: Leertaste für Play/Pause, Pfeil links/rechts für ein Bild, Strg+Pfeil links/rechts für zehn Bilder.
 
 Die Anzeige **Geschnitten** ist eine Vorschau der geplanten Ausgabelaufzeit. Prüfe das tatsächliche Schnittergebnis im Player; Schnittmotor und Videostruktur können die exakten Grenzen beeinflussen.
@@ -72,6 +108,18 @@ Mit **Cutlist erzeugen** öffnest du den Erstellungsdialog. Prüfe die Metadaten
 Dafür muss das Video nicht geschnitten oder nach MP4 vorbereitet werden. CAN kann somit auch ausschließlich zum Erstellen und Korrigieren von Cutlists verwendet werden.
 
 Das klassische Cutlist-Format beschreibt die zu behaltenden Abschnitte. CAN rechnet seine Entfernbereiche beim Erzeugen entsprechend um. Der Bezug zur Originaldatei bleibt bestehen.
+
+### Fremde Cutlists als Vorlage verwenden
+
+Cut Assistant Next ermöglicht es, vorhandene Schnittpunkte schnell zu kontrollieren und bei Bedarf framegenau nach den eigenen Vorstellungen nachzuarbeiten.
+
+Wenn du aus einer fremden Cutlist eine eigene Fassung erzeugst, bleibt deren vorgeschlagener Filmname zunächst in der Namensvorschau erhalten. Änderungen an den Namensfeldern überschreiben diesen Vorschlag nicht automatisch. Erst mit **Aus obigen Eingaben neu erzeugen** wechselst du bewusst zur eigenen Namensmaske. Anschließend berücksichtigt die Vorschau die aktuellen Eingaben.
+
+Die Namensvorschau lässt sich markieren und mit **Strg+C** kopieren.
+
+Bei einer Vorlage mit einem anderen Autor ergänzt CAN den Kommentar der neu erzeugten Cutlist um einen Herkunftshinweis, beispielsweise „Vorlage von KukiDent“. Dein eigener Autor bleibt erhalten. Bei fehlendem oder identischem Vorlagenautor wird kein Herkunftshinweis ergänzt; doppelte Angaben werden vermieden.
+
+Prüfe Schnittpunkte, Filmnamen, Bewertung und Kommentar vor dem Speichern. Wenn du deine Fassung veröffentlichen möchtest, speichere sie zunächst lokal und lade anschließend diese eigene Version hoch.
 
 ## 6. Video schneiden
 
@@ -109,6 +157,8 @@ Bei experimenteller Vorbereitung geschieht Folgendes:
 5. Die temporäre Arbeitsdatei wird nach dem Vorgang entfernt. Bei einem weiteren Schnittversuch wird sie erneut erzeugt.
 
 Die Prüfungen sind keine vollständige Kontrolle aller Bildzeitstempel. Kontrolliere Anfang, Ende, Werbegrenzen und Ton-Synchronität der fertigen Datei.
+
+Enthält eine HD-Aufnahme mehrere Tonspuren, bleiben sie beim Schneiden mit MP4Box erhalten. Öffne die geschnittene Datei anschließend in deinem eigenen Player und wähle dort bei Bedarf die gewünschte Tonspur aus. CANs Player bietet derzeit keine Tonspurauswahl.
 
 **Abbrechen** fordert den Abbruch an. Warte, bis er abgeschlossen ist. Nach einem Fehler bleibt das Fenster offen und zeigt den Grund direkt oberhalb des Protokolls. Bei Erfolg meldet es **Fertig.** und bietet einen Schließen-Countdown an.
 
@@ -151,3 +201,9 @@ Unter **Credits** findest du die Danksagung mit Links zu den beteiligten Projekt
 Der integrierte AVI-Ablauf wurde mit **Die Diplomatin – Tod einer Nonne** und **Rubikon**, jeweils OTR-HD-AVI, mit jeweils zwei Cutlists erfolgreich geprüft. Die ausgegebenen MP4-Dateien enthielten H.264 mit 1280×720 bei 50 fps sowie MP3-Stereoton. Der Nutzer bestätigte Schnittgrenzen und Ton-Synchronität.
 
 Das sind konkrete Beispiele, keine Garantie für alle historischen AVI-, MKV- oder sonstigen Codec-Kombinationen. Weitere technische Prüfergebnisse stehen im [Testplan](TESTPLAN.md), die genauen aktuellen Toleranzen im [Projektstatus](STATUS.md).
+
+Ein weiterer Praxistest mit „Enigma – Das Geheimnis“ (AVI, H.264/MP3, 25 fps) führte erfolgreich über FFmpeg-Vorbereitung und MP4Box-Schnitt zur fertigen MP4. Anfang, Mitte, Ende, Abspann und Ton wurden kontrolliert. Dabei aufgetretene Zeitstempel-Auffälligkeiten sind im Testplan dokumentiert.
+
+Bei einer anderen Full-HD-Aufnahme („Wo die Liebe hinfällt“) wurden dagegen bereits bei der Wiedergabe und Frame-Navigation Auffälligkeiten festgestellt. Die Datei besitzt einen AVI-Container, obwohl ihr Name auf `.avi.mp4` endet. Für diese Aufnahme liegt keine erfolgreiche Schnittabnahme vor.
+
+Besonders bei solchen älteren AVI-Aufnahmen können Bild-, Ton- oder Navigationsprobleme schon in der unveränderten Originaldatei vorliegen. CAN verändert das Original beim Einlesen nicht. Kontrolliere vor dem Schneiden die Wiedergabe und anschließend das tatsächliche Schnittergebnis sorgfältig.

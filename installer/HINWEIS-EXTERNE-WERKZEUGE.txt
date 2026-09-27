@@ -1,0 +1,25 @@
+Cut Assistant Next – Externe Werkzeuge
+
+FFmpeg, ffprobe und MP4Box sind nicht im Lieferumfang enthalten.
+
+Bitte installieren Sie die benötigten Programme selbst:
+
+FFmpeg und ffprobe:
+https://ffmpeg.org/download.html
+Auf dieser Seite finden Sie auch Windows-Versionen.
+
+GPAC einschließlich MP4Box:
+https://gpac.io/downloads/gpac-nightly-builds/
+Bitte unten im Abschnitt "Current Stable Installers"
+die stabile Windows-64-Bit-Version auswählen.
+
+Anschließend die vollständigen Programmpfade in CAN eintragen:
+
+FFmpeg und ffprobe:
+Einstellungen > FFmpeg-Werkzeuge
+
+MP4Box:
+Einstellungen > Schnittanwendung
+
+Die Videowiedergabe funktioniert bereits ohne diese
+zusätzlichen Programme.

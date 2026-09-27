@@ -10,8 +10,7 @@ internal sealed class FfmpegSettingsViewModel :
     private string _ffprobeExecutablePath;
     private string _ffmpegExecutablePath;
 
-    public FfmpegSettingsViewModel(
-        FfmpegSettings settings)
+    public FfmpegSettingsViewModel(FfmpegSettings settings)
     {
         ArgumentNullException.ThrowIfNull(
             settings);

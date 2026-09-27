@@ -1,0 +1,24 @@
+﻿Cut Assistant Next – Einmalig benötigte Programme
+
+Für diese laufzeitabhängige CAN-Testausgabe wird die .NET 10 Desktop Runtime
+für Windows x64 separat benötigt. Bitte die Variante "Desktop Runtime"
+auswählen; die einfache ".NET Runtime" reicht für CANs Oberfläche nicht.
+
+.NET 10 Desktop Runtime (Windows x64):
+https://dotnet.microsoft.com/en-us/download/dotnet/10.0
+
+FFmpeg einschließlich ffprobe (nicht im CAN-Paket enthalten):
+https://ffmpeg.org/download.html
+Auf dieser Seite sind Links zu fertigen Windows-Versionen angegeben.
+
+GPAC einschließlich MP4Box (nicht im CAN-Paket enthalten):
+https://gpac.io/downloads/gpac-nightly-builds/
+Im Abschnitt "Current Stable Installers" die stabile Windows-64-Bit-Version wählen.
+
+Nach der Installation die Pfade in CAN prüfen:
+
+FFmpeg und ffprobe: Einstellungen > FFmpeg-Werkzeuge
+MP4Box: Einstellungen > Schnittanwendung
+
+Die Wiedergabe benötigt FFmpeg und GPAC nicht; für die Analyse wird ffprobe,
+für den Schnitt MP4Box benötigt. Diese Ausgabe ist ein interner Testkandidat.

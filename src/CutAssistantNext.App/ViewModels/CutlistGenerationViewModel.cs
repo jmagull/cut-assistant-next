@@ -96,7 +96,12 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
 
         _suggestedMovieName =
             namingState.SuggestedMovieName;
+
+        _preserveSuggestedMovieName =
+            namingState.PreserveSuggestedMovieName;
     }
+
+    private bool _preserveSuggestedMovieName;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -111,9 +116,11 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
             }
 
             var suggestedMovieName =
-                NameTemplateRenderer.Render(
-                    value,
-                    _nameContext);
+                _preserveSuggestedMovieName
+                    ? _suggestedMovieName
+                    : NameTemplateRenderer.Render(
+                        value,
+                        _nameContext);
 
             _nameTemplate = value;
             _suggestedMovieName = suggestedMovieName;
@@ -351,6 +358,41 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
                 : $"{UserComment} {quickText}";
     }
 
+    public void ApplyTemplateAuthor(
+        string? templateAuthor)
+    {
+        if (string.IsNullOrWhiteSpace(templateAuthor))
+        {
+            return;
+        }
+
+        var normalizedAuthor =
+            templateAuthor.Trim();
+
+        if (string.Equals(
+                normalizedAuthor,
+                Author?.Trim(),
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        var provenance =
+            $"Vorlage von {normalizedAuthor}.";
+
+        if (UserComment?.Contains(
+                provenance,
+                StringComparison.OrdinalIgnoreCase) == true)
+        {
+            return;
+        }
+
+        UserComment =
+            string.IsNullOrWhiteSpace(UserComment)
+                ? provenance
+                : $"{UserComment.TrimEnd()} {provenance}";
+    }
+
     public CutlistDocument CreateDocument(
         CutPlan cutPlan,
         string applyToFile,
@@ -408,13 +450,35 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
 
     public CutNamingState CreateNamingState()
     {
-        return new CutNamingState(
-            _nameTemplate,
-            _nameContext);
+        var namingState =
+            new CutNamingState(
+                _nameTemplate,
+                _nameContext);
+
+        return _preserveSuggestedMovieName
+            ? namingState.UseSuggestedMovieName(
+                _suggestedMovieName,
+                preserveSuggestedMovieName: true)
+            : namingState;
     }
 
     public string SuggestedMovieName =>
         _suggestedMovieName;
+
+    public void GenerateSuggestedMovieName()
+    {
+        var suggestedMovieName =
+            NameTemplateRenderer.Render(
+                _nameTemplate,
+                _nameContext);
+
+        _suggestedMovieName =
+            suggestedMovieName;
+
+        _preserveSuggestedMovieName = false;
+
+        OnPropertyChanged(nameof(SuggestedMovieName));
+    }
 
     private void UpdateNameContext(
         NameTemplateContext nameContext,
@@ -426,9 +490,11 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
         }
 
         var suggestedMovieName =
-            NameTemplateRenderer.Render(
-                _nameTemplate,
-                nameContext);
+            _preserveSuggestedMovieName
+                ? _suggestedMovieName
+                : NameTemplateRenderer.Render(
+                    _nameTemplate,
+                    nameContext);
 
         _nameContext = nameContext;
         _suggestedMovieName = suggestedMovieName;

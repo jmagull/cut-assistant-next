@@ -93,7 +93,7 @@
                            FontSize="12"
                            Foreground="#6B7280"
                            TextWrapping="Wrap"
-                           Text="Der Programmpfad ist frei wählbar. Ohne Programmdatei ist keine Schnittanwendung konfiguriert." />
+                           Text="MP4Box ist nicht im Lieferumfang enthalten. Bitte GPAC selbst installieren und unter Programmdatei über Durchsuchen die MP4Box.exe auswählen." />
             </StackPanel>
         </Border>
 

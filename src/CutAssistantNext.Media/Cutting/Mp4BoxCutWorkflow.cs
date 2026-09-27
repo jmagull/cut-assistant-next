@@ -122,22 +122,34 @@ public sealed class Mp4BoxCutWorkflow
                     cancellationToken);
             }
 
-            progress?.Report(
-                new Mp4BoxProgressUpdate(
-                    Mp4BoxProgressKind.Status,
-                    "Segmente werden zusammengefügt …"));
-
-            await _runner.RunConcatAsync(
-                segmentFilePaths,
-                concatOutputFilePath,
-                cancellationToken);
-
             cancellationToken.ThrowIfCancellationRequested();
 
-            File.Move(
-                concatOutputFilePath,
-                fullOutputFilePath,
-                overwrite: outputFileExists && overwriteExistingOutput);
+            if (segmentFilePaths.Count == 1)
+            {
+                File.Move(
+                    segmentFilePaths[0],
+                    fullOutputFilePath,
+                    overwrite: outputFileExists && overwriteExistingOutput);
+            }
+            else
+            {
+                progress?.Report(
+                    new Mp4BoxProgressUpdate(
+                        Mp4BoxProgressKind.Status,
+                        "Segmente werden zusammengefügt …"));
+
+                await _runner.RunConcatAsync(
+                    segmentFilePaths,
+                    concatOutputFilePath,
+                    cancellationToken);
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                File.Move(
+                    concatOutputFilePath,
+                    fullOutputFilePath,
+                    overwrite: outputFileExists && overwriteExistingOutput);
+            }
 
             progress?.Report(
                 new Mp4BoxProgressUpdate(

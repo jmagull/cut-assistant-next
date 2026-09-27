@@ -6,7 +6,10 @@ public sealed class Mp4BoxOutputPublicationTests : IDisposable
 {
     private readonly string _directory = Path.Combine(Path.GetTempPath(), $"can-output-{Guid.NewGuid():N}");
     private static readonly Mp4BoxSplitRange[] Ranges =
-        [new(TimeSpan.Zero, TimeSpan.FromSeconds(10))];
+    [
+        new(TimeSpan.Zero, TimeSpan.FromSeconds(10)),
+        new(TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(30))
+    ];
 
     public Mp4BoxOutputPublicationTests() => Directory.CreateDirectory(_directory);
 

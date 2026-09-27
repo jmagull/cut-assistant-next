@@ -1,12 +1,12 @@
 # Projektstatus
 
-Stand: 13.09.2026. Dieser Überblick beschreibt den aktuellen Feature-Stand; ältere Projektdefinitionen und Architekturentscheidungen dokumentieren teilweise frühere Entwicklungsphasen.
+Stand: 19.09.2026. Dieser Überblick beschreibt den aktuellen Feature-Stand; ältere Projektdefinitionen und Architekturentscheidungen dokumentieren teilweise frühere Entwicklungsphasen.
 
 ## Aktueller Umfang
 
 CAN verwendet C#, .NET 10 und WPF unter Windows 11 x64. ffprobe liefert Medieninformationen, mpv/libmpv übernimmt die Wiedergabe, MP4Box den Schnitt. FFmpeg bereitet bei Bedarf eine MP4-Arbeitsdatei vor.
 
-Umgesetzt sind Medienanalyse und Wiedergabe, Frame-Navigation, manuelle Schnittplanung, lokale Cutlists, Server-Suche/-Download/-Upload, Namensmasken, MP4Box-Schnitt und experimentelle Vorbereitung anderer Container. Die Bedienung ist in der [Nutzeranleitung](NUTZERANLEITUNG.md) beschrieben.
+Umgesetzt sind Medienanalyse und Wiedergabe, Frame-Navigation, manuelle Schnittplanung, lokale Cutlists, Server-Suche/-Download/-Upload, Namensmasken, Herkunftsübernahme bei Fremd-Cutlists, MP4Box-Schnitt und experimentelle Vorbereitung anderer Container. Die Bedienung ist in der [Nutzeranleitung](NUTZERANLEITUNG.md) beschrieben.
 
 ## Oberfläche und Cutlist-Ablauf
 
@@ -15,6 +15,9 @@ Umgesetzt sind Medienanalyse und Wiedergabe, Frame-Navigation, manuelle Schnittp
 - Lokale und heruntergeladene Cutlists verwenden denselben Importweg. Dateigrößenabweichungen lösen eine Warnung aus und können bewusst akzeptiert werden.
 - Null-Längen-Einträge werden beim Import ignoriert und NoOfCuts wird intern angepasst. Negative Dauern, widersprüchliche Frame-Dauern und ausschließlich leere Bereiche bleiben Fehler.
 - Die Oberfläche zeigt Entfernbereiche; klassische Cutlists speichern die komplementären Behaltebereiche.
+- Fremde Cutlists können als Vorlage dienen. Ein vorhandener Namensvorschlag bleibt zunächst erhalten und kann bewusst aus den eigenen Eingaben neu erzeugt werden.
+- Bei abweichendem Vorlagenautor ergänzt CAN den Benutzerkommentar automatisch um einen Herkunftshinweis. Fehlende oder eigene Autoren erzeugen keinen Hinweis; doppelte Einträge werden vermieden.
+- Anfang, Ende und Dauer erscheinen in der Schnittliste einheitlich mit drei Nachkommastellen. Die Namensvorschau im Dialog „Cutlist erzeugen“ ist markierbar und mit Strg+C kopierbar.
 - Technische Medieninformationen stehen im Dialog „Video-Informationen“.
 - Bei geringer Breite umbrechen die Bediengruppen, bei geringer Höhe scrollt der Hauptbereich. Das native Videofenster wird auf den sichtbaren Scrollbereich begrenzt.
 - Fenstergröße wird auch ohne Videoladen gespeichert; Erfolg oder Fehler wird protokolliert.
@@ -54,9 +57,13 @@ Das Protokoll ist standardmäßig aufgeklappt, kann eingeklappt und in die Zwisc
 
 ## Verifikation
 
-- Release-Build: 0 Fehler, 0 Warnungen; **443/443 Tests bestanden**.
+- Letzter bestätigter vollständiger Testlauf am 19.09.2026: **450/450 Tests bestanden**, Debug-Build erfolgreich. Der zuvor dokumentierte Release-Build mit 443 Tests war ebenfalls fehler- und warnungsfrei; ein erneuter Release-Build mit 450 Tests ist hier noch nicht nachgewiesen.
+- P1 abgeschlossen: Schutz übernommener Namensvorschläge, bewusste Neuberechnung aus der Namensmaske, automatische Herkunftsangabe bei Fremd-Cutlists, einheitliche Zeitdarstellung und kopierbare Namensvorschau. Die Herkunftsübernahme ist durch sieben neue Testfälle und praktische Prüfungen abgesichert.
 - Diplomatin und Rubikon: integrierter AVI-Ablauf mit jeweils zwei Cutlists erfolgreich; Wiedergabe einschließlich Anfang, Ende und Ton-Synchronität vom Nutzer bestätigt.
 - Zusätzlich bestätigter Diplomatin-Schnitt mit HQ-Cutlist trotz unterschiedlicher Quelldateigröße.
+- Enigma: AVI mit H.264/MP3 und 25 fps erfolgreich verlustfrei vorbereitet und mit MP4Box geschnitten. Die fertige MP4 enthält 162.246 Videopakete. Anfang, Mitte, Ende, Abspann und Ton wurden praktisch geprüft. Ein vollständiger Decoderlauf mit normalisierten Ausgabezeitstempeln endete ohne Fehlermeldungen.
+- Bei Enigma traten beim Remux fehlende PTS-Werte und beim ersten Decoder-Prüflauf zwei DTS-Meldungen auf. Die genaue Ursache ist nicht abschließend geklärt; die praktische Qualitätskontrolle war erfolgreich.
+- „Wo die Liebe hinfällt“: großer Full-HD-AVI-Container trotz Endung `.avi.mp4`, durchschnittlich 50 fps und zwei Tonspuren. Bildfehler und Probleme beim framegenauen Zurückspringen in CAN beobachtet; Tonversatz in MPC-HC berichtet. Keine erfolgreiche Schnittabnahme für diese Datei.
 - Fehleranzeige mit absichtlich ungültigem ffprobe-Pfad live bestätigt.
 - Kleine künstliche AVI-/MKV-Dateien: Prozessaufruf und Ergebnisprüfung, Ablehnung existierender Arbeitsdateien und vorab abgebrochener Aufträge geprüft.
 - Leere Cutlist-Endbereiche sind automatisiert mit den Diplomatin-Schnittwerten abgesichert. Ein separater ausdrücklicher Live-Nachweis für genau den zuvor fehlerhaften Originaleintrag ist nicht protokolliert.
@@ -65,8 +72,10 @@ Weitere Prüfschritte stehen im [Testplan](TESTPLAN.md). Aus diesen Beispielen f
 
 ## Nächste Schritte
 
-1. Weitere Praxistests durch Jörg in dieser Woche; auftretende Fehler auswerten.
-2. Anschließend das vereinbarte Rundum-sorglos-Paket vorbereiten: siehe [Setup-Merkliste](SETUP-MERKLISTE.md).
+1. P2: Regressionstests und Release-Vorbereitung fortsetzen. Installations- und Portable-Paket gemäß [Setup-Merkliste](SETUP-MERKLISTE.md) vorbereiten.
+2. Offene Player-Probleme untersuchen: schnelle aufeinanderfolgende Frame-Sprünge und Positionsänderungen ohne entsprechendes neues Videobild.
+3. UX-Merkliste: Größe des Dialogs „Cutlist erzeugen“ wiederherstellen, Klick auf die Zeitleiste zum Positionieren verwenden und weitere Bedienungsdetails verbessern.
+4. Für AVI-Container mit irreführenden Dateiendungen wie `.mpg.HD.avi.mp4` einen deutlich hervorgehobenen Warnhinweis ergänzen. Der Hinweis soll erklären, dass Probleme bereits in der unveränderten Originaldatei vorliegen können. Die Verarbeitung bleibt möglich.
 
 Für V2 vorgemerkt: Klebezentrum (experimentell) für mehrteilige Aufnahmen und Feinabstimmung der Schnittbereiche gemäß chrisdudes Hinweisen. Stapelverarbeitung und Smart Rendering bleiben spätere Wünsche. Eine automatische Neukodierung ist nicht Teil des aktuellen Vorbereitungsablaufs.
 

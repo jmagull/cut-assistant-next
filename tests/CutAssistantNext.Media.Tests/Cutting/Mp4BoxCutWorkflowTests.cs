@@ -62,6 +62,54 @@ public sealed class Mp4BoxCutWorkflowTests : IDisposable
     }
 
     [Fact]
+    public async Task RunAsync_WithOneRange_PublishesSplitResultWithoutConcat()
+    {
+        var runner =
+            new RecordingMp4BoxRunner
+            {
+                CreateSplitFiles = true
+            };
+
+        var workflow =
+            new Mp4BoxCutWorkflow(
+                runner);
+
+        var outputFilePath =
+            Path.Combine(
+                _directory,
+                "output.mp4");
+
+        var ranges =
+            new[]
+            {
+                new Mp4BoxSplitRange(
+                    TimeSpan.FromSeconds(10),
+                    TimeSpan.FromSeconds(20))
+            };
+
+        await workflow.RunAsync(
+            "source.mp4",
+            outputFilePath,
+            ranges);
+
+        Assert.Single(
+            runner.SplitCalls);
+
+        Assert.Empty(
+            runner.ConcatCalls);
+
+        Assert.True(
+            File.Exists(
+                outputFilePath));
+
+        Assert.Equal(
+            "segment",
+            File.ReadAllText(
+                outputFilePath));
+    }
+
+
+    [Fact]
     public async Task RunAsync_AfterSuccessfulConcat_DeletesTemporarySegments()
     {
         var directoryPath =

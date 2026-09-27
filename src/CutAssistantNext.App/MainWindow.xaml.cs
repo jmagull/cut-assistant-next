@@ -34,6 +34,7 @@ public partial class MainWindow : Window
     private readonly PlaybackViewModel _playbackViewModel;
     private readonly CutPlanViewModel _cutPlanViewModel;
     private CutNamingState? _cutNamingState;
+    private string? _loadedCutlistAuthor;
     private string? _lastSavedCutlistFilePath;
     private bool _cutlistUploadInProgress;
     private bool _cutlistSearchInProgress;
@@ -1135,10 +1136,31 @@ public partial class MainWindow : Window
                         if (requiresPreparation)
                         {
                             temporaryVideo = Path.Combine(Path.GetTempPath(), $"can-{Guid.NewGuid():N}.mp4");
-                            var tools = new FfmpegSettingsStore().Load() ?? FfmpegSettings.CreateDefault();
-                            await VideoPreparation.PrepareAsync(sourceForCut, temporaryVideo, analysis,
-                                tools.FfmpegExecutablePath, tools.FfprobeExecutablePath,
-                                progress, cancellationTokenSource.Token);
+                            var tools =
+                                new FfmpegSettingsStore().Load()
+                                ?? FfmpegSettings.CreateDefault();
+
+                            var resolver =
+                                new ToolPathResolver();
+
+                            var ffmpegPath =
+                                resolver.Resolve(
+                                    BundledToolKind.Ffmpeg,
+                                    tools.FfmpegExecutablePath);
+
+                            var ffprobePath =
+                                resolver.Resolve(
+                                    BundledToolKind.Ffprobe,
+                                    tools.FfprobeExecutablePath);
+
+                            await VideoPreparation.PrepareAsync(
+                                sourceForCut,
+                                temporaryVideo,
+                                analysis,
+                                ffmpegPath,
+                                ffprobePath,
+                                progress,
+                                cancellationTokenSource.Token);
                             sourceForCut = temporaryVideo;
                         }
 
@@ -1585,7 +1607,8 @@ public partial class MainWindow : Window
 
                 _cutNamingState =
                     _cutNamingState.UseSuggestedMovieName(
-                        suggestedMovieName);
+                        suggestedMovieName,
+                        preserveSuggestedMovieName: true);
             }
 
             if (rememberAsUploadCandidate)
@@ -1594,6 +1617,9 @@ public partial class MainWindow : Window
                     Path.GetFullPath(
                         fileName);
             }
+
+            _loadedCutlistAuthor =
+                document.Info.Author;
 
             _logger.Information(
                 $"Cutlist wurde geladen: {fileName}");
@@ -1666,6 +1692,9 @@ public partial class MainWindow : Window
                     fileName,
                     analysis,
                     _cutNamingState);
+
+        cutlistViewModel.ApplyTemplateAuthor(
+            _loadedCutlistAuthor);
 
         var cutPlan =
             _cutPlanViewModel.CreateCutPlanSnapshot();
@@ -2012,6 +2041,7 @@ public partial class MainWindow : Window
         _cutPlanViewModel.Reset();
 
         _cutNamingState = null;
+        _loadedCutlistAuthor = null;
         _lastSavedCutlistFilePath = null;
 
         await _viewModel.AnalyzeAsync(dialog.FileName);

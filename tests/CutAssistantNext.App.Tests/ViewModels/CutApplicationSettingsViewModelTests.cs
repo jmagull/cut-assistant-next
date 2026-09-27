@@ -37,6 +37,19 @@ public sealed class CutApplicationSettingsViewModelTests
     }
 
     [Fact]
+    public void Constructor_DefaultSettingsKeepExecutablePathEmpty()
+    {
+        var viewModel = new CutApplicationSettingsViewModel(
+            CutApplicationSettings.CreateDefault());
+
+        var savedSettings = viewModel.CreateSettings();
+
+        Assert.Equal(
+            string.Empty,
+            savedSettings.ExecutablePath);
+    }
+
+    [Fact]
     public void CreateSettings_PreservesCurrentValues()
     {
         var viewModel =

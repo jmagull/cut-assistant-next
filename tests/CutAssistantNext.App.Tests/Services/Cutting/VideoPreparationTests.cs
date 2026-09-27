@@ -52,6 +52,49 @@ public sealed class VideoPreparationTests
             Sample("mp4") with { AudioStreams = [] }));
 
     [Fact]
+    public void ChangedAudioCodecNameIsReportedWithoutBlocking()
+    {
+        var original = Sample() with
+        {
+            AudioStreams =
+            [
+                Sample().AudioStreams[0] with { CodecName = "mp2" }
+            ]
+        };
+
+        var prepared = Sample("mp4");
+        var details = new List<string>();
+
+        VideoPreparation.Validate(original, prepared, details.Add);
+
+        Assert.Contains(details, line => line.Contains("Audio-Codec"));
+    }
+
+    [Theory]
+    [InlineData(44100, 2)]
+    [InlineData(48000, 1)]
+    public void ChangedAudioSampleRateOrChannelsIsRejected(
+        int sampleRate,
+        int channels)
+    {
+        var prepared = Sample("mp4");
+        prepared = prepared with
+        {
+            AudioStreams =
+            [
+                prepared.AudioStreams[0] with
+                {
+                    SampleRate = sampleRate,
+                    Channels = channels
+                }
+            ]
+        };
+
+        Assert.Throws<InvalidOperationException>(() =>
+            VideoPreparation.Validate(Sample(), prepared));
+    }
+
+    [Fact]
     public void MissingTimeOriginIsReportedWithoutBlocking()
     {
         var details = new List<string>();
@@ -127,5 +170,72 @@ public sealed class VideoPreparationTests
         Assert.Equal(0.5, parsed.VideoStreams[0].StartTimeSeconds);
         Assert.Equal(250, parsed.VideoStreams[0].FrameCount);
         Assert.Equal(0.52, parsed.AudioStreams[0].StartTimeSeconds);
+    }
+[Fact]
+public void EqualVideoPacketCountsPass()
+{
+    VideoPreparation.ValidateVideoPacketCounts(
+        new Dictionary<int, long> { [0] = 224965 },
+        new Dictionary<int, long> { [0] = 224965 });
+}
+
+[Fact]
+public void ChangedVideoPacketCountIsRejected()
+{
+    Assert.Throws<InvalidOperationException>(() =>
+        VideoPreparation.ValidateVideoPacketCounts(
+            new Dictionary<int, long> { [0] = 224965 },
+            new Dictionary<int, long> { [0] = 224964 }));
+}
+
+[Fact]
+public void MissingVideoPacketStreamIsRejected()
+{
+    Assert.Throws<InvalidOperationException>(() =>
+        VideoPreparation.ValidateVideoPacketCounts(
+            new Dictionary<int, long>
+            {
+                [0] = 224965,
+                [2] = 123
+            },
+            new Dictionary<int, long>
+            {
+                [0] = 224965
+            }));
+}
+    [Fact]
+    public void VerifiedPacketCountsAllowUnreliableContainerFrameMetadata()
+    {
+        var original = Sample() with
+        {
+            VideoStreams =
+            [
+                Sample().VideoStreams[0] with
+                {
+                    FramesPerSecond = 50,
+                    FrameCount = 500
+                }
+            ]
+        };
+
+        var prepared = Sample("mp4") with
+        {
+            VideoStreams =
+            [
+                Sample("mp4").VideoStreams[0] with
+                {
+                    FramesPerSecond = 25,
+                    FrameCount = 250
+                }
+            ]
+        };
+
+        VideoPreparation.Validate(
+            original,
+            prepared,
+            originalVideoPacketCounts:
+                new Dictionary<int, long> { [0] = 250 },
+            preparedVideoPacketCounts:
+                new Dictionary<int, long> { [0] = 250 });
     }
 }

@@ -1,0 +1,29 @@
+Crate,Version,LicenseExpression,IncludedLicenseFiles,Note
+anyhow,1.0.102,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+bitstream-io,4.10.0,MIT/Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+bitvec,1.0.1,MIT,LICENSE.txt,Conservative production dependency closure; not proof of inclusion in final DLL
+bitvec_helpers,4.0.2,MIT,LICENSE,Conservative production dependency closure; not proof of inclusion in final DLL
+crc,3.4.0,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+crc-catalog,2.5.0,MIT OR Apache-2.0,LICENSE-Apache-2.0; LICENSE-MIT,Supplemented from the upstream repository commit; absent from registry archive
+equivalent,1.0.2,Apache-2.0 OR MIT,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+funty,2.0.0,MIT,LICENSE.txt,Conservative production dependency closure; not proof of inclusion in final DLL
+hashbrown,0.17.1,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+indexmap,2.14.0,Apache-2.0 OR MIT,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+itoa,1.0.18,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+libc,0.2.186,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+memchr,2.8.0,Unlicense OR MIT,COPYING; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+no_std_io2,0.9.4,Apache-2.0 OR MIT,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+proc-macro2,1.0.106,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+quote,1.0.45,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+radium,0.7.0,MIT,LICENSE.txt,Conservative production dependency closure; not proof of inclusion in final DLL
+roxmltree,0.21.1,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+serde,1.0.228,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+serde_core,1.0.228,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+serde_derive,1.0.228,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+serde_json,1.0.149,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+syn,2.0.117,MIT OR Apache-2.0,LICENSE-APACHE; LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL
+tap,1.0.1,MIT,LICENSE.txt,Conservative production dependency closure; not proof of inclusion in final DLL
+tinyvec,1.11.0,Zlib OR Apache-2.0 OR MIT,LICENSE-APACHE.md; LICENSE-MIT.md; LICENSE-ZLIB.md,Conservative production dependency closure; not proof of inclusion in final DLL
+unicode-ident,1.0.24,(MIT OR Apache-2.0) AND Unicode-3.0,LICENSE-APACHE; LICENSE-MIT; LICENSE-UNICODE,Conservative production dependency closure; not proof of inclusion in final DLL
+wyz,0.5.1,MIT,LICENSE.txt,Conservative production dependency closure; not proof of inclusion in final DLL
+zmij,1.0.21,MIT,LICENSE-MIT,Conservative production dependency closure; not proof of inclusion in final DLL

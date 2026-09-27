@@ -55,6 +55,23 @@ public sealed class FfmpegSettingsViewModelTests
     }
 
     [Fact]
+    public void Constructor_DefaultSettingsKeepToolPathsEmpty()
+    {
+        var viewModel = new FfmpegSettingsViewModel(
+            FfmpegSettings.CreateDefault());
+
+        var savedSettings = viewModel.CreateSettings();
+
+        Assert.Equal(
+            string.Empty,
+            savedSettings.FfprobeExecutablePath);
+
+        Assert.Equal(
+            string.Empty,
+            savedSettings.FfmpegExecutablePath);
+    }
+
+    [Fact]
     public void ChangingFfprobePath_RaisesPropertyChanged()
     {
         var viewModel =

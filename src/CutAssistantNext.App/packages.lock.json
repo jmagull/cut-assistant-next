@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0-windows7.0": {
+      "HanumanInstitute.LibMpv": {
+        "type": "Transitive",
+        "resolved": "0.10.1",
+        "contentHash": "rA+u1FBpcPKdOvcdeqghK2ZOja6RxYhfloMe6CLjvjqJz2yqhgkONXasGqw1ZUKmRkwa6OX6g3b1kQB/IiJNyA==",
+        "dependencies": {
+          "HanumanInstitute.Validators": "2.1.2"
+        }
+      },
+      "HanumanInstitute.Validators": {
+        "type": "Transitive",
+        "resolved": "2.1.2",
+        "contentHash": "bifEUNRI6rb4GxUa+JpvU7+Qi91Zfcox2fCZeiIcZrQQQgxpik5XJ2iauxuaxB2GoheqJuj8JHSZmyKFlAQSHQ==",
+        "dependencies": {
+          "JetBrains.Annotations": "2025.2.4",
+          "System.ComponentModel.Annotations": "5.0.0"
+        }
+      },
+      "JetBrains.Annotations": {
+        "type": "Transitive",
+        "resolved": "2025.2.4",
+        "contentHash": "TwbgxAkXxY+vNEhNVx/QXjJ4vqxmepOjsgRvvImQPbHkHMMb4W+ahL3laMsxXKtNT7iMy+E1B3xkqao2hf1n3A=="
+      },
+      "System.ComponentModel.Annotations": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg=="
+      },
+      "cutassistantnext.core": {
+        "type": "Project"
+      },
+      "cutassistantnext.cutlists": {
+        "type": "Project",
+        "dependencies": {
+          "CutAssistantNext.Core": "[0.2.0, )"
+        }
+      },
+      "cutassistantnext.media": {
+        "type": "Project",
+        "dependencies": {
+          "CutAssistantNext.Core": "[0.2.0, )",
+          "HanumanInstitute.LibMpv": "[0.10.1, )"
+        }
+      }
+    },
+    "net10.0-windows7.0/win-x64": {}
+  }
+}

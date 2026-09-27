@@ -9,10 +9,12 @@ internal sealed class ConfiguredFfprobeRunner :
 {
     private readonly Func<FfmpegSettings?> _settingsProvider;
     private readonly Func<string, IMediaAnalysisRunner> _runnerFactory;
+    private readonly ToolPathResolver _toolPathResolver;
 
     internal ConfiguredFfprobeRunner(
         Func<FfmpegSettings?> settingsProvider,
-        Func<string, IMediaAnalysisRunner> runnerFactory)
+        Func<string, IMediaAnalysisRunner> runnerFactory,
+        ToolPathResolver? toolPathResolver = null)
     {
         ArgumentNullException.ThrowIfNull(
             settingsProvider);
@@ -25,6 +27,9 @@ internal sealed class ConfiguredFfprobeRunner :
 
         _runnerFactory =
             runnerFactory;
+
+        _toolPathResolver =
+            toolPathResolver ?? new ToolPathResolver();
     }
 
     public Task<MediaAnalysisResult> RunAsync(
@@ -35,16 +40,14 @@ internal sealed class ConfiguredFfprobeRunner :
             _settingsProvider()
             ?? FfmpegSettings.CreateDefault();
 
-        if (string.IsNullOrWhiteSpace(
-            settings.FfprobeExecutablePath))
-        {
-            throw new InvalidOperationException(
-                "ffprobe.exe ist nicht konfiguriert.");
-        }
+        var executablePath =
+            _toolPathResolver.Resolve(
+                BundledToolKind.Ffprobe,
+                settings.FfprobeExecutablePath);
 
         var runner =
             _runnerFactory(
-                settings.FfprobeExecutablePath);
+                executablePath);
 
         return runner.RunAsync(
             mediaFilePath,

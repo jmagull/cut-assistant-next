@@ -60,9 +60,9 @@ libmpv-2.dll
 - ViewModels kennen weder WPF-Fensterklassen noch mpv- oder native Typen.
 - Die Ereignisschleife wird beim Beenden kontrolliert abgebrochen.
 - libmpv wird freigegeben, bevor WPF das native Videofenster zerstört.
-- Die native DLL wird beim Build automatisch in den Ausgabe- und Publish-Ordner kopiert.
+- Die vier nativen DLLs werden beim Build automatisch in den Ausgabe- und Publish-Ordner kopiert.
 
-Die native Laufzeit wird reproduzierbar mit `tools/setup-libmpv.ps1` bereitgestellt:
+Die native Laufzeit wird mit `tools/setup-libmpv.ps1 -SourceDirectory <Ordner mit vier DLLs>` aus dem verifizierten CAN-libmpv-Kandidaten bereitgestellt. Das Skript prüft jede DLL vor und nach dem Kopieren gegen die SHA-256-Werte in [der Kandidaten-Dokumentation](libmpv/v0.41.0/README.md). Publish und internes Test-Setup übernehmen auch die zugehörigen Drittanbieterhinweise. Der zuvor verwendete Zhongfly-Build bleibt lokal als historischer Vergleich erhalten:
 
 ```text
 Release:

@@ -6,18 +6,22 @@ namespace CutAssistantNext.App.Services.Cutting;
 internal sealed class ConfiguredMp4BoxCutServiceFactory
 {
     private readonly Func<CutApplicationSettings?> _settingsProvider;
+
     private readonly Func<
         string,
         IProgress<Mp4BoxProgressUpdate>?,
         IMp4BoxRunner> _runnerFactory;
 
+    private readonly ToolPathResolver _toolPathResolver;
+
     internal ConfiguredMp4BoxCutServiceFactory(
         Func<CutApplicationSettings?> settingsProvider,
-        Func<string, IMp4BoxRunner> runnerFactory)
+        Func<string, IMp4BoxRunner> runnerFactory,
+        ToolPathResolver? toolPathResolver = null)
         : this(
             settingsProvider,
-            (path, _) =>
-                runnerFactory(path))
+            (path, _) => runnerFactory(path),
+            toolPathResolver)
     {
         ArgumentNullException.ThrowIfNull(
             runnerFactory);
@@ -28,7 +32,8 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
         Func<
             string,
             IProgress<Mp4BoxProgressUpdate>?,
-            IMp4BoxRunner> runnerFactory)
+            IMp4BoxRunner> runnerFactory,
+        ToolPathResolver? toolPathResolver = null)
     {
         ArgumentNullException.ThrowIfNull(
             settingsProvider);
@@ -41,6 +46,9 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
 
         _runnerFactory =
             runnerFactory;
+
+        _toolPathResolver =
+            toolPathResolver ?? new ToolPathResolver();
     }
 
     public Mp4BoxCutService Create()
@@ -56,16 +64,14 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
             _settingsProvider()
             ?? CutApplicationSettings.CreateDefault();
 
-        if (string.IsNullOrWhiteSpace(
-            settings.ExecutablePath))
-        {
-            throw new InvalidOperationException(
-                "Es ist keine Schnittanwendung konfiguriert.");
-        }
+        var executablePath =
+            _toolPathResolver.Resolve(
+                BundledToolKind.Mp4Box,
+                settings.ExecutablePath);
 
         var runner =
             _runnerFactory(
-                settings.ExecutablePath,
+                executablePath,
                 progress);
 
         return new Mp4BoxCutService(

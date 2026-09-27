@@ -2,7 +2,11 @@
 
 Cut Assistant Next (CAN) ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box. Die Oberfläche verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codec-Pakete vorauszusetzen.
 
-Stand: 13.09.2026. CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer.
+CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer. Der selbst gebaute libmpv-Kandidat ist in internen Testpaketen enthalten, aber noch nicht für eine öffentliche Ausgabe freigegeben.
+
+## Lizenz
+
+Der vom CAN-Projekt selbst entwickelte Quellcode steht unter **GPL-3.0-or-later**. Der vollständige Lizenztext steht in [LICENSE](LICENSE). Eingebundene Bibliotheken, NuGet-Pakete und die .NET-Laufzeit behalten ihre eigenen Lizenzen; die [libmpv-Hinweise](docs/libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) und die [.NET-/NuGet-Bestandsaufnahme](docs/DOTNET-LICENSING.md) ordnen sie zu. Die derzeitigen Testpakete sind noch keine öffentliche Freigabe.
 
 ## Einstieg
 
@@ -10,6 +14,7 @@ Stand: 13.09.2026. CAN ist weiterhin ein Proof of Concept mit experimenteller Un
 - [Projektstatus](docs/STATUS.md): umgesetzter Umfang, bestätigte Tests und offene Aufgaben.
 - [Setup-Merkliste](docs/SETUP-MERKLISTE.md): geplantes Gesamtpaket und vorgemerkte V2-Funktionen.
 - [Testplan](docs/TESTPLAN.md): reproduzierbare Prüfungen und Testbasis.
+- [Release-Build 6 / RC1](docs/RELEASE-BUILD6.md): Quellpaket, feste Paketversionen und erneute Paketierung ohne Erhöhung der Buildnummer.
 - [Architektur](docs/ARCHITECTURE.md) und [Entscheidungen](docs/DECISIONS.md): technische Hintergründe und Entwicklungsgeschichte.
 
 ## Was CAN derzeit kann
@@ -20,6 +25,8 @@ Stand: 13.09.2026. CAN ist weiterhin ein Proof of Concept mit experimenteller Un
 - Cutlists lokal laden, erzeugen und speichern.
 - Passende Server-Cutlists automatisch suchen und die Suche erneut per Button öffnen.
 - Lokal gespeicherte Cutlists nach Bestätigung auf den konfigurierten Server hochladen.
+- Fremde Cutlists als Vorlage verwenden, deren Namensvorschlag bewusst beibehalten oder neu erzeugen und die Herkunft bei abweichendem Autor im Kommentar dokumentieren.
+- Schnittzeiten einheitlich anzeigen und die Namensvorschau markieren und kopieren.
 - Ausgabenamen über Namensmasken und Cutlist-Namensvorschläge vorbereiten.
 - MP4-Inhalte direkt mit MP4Box schneiden, auch bei abweichender Dateiendung.
 - Andere Container nach Bestätigung experimentell mit FFmpeg verlustfrei nach MP4 umpacken und anschließend mit MP4Box schneiden.
@@ -32,28 +39,30 @@ Die reine Cutlist-Erstellung benötigt keine Video-Umwandlung. Erst beim Schneid
 
 MP4 ist ein Container, keine Bezeichnung für einen bestimmten Videocodec. Ob sich ein anderes Format verlustfrei vorbereiten lässt, hängt von seinen Streams ab. CAN verwendet Stream-Copy und führt keine automatische Neukodierung durch. Ungeeignete Dateien oder deutliche Abweichungen werden mit einer Fehlermeldung gestoppt.
 
-Die Prüfung der Arbeitsdatei ist eine Plausibilitätsprüfung anhand der Medieninformationen. Sie ersetzt nicht die Kontrolle der Schnittstellen und der Ton-Synchronität. Smart Rendering, Stapelverarbeitung, integrierte mehrteilige Aufnahmen sowie Installer/portable Veröffentlichung sind noch nicht umgesetzt.
+Die Prüfung der Arbeitsdatei ist eine Plausibilitätsprüfung anhand der Medieninformationen. Sie ersetzt nicht die Kontrolle der Schnittstellen und der Ton-Synchronität. Smart Rendering, Stapelverarbeitung, integrierte mehrteilige Aufnahmen sowie die öffentliche Installer-/Portable-Veröffentlichung sind noch nicht umgesetzt.
+
+Insbesondere bei historischen AVI-Dateien können bereits im Original Probleme mit Zeitstempeln, Bildaktualisierung oder Ton-Synchronität auftreten. Eine irreführende Dateiendung wie `.avi.mp4` ändert nichts am tatsächlich erkannten Container. Für solche Fälle sind weitere Praxistests und ein deutlicherer Warnhinweis vorgesehen.
 
 ## Für Anwender
 
-Vorgesehene Umgebung ist Windows 11 x64. Die derzeitige Build-Ausgabe benötigt die passende .NET-10-Desktop-Laufzeit und die mitgelieferte `libmpv-2.dll` neben dem Programm. ffprobe, FFmpeg und MP4Box werden über die Einstellungen konfiguriert. Eine fertige Installationsroutine gehört noch nicht zum Projektstand.
+Vorgesehene Umgebung ist Windows 11 x64. Die normale Build-Ausgabe benötigt die passende .NET-10-Desktop-Laufzeit und die vier mitgelieferten libmpv-DLLs neben dem Programm. ffprobe, FFmpeg und MP4Box werden über die Einstellungen konfiguriert. Ein internes Test-Setup ist vorhanden; eine öffentliche Installationsausgabe ist noch nicht freigegeben.
 
 Die [Nutzeranleitung](docs/NUTZERANLEITUNG.md) erklärt die Einrichtung ohne Entwicklungswerkzeuge.
 
 ## Aus dem Quellcode bauen
 
-Voraussetzungen: Windows 11 x64, .NET-10-SDK und 7-Zip für die Einrichtung der nativen Wiedergabebibliothek. Das Setup-Skript lädt die im Repository festgelegte libmpv-Version und prüft den Archiv-Hash. Restore und erstmalige Einrichtung benötigen Netzwerkzugriff.
+Voraussetzungen: Windows 11 x64, .NET-10-SDK und die vier DLLs des [geprüften CAN-libmpv-0.41.0-Kandidaten](docs/libmpv/v0.41.0/README.md) in einem lokalen Ordner. Das Setup-Skript prüft die SHA-256-Werte und kopiert die DLLs in den ignorierten Laufzeitordner. Ein .NET-Restore benötigt die passenden Pakete im lokalen Cache oder Netzwerkzugriff.
 
 Im Repository-Verzeichnis:
 
 ```powershell
-.\tools\setup-libmpv.ps1
+.\tools\setup-libmpv.ps1 -SourceDirectory 'C:\Pfad\zum\Vier-DLL-Ordner'
 dotnet restore .\CutAssistantNext.sln
 .\tools\build.ps1 -Configuration Release -NoRestore
 dotnet test .\CutAssistantNext.sln --configuration Release --no-build
 ```
 
-Die Anwendung liegt danach unter `src\CutAssistantNext.App\bin\Release\net10.0-windows\CutAssistantNext.App.exe`. Der Build kopiert die vorbereitete libmpv-Bibliothek in das Ausgabeverzeichnis. Für Analyse, experimentelles Umpacken und Schnitt sind zusätzlich die konfigurierten externen Werkzeuge erforderlich.
+Die Anwendung liegt danach unter `src\CutAssistantNext.App\bin\Release\net10.0-windows\CutAssistantNext.App.exe`. Der Build kopiert die vier vorbereiteten DLLs und die Drittanbieterhinweise in das Ausgabeverzeichnis. Für Analyse, experimentelles Umpacken und Schnitt sind zusätzlich die konfigurierten externen Werkzeuge erforderlich.
 
 ## Version und Buildnummer
 
@@ -71,7 +80,7 @@ Die inhaltliche Version steht zentral in `Version.props`: Patch für Korrekturen
 | `src/CutAssistantNext.Cutlists` | Cutlist-Import, Export, Metadaten und Bereichsumrechnung |
 | `tests` | vier automatisierte Testsuiten |
 | `samples` | kleine Referenzdaten |
-| `tools` | Einrichtung von libmpv |
+| `tools` | Einrichtung von libmpv und versionierte Builds |
 | `docs` | Anleitung, Status, Testplan und technische Dokumentation |
 
-Letzter bestätigter Stand: Release-Build ohne Fehler oder Warnungen, **443/443 Tests bestanden**. Die Diplomatin und Rubikon wurden mit jeweils zwei Cutlists im integrierten AVI-Ablauf erfolgreich geschnitten und vom Nutzer im Player geprüft. Einzelheiten und Einschränkungen stehen im [Testplan](docs/TESTPLAN.md).
+Letzter bestätigter Stand (19.09.2026): **450/450 automatisierte Tests bestanden**, Debug-Build erfolgreich. Der zuvor geprüfte Release-Build mit 443 Tests war fehler- und warnungsfrei; ein erneuter Release-Build mit 450 Tests steht noch aus. P1 zur Cutlist-Bedienung ist abgeschlossen. Diplomatin, Rubikon und Enigma wurden im integrierten AVI-Ablauf erfolgreich geschnitten und praktisch geprüft. Die AVI-Unterstützung bleibt experimentell. Einzelheiten, Auffälligkeiten und Einschränkungen stehen im [Testplan](docs/TESTPLAN.md).
