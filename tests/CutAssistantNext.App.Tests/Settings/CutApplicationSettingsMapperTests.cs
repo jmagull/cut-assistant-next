@@ -191,6 +191,61 @@ public sealed class CutApplicationSettingsMapperTests
     }
 
     [Fact]
+    public void ToCutApplicationInfo_WithInstalledGpac_UsesDetectedPath()
+    {
+        var root = Path.Combine(
+            Path.GetTempPath(),
+            "can-mapper-gpac-" +
+            Guid.NewGuid().ToString("N"));
+
+        Directory.CreateDirectory(root);
+
+        try
+        {
+            var installedDirectory = Path.Combine(
+                root,
+                "Installed GPAC");
+
+            Directory.CreateDirectory(installedDirectory);
+
+            var installedPath = Path.Combine(
+                installedDirectory,
+                "MP4Box.exe");
+
+            File.WriteAllText(installedPath, string.Empty);
+
+            var resolver = new ToolPathResolver(
+                root,
+                () => installedPath);
+
+            var settings =
+                CutApplicationSettings.CreateDefault();
+
+            var info =
+                CutApplicationSettingsMapper
+                    .ToCutApplicationInfo(
+                        settings,
+                        resolver);
+
+            Assert.NotNull(info);
+            Assert.Equal("MP4Box", info.Name);
+            Assert.Equal(installedPath, info.Executable);
+            Assert.Equal(string.Empty, info.Version);
+            Assert.Equal(string.Empty, info.Options);
+
+            Assert.Equal(
+                resolver.Resolve(
+                    BundledToolKind.Mp4Box,
+                    settings.ExecutablePath),
+                info.Executable);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Fact]
     public void ToCutApplicationInfo_WithNullSettings_Throws()
     {
         Assert.Throws<ArgumentNullException>(

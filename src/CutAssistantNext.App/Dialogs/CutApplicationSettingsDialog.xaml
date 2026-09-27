@@ -63,28 +63,6 @@
                              Padding="8,4"
                              Text="{Binding ExecutablePath, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBlock Grid.Column="0"
-                               Margin="9,0,9,0"
-                               VerticalAlignment="Center"
-                               Foreground="#9CA3AF"
-                               IsHitTestVisible="False"
-                               TextTrimming="CharacterEllipsis"
-                               Text="{Binding BundledMp4BoxExecutablePath}">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Visibility"
-                                        Value="Collapsed" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ExecutablePath}"
-                                                 Value="">
-                                        <Setter Property="Visibility"
-                                                Value="Visible" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-
                     <Button Grid.Column="2"
                             MinWidth="110"
                             Height="32"
@@ -115,7 +93,7 @@
                            FontSize="12"
                            Foreground="#6B7280"
                            TextWrapping="Wrap"
-                           Text="Ohne eigenen Programmpfad wird die mitgelieferte MP4Box verwendet, sofern sie vorhanden ist. Ein eigener Programmpfad hat Vorrang." />
+                           Text="MP4Box ist nicht im Lieferumfang enthalten. Bitte GPAC selbst installieren und unter Programmdatei über Durchsuchen die MP4Box.exe auswählen." />
             </StackPanel>
         </Border>
 

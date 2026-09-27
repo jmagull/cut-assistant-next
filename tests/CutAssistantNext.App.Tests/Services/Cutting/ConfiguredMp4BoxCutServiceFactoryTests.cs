@@ -178,6 +178,71 @@ public sealed class ConfiguredMp4BoxCutServiceFactoryTests
             expectedProgress,
             receivedProgress);
     }
+
+    [Fact]
+    public void Create_WithRealGpacInstallation_UsesSamePathAsMetadata()
+    {
+        var expectedPath =
+            Environment.GetEnvironmentVariable(
+                "CAN_TEST_INSTALLED_GPAC_PATH");
+
+        // Nur bei explizit aktiviertem lokalen Integrationstest.
+        if (string.IsNullOrWhiteSpace(expectedPath))
+        {
+            return;
+        }
+
+        var root = Path.Combine(
+            Path.GetTempPath(),
+            "can-real-gpac-" +
+            Guid.NewGuid().ToString("N"));
+
+        Directory.CreateDirectory(root);
+
+        try
+        {
+            var detectedPath =
+                GpacInstallationLocator.FindMp4BoxPath();
+
+            Assert.NotNull(detectedPath);
+            Assert.Equal(expectedPath, detectedPath);
+
+            var resolver = new ToolPathResolver(
+                root,
+                GpacInstallationLocator.FindMp4BoxPath);
+
+            var settings =
+                CutApplicationSettings.CreateDefault();
+
+            string? runnerPath = null;
+
+            var factory =
+                new ConfiguredMp4BoxCutServiceFactory(
+                    () => settings,
+                    path =>
+                    {
+                        runnerPath = path;
+                        return new RecordingMp4BoxRunner();
+                    },
+                    resolver);
+
+            _ = factory.Create();
+
+            var metadata =
+                CutApplicationSettingsMapper.ToCutApplicationInfo(
+                    settings,
+                    resolver);
+
+            Assert.NotNull(metadata);
+            Assert.Equal(expectedPath, runnerPath);
+            Assert.Equal(expectedPath, metadata.Executable);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
     private sealed class RecordingMp4BoxRunner :
         IMp4BoxRunner
     {

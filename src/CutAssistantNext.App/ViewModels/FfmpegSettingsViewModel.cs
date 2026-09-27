@@ -10,22 +10,10 @@ internal sealed class FfmpegSettingsViewModel :
     private string _ffprobeExecutablePath;
     private string _ffmpegExecutablePath;
 
-    public FfmpegSettingsViewModel(
-        FfmpegSettings settings,
-        ToolPathResolver? resolver = null)
+    public FfmpegSettingsViewModel(FfmpegSettings settings)
     {
         ArgumentNullException.ThrowIfNull(
             settings);
-
-        resolver ??= new ToolPathResolver();
-
-        BundledFfprobeExecutablePath =
-            resolver.GetBundledPath(
-                BundledToolKind.Ffprobe);
-
-        BundledFfmpegExecutablePath =
-            resolver.GetBundledPath(
-                BundledToolKind.Ffmpeg);
 
         _ffprobeExecutablePath =
             settings.FfprobeExecutablePath;
@@ -35,10 +23,6 @@ internal sealed class FfmpegSettingsViewModel :
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    public string BundledFfprobeExecutablePath { get; }
-
-    public string BundledFfmpegExecutablePath { get; }
 
     public string FfprobeExecutablePath
     {

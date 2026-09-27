@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\CutAssistantNext.Core\CutAssistantNext.Core.csproj" />
@@ -7,7 +7,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <LibMpvPath>$(MSBuildThisFileDirectory)..\..\external\libmpv\win-x64\libmpv-2.dll</LibMpvPath>
+    <LibMpvDirectory>$(MSBuildThisFileDirectory)..\..\external\libmpv\can-v0.41.0</LibMpvDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,16 +17,42 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="$(LibMpvPath)"
+    <None Include="$(LibMpvDirectory)\libmpv-2.dll"
           Link="libmpv-2.dll"
           CopyToOutputDirectory="PreserveNewest"
           CopyToPublishDirectory="PreserveNewest" />
+    <None Include="$(LibMpvDirectory)\libc++.dll"
+          Link="libc++.dll"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
+    <None Include="$(LibMpvDirectory)\libshaderc_shared.dll"
+          Link="libshaderc_shared.dll"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
+    <None Include="$(LibMpvDirectory)\libspirv-cross-c-shared.dll"
+          Link="libspirv-cross-c-shared.dll"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="$(MSBuildThisFileDirectory)..\..\LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="$(MSBuildThisFileDirectory)..\..\docs\DOTNET-LICENSING.md" Link="third-party\DOTNET-LICENSING.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="$(MSBuildThisFileDirectory)..\..\docs\licenses\nuget\MIT-NOTICES.txt" Link="third-party\licenses\nuget\MIT-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="$(MSBuildThisFileDirectory)..\..\docs\licenses\dotnet\**\*">
+      <Link>third-party\licenses\dotnet\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)..\..\docs\libmpv\v0.41.0\**\*"
+             Exclude="$(MSBuildThisFileDirectory)..\..\docs\libmpv\v0.41.0\INTEGRATION-TEST.md">
+      <Link>third-party\libmpv\v0.41.0\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <Target Name="EnsureLibMpvPresent"
           BeforeTargets="PrepareForBuild">
-    <Error Condition="!Exists('$(LibMpvPath)')"
-           Text="libmpv-2.dll wurde nicht gefunden. Bitte zuerst tools\setup-libmpv.ps1 ausführen." />
+    <Error Condition="!Exists('$(LibMpvDirectory)\libmpv-2.dll') Or !Exists('$(LibMpvDirectory)\libc++.dll') Or !Exists('$(LibMpvDirectory)\libshaderc_shared.dll') Or !Exists('$(LibMpvDirectory)\libspirv-cross-c-shared.dll')"
+           Text="CAN-libmpv 0.41.0 ist unvollständig. Bitte zuerst tools\setup-libmpv.ps1 mit -SourceDirectory ausführen." />
   </Target>
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -35,6 +61,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <PlatformTarget>x64</PlatformTarget>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>..\..\assets\can.ico</ApplicationIcon>
   </PropertyGroup>
 
 </Project>

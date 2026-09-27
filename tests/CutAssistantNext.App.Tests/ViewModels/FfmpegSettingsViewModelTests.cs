@@ -55,27 +55,10 @@ public sealed class FfmpegSettingsViewModelTests
     }
 
     [Fact]
-    public void Constructor_ProvidesBundledToolPathsWithoutPersistingThem()
+    public void Constructor_DefaultSettingsKeepToolPathsEmpty()
     {
-        var root = Path.Combine(
-            Path.GetTempPath(),
-            "can-ffprobe-viewmodel-" +
-            Guid.NewGuid().ToString("N"));
-
-        var resolver = new ToolPathResolver(root);
-
-        var viewModel =
-            new FfmpegSettingsViewModel(
-                FfmpegSettings.CreateDefault(),
-                resolver);
-
-        Assert.Equal(
-            resolver.GetBundledPath(BundledToolKind.Ffprobe),
-            viewModel.BundledFfprobeExecutablePath);
-
-        Assert.Equal(
-            resolver.GetBundledPath(BundledToolKind.Ffmpeg),
-            viewModel.BundledFfmpegExecutablePath);
+        var viewModel = new FfmpegSettingsViewModel(
+            FfmpegSettings.CreateDefault());
 
         var savedSettings = viewModel.CreateSettings();
 

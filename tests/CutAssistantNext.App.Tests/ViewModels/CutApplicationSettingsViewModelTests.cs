@@ -37,23 +37,10 @@ public sealed class CutApplicationSettingsViewModelTests
     }
 
     [Fact]
-    public void Constructor_ProvidesBundledMp4BoxPathWithoutPersistingIt()
+    public void Constructor_DefaultSettingsKeepExecutablePathEmpty()
     {
-        var root = Path.Combine(
-            Path.GetTempPath(),
-            "can-mp4box-viewmodel-" +
-            Guid.NewGuid().ToString("N"));
-
-        var resolver = new ToolPathResolver(root);
-
-        var viewModel =
-            new CutApplicationSettingsViewModel(
-                CutApplicationSettings.CreateDefault(),
-                resolver);
-
-        Assert.Equal(
-            resolver.GetBundledPath(BundledToolKind.Mp4Box),
-            viewModel.BundledMp4BoxExecutablePath);
+        var viewModel = new CutApplicationSettingsViewModel(
+            CutApplicationSettings.CreateDefault());
 
         var savedSettings = viewModel.CreateSettings();
 

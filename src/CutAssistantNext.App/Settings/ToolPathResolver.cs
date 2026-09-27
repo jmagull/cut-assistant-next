@@ -12,19 +12,35 @@ internal enum BundledToolKind
 internal sealed class ToolPathResolver
 {
     private readonly string _applicationDirectory;
+    private readonly Func<string?> _findInstalledMp4Box;
 
     internal ToolPathResolver()
-        : this(AppContext.BaseDirectory)
+        : this(
+            AppContext.BaseDirectory,
+            GpacInstallationLocator.FindMp4BoxPath)
     {
     }
 
     internal ToolPathResolver(string applicationDirectory)
+        : this(applicationDirectory, () => null)
+    {
+    }
+
+    internal ToolPathResolver(
+        string applicationDirectory,
+        Func<string?> findInstalledMp4Box)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
             applicationDirectory);
 
+        ArgumentNullException.ThrowIfNull(
+            findInstalledMp4Box);
+
         _applicationDirectory =
             Path.GetFullPath(applicationDirectory);
+
+        _findInstalledMp4Box =
+            findInstalledMp4Box;
     }
 
     internal string GetBundledPath(BundledToolKind tool)
@@ -63,6 +79,34 @@ internal sealed class ToolPathResolver
         BundledToolKind tool,
         string? configuredPath)
     {
+        var resolvedPath = TryResolve(
+            tool,
+            configuredPath);
+
+        if (resolvedPath is not null)
+        {
+            return resolvedPath;
+        }
+
+        if (tool == BundledToolKind.Mp4Box)
+        {
+            throw new InvalidOperationException(
+                "MP4Box wurde nicht gefunden (MP4Box.exe). Bitte GPAC installieren " +
+                "oder den Programmpfad unter Einstellungen " +
+                "→ Schnittanwendung eintragen.");
+        }
+
+            throw new InvalidOperationException(
+                "Das notwendige Werkzeug wurde nicht gefunden: " +
+               (tool == BundledToolKind.Ffprobe ? "ffprobe.exe" : "ffmpeg.exe") +
+               ". Bitte das Werkzeug selbst installieren und den vollständigen " +
+               "Programmpfad unter Einstellungen → FFmpeg-Werkzeuge eintragen.");
+    }
+
+    internal string? TryResolve(
+        BundledToolKind tool,
+        string? configuredPath)
+    {
         if (!string.IsNullOrWhiteSpace(configuredPath))
         {
             return configuredPath;
@@ -70,13 +114,21 @@ internal sealed class ToolPathResolver
 
         var bundledPath = GetBundledPath(tool);
 
-        if (!File.Exists(bundledPath))
+        if (File.Exists(bundledPath))
         {
-            throw new InvalidOperationException(
-                "Das mitgelieferte Werkzeug wurde nicht gefunden: " +
-                bundledPath);
+            return bundledPath;
         }
 
-        return bundledPath;
+        if (tool != BundledToolKind.Mp4Box)
+        {
+            return null;
+        }
+
+        var installedPath = _findInstalledMp4Box();
+
+        return !string.IsNullOrWhiteSpace(installedPath) &&
+               File.Exists(installedPath)
+            ? installedPath
+            : null;
     }
 }

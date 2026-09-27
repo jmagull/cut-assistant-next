@@ -1,19 +1,29 @@
 # Setup-Merkliste
 
-Stand: 13.09.2026. Vereinbarter Umfang für die Veröffentlichung nach der weiteren Testphase. Diese Punkte sind geplant und noch nicht umgesetzt.
+Stand: 20.09.2026. Interne Testphase für Cut Assistant Next 0.2.0, Build 6.
+Windows-Installer TEST2 und Portable ZIP TEST2 wurden erfolgreich getestet.
+Eine öffentliche Veröffentlichung ist noch nicht freigegeben; insbesondere
+Lizenz- und Weitergabebedingungen sind noch zu klären.
 
-## Rundum-sorglos-Paket
+## Windows-Installer und portable Ausgabe
 
-- [ ] CAN mit gemeinsam getesteten Versionen von FFmpeg, ffprobe, MP4Box und libmpv ausliefern.
-- [ ] Konkrete Werkzeugversionen, Downloadquellen und Prüfsummen für reproduzierbare Pakete festhalten.
-- [ ] Werkzeuge im CAN-Verzeichnis ablegen und automatisch über relative Pfade finden; die von libmpv benötigte Platzierung neben der Anwendung berücksichtigen.
-- [ ] Eigene Werkzeugpfade als optionale Einstellung weiterhin ermöglichen; das Paket soll ohne manuelle Pfadeinrichtung starten.
-- [ ] Weitergabebedingungen der tatsächlich verwendeten Builds prüfen und erforderliche Lizenztexte, Hinweise und gegebenenfalls Quellcode-Angebote beilegen.
-- [ ] Bereitstellung der .NET-Desktop-Laufzeit klären: im Paket enthalten oder durch das Setup bereitgestellt.
-- [ ] Installer oder portable Ausgabe festlegen und auf einem Windows-System ohne zuvor eingerichtete Entwicklungswerkzeuge testen.
-- [ ] Programmsymbol und finale Gestaltung ergänzen.
-- [ ] Paketversion und enthaltene Werkzeugversionen dokumentieren; Updates als erneut getestetes Gesamtpaket bereitstellen.
-- [ ] Installation beziehungsweise Entpacken, Werkzeugerkennung, Wiedergabe, Analyse und Schnitt gemeinsam prüfen.
+- [x] Windows-Installer TEST2: CAN 0.2.0 Build 6, selbstenthaltene .NET-Laufzeit, libmpv sowie FFmpeg und ffprobe 8.1.2 enthalten.
+- [x] GPAC 26.07: Originalinstaller separat eingebunden. Fehlende Installation wird nach ausdrücklicher Zustimmung durchgeführt; eine vorhandene Installation wird übersprungen. Beide Fälle auf VM 108 erfolgreich getestet.
+- [x] Portable ZIP TEST2: CAN, selbstenthaltene .NET-Laufzeit und libmpv enthalten; FFmpeg und GPAC werden nicht mitgeliefert. Entpacken und Programmstart auf dem Entwicklungsrechner erfolgreich getestet.
+
+### Technische Prüfung und Freigabe
+
+- [x] Werkzeugerkennung: gebündelte FFmpeg-Pfade und separat installiertes GPAC werden automatisch gefunden; eigene Werkzeugpfade bleiben konfigurierbar.
+- [x] Selbstenthaltene .NET-Laufzeit und libmpv sind in beiden Ausgaben enthalten.
+- [x] Programmsymbol, deutscher Installationsassistent und Desktop-Verknüpfung umgesetzt und getestet.
+- [x] Installer auf VM 108 getestet: Installation, Wiedergabe, Analyse, MP4Box-Schnitt und Deinstallation.
+- [x] Beide GPAC-Szenarien getestet: Nachinstallation mit Zustimmung sowie Überspringen einer vorhandenen Installation.
+- [x] Portable ZIP: Inhalt, Entpacken und Programmstart auf dem Entwicklungsrechner getestet.
+- [ ] Portable ZIP zusätzlich auf einem Rechner ohne vorhandene CAN-Konfiguration testen.
+- [ ] Werkzeugversionen, Downloadquellen und SHA-256-Prüfsummen vollständig für einen reproduzierbaren Paketbau dokumentieren.
+- [ ] libmpv-Juli-Build `2026-07-30-74356c0fc6`: Originalarchiv wiederbeschaffen und dauerhaft sichern (hinterlegte Download-URL am 20.09.2026 mit HTTP 404 geprüft). Passende Quellcodes, Buildinformationen und Lizenzpflichten für genau diesen Build klären. Der September-Build ist nur ein Untersuchungskandidat und ersetzt die getestete Juli-DLL nicht.
+- [ ] Lizenztexte, Weitergaberechte und gegebenenfalls erforderliche Quellcode-Angebote prüfen und beilegen.
+- [ ] Release-Verfahren für künftige, gemeinsam getestete Paketversionen dokumentieren.
 
 Zusätzliche Werkzeug-Downloadlinks unter Hilfe sind für dieses Konzept nicht vorgesehen. Die Projektlinks in den Credits bleiben erhalten. Der Menüpunkt Update/GitHub öffnet derzeit nur die Projektseite; ein automatischer Updater ist damit nicht umgesetzt.
 
@@ -33,5 +43,6 @@ Jörg nimmt sich in dieser Woche Zeit für weitere Praxistests. Erkenntnisse und
 
 - Klebezentrum (experimentell): mehrteilige Aufnahmen zusammenfügen.
 - Schnittbereiche beim Schneiden gemäß den Hinweisen von chrisdude feinabstimmen; konkrete Regeln vor der Umsetzung festlegen.
+- Auswahl der Tonspur in CANs Player anbieten, wenn eine Aufnahme mehrere Tonspuren enthält; Sprachen und Kennzeichnungen verständlich anzeigen.
 
 Stapelverarbeitung und Smart Rendering bleiben weitere spätere Wünsche ohne feste Versionszuordnung.

@@ -1,4 +1,3 @@
-using System.IO;
 using CutAssistantNext.Cutlists.Metadata;
 
 namespace CutAssistantNext.App.Settings;
@@ -17,18 +16,15 @@ internal static class CutApplicationSettingsMapper
             !string.IsNullOrWhiteSpace(
                 settings.ExecutablePath);
 
-        if (!hasCustomPath &&
-            !File.Exists(
-                resolver.GetBundledPath(
-                    BundledToolKind.Mp4Box)))
+        var executablePath =
+            resolver.TryResolve(
+                BundledToolKind.Mp4Box,
+                settings.ExecutablePath);
+
+        if (executablePath is null)
         {
             return null;
         }
-
-        var executablePath =
-            resolver.Resolve(
-                BundledToolKind.Mp4Box,
-                settings.ExecutablePath);
 
         return new CutApplicationInfo(
             hasCustomPath ? settings.Name : "MP4Box",

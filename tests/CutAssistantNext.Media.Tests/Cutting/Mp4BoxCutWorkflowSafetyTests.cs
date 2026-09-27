@@ -188,7 +188,10 @@ public sealed class Mp4BoxCutWorkflowSafetyTests
                 {
                     new Mp4BoxSplitRange(
                         TimeSpan.FromSeconds(10),
-                        TimeSpan.FromSeconds(20))
+                        TimeSpan.FromSeconds(20)),
+                    new Mp4BoxSplitRange(
+                        TimeSpan.FromSeconds(30),
+                        TimeSpan.FromSeconds(40))
                 };
 
             await workflow.RunAsync(
@@ -198,7 +201,7 @@ public sealed class Mp4BoxCutWorkflowSafetyTests
                 overwriteExistingOutput: true);
 
             Assert.Equal(
-                1,
+                2,
                 runner.SplitCallCount);
 
             Assert.Equal(
@@ -278,7 +281,10 @@ public sealed class Mp4BoxCutWorkflowSafetyTests
                 {
                     new Mp4BoxSplitRange(
                         TimeSpan.FromSeconds(10),
-                        TimeSpan.FromSeconds(20))
+                        TimeSpan.FromSeconds(20)),
+                    new Mp4BoxSplitRange(
+                        TimeSpan.FromSeconds(30),
+                        TimeSpan.FromSeconds(40))
                 };
 
             await Assert.ThrowsAsync<IOException>(
@@ -290,7 +296,7 @@ public sealed class Mp4BoxCutWorkflowSafetyTests
                         overwriteExistingOutput: true));
 
             Assert.Equal(
-                1,
+                2,
                 runner.SplitCallCount);
 
             Assert.Equal(

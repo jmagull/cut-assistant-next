@@ -1,12 +1,12 @@
 # Nutzeranleitung – Cut Assistant Next
 
-Stand: 19.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand: 27.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
-Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, zum Beispiel **Cut Assistant Next · 0.2.0 · Build 1**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, zum Beispiel **Cut Assistant Next · 0.2.0 · Build 6**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
 
 ## 1. Einmalig einrichten
 
-Starte die aktuelle Programmversion aus ihrem vollständigen Ausgabeordner. Die Datei `libmpv-2.dll` gehört neben das Programm; kopiere nicht nur die EXE allein. Auf dem Rechner muss die passende .NET-10-Desktop-Laufzeit vorhanden sein. Ein Installer ist noch nicht Teil dieses Standes.
+Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE allein. Der bisherige selbstenthaltene Build-6-Teststand bringt die .NET-Laufzeit mit. Die neue laufzeitabhängige Testausgabe benötigt dagegen die separat installierte [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). Ein internes Test-Setup ist vorhanden; eine öffentliche Ausgabe ist noch nicht freigegeben.
 
 Öffne die Einstellungen und hinterlege die benötigten Werkzeuge:
 
@@ -22,6 +22,40 @@ Starte die aktuelle Programmversion aus ihrem vollständigen Ausgabeordner. Die 
 Wähle jeweils die ausführbare Datei, nicht nur ihren Ordner. Der aktuelle Schnittablauf erwartet MP4Box als Schnittanwendung. Ein beliebiges anderes Programm wird durch Eintragen seines Pfades nicht zu einem unterstützten Schnittmotor.
 
 Ohne Server-Konfiguration kannst du Videos weiterhin bearbeiten und lokale Cutlists verwenden. Ohne MP4Box kannst du Schnittmarken vorbereiten und Cutlists speichern, aber keine Videoausgabe schneiden.
+
+### Portable-Version aus dem ZIP verwenden
+
+Das Portable-Paket vollständig in einen beliebigen Ordner entpacken und
+`CutAssistantNext.App.exe` dort starten. Der bisherige selbstenthaltene
+Build-6-Teststand bringt die .NET-Desktop-Laufzeit mit; die neue kleinere
+laufzeitabhängige Vorschau benötigt eine separate Installation.
+
+Für Wiedergabe und Schnitt werden die benötigten Programme so eingerichtet:
+
+1. **Nur für die laufzeitabhängige Ausgabe:** Die
+   [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+   installieren. Die einfache ".NET Runtime" ohne Desktop-Komponenten genügt nicht.
+2. FFmpeg einschließlich ffprobe von
+   https://www.gyan.dev/ffmpeg/builds/ herunterladen und entpacken.
+   Die bisher getestete Version ist 8.1.2 (Essentials Build).
+3. GPAC einschließlich MP4Box von
+   https://gpac.io/downloads/gpac-nightly-builds/ herunterladen und
+   installieren. Getestet wurde GPAC 26.07.
+4. Unter **Einstellungen → FFmpeg-Werkzeuge …** die beiden ausführbaren
+   Dateien `ffprobe.exe` und `ffmpeg.exe` auswählen. Sie liegen
+   normalerweise im Unterordner `bin` des entpackten FFmpeg-Pakets.
+5. CAN erkennt eine regulär installierte GPAC-Version automatisch,
+   solange kein eigener MP4Box-Pfad eingetragen ist. Falls die Erkennung
+   nicht gelingt, unter **Einstellungen → Schnittanwendung …** die
+   `MP4Box.exe` selbst auswählen.
+
+Die Einstellungen werden weiterhin im Benutzerprofil gespeichert.
+„Portable“ bezeichnet hier die entpackbare Programmausgabe, nicht eine
+vom Benutzerprofil unabhängige Speicherung aller Einstellungen.
+
+Der bisherige selbstenthaltene Build-6-Teststand wurde unter Windows 11
+praktisch geprüft. Der VM-Test der neuen laufzeitabhängigen Ausgabe steht
+noch aus.
 
 ## 2. Video laden
 
@@ -123,6 +157,8 @@ Bei experimenteller Vorbereitung geschieht Folgendes:
 5. Die temporäre Arbeitsdatei wird nach dem Vorgang entfernt. Bei einem weiteren Schnittversuch wird sie erneut erzeugt.
 
 Die Prüfungen sind keine vollständige Kontrolle aller Bildzeitstempel. Kontrolliere Anfang, Ende, Werbegrenzen und Ton-Synchronität der fertigen Datei.
+
+Enthält eine HD-Aufnahme mehrere Tonspuren, bleiben sie beim Schneiden mit MP4Box erhalten. Öffne die geschnittene Datei anschließend in deinem eigenen Player und wähle dort bei Bedarf die gewünschte Tonspur aus. CANs Player bietet derzeit keine Tonspurauswahl.
 
 **Abbrechen** fordert den Abbruch an. Warte, bis er abgeschlossen ist. Nach einem Fehler bleibt das Fenster offen und zeigt den Grund direkt oberhalb des Protokolls. Bei Erfolg meldet es **Fertig.** und bietet einen Schließen-Countdown an.
 

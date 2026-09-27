@@ -77,6 +77,33 @@ public sealed class ToolPathResolverTests
         }
     }
 
+[Theory]
+[InlineData("Ffprobe", "ffprobe.exe")]
+[InlineData("Ffmpeg", "ffmpeg.exe")]
+public void Resolve_MissingFfmpegTool_ExplainsManualConfiguration(
+    string toolName,
+    string fileName)
+{
+    var root = CreateTempDirectory();
+
+    try
+    {
+        var resolver = new ToolPathResolver(root);
+        var tool = Enum.Parse<BundledToolKind>(toolName);
+
+        var error = Assert.Throws<InvalidOperationException>(
+            () => resolver.Resolve(tool, ""));
+
+        Assert.Contains(fileName, error.Message);
+        Assert.Contains("FFmpeg-Werkzeuge", error.Message);
+        Assert.DoesNotContain(root, error.Message);
+    }
+    finally
+    {
+        Directory.Delete(root, true);
+    }
+}
+
     [Fact]
     public void Resolve_FollowsMovedApplicationDirectory()
     {
@@ -130,6 +157,99 @@ public sealed class ToolPathResolverTests
         finally
         {
             Directory.Delete(root, true);
+        }
+    }
+
+    [Fact]
+    public void Resolve_UsesInstalledMp4BoxWhenBundledToolIsMissing()
+    {
+        var root = CreateTempDirectory();
+
+        try
+        {
+            var installedDirectory = Path.Combine(
+                root,
+                "Installed GPAC");
+
+            Directory.CreateDirectory(installedDirectory);
+
+            var installedPath = Path.Combine(
+                installedDirectory,
+                "MP4Box.exe");
+
+            File.WriteAllText(installedPath, string.Empty);
+
+            var resolver = new ToolPathResolver(
+                root,
+                () => installedPath);
+
+            var actual = resolver.Resolve(
+                BundledToolKind.Mp4Box,
+                string.Empty);
+
+            Assert.Equal(installedPath, actual);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Resolve_PrefersCustomMp4BoxWithoutRegistryLookup()
+    {
+        var root = CreateTempDirectory();
+
+        try
+        {
+            var resolver = new ToolPathResolver(
+                root,
+                () => throw new InvalidOperationException(
+                    "Die Registry darf nicht abgefragt werden."));
+
+            var customPath = @"D:\MeineTools\MP4Box.exe";
+
+            var actual = resolver.Resolve(
+                BundledToolKind.Mp4Box,
+                customPath);
+
+            Assert.Equal(customPath, actual);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Fact]
+    public void Resolve_PrefersBundledMp4BoxWithoutRegistryLookup()
+    {
+        var root = CreateTempDirectory();
+
+        try
+        {
+            var resolver = new ToolPathResolver(
+                root,
+                () => throw new InvalidOperationException(
+                    "Die Registry darf nicht abgefragt werden."));
+
+            var bundledPath = resolver.GetBundledPath(
+                BundledToolKind.Mp4Box);
+
+            Directory.CreateDirectory(
+                Path.GetDirectoryName(bundledPath)!);
+
+            File.WriteAllText(bundledPath, string.Empty);
+
+            var actual = resolver.Resolve(
+                BundledToolKind.Mp4Box,
+                string.Empty);
+
+            Assert.Equal(bundledPath, actual);
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
         }
     }
 
