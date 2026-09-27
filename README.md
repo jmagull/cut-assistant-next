@@ -2,11 +2,11 @@
 
 Cut Assistant Next (CAN) ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box. Die Oberfläche verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codec-Pakete vorauszusetzen.
 
-CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer. Der selbst gebaute libmpv-Kandidat ist in internen Testpaketen enthalten, aber noch nicht für eine öffentliche Ausgabe freigegeben.
+CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer. Die [öffentliche Vorabversion 0.2.0 Build 6 – RC1](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.0-build6-rc1) enthält den selbst gebauten und dokumentierten libmpv-0.41.0-Stack.
 
 ## Lizenz
 
-Der vom CAN-Projekt selbst entwickelte Quellcode steht unter **GPL-3.0-or-later**. Der vollständige Lizenztext steht in [LICENSE](LICENSE). Eingebundene Bibliotheken, NuGet-Pakete und die .NET-Laufzeit behalten ihre eigenen Lizenzen; die [libmpv-Hinweise](docs/libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) und die [.NET-/NuGet-Bestandsaufnahme](docs/DOTNET-LICENSING.md) ordnen sie zu. Die derzeitigen Testpakete sind noch keine öffentliche Freigabe.
+Der vom CAN-Projekt selbst entwickelte Quellcode steht unter **GPL-3.0-or-later**. Der vollständige Lizenztext steht in [LICENSE](LICENSE). Eingebundene Bibliotheken, NuGet-Pakete und die .NET-Laufzeit behalten ihre eigenen Lizenzen; die [libmpv-Hinweise](docs/libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) und die [.NET-/NuGet-Bestandsaufnahme](docs/DOTNET-LICENSING.md) ordnen sie zu. Die öffentliche RC1-Ausgabe ist als Vorabversion gekennzeichnet; die zugehörigen Quellen und Prüfsummen stehen beim Release.
 
 ## Einstieg
 
@@ -15,6 +15,7 @@ Der vom CAN-Projekt selbst entwickelte Quellcode steht unter **GPL-3.0-or-later*
 - [Setup-Merkliste](docs/SETUP-MERKLISTE.md): geplantes Gesamtpaket und vorgemerkte V2-Funktionen.
 - [Testplan](docs/TESTPLAN.md): reproduzierbare Prüfungen und Testbasis.
 - [Release-Build 6 / RC1](docs/RELEASE-BUILD6.md): Quellpaket, feste Paketversionen und erneute Paketierung ohne Erhöhung der Buildnummer.
+- [Veröffentlichungsnachweis](docs/RELEASE-PUBLICATION-RC1.md): Tag, öffentliche Downloads und Prüfergebnis.
 - [Architektur](docs/ARCHITECTURE.md) und [Entscheidungen](docs/DECISIONS.md): technische Hintergründe und Entwicklungsgeschichte.
 
 ## Was CAN derzeit kann
@@ -39,13 +40,13 @@ Die reine Cutlist-Erstellung benötigt keine Video-Umwandlung. Erst beim Schneid
 
 MP4 ist ein Container, keine Bezeichnung für einen bestimmten Videocodec. Ob sich ein anderes Format verlustfrei vorbereiten lässt, hängt von seinen Streams ab. CAN verwendet Stream-Copy und führt keine automatische Neukodierung durch. Ungeeignete Dateien oder deutliche Abweichungen werden mit einer Fehlermeldung gestoppt.
 
-Die Prüfung der Arbeitsdatei ist eine Plausibilitätsprüfung anhand der Medieninformationen. Sie ersetzt nicht die Kontrolle der Schnittstellen und der Ton-Synchronität. Smart Rendering, Stapelverarbeitung, integrierte mehrteilige Aufnahmen sowie die öffentliche Installer-/Portable-Veröffentlichung sind noch nicht umgesetzt.
+Die Prüfung der Arbeitsdatei ist eine Plausibilitätsprüfung anhand der Medieninformationen. Sie ersetzt nicht die Kontrolle der Schnittstellen und der Ton-Synchronität. Smart Rendering, Stapelverarbeitung und integrierte mehrteilige Aufnahmen sind noch nicht umgesetzt.
 
 Insbesondere bei historischen AVI-Dateien können bereits im Original Probleme mit Zeitstempeln, Bildaktualisierung oder Ton-Synchronität auftreten. Eine irreführende Dateiendung wie `.avi.mp4` ändert nichts am tatsächlich erkannten Container. Für solche Fälle sind weitere Praxistests und ein deutlicherer Warnhinweis vorgesehen.
 
 ## Für Anwender
 
-Vorgesehene Umgebung ist Windows 11 x64. Die normale Build-Ausgabe benötigt die passende .NET-10-Desktop-Laufzeit und die vier mitgelieferten libmpv-DLLs neben dem Programm. ffprobe, FFmpeg und MP4Box werden über die Einstellungen konfiguriert. Ein internes Test-Setup ist vorhanden; eine öffentliche Installationsausgabe ist noch nicht freigegeben.
+Vorgesehene Umgebung ist Windows 11 x64. Die öffentliche RC1-Vorabversion bietet Setup und Portable-ZIP. Die .NET 10 Desktop Runtime muss separat installiert werden; die vier geprüften libmpv-DLLs sind enthalten. ffprobe, FFmpeg und MP4Box werden separat installiert und über die Einstellungen konfiguriert.
 
 Die [Nutzeranleitung](docs/NUTZERANLEITUNG.md) erklärt die Einrichtung ohne Entwicklungswerkzeuge.
 
