@@ -2,11 +2,11 @@
 
 Cut Assistant Next (CAN) ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box. Die Oberfläche verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codec-Pakete vorauszusetzen.
 
-CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer. Die [öffentliche Vorabversion 0.2.0 Build 6 – RC1](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.0-build6-rc1) enthält den selbst gebauten und dokumentierten libmpv-0.41.0-Stack.
+CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer. Die [öffentliche Vorabversion 0.2.0 Build 6 – RC2](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.0-build6-rc2) enthält den selbst gebauten und dokumentierten libmpv-0.41.0-Stack.
 
 ## Lizenz
 
-Der vom CAN-Projekt selbst entwickelte Quellcode steht unter **GPL-3.0-or-later**. Der vollständige Lizenztext steht in [LICENSE](LICENSE). Eingebundene Bibliotheken, NuGet-Pakete und die .NET-Laufzeit behalten ihre eigenen Lizenzen; die [libmpv-Hinweise](docs/libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) und die [.NET-/NuGet-Bestandsaufnahme](docs/DOTNET-LICENSING.md) ordnen sie zu. Die öffentliche RC1-Ausgabe ist als Vorabversion gekennzeichnet; die zugehörigen Quellen und Prüfsummen stehen beim Release.
+Der vom CAN-Projekt selbst entwickelte Quellcode steht unter **GPL-3.0-or-later**. Der vollständige Lizenztext steht in [LICENSE](LICENSE). Eingebundene Bibliotheken, NuGet-Pakete und die .NET-Laufzeit behalten ihre eigenen Lizenzen; die [libmpv-Hinweise](docs/libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) und die [.NET-/NuGet-Bestandsaufnahme](docs/DOTNET-LICENSING.md) ordnen sie zu. Die öffentliche RC2-Ausgabe ist als Vorabversion gekennzeichnet; die zugehörigen Quellen und Prüfsummen stehen beim Release.
 
 ## Danksagung
 
@@ -18,8 +18,8 @@ CAN baut auf Ideen und Arbeit vieler Menschen und Projekte auf. Die [Danksagung]
 - [Projektstatus](docs/STATUS.md): umgesetzter Umfang, bestätigte Tests und offene Aufgaben.
 - [Setup-Merkliste](docs/SETUP-MERKLISTE.md): geplantes Gesamtpaket und vorgemerkte V2-Funktionen.
 - [Testplan](docs/TESTPLAN.md): reproduzierbare Prüfungen und Testbasis.
-- [Release-Build 6 / RC1](docs/RELEASE-BUILD6.md): Quellpaket, feste Paketversionen und erneute Paketierung ohne Erhöhung der Buildnummer.
-- [Veröffentlichungsnachweis](docs/RELEASE-PUBLICATION-RC1.md): Tag, öffentliche Downloads und Prüfergebnis.
+- [RC2-Prüfbericht](docs/RELEASE-BUILD6-RC2-RESULT.md): Quellstand, Paketprüfsummen, 484 automatisierte Tests und praktische Pakettests.
+- [Veröffentlichungsnachweis](docs/RELEASE-PUBLICATION-RC2.md): Tag, öffentliche Downloads und Prüfergebnis.
 - [Architektur](docs/ARCHITECTURE.md) und [Entscheidungen](docs/DECISIONS.md): technische Hintergründe und Entwicklungsgeschichte.
 
 ## Was CAN derzeit kann
@@ -50,7 +50,7 @@ Insbesondere bei historischen AVI-Dateien können bereits im Original Probleme m
 
 ## Für Anwender
 
-Vorgesehene Umgebung ist Windows 11 x64. Die öffentliche RC1-Vorabversion bietet Setup und Portable-ZIP. Die .NET 10 Desktop Runtime muss separat installiert werden; die vier geprüften libmpv-DLLs sind enthalten. ffprobe, FFmpeg und MP4Box werden separat installiert und über die Einstellungen konfiguriert.
+Vorgesehene Umgebung ist Windows 11 x64. Die öffentliche RC2-Vorabversion bietet Setup und Portable-ZIP. Die .NET 10 Desktop Runtime muss separat installiert werden; die vier geprüften libmpv-DLLs sind enthalten. ffprobe, FFmpeg und MP4Box werden separat installiert und über die Einstellungen konfiguriert.
 
 Die [Nutzeranleitung](docs/NUTZERANLEITUNG.md) erklärt die Einrichtung ohne Entwicklungswerkzeuge.
 
@@ -88,4 +88,4 @@ Die inhaltliche Version steht zentral in `Version.props`: Patch für Korrekturen
 | `tools` | Einrichtung von libmpv und versionierte Builds |
 | `docs` | Anleitung, Status, Testplan und technische Dokumentation |
 
-Letzter bestätigter Stand (19.09.2026): **450/450 automatisierte Tests bestanden**, Debug-Build erfolgreich. Der zuvor geprüfte Release-Build mit 443 Tests war fehler- und warnungsfrei; ein erneuter Release-Build mit 450 Tests steht noch aus. P1 zur Cutlist-Bedienung ist abgeschlossen. Diplomatin, Rubikon und Enigma wurden im integrierten AVI-Ablauf erfolgreich geschnitten und praktisch geprüft. Die AVI-Unterstützung bleibt experimentell. Einzelheiten, Auffälligkeiten und Einschränkungen stehen im [Testplan](docs/TESTPLAN.md).
+Letzter bestätigter Release-Stand (29.09.2026): **0.2.0 Build 6 – RC2**, Release-Build ohne Warnungen oder Fehler und **484/484 automatisierte Tests bestanden**. Setup und Portable-ZIP wurden separat mit einem HD-Schnitt von „Black Adam“ geprüft; Bild und Ton wurden als einwandfrei bestätigt. Drüberinstallation, Namensmasken-Reset und Deinstallation des Setups waren erfolgreich. Details stehen im [RC2-Prüfbericht](docs/RELEASE-BUILD6-RC2-RESULT.md).
