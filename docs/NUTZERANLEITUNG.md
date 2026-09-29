@@ -1,6 +1,6 @@
 # Nutzeranleitung – Cut Assistant Next
 
-Stand: 27.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand: 29.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
 Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, zum Beispiel **Cut Assistant Next · 0.2.0 · Build 6**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
 
@@ -22,6 +22,21 @@ Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE al
 Wähle jeweils die ausführbare Datei, nicht nur ihren Ordner. Der aktuelle Schnittablauf erwartet MP4Box als Schnittanwendung. Ein beliebiges anderes Programm wird durch Eintragen seines Pfades nicht zu einem unterstützten Schnittmotor.
 
 Ohne Server-Konfiguration kannst du Videos weiterhin bearbeiten und lokale Cutlists verwenden. Ohne MP4Box kannst du Schnittmarken vorbereiten und Cutlists speichern, aber keine Videoausgabe schneiden.
+
+### Namensmaske bearbeiten und zurücksetzen
+
+Unter **Einstellungen → Namensmaske …** legst du fest, wie CAN vorgeschlagene Dateinamen bildet.
+
+Ziehe verfügbare Elemente und Trennzeichen mit gedrückter linker Maustaste in die Namensmaske. Vorhandene Bausteine kannst du durch Ziehen verschieben. Zum Entfernen wählst du einen Baustein aus und drückst **Entf**. Die Vorschau aktualisiert sich bei jeder Änderung.
+
+| Schaltfläche | Wirkung |
+|---|---|
+| **Änderungen verwerfen** | Stellt die Maske wieder her, die beim Öffnen des Editors geladen war. Der Editor bleibt geöffnet. |
+| **CAN-Standardmaske** | Lädt die ursprüngliche, mit CAN ausgelieferte Namensmaske in den Editor. Bausteine und Vorschau werden aktualisiert. |
+| **Speichern** | Übernimmt die angezeigte Maske dauerhaft und schließt den Editor. Beim nächsten Öffnen ist sie der Ausgangsstand. |
+| **Abbrechen** | Schließt den Editor, ohne die Änderungen zu übernehmen. Die bisher gespeicherte Maske bleibt erhalten. |
+
+Auch nach **CAN-Standardmaske** kannst du die Bausteine weiter bearbeiten. Erst **Speichern** übernimmt das Ergebnis dauerhaft. **Änderungen verwerfen** führt weiterhin zum Stand beim Öffnen zurück.
 
 ### Portable-Version aus dem ZIP verwenden
 
