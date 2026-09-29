@@ -2,7 +2,7 @@
 
 Stand: 29.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
-Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, zum Beispiel **Cut Assistant Next · 0.2.0 · Build 6**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, zum Beispiel **Cut Assistant Next · 0.2.0 · Build 6 · RC2**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
 
 ## 1. Einmalig einrichten
 

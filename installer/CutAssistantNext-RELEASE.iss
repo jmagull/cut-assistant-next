@@ -19,7 +19,7 @@
 AppId={{cdcdaf11-d631-4f81-b1d0-b50ea6ac606d}
 AppName=Cut Assistant Next
 AppVersion={#CanVersion}
-AppVerName=Cut Assistant Next {#CanVersion} (Build {#CanBuildNumber})
+AppVerName=Cut Assistant Next {#CanVersion} (Build {#CanBuildNumber}, {#CanCandidate})
 DefaultDirName={autopf}\Cut Assistant Next
 DefaultGroupName=Cut Assistant Next
 SetupArchitecture=x64

@@ -8,4 +8,7 @@
     <InformationalVersion>$(Version)+build.$(CanBuildNumber)</InformationalVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
+  <ItemGroup Condition="'$(CanCandidate)' != ''">
+    <AssemblyMetadata Include="CanCandidate" Value="$(CanCandidate)" />
+  </ItemGroup>
 </Project>

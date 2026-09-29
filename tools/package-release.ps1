@@ -66,9 +66,9 @@ function Invoke-Step([string]$Name, [string]$Program, [string[]]$Arguments) {
 $solution = Join-Path $repo 'CutAssistantNext.sln'
 $app = Join-Path $repo 'src\CutAssistantNext.App\CutAssistantNext.App.csproj'
 Invoke-Step 'restore' $dotnet @('restore', $solution, '-r', 'win-x64', '--locked-mode')
-Invoke-Step 'build' $dotnet @('build', $solution, '-c', 'Release', '--no-restore', "-p:CanBuildNumber=$BuildNumber")
+Invoke-Step 'build' $dotnet @('build', $solution, '-c', 'Release', '--no-restore', "-p:CanBuildNumber=$BuildNumber", "-p:CanCandidate=$Candidate")
 Invoke-Step 'tests' $dotnet @('test', $solution, '-c', 'Release', '--no-build', '--no-restore', '--logger', 'trx', '--results-directory', (Join-Path $output 'test-results'))
-Invoke-Step 'publish' $dotnet @('publish', $app, '-c', 'Release', '-r', 'win-x64', '--self-contained', 'false', "-p:CanBuildNumber=$BuildNumber", '-p:RestoreLockedMode=true', '-o', $publish)
+Invoke-Step 'publish' $dotnet @('publish', $app, '-c', 'Release', '-r', 'win-x64', '--self-contained', 'false', "-p:CanBuildNumber=$BuildNumber", "-p:CanCandidate=$Candidate", '-p:RestoreLockedMode=true', '-o', $publish)
 
 $forbidden = @(Get-ChildItem -LiteralPath $publish -File -Recurse | Where-Object {
     $_.Name -match '^(coreclr|hostfxr|hostpolicy|PresentationNative_cor3|wpfgfx_cor3|vcruntime140_cor3|D3DCompiler_47_cor3|Microsoft\.DiaSymReader\.Native\..+)\.dll$|^(createdump|ffmpeg|ffprobe|mp4box)\.exe$'
