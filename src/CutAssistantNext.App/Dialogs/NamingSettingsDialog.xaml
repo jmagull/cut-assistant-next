@@ -354,12 +354,21 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
 
-            <Button MinWidth="140"
+            <Button MinWidth="170"
                     Height="36"
                     Margin="0,0,10,0"
                     Padding="14,0"
                     Click="ResetButton_Click"
-                    Content="Zurück auf Anfang" />
+                    ToolTip="Stellt die Maske vom Öffnen dieses Fensters wieder her."
+                    Content="Änderungen verwerfen" />
+
+            <Button MinWidth="170"
+                    Height="36"
+                    Margin="0,0,10,0"
+                    Padding="14,0"
+                    Click="RestoreCanDefaultButton_Click"
+                    ToolTip="Lädt die ursprüngliche CAN-Maske. Dauerhafte Übernahme erst mit Speichern."
+                    Content="CAN-Standardmaske" />
 
             <Button MinWidth="130"
                     Height="36"

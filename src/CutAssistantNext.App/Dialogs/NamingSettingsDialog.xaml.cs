@@ -391,6 +391,20 @@ public partial class NamingSettingsDialog : Window
         NameTemplateBlockListBox.SelectedIndex = -1;
     }
 
+    private void RestoreCanDefaultButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (DataContext is not NamingSettingsViewModel viewModel)
+        {
+            return;
+        }
+
+        viewModel.RestoreCanDefaultNameTemplate();
+
+        NameTemplateBlockListBox.SelectedIndex = -1;
+    }
+
     private void NerdButton_Click(
         object sender,
         RoutedEventArgs e)
@@ -406,7 +420,7 @@ public partial class NamingSettingsDialog : Window
 
         NerdButton.Content =
             isVisible
-            ? "Ich will es genau wissen …"
+            ? "Ich will es genau wissen â€¦"
             : "Codebuch zuklappen.";
     }
 

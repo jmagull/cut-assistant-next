@@ -218,7 +218,13 @@ internal sealed class NamingSettingsViewModel :
             _initialDefaultNameTemplate;
     }
 
-     internal NamingSettings CreateSettings()
+    internal void RestoreCanDefaultNameTemplate()
+    {
+        DefaultNameTemplate =
+            NamingSettings.CreateDefault().DefaultNameTemplate;
+    }
+
+    internal NamingSettings CreateSettings()
     {
         return new NamingSettings
         {
