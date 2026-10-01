@@ -26,25 +26,21 @@ internal static class CutlistServerSettingsValidator
             return false;
         }
 
-        if (!string.Equals(
-                uri.Scheme,
-                Uri.UriSchemeHttp,
-                StringComparison.OrdinalIgnoreCase))
-        {
-            errorMessage =
-                "Die persönliche Cutlist-Server-URL muss mit http:// beginnen.";
+        var isCutlistAt = string.Equals(
+            uri.Host, "cutlist.at", StringComparison.OrdinalIgnoreCase);
+        var isSniplist = string.Equals(
+            uri.Host, "sniplist.mepaso.net", StringComparison.OrdinalIgnoreCase);
 
+        if (!isCutlistAt && !isSniplist)
+        {
+            errorMessage = "Diese Cutlist-Server-Adresse wird nicht unterst\u00fctzt.";
             return false;
         }
 
-        if (!string.Equals(
-                uri.Host,
-                "cutlist.at",
-                StringComparison.OrdinalIgnoreCase))
+        var expectedScheme = isSniplist ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+        if (!string.Equals(uri.Scheme, expectedScheme, StringComparison.OrdinalIgnoreCase))
         {
-            errorMessage =
-                "Die persönliche Cutlist-Server-URL muss auf cutlist.at verweisen.";
-
+            errorMessage = $"Die pers\u00f6nliche Cutlist-Server-URL muss mit {expectedScheme}:// beginnen.";
             return false;
         }
 

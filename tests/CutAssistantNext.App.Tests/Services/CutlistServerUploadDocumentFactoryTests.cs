@@ -75,15 +75,15 @@ public sealed class CutlistServerUploadDocumentFactoryTests
             result.Info);
 
         Assert.Equal(
-            "Cut Assistant",
+            "Cut Assistant Next",
             result.General.Application);
 
         Assert.Equal(
-            "0.26.5.6",
+            "1.2.3",
             result.General.Version);
 
         Assert.Equal(
-            "joerg",
+            "Joerg",
             result.Info.Author);
 
         Assert.Equal(

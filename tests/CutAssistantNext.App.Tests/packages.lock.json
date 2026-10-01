@@ -129,9 +129,9 @@
       "cutassistantnext.app": {
         "type": "Project",
         "dependencies": {
-          "CutAssistantNext.Core": "[0.2.0, )",
-          "CutAssistantNext.Cutlists": "[0.2.0, )",
-          "CutAssistantNext.Media": "[0.2.0, )"
+          "CutAssistantNext.Core": "[0.2.1, )",
+          "CutAssistantNext.Cutlists": "[0.2.1, )",
+          "CutAssistantNext.Media": "[0.2.1, )"
         }
       },
       "cutassistantnext.core": {
@@ -140,13 +140,13 @@
       "cutassistantnext.cutlists": {
         "type": "Project",
         "dependencies": {
-          "CutAssistantNext.Core": "[0.2.0, )"
+          "CutAssistantNext.Core": "[0.2.1, )"
         }
       },
       "cutassistantnext.media": {
         "type": "Project",
         "dependencies": {
-          "CutAssistantNext.Core": "[0.2.0, )",
+          "CutAssistantNext.Core": "[0.2.1, )",
           "HanumanInstitute.LibMpv": "[0.10.1, )"
         }
       }

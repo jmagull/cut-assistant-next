@@ -4,12 +4,14 @@ namespace CutAssistantNext.App.Tests.Settings;
 
 public sealed class CutlistServerSettingsValidatorTests
 {
-    [Fact]
-    public void TryValidatePersonalServerUrl_AcceptsValidCutlistAtUrl()
+    [Theory]
+    [InlineData("http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    [InlineData("https://sniplist.mepaso.net/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    public void TryValidatePersonalServerUrl_AcceptsSupportedServerUrl(string url)
     {
         var isValid =
             CutlistServerSettingsValidator.TryValidatePersonalServerUrl(
-                "http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/",
+                url,
                 out var errorMessage);
 
         Assert.True(
@@ -24,6 +26,14 @@ public sealed class CutlistServerSettingsValidatorTests
     [InlineData("https://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
     [InlineData("http://cutlist.at/0123456789abcdef/")]
     [InlineData("http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")]
+    [InlineData("http://www.cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    [InlineData("http://sniplist.mepaso.net/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    [InlineData("https://sniplist.mepaso.net.example.org/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    [InlineData("https://sniplist.mepaso.net/FRED/")]
+    [InlineData("https://sniplist.mepaso.net/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")]
+    [InlineData("https://sniplist.mepaso.net/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/#")]
+    [InlineData("https://sniplist.mepaso.net/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/?x=1")]
+    [InlineData("https://sniplist.mepaso.net/zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz/")]
     public void TryValidatePersonalServerUrl_RejectsInvalidUrls(
         string url)
     {

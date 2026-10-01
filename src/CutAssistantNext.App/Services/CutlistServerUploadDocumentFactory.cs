@@ -15,9 +15,9 @@ internal static class CutlistServerUploadDocumentFactory
             new CutlistGeneralMetadata
             {
                 Application =
-                    "Cut Assistant",
+                    source.General.Application,
                 Version =
-                    "0.26.5.6",
+                    source.General.Version,
                 FramesPerSecond =
                     source.General.FramesPerSecond,
                 DisplayAspectRatio =
@@ -46,7 +46,7 @@ internal static class CutlistServerUploadDocumentFactory
                 UserComment =
                     source.Info.UserComment,
                 Author =
-                    "joerg",
+                    source.Info.Author,
                 RatingByAuthor =
                     source.Info.RatingByAuthor,
                 EpgError =

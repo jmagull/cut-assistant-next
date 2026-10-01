@@ -1950,7 +1950,7 @@ public partial class MainWindow : Window
                     serverSettings.PersonalServerUrl,
                     cutlistFileName,
                     cutlistBytes,
-                    "0.26.5.6");
+                    ApplicationVersion.NumericVersion);
 
             if (string.IsNullOrWhiteSpace(
                     uploadResult.CutlistId))

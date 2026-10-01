@@ -23,6 +23,16 @@ Wähle jeweils die ausführbare Datei, nicht nur ihren Ordner. Der aktuelle Schn
 
 Ohne Server-Konfiguration kannst du Videos weiterhin bearbeiten und lokale Cutlists verwenden. Ohne MP4Box kannst du Schnittmarken vorbereiten und Cutlists speichern, aber keine Videoausgabe schneiden.
 
+### Persönliche Cutlist-Server-URL eintragen
+
+Trage unter **Einstellungen → Cutlist-Einstellungen …** deine persönliche URL in der Form `http://cutlist.at/<dein FRED>/` ein. Ersetze den Platzhalter einschließlich der spitzen Klammern durch deinen persönlichen FRED. Der Einstellungsdialog öffnet sich höher und nahe dem oberen Rand des aktuellen Bildschirms. Seine Höhe wird auf den verfügbaren Arbeitsbereich begrenzt; auf kleinen Bildschirmen bleibt der Inhalt scrollbar. Die ausführlichen Hinweise zur Schreibweise blendet CAN unter dem URL-Eingabefeld ein, wenn „Verbindung testen“ wegen einer leeren oder ungültigen URL oder eines Verbindungsfehlers scheitert. Bei einem erneuten Test werden sie zunächst ausgeblendet; nach erfolgreicher Verbindung bleiben sie verborgen.
+
+- **Ohne `www`:** Verwende `cutlist.at`, nicht `www.cutlist.at`.
+- Für `cutlist.at` muss die URL in der aktuellen CAN-Version mit `http://` beginnen; `https://cutlist.at/…` wird nicht akzeptiert.
+- Der FRED besteht aus genau 64 Hexadezimalzeichen (0–9 und a–f).
+- Der abschließende Schrägstrich `/` ist erforderlich.
+- Entferne angehängte Parameter oder Sprungmarken wie `?…` oder `#`.
+
 ### Namensmaske bearbeiten und zurücksetzen
 
 Unter **Einstellungen → Namensmaske …** legst du fest, wie CAN vorgeschlagene Dateinamen bildet.
@@ -204,6 +214,7 @@ Unter **Credits** findest du die Danksagung mit Links zu den beteiligten Projekt
 | Gültigen Pfad zu ffprobe.exe einstellen | Unter FFmpeg-Werkzeuge die vorhandene Programmdatei auswählen; ffprobe wird auch zur Kontrolle der Arbeitsdatei benötigt. |
 | ffmpeg.exe nicht gefunden | FFmpeg-Pfad prüfen. Für direkte MP4-Schnitte ist kein Remux nötig. |
 | Keine Schnittanwendung konfiguriert | Unter Schnittanwendung den Pfad zu MP4Box eintragen. |
+| Persönliche Server-URL lässt sich nicht speichern | `http://cutlist.at/<dein FRED>/` verwenden: ohne `www`, mit 64-stelligem FRED und abschließendem `/`, ohne Parameter oder `#`. |
 | Keine Server-Treffer | Originaldateiname und persönliche Server-URL prüfen; lokale Cutlist laden oder selbst markieren. |
 | Cutlist enthält überlappende oder falsch sortierte Schnittbereiche | Die Cutlist wurde nicht geladen. Bitte eine andere Cutlist wählen. |
 | Dateigröße laut Cutlist weicht ab | Aufnahme/Qualitätsstufe vergleichen; nur bewusst fortfahren und Grenzen kontrollieren. |

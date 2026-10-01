@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Cutlist-Einstellungen"
         Width="860"
-        Height="780"
+        Height="940"
+        Loaded="Window_Loaded"
         MinWidth="760"
         MinHeight="680"
         WindowStartupLocation="CenterOwner"
@@ -119,7 +120,14 @@
                         <TextBlock Margin="0,6,0,0"
                                    Foreground="#6B7280"
                                    TextWrapping="Wrap"
-                                   Text="Die persönliche URL aus dem Cutlist-Cockpit. Leer lassen, wenn der Cutlist-Server nicht verwendet wird." />
+                                   Text="Die persönliche URL aus dem Cutlist-Cockpit. Leer lassen, wenn du den Cutlist-Server nicht verwenden möchtest." />
+
+                        <TextBlock x:Name="ServerUrlHelp"
+                                   Margin="0,6,0,0"
+                                   Foreground="#6B7280"
+                                   TextWrapping="Wrap"
+                                   Visibility="Collapsed"
+                                   Text="Bitte bei einem Verbindungsfehler auch die Schreibweise prüfen:&#10;http://cutlist.at/&lt;dein FRED&gt;/ – ohne www, mit http:// und abschließendem /.&#10;&lt;dein FRED&gt; durch deinen persönlichen 64-stelligen FRED ersetzen. Angefügte Parameter (?…) oder Sprungmarken (#…) entfernen." />
 
                         <Button x:Name="TestConnectionButton"
                                 Width="160"

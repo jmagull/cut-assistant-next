@@ -15,7 +15,9 @@ public static class ApplicationVersion
             .FirstOrDefault(attribute => attribute.Key == "CanCandidate")
             ?.Value;
 
+    public static string NumericVersion => FileVersion.ToString(3);
+
     public static string DisplayName =>
-        $"Cut Assistant Next · {FileVersion.ToString(3)} · Build {FileVersion.Revision}" +
+        $"Cut Assistant Next · {NumericVersion} · Build {FileVersion.Revision}" +
         (string.IsNullOrWhiteSpace(Candidate) ? string.Empty : $" · {Candidate}");
 }

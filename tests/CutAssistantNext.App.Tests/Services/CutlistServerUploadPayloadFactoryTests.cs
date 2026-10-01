@@ -52,19 +52,19 @@ public sealed class CutlistServerUploadPayloadFactoryTests
                 bytes);
 
         Assert.Contains(
-            "Application=Cut Assistant\r\n",
-            text);
-
-        Assert.DoesNotContain(
             "Application=Cut Assistant Next\r\n",
             text);
 
-        Assert.Contains(
-            "Version=0.26.5.6\r\n",
+        Assert.DoesNotContain(
+            "Application=Cut Assistant\r\n",
             text);
 
         Assert.Contains(
-            "Author=joerg\r\n",
+            "Version=1.2.3\r\n",
+            text);
+
+        Assert.Contains(
+            "Author=Joerg\r\n",
             text);
 
         Assert.Contains(

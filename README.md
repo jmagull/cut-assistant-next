@@ -16,6 +16,7 @@ CAN baut auf Ideen und Arbeit vieler Menschen und Projekte auf. Die [Danksagung]
 
 - [Nutzeranleitung](docs/NUTZERANLEITUNG.md): Einrichtung, Bedienung, Cutlists, Schneiden und Hilfe bei Fehlern.
 - [Projektstatus](docs/STATUS.md): umgesetzter Umfang, bestätigte Tests und offene Aufgaben.
+- [Entwicklungstagebuch](docs/TAGEBUCH.md): aktuelle Änderungen, Prüfergebnisse und offene Schritte.
 - [Setup-Merkliste](docs/SETUP-MERKLISTE.md): geplantes Gesamtpaket und vorgemerkte V2-Funktionen.
 - [Testplan](docs/TESTPLAN.md): reproduzierbare Prüfungen und Testbasis.
 - [RC2-Prüfbericht](docs/RELEASE-BUILD6-RC2-RESULT.md): Quellstand, Paketprüfsummen, 484 automatisierte Tests und praktische Pakettests.
@@ -71,7 +72,11 @@ Die Anwendung liegt danach unter `src\CutAssistantNext.App\bin\Release\net10.0-w
 
 ## Version und Buildnummer
 
+Lokaler Entwicklungsstand vom 01.10.2026: **0.2.1 · Build 7 · RC2** mit korrigierter Upload-Identität und überarbeiteten Cutlist-Einstellungen. Der Release-Build ist ohne Warnungen oder Fehler abgeschlossen; **496/496 Tests bestanden**. Dieser Stand ist noch nicht veröffentlicht; die öffentliche Vorabversion bleibt **0.2.0 Build 6 – RC2**.
+
 Die inhaltliche Version steht zentral in `Version.props`: Patch für Korrekturen, Minor für neue Funktionen, Major für einen größeren Versionssprung. Sie wird bewusst gepflegt.
+
+Die RC-Kennung steht ebenfalls in `Version.props` (`CanCandidate`, derzeit `RC2`) und erscheint auch bei normalen lokalen Builds im Fenstertitel und in der Hauptüberschrift. Eine ausdrücklich übergebene Build-Eigenschaft `CanCandidate` hat Vorrang. Die numerische Version für Cutlists und HTTP-Uploads enthält diese Kennung nicht.
 
 `tools/build.ps1` baut die gesamte Lösung neu und erhöht den lokalen Zähler in `.build/build-number.txt` genau einmal bei erfolgreichem Abschluss. Fehlgeschlagene Builds erhöhen ihn nicht. Titel, Hauptüberschrift und Dateieigenschaften verwenden dieselbe Version und Buildnummer. Einzelne Projekt-Builds und direkte IDE-/dotnet-Builds verwenden die zuletzt erfolgreiche Nummer (bei einem neuen Checkout zunächst 0); für eine neue nummerierte Ausgabe das Skript verwenden. Der Zähler ist lokal, wird nicht mit Git synchronisiert und identifiziert keine weltweit eindeutige Veröffentlichung. Gleichzeitige Skript-Builds im selben Checkout werden durch eine Dateisperre verhindert.
 

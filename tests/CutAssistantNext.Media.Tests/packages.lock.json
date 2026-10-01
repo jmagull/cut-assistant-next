@@ -132,7 +132,7 @@
       "cutassistantnext.media": {
         "type": "Project",
         "dependencies": {
-          "CutAssistantNext.Core": "[0.2.0, )",
+          "CutAssistantNext.Core": "[0.2.1, )",
           "HanumanInstitute.LibMpv": "[0.10.1, )"
         }
       }

@@ -207,7 +207,7 @@ internal sealed class CutlistServerClient
 
         content.Add(
             new StringContent(
-                "CutAssistant"),
+                "CutAssistantNext"),
             "app");
 
         content.Add(

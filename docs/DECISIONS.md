@@ -122,6 +122,7 @@ Nach dem erfolgreichen Laden einer Mediendatei sucht Cut Assistant Next automati
 Begründung und Regeln:
 
 - Die persönliche Server-URL ist eine lokale Benutzereinstellung und gehört nicht in Cutlist-Metadaten oder Programmcode.
+- Zusätzlich zu `http://cutlist.at/<FRED>/` akzeptiert die URL-Prüfung `https://sniplist.mepaso.net/<FRED>/` mit demselben 64-stelligen FRED-Format. Diese zusätzliche Adresse wird im Einstellungsdialog nicht beworben. Such-, Download- und Upload-Anfragen behalten den konfigurierten Server bei; automatisierte Tests verwenden nachgebildete HTTP-Antworten. Ein realer Sniplist-Upload wurde noch nicht geprüft.
 - Ist keine persönliche Server-URL eingerichtet, wird die automatische Serversuche still übersprungen.
 - Die Suche verwendet den vollständigen Originaldateinamen der geladenen Mediendatei.
 - `ApplyToFile` und die Identität der Originaldatei werden durch die Serversuche nicht verändert.
@@ -167,7 +168,10 @@ Begründung und Regeln:
 - Eine Server-Cutlist darf ausdrücklich als Vorlage dienen. Sie kann geladen, geprüft und verändert werden. Soll daraus eine eigene Fassung entstehen, wird diese zunächst lokal gespeichert und anschließend hochgeladen.
 - Dadurch können beispielsweise korrigierte Schnittfassungen mit eigenem Autor und einem Hinweis wie `Vorlage von <Autor>, Ende korrigiert.` veröffentlicht werden.
 - Der Upload verändert die lokale Cutlist nicht. Stattdessen wird im Speicher eine separate serverkompatible Kopie erzeugt.
-- Die Serverkopie verwendet das derzeit benötigte Kompatibilitätsprofil des klassischen Cut Assistant.
+- `Application`, `Version` und `Author` werden unverändert aus der gespeicherten Cutlist übernommen.
+- Am 01.10.2026 wurde durch einen echten Upload nachgewiesen, dass der Server `Application=Cut Assistant Next` und `Version=0.2.0` akzeptiert und erhält (Cutlist-ID 2079433).
+- Der Testupload vom 01.10.2026 mit `app=CutAssistantNext` und noch `version=0.26.5.6` war erfolgreich (vom Benutzer zurückgemeldete Cutlist-ID 2079437). Das HTTP-Feld `app` ist in der heruntergeladenen Cutlist nicht separat sichtbar.
+- Das HTTP-Formular sendet nun `app=CutAssistantNext` und als `version` die dreiteilige numerische Version der laufenden CAN-Anwendung aus deren Assembly-Dateiversion (beim nachfolgenden Praxistest `0.2.0`, ohne Buildnummer oder RC-Zusatz). Diese Angabe ist unabhängig von der Version einer geladenen Cutlist. Der Testupload mit diesen beiden HTTP-Feldern wurde am 01.10.2026 vom Benutzer als erfolgreich zurückgemeldet (Cutlist-ID 2079440, GeneratedOn=2026-10-01 17:20:20). Die HTTP-Felder sind in der heruntergeladenen Cutlist nicht separat sichtbar; der Nachweis beruht auf dem Test der entsprechend gebauten Anwendung. Für diesen getesteten Ablauf sind die alten HTTP-Kennungen damit nicht erforderlich.
 - Fachliche Inhalte wie Schnittbereiche, Bewertung, `SuggestedMovieName`, Fehlerangaben und Benutzerkommentar werden aus der gespeicherten Cutlist übernommen.
 - Der Benutzerkommentar wird beim Upload nicht automatisch durch einen technischen Standardtext ersetzt.
 - Der Upload erfolgt erst nach ausdrücklicher Bestätigung durch den Benutzer.

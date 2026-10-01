@@ -1,4 +1,6 @@
 using System.Net.Http;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 using CutAssistantNext.App.Services;
 using System.Windows;
 using CutAssistantNext.App.ViewModels;
@@ -17,6 +19,52 @@ public partial class CutlistSettingsDialog : Window
 
         DataContext =
             viewModel;
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        var handle = new WindowInteropHelper(this).Handle;
+        var monitor = MonitorFromWindow(handle, 2); // Nearest monitor.
+        var info = new MonitorInfo { Size = Marshal.SizeOf<MonitorInfo>() };
+        var source = HwndSource.FromHwnd(handle);
+        if (!GetMonitorInfo(monitor, ref info) || source?.CompositionTarget is null)
+        {
+            return;
+        }
+
+        var transform = source.CompositionTarget.TransformFromDevice;
+        var topLeft = transform.Transform(new Point(info.Work.Left, info.Work.Top));
+        var bottomRight = transform.Transform(new Point(info.Work.Right, info.Work.Bottom));
+        var availableHeight = Math.Max(1, bottomRight.Y - topLeft.Y - 24);
+        MinHeight = Math.Min(MinHeight, availableHeight);
+        MaxHeight = availableHeight;
+        Height = Math.Min(940, availableHeight);
+        Top = topLeft.Y + 12;
+    }
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr MonitorFromWindow(IntPtr window, uint flags);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetMonitorInfo(IntPtr monitor, ref MonitorInfo info);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MonitorInfo
+    {
+        public int Size;
+        public MonitorRectangle Monitor;
+        public MonitorRectangle Work;
+        public uint Flags;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MonitorRectangle
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
     }
 
     private void SaveButton_Click(
@@ -53,9 +101,13 @@ public partial class CutlistSettingsDialog : Window
             return;
         }
 
+        ServerUrlHelp.Visibility = Visibility.Collapsed;
+
         if (!viewModel.TryValidatePersonalServerUrl(
                 out var errorMessage))
         {
+            ServerUrlHelp.Visibility = Visibility.Visible;
+
             MessageBox.Show(
                 this,
                 errorMessage,
@@ -69,6 +121,8 @@ public partial class CutlistSettingsDialog : Window
         if (string.IsNullOrWhiteSpace(
                 viewModel.PersonalServerUrl))
         {
+            ServerUrlHelp.Visibility = Visibility.Visible;
+
             MessageBox.Show(
                 this,
                 "Bitte zuerst die persönliche Server-URL eintragen.",
@@ -108,6 +162,8 @@ public partial class CutlistSettingsDialog : Window
         }
         catch (HttpRequestException exception)
         {
+            ServerUrlHelp.Visibility = Visibility.Visible;
+
             MessageBox.Show(
                 this,
                 $"Der Cutlist-Server hat die Anfrage abgelehnt: {exception.Message}",
@@ -117,6 +173,8 @@ public partial class CutlistSettingsDialog : Window
         }
         catch (TaskCanceledException)
         {
+            ServerUrlHelp.Visibility = Visibility.Visible;
+
             MessageBox.Show(
                 this,
                 "Der Cutlist-Server hat nicht rechtzeitig geantwortet.",
@@ -126,6 +184,8 @@ public partial class CutlistSettingsDialog : Window
         }
         catch
         {
+            ServerUrlHelp.Visibility = Visibility.Visible;
+
             MessageBox.Show(
                 this,
                 "Die Verbindung zum Cutlist-Server ist fehlgeschlagen.",

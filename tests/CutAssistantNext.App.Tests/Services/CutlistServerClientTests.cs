@@ -4,11 +4,11 @@ namespace CutAssistantNext.App.Tests.Services;
 
 public sealed class CutlistServerClientTests
 {
-    [Fact]
-    public void BuildSearchUri_UsesPersonalServerUrlAndEncodedMovieName()
+    [Theory]
+    [InlineData("http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    [InlineData("https://sniplist.mepaso.net/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    public void BuildSearchUri_UsesPersonalServerUrlAndEncodedMovieName(string personalServerUrl)
     {
-        var personalServerUrl =
-            "http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/";
 
         var movieName =
             "Brilliant_Minds_26.08.21_21-05_5plus_60_TVOON_DE";
@@ -321,11 +321,11 @@ public async Task SearchAsync_ReturnsEmptyListForEmptyResponse()
             uri.AbsoluteUri);
     }
 
-    [Fact]
-    public void BuildDownloadUri_UsesPersonalServerUrlAndCutlistId()
+    [Theory]
+    [InlineData("http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    [InlineData("https://sniplist.mepaso.net/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    public void BuildDownloadUri_UsesPersonalServerUrlAndCutlistId(string personalServerUrl)
     {
-        var personalServerUrl =
-            "http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/";
 
         var cutlistId =
             "2078205";
@@ -397,11 +397,11 @@ public async Task SearchAsync_ReturnsEmptyListForEmptyResponse()
             + "?id=2078205",
             handler.RequestUri?.AbsoluteUri);
     }
-    [Fact]
-    public async Task UploadBytesAsync_SendsLegacyMultipartRequestToPersonalServerUrl()
+    [Theory]
+    [InlineData("http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    [InlineData("https://sniplist.mepaso.net/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/")]
+    public async Task UploadBytesAsync_SendsLegacyMultipartRequestToPersonalServerUrl(string personalServerUrl)
     {
-        var personalServerUrl =
-            "http://cutlist.at/0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef/";
 
         var cutlistFileName =
             "Test_26.09.08_20-15_sender_60_TVOON_DE.HQ.mp4.cutlist";
@@ -469,7 +469,7 @@ public async Task SearchAsync_ReturnsEmptyListForEmptyResponse()
             handler.FormFields["userid"]);
 
         Assert.Equal(
-            "CutAssistant",
+            "CutAssistantNext",
             handler.FormFields["app"]);
 
         Assert.Equal(
@@ -553,7 +553,11 @@ public async Task SearchAsync_ReturnsEmptyListForEmptyResponse()
                 personalServerUrl,
                 cutlistFileName,
                 cutlistBytes,
-                "1.0.0");
+                ApplicationVersion.NumericVersion);
+
+        Assert.Equal(
+            ApplicationVersion.NumericVersion,
+            handler.FormFields["version"]);
 
         Assert.Equal(
             "2079999",
