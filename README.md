@@ -2,7 +2,7 @@
 
 Cut Assistant Next (CAN) ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box. Die Oberfläche verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codec-Pakete vorauszusetzen.
 
-CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer. Die [öffentliche Vorabversion 0.2.0 Build 6 – RC2](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.0-build6-rc2) enthält den selbst gebauten und dokumentierten libmpv-0.41.0-Stack.
+CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer. Die [öffentliche Vorabversion 0.2.1 Build 7 – RC2](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build7-rc2) enthält den selbst gebauten und dokumentierten libmpv-0.41.0-Stack.
 
 ## Lizenz
 
@@ -19,8 +19,8 @@ CAN baut auf Ideen und Arbeit vieler Menschen und Projekte auf. Die [Danksagung]
 - [Entwicklungstagebuch](docs/TAGEBUCH.md): aktuelle Änderungen, Prüfergebnisse und offene Schritte.
 - [Setup-Merkliste](docs/SETUP-MERKLISTE.md): geplantes Gesamtpaket und vorgemerkte V2-Funktionen.
 - [Testplan](docs/TESTPLAN.md): reproduzierbare Prüfungen und Testbasis.
-- [RC2-Prüfbericht](docs/RELEASE-BUILD6-RC2-RESULT.md): Quellstand, Paketprüfsummen, 484 automatisierte Tests und praktische Pakettests.
-- [Veröffentlichungsnachweis](docs/RELEASE-PUBLICATION-RC2.md): Tag, öffentliche Downloads und Prüfergebnis.
+- [RC2-Prüfbericht](docs/RELEASE-BUILD7-RC2-RESULT.md): Quellstand, Paketprüfsummen, 496 automatisierte Tests, Portable-Starttest und verbleibende Praxistests.
+- [Veröffentlichungsnachweis](docs/RELEASE-PUBLICATION-BUILD7-RC2.md): Tag, öffentliche Downloads und Prüfergebnis.
 - [Architektur](docs/ARCHITECTURE.md) und [Entscheidungen](docs/DECISIONS.md): technische Hintergründe und Entwicklungsgeschichte.
 
 ## Was CAN derzeit kann
@@ -72,7 +72,7 @@ Die Anwendung liegt danach unter `src\CutAssistantNext.App\bin\Release\net10.0-w
 
 ## Version und Buildnummer
 
-Lokaler Entwicklungsstand vom 01.10.2026: **0.2.1 · Build 7 · RC2** mit korrigierter Upload-Identität und überarbeiteten Cutlist-Einstellungen. Der Release-Build ist ohne Warnungen oder Fehler abgeschlossen; **496/496 Tests bestanden**. Dieser Stand ist noch nicht veröffentlicht; die öffentliche Vorabversion bleibt **0.2.0 Build 6 – RC2**.
+Öffentliche Vorabversion vom 01.10.2026: **0.2.1 · Build 7 · RC2** mit korrigierter Upload-Identität und überarbeiteten Cutlist-Einstellungen. Der Release-Build ist ohne Warnungen oder Fehler abgeschlossen; **496/496 Tests bestanden**. Setup, Portable-ZIP, Quellen und Prüfsummen stehen beim Release bereit. Die frühere Ausgabe **0.2.0 Build 6 – RC2** bleibt unverändert verfügbar.
 
 Die inhaltliche Version steht zentral in `Version.props`: Patch für Korrekturen, Minor für neue Funktionen, Major für einen größeren Versionssprung. Sie wird bewusst gepflegt.
 
@@ -93,4 +93,4 @@ Die RC-Kennung steht ebenfalls in `Version.props` (`CanCandidate`, derzeit `RC2`
 | `tools` | Einrichtung von libmpv und versionierte Builds |
 | `docs` | Anleitung, Status, Testplan und technische Dokumentation |
 
-Letzter bestätigter Release-Stand (29.09.2026): **0.2.0 Build 6 – RC2**, Release-Build ohne Warnungen oder Fehler und **484/484 automatisierte Tests bestanden**. Setup und Portable-ZIP wurden separat mit einem HD-Schnitt von „Black Adam“ geprüft; Bild und Ton wurden als einwandfrei bestätigt. Drüberinstallation, Namensmasken-Reset und Deinstallation des Setups waren erfolgreich. Details stehen im [RC2-Prüfbericht](docs/RELEASE-BUILD6-RC2-RESULT.md).
+Aktueller Release-Stand (01.10.2026): **0.2.1 Build 7 – RC2**, Release-Build ohne Warnungen oder Fehler und **496/496 automatisierte Tests bestanden**. Alle 148 Dateien des Portable-ZIPs wurden geprüft; Start, Versionsanzeige und reguläres Beenden waren erfolgreich. Eine erneute Setup-Installation und ein Videoschnitt mit diesen neuen Paketen stehen noch aus. Details stehen im [aktuellen Prüfbericht](docs/RELEASE-BUILD7-RC2-RESULT.md); die früheren Pakettests bleiben im [Build-6-Prüfbericht](docs/RELEASE-BUILD6-RC2-RESULT.md) dokumentiert.

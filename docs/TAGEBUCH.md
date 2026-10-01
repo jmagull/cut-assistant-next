@@ -2,7 +2,7 @@
 
 ## 01.10.2026 – Upload-Korrektur und Cutlist-Einstellungen
 
-Lokaler Stand: **CAN 0.2.1 · Build 7 · RC2**. Die veröffentlichte Ausgabe **0.2.0 Build 6 – RC2** bleibt unverändert. Für den neuen Stand wurden noch keine Pakete veröffentlicht.
+Veröffentlichter Stand: **CAN 0.2.1 · Build 7 · RC2**. Die vorherige Ausgabe **0.2.0 Build 6 – RC2** bleibt unverändert verfügbar.
 
 ### Änderungen
 
@@ -26,4 +26,12 @@ Lokaler Stand: **CAN 0.2.1 · Build 7 · RC2**. Die veröffentlichte Ausgabe **0
 
 - Ein echter Sniplist-Verbindungs-/Upload-Test ist noch nicht bestätigt.
 - Der neue HTTP-Versionswert 0.2.1 wurde noch nicht separat am Server praktisch getestet.
-- Änderungen committen und nach Freigabe pushen; anschließend Setup und Portable-ZIP für 0.2.1 Build 7 RC2 erstellen, prüfen und getrennt zur Veröffentlichung freigeben.
+- Eine erneute Setup-Installation/Deinstallation und ein Videoschnitt mit den neuen Paketen stehen noch aus.
+
+### Veröffentlichung um 20:03 Uhr MESZ
+
+- Änderungen mit Commit `dcf4123` gesichert und nach GitHub gepusht.
+- Setup und Portable-ZIP aus dem frisch entpackten Quellarchiv dieses Commits gebaut: 496/496 Tests, keine Buildwarnungen oder Fehler.
+- 148 Portable-Dateien geprüft; Start mit korrekter Versionsanzeige und reguläres Beenden erfolgreich.
+- Alle sechs Uploads anhand von Größe und GitHub-SHA-256-Digest mit den lokalen Dateien abgeglichen.
+- Nach Nutzerauftrag als Vorabversion [v0.2.1-build7-rc2](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build7-rc2) veröffentlicht. Tag-Zuordnung und öffentlicher Status bestätigt. Prüfbericht und Veröffentlichungsnachweis wurden nach dem Paketbau ergänzt.
