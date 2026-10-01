@@ -24,10 +24,12 @@ Veröffentlichter Stand: **CAN 0.2.1 · Build 7 · RC2**. Die vorherige Ausgabe 
 - Der Benutzer hat die vergrößerte und nach oben verschobene Fensterdarstellung bestätigt.
 - Nach Veröffentlichung: Installation in einer VM mit GPAC, .NET 10 und FFmpeg bestätigt. „Grey’s Anatomy – Durchs Feuer“ (HQ-MP4) wurde in drei Behaltebereichen geschnitten und vollständig zusammengefügt; das Protokoll endet mit „Fertig.“. Die Cutlist stimmt mit den Schnittaufrufen überein und enthält CAN 0.2.1 sowie Autor Joerg. Bild und Ton der fertigen Datei wurden vom Benutzer als einwandfrei bestätigt.
 
+- Die anschließende Deinstallation der Setup-Version in der VM wurde vom Benutzer als erfolgreich bestätigt.
+
 ### Noch offen
 
 - Ein echter Sniplist-Verbindungs-/Upload-Test ist noch nicht bestätigt.
-- Die Setup-Deinstallation und ein separater Videoschnitt mit dem neuen Portable-ZIP stehen noch aus.
+- Ein separater Videoschnitt mit dem neuen Portable-ZIP steht noch aus.
 
 ### Veröffentlichung um 20:03 Uhr MESZ
 
