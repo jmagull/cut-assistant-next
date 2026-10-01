@@ -20,13 +20,13 @@ Veröffentlichter Stand: **CAN 0.2.1 · Build 7 · RC2**. Die vorherige Ausgabe 
 - Die Windows-x64-Paketwiederherstellung mit `--locked-mode` ist erfolgreich.
 - Echte Testuploads bestätigten den Erhalt der Cutlist-Metadaten sowie die Annahme von `app=CutAssistantNext` (ID 2079437) und HTTP-`version=0.2.0` (ID 2079440). Die HTTP-Felder sind nicht separat in der heruntergeladenen Cutlist sichtbar; die Zuordnung beruht auf der jeweils getesteten Anwendung. Weitere Details in ADR-010.
 - Der Benutzer hat die Löschung sämtlicher Test-Cutlists bestätigt.
+- Der spätere Upload aus CAN 0.2.1 wurde mit Server-ID 2079448 bestätigt (`GeneratedOn=2026-10-01 20:40:32`). Die Serverfassung erhält Programmname, Version, Autor, Schnittbereiche, Namensvorschlag und Kommentar der lokalen Cutlist. Damit ist auch der Upload-Ablauf mit HTTP-Version 0.2.1 praktisch bestätigt; die HTTP-Felder selbst werden nicht separat in der Cutlist angezeigt.
 - Der Benutzer hat die vergrößerte und nach oben verschobene Fensterdarstellung bestätigt.
 - Nach Veröffentlichung: Installation in einer VM mit GPAC, .NET 10 und FFmpeg bestätigt. „Grey’s Anatomy – Durchs Feuer“ (HQ-MP4) wurde in drei Behaltebereichen geschnitten und vollständig zusammengefügt; das Protokoll endet mit „Fertig.“. Die Cutlist stimmt mit den Schnittaufrufen überein und enthält CAN 0.2.1 sowie Autor Joerg. Bild und Ton der fertigen Datei wurden vom Benutzer als einwandfrei bestätigt.
 
 ### Noch offen
 
 - Ein echter Sniplist-Verbindungs-/Upload-Test ist noch nicht bestätigt.
-- Der neue HTTP-Versionswert 0.2.1 wurde noch nicht separat am Server praktisch getestet.
 - Die Setup-Deinstallation und ein separater Videoschnitt mit dem neuen Portable-ZIP stehen noch aus.
 
 ### Veröffentlichung um 20:03 Uhr MESZ

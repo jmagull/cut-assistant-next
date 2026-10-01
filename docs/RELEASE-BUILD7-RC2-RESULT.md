@@ -32,7 +32,9 @@ Nach der Veröffentlichung bestätigte der Benutzer die Installation in einer VM
 
 Die zugehörige Cutlist enthält `Application=Cut Assistant Next`, `Version=0.2.1`, `Author=Joerg` und drei Bereiche. Die MP4Box-Aufrufe `592.56:1759.12`, `2314.2:3005.44` und `3565.52:4133.64` stimmen mit diesen Bereichen und der vorhandenen CAN-Umrechnung (Ende = Start + Dauer − ein Bild bei 25 fps) überein. Dies ist kein zusätzlicher Upload-Nachweis.
 
-Ein gesonderter Server-Praxistest mit HTTP-Version 0.2.1, ein echter Sniplist-Test, die Setup-Deinstallation und ein separater Videoschnitt mit dem Portable-ZIP stehen noch aus. Die früheren Pakettests von 0.2.0 Build 6 RC2 gelten nicht als erneute Abnahme dieser Ausgabe.
+Der anschließende Upload aus dem neuen Stand wurde durch die vom Benutzer zurückgemeldete Server-Cutlist **2079448** bestätigt (`GeneratedOn=2026-10-01 20:40:32`). Programmname, Version 0.2.1, Autor Joerg, alle drei Schnittbereiche, Namensvorschlag und Kommentar stimmen mit der lokalen Cutlist überein. Damit ist auch der Upload-Ablauf der Anwendung mit HTTP-Version 0.2.1 praktisch bestätigt. Die HTTP-Felder selbst sind im Cutlist-Inhalt nicht separat sichtbar; die Zuordnung beruht auf dem getesteten Programmstand.
+
+Ein echter Sniplist-Test, die Setup-Deinstallation und ein separater Videoschnitt mit dem Portable-ZIP stehen noch aus. Die früheren Pakettests von 0.2.0 Build 6 RC2 gelten nicht als erneute Abnahme dieser Ausgabe.
 
 ## Pakete und Prüfsummen
 
