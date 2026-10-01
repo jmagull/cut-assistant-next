@@ -28,9 +28,11 @@ Veröffentlichter Stand: **CAN 0.2.1 · Build 7 · RC2**. Die vorherige Ausgabe 
 
 - Der separate Portable-ZIP-Schnitt mit drei Behaltebereichen wurde ebenfalls erfolgreich abgeschlossen; Bild und Ton der fertigen Datei wurden vom Benutzer als einwandfrei bestätigt. Das neue Protokoll verwendet andere temporäre Dateien als der Setup-Test und zeigt drei abgeschlossene Segment-Schnitte, vollständiges Zusammenfügen und einen erfolgreichen Abschluss.
 
-### Noch offen
+### Zusätzlicher Server-Praxistest
 
-- Ein echter Sniplist-Verbindungs-/Upload-Test ist noch nicht bestätigt.
+- Mit konfigurierter Sniplist-HTTPS-URL wurden Verbindungstest, Suche (zwei Treffer) und Download mit geladenen Schnittbereichen bestätigt.
+- Der anschließende Upload war erfolgreich; der Dialog zeigt Server-ID 2079449. Ein separater Inhaltsabgleich dieser Serverfassung ist nicht dokumentiert.
+- Die vorgesehenen Funktionsprüfungen für Setup, Portable-ZIP und den zusätzlichen Serverablauf sind damit abgeschlossen. Dies ist keine allgemeine Garantie für alle Dateien oder Serverzustände.
 
 ### Veröffentlichung um 20:03 Uhr MESZ
 

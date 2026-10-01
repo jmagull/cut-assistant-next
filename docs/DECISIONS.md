@@ -122,7 +122,7 @@ Nach dem erfolgreichen Laden einer Mediendatei sucht Cut Assistant Next automati
 Begründung und Regeln:
 
 - Die persönliche Server-URL ist eine lokale Benutzereinstellung und gehört nicht in Cutlist-Metadaten oder Programmcode.
-- Zusätzlich zu `http://cutlist.at/<FRED>/` akzeptiert die URL-Prüfung `https://sniplist.mepaso.net/<FRED>/` mit demselben 64-stelligen FRED-Format. Diese zusätzliche Adresse wird im Einstellungsdialog nicht beworben. Such-, Download- und Upload-Anfragen behalten den konfigurierten Server bei; automatisierte Tests verwenden nachgebildete HTTP-Antworten. Ein realer Sniplist-Upload wurde noch nicht geprüft.
+- Zusätzlich zu `http://cutlist.at/<FRED>/` akzeptiert die URL-Prüfung `https://sniplist.mepaso.net/<FRED>/` mit demselben 64-stelligen FRED-Format. Diese zusätzliche Adresse wird im Einstellungsdialog nicht beworben. Such-, Download- und Upload-Anfragen behalten den konfigurierten Server bei; automatisierte Tests verwenden nachgebildete HTTP-Antworten. Am 01.10.2026 bestätigte der Benutzer mit dieser konfigurierten URL einen erfolgreichen Verbindungstest, Suchtreffer, das Laden einer Cutlist und einen erfolgreichen Upload mit Server-ID 2079449. Der Ablauf ist damit praktisch geprüft; aus den Screenshots wird keine Aussage über interne Weiterleitungen oder die Serverarchitektur abgeleitet.
 - Ist keine persönliche Server-URL eingerichtet, wird die automatische Serversuche still übersprungen.
 - Die Suche verwendet den vollständigen Originaldateinamen der geladenen Mediendatei.
 - `ApplyToFile` und die Identität der Originaldatei werden durch die Serversuche nicht verändert.
