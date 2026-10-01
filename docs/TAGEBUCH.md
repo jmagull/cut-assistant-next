@@ -26,10 +26,11 @@ Veröffentlichter Stand: **CAN 0.2.1 · Build 7 · RC2**. Die vorherige Ausgabe 
 
 - Die anschließende Deinstallation der Setup-Version in der VM wurde vom Benutzer als erfolgreich bestätigt.
 
+- Der separate Portable-ZIP-Schnitt mit drei Behaltebereichen wurde ebenfalls erfolgreich abgeschlossen; Bild und Ton der fertigen Datei wurden vom Benutzer als einwandfrei bestätigt. Das neue Protokoll verwendet andere temporäre Dateien als der Setup-Test und zeigt drei abgeschlossene Segment-Schnitte, vollständiges Zusammenfügen und einen erfolgreichen Abschluss.
+
 ### Noch offen
 
 - Ein echter Sniplist-Verbindungs-/Upload-Test ist noch nicht bestätigt.
-- Ein separater Videoschnitt mit dem neuen Portable-ZIP steht noch aus.
 
 ### Veröffentlichung um 20:03 Uhr MESZ
 
