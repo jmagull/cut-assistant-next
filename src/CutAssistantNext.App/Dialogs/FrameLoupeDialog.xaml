@@ -1,0 +1,91 @@
+<Window x:Class="CutAssistantNext.App.Dialogs.FrameLoupeDialog" x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding Title}" Width="1050" Height="850" MinWidth="780" MinHeight="620"
+        WindowStartupLocation="CenterOwner" Background="#F4F6F8"
+        Loaded="Window_Loaded" Closed="Window_Closed" PreviewKeyDown="Window_PreviewKeyDown">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="Margin" Value="0,0,8,6" />
+            <Setter Property="MinWidth" Value="60" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="0,0,0,14">
+            <TextBlock Text="{Binding Title}" FontSize="24" FontWeight="SemiBold" Foreground="#111827" />
+            <TextBlock Text="{Binding CutPositionText}" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#4B5563" />
+            <TextBlock Text="{Binding FrameText}" Margin="0,6,0,0" FontWeight="SemiBold" />
+        </StackPanel>
+        <ScrollViewer x:Name="PreviewScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled" ScrollChanged="PreviewScroll_ScrollChanged">
+        <Grid MinHeight="{Binding ViewportHeight, RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border x:Name="PreviewBorder" Background="#10151D" CornerRadius="8" Padding="8"
+                    Margin="0,0,0,10" Height="300" MinHeight="140">
+                <Grid>
+                    <TextBlock Text="{Binding PreviewPlaceholderText}" Foreground="#AAB5C5"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Image x:Name="FrameImage" Stretch="Uniform" />
+                </Grid>
+            </Border>
+            <Expander x:Name="FrameDetails" Grid.Row="1" Header="Frame-Details" Margin="0,0,0,12"
+                      Expanded="FrameDetails_Changed" Collapsed="FrameDetails_Changed">
+                <ScrollViewer MaxHeight="280" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,8,0,0">
+                        <TextBlock Text="{Binding DetailsText}" TextWrapping="Wrap" Margin="0,0,0,8" FontFamily="Consolas" />
+                        <DataGrid x:Name="FramesGrid" Height="160" IsReadOnly="True" AutoGenerateColumns="False"
+                                  CanUserAddRows="False" SelectionMode="Single" SelectionUnit="FullRow"
+                                  ItemsSource="{Binding Frames}" SelectedItem="{Binding SelectedFrame, Mode=OneWay}"
+                                  IsEnabled="{Binding CanNavigate}" SelectionChanged="FramesGrid_SelectionChanged">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Nr. im Abschnitt" Binding="{Binding Number}" Width="130" />
+                                <DataGridTextColumn Header="Quellzeit (s)" Binding="{Binding TimeText}" Width="150" />
+                                <DataGridTextColumn Header="PTS" Binding="{Binding Frame.Pts}" Width="*" />
+                                <DataGridTextColumn Header="Keyframe" Binding="{Binding KeyframeText}" Width="90" />
+                                <DataGridTextColumn Header="Bildtyp" Binding="{Binding Frame.PictureType}" Width="80" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </ScrollViewer>
+            </Expander>
+        </Grid>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2">
+            <WrapPanel IsEnabled="{Binding CanNavigate}">
+                <Button Content="−10" Tag="-10" Click="Step_Click" ToolTip="Strg: −20 Frames" />
+                <Button Content="−1" Tag="-1" Click="Step_Click" />
+                <Button Content="+1" Tag="1" Click="Step_Click" />
+                <Button Content="+10" Tag="10" Click="Step_Click" ToolTip="Strg: +20 Frames" />
+                <TextBlock Text="← / →: 1 Frame · Strg+← / →: 20 Frames" VerticalAlignment="Center" Margin="6,0,0,6" />
+            </WrapPanel>
+            <WrapPanel IsEnabled="{Binding CanNavigate}">
+                <Button Content="{Binding SearchLeftText}" Tag="-1" Click="Search_Click" ToolTip="Umschalt+←" />
+                <Button Content="{Binding SearchRightText}" Tag="1" Click="Search_Click" ToolTip="Umschalt+→" />
+                <Button Content="Suche neu starten" Click="ResetSearch_Click" />
+            </WrapPanel>
+            <TextBlock Text="Suchsprung: Umschalt+← / →. Nach jedem erfolgreichen Suchsprung halbiert sich die Weite."
+                       TextWrapping="Wrap" Foreground="#4B5563" Margin="0,0,0,8" />
+            <TextBlock Text="{Binding EdgeMeaningText}" TextWrapping="Wrap" Foreground="#1F2937" Margin="0,0,0,6" />
+        </StackPanel>
+        <TextBlock Grid.Row="3" Text="{Binding Status}" TextWrapping="Wrap" Foreground="#1F2937" Margin="0,4,0,12" />
+        <DockPanel Grid.Row="4">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="12,0,0,0">
+                <Button Content="Schnittkante übernehmen" IsEnabled="{Binding CanApply}" Click="Apply_Click" Margin="0,0,8,0" />
+                <Button Content="Abbrechen" IsCancel="True" Click="Close_Click" Margin="0" />
+            </StackPanel>
+            <TextBlock Text="{Binding SelectedCutPositionText}"
+                       TextWrapping="Wrap" VerticalAlignment="Center" Foreground="#6B7280" />
+        </DockPanel>
+    </Grid>
+</Window>

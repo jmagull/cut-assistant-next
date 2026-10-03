@@ -67,6 +67,9 @@
 
                 <MenuItem Header="FFmpeg-Werkzeuge …"
                           Click="FfmpegSettingsButton_Click" />
+
+                <MenuItem Header="Frame-Lupe …"
+                          Click="FrameLoupeSettingsMenuItem_Click" />
             </MenuItem>
 
             <MenuItem Header="Video-Informationen"

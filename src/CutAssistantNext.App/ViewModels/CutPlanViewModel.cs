@@ -64,6 +64,19 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public bool CanModifySelectedSegment =>
         SelectedRemoveSegment is not null;
 
+    public CutEdgeSide? SelectedEdgeSide { get; private set; }
+
+    public TimeSpan? SelectedEdgePosition =>
+        SelectedEdgeSide switch
+        {
+            CutEdgeSide.Start => SelectedRemoveSegment?.Start,
+            CutEdgeSide.End => SelectedRemoveSegment?.End,
+            _ => null
+        };
+
+    public bool CanInspectSelectedEdge =>
+        SelectedRemoveSegment is not null && SelectedEdgeSide.HasValue;
+
     public RemoveSegment? SelectedRemoveSegment
     {
         get => _selectedRemoveSegment;
@@ -77,6 +90,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             }
 
             _selectedRemoveSegment = value;
+            SelectedEdgeSide = null;
 
             if (value is not null)
             {
@@ -87,8 +101,64 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(CanModifySelectedSegment));
             OnPropertyChanged(nameof(CanSetStart));
             OnPropertyChanged(nameof(CanSetEnd));
+            PublishEdgeSelectionChanges();
         }
     }
+
+    public void SelectEdge(RemoveSegment segment, CutEdgeSide side)
+    {
+        ArgumentNullException.ThrowIfNull(segment);
+        if (!Enum.IsDefined(side))
+        {
+            throw new ArgumentOutOfRangeException(nameof(side));
+        }
+
+        if (!GetInitializedCutPlan().RemoveSegments.Contains(segment))
+        {
+            throw new InvalidOperationException(
+                "Die ausgewählte Schnittkante gehört nicht zum aktuellen Schnittplan.");
+        }
+
+        SelectedRemoveSegment = segment;
+        SelectedEdgeSide = side;
+        PublishEdgeSelectionChanges();
+    }
+
+    private void PublishEdgeSelectionChanges()
+    {
+        OnPropertyChanged(nameof(SelectedEdgeSide));
+        OnPropertyChanged(nameof(SelectedEdgePosition));
+        OnPropertyChanged(nameof(CanInspectSelectedEdge));
+    }
+
+    public void ApplyFrameEdge(RemoveSegment expectedSegment, CutEdgeSide side, TimeSpan position)
+    {
+        ArgumentNullException.ThrowIfNull(expectedSegment);
+        if (!Enum.IsDefined(side))
+        {
+            throw new ArgumentOutOfRangeException(nameof(side));
+        }
+
+        var cutPlan = GetInitializedCutPlan();
+        if (!ReferenceEquals(SelectedRemoveSegment, expectedSegment) || SelectedEdgeSide != side ||
+            !cutPlan.RemoveSegments.Contains(expectedSegment))
+        {
+            throw new InvalidOperationException("Die Schnittkante hat sich inzwischen geändert. Bitte die Frame-Lupe erneut öffnen.");
+        }
+
+        ValidatePosition(position, cutPlan.MediaDuration);
+        if (SelectedEdgePosition == position)
+        {
+            return;
+        }
+
+        // Both edges are boundaries before the chosen frame, without an implicit frame offset.
+        Replace(expectedSegment,
+            side == CutEdgeSide.Start ? position : expectedSegment.Start,
+            side == CutEdgeSide.End ? position : expectedSegment.End);
+        SelectEdge(SelectedRemoveSegment!, side);
+    }
+
     public TimeSpan? PendingStart
     {
         get => _pendingStart;

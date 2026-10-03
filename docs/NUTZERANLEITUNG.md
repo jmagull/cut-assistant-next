@@ -122,9 +122,31 @@ Mit **Videoanfang** bzw. **Videoende** kannst du die entsprechende Dateigrenze v
 
 Ein Klick auf einen Schnittbereich wählt ihn aus und hebt ihn hervor. Ein erneuter Klick auf denselben Bereich hebt die Auswahl wieder auf. In der Schnittliste werden Anfang, Ende und Dauer einheitlich als Stunden:Minuten:Sekunden mit drei Nachkommastellen dargestellt. Die interne Genauigkeit der Schnittmarken wird dadurch nicht verändert.
 
-Play/Pause, Zeitleiste, **−10 Bilder**, **Bild zurück**, **Bild vor** und **+10 Bilder** helfen bei der Positionierung. Einzelbildschritte sind im pausierten Zustand verfügbar. Tastatur: Leertaste für Play/Pause, Pfeil links/rechts für ein Bild, Strg+Pfeil links/rechts für zehn Bilder.
+Play/Pause, Zeitleiste, **−10 Bilder**, **Bild zurück**, **Bild vor** und **+10 Bilder** helfen bei der Positionierung. Einzelbildschritte sind im pausierten Zustand verfügbar. Tastatur: Leertaste für Play/Pause, Pfeil links/rechts für ein Bild, Strg+Pfeil links/rechts für zwanzig Bilder. Mit Strg verwenden auch die größeren Bildschritt-Buttons zwanzig Bilder.
 
 Die Anzeige **Geschnitten** ist eine Vorschau der geplanten Ausgabelaufzeit. Prüfe das tatsächliche Schnittergebnis im Player; Schnittmotor und Videostruktur können die exakten Grenzen beeinflussen.
+
+### Frame-Lupe im Entwicklungsbuild ab Build 10
+
+Klicke in der Schnitttabelle auf die **Startzeit oder Endzeit** und drücke **Shift+F**. Die Frame-Lupe öffnet diese Kante in einem eigenen Fenster. FFprobe und FFmpeg müssen unter **Einstellungen → FFmpeg-Werkzeuge** verfügbar sein.
+
+- **Links/Rechts** und die Buttons **−1/+1**: ein tatsächlich analysierter Frame.
+- **−10/+10**: zehn Frames; mit Strg zwanzig. **Strg+Links/Rechts**: zwanzig Frames.
+- **Umschalt+Links/Rechts** oder die beiden Suchbuttons: zusätzliche halbierte Suche. Standardfolge: 2000 → 1000 → 500 → 250 → 125 → 62 → 31 → 15 → 7 → 3 → 1.
+- **Suche neu starten** setzt die Suchweite zurück. Normale Bildschritte verändern diese Suchweite nicht.
+- Unter **Einstellungen → Frame-Lupe** lässt sich der Startwert ändern; er gilt beim nächsten Öffnen.
+- **Frame-Details** zeigt Zeitstempel, Keyframe und Bildtyp. Ein Klick auf einen Frame in der Detailtabelle lädt dessen Vorschau.
+- Ab **Build 11** zeigt **Neue Schnittkante** die Zeit des gewählten Frames. **Schnittkante übernehmen** trägt diese Zeit in den Schnittplan ein und schließt die Lupe. Der Button ist erst mit bestätigter Bildvorschau innerhalb der Datei aktiv.
+- CAN bearbeitet Entfernbereiche: An einer **Startkante** wählst du das erste zu entfernende Bild. An einer **Endkante** wählst du das erste Bild, das danach erhalten bleiben soll. Die Grenze liegt jeweils unmittelbar vor dem gewählten Bild; es wird kein zusätzlicher Frameversatz angewendet und nicht automatisch zu einem Keyframe gesprungen.
+- **Abbrechen**, Escape oder das Fensterschließen lassen die Kante unverändert. Würde die neue Kante einen leeren/umgekehrten Bereich oder eine Überschneidung erzeugen, erscheint eine Meldung; die Lupe bleibt zum Korrigieren geöffnet.
+
+Beim Laden eines größeren Abschnitts kann die Analyse etwas dauern. **Schließen** beendet auch laufende Vorgänge. Fehlen eindeutige Zeitstempel, zeigt die Lupe keine bestätigte Bildzuordnung an; Fehlerdetails stehen im aufklappbaren Detailbereich.
+
+Die Übernahme in den Schnittplan speichert noch keine Datei. Prüfe anschließend die übrigen Kanten und verwende **Cutlist erzeugen**, um eine neue `.cutlist` zu speichern. Verwende beispielsweise einen Namen mit `.korrigiert.cutlist`, wenn du die ursprüngliche Liste behalten möchtest. Beim Export werden die korrigierten Entfernbereiche wie bisher in zu behaltende Abschnitte umgerechnet.
+
+Die Übernahme verwendet Original-PTS und Zeitbasis und zieht den bekannten Containerstart ab. Sie verwendet weder die geschätzte Framenummer des Hauptplayers noch eine Rechnung aus Bildrate und lokaler Lupennummer. Die interne Zeitauflösung beträgt 100 Nanosekunden; die Anzeige mit Millisekunden verringert die interne Genauigkeit nicht. Die Framenummer zählt nur im geladenen Abschnitt; ein absoluter Datei-Frameindex und der unabhängige Abgleich zum sichtbaren Hauptplayerbild folgen. Dateien mit mehreren Videostreams benötigen zuvor die noch ausstehende Zuordnung zur aktiven Player-Videospur.
+
+Die Wahl einer genauen Schnittzeit garantiert nicht, dass jeder Schnittmotor sie identisch ausführt. CANs MP4Box-Verfahren bleibt unverändert. Für den vorgesehenen Vergleich mit CutlistDude lade die korrigierte Liste dort und kontrolliere Filmstart, Übergänge, Filmende und Ton-Synchronität im Ergebnis.
 
 ## 5. Nur eine Cutlist erstellen
 

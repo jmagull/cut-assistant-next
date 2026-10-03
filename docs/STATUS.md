@@ -1,12 +1,20 @@
 # Projektstatus
 
-Stand: 19.09.2026. Dieser Überblick beschreibt den aktuellen Feature-Stand; ältere Projektdefinitionen und Architekturentscheidungen dokumentieren teilweise frühere Entwicklungsphasen.
+Stand: 03.10.2026. Dieser Überblick beschreibt den aktuellen Feature-Stand; ältere Projektdefinitionen und Architekturentscheidungen dokumentieren teilweise frühere Entwicklungsphasen.
 
 ## Aktueller Umfang
 
 CAN verwendet C#, .NET 10 und WPF unter Windows 11 x64. ffprobe liefert Medieninformationen, mpv/libmpv übernimmt die Wiedergabe, MP4Box den Schnitt. FFmpeg bereitet bei Bedarf eine MP4-Arbeitsdatei vor.
 
-Umgesetzt sind Medienanalyse und Wiedergabe, Frame-Navigation, manuelle Schnittplanung, lokale Cutlists, Server-Suche/-Download/-Upload, Namensmasken, Herkunftsübernahme bei Fremd-Cutlists, MP4Box-Schnitt und experimentelle Vorbereitung anderer Container. Die Bedienung ist in der [Nutzeranleitung](NUTZERANLEITUNG.md) beschrieben.
+Umgesetzt sind Medienanalyse und Wiedergabe, Frame-Navigation, Frame-Lupe mit Schnittkantenübernahme und Halbierungssuche, manuelle Schnittplanung, lokale Cutlists, Server-Suche/-Download/-Upload, Namensmasken, Herkunftsübernahme bei Fremd-Cutlists, MP4Box-Schnitt und experimentelle Vorbereitung anderer Container. Die Bedienung ist in der [Nutzeranleitung](NUTZERANLEITUNG.md) beschrieben.
+
+## Frame-Lupe und Schnittkantenkorrektur
+
+- Umschalt+F öffnet die Lupe für eine ausdrücklich angeklickte Anfangs- oder Endkante. Eine unabhängige FFmpeg-Vorschau wird anhand des Original-PTS und der Zeitbasis geprüft. Tabellenwahl, Keyframe-Anzeige und normale Schritte mit ±1/±10 sowie Strg für ±20 sind verfügbar.
+- Eigene Suchbuttons und Umschalt+Links/Rechts beginnen standardmäßig mit 2000 Frames und halbieren nach jedem erfolgreich angezeigten Suchsprung bis auf 1. Der Startwert ist einstellbar; normale Schritte verändern die Suchweite nicht.
+- **Schnittkante übernehmen** setzt die ausgewählte Grenze vor den angezeigten Frame. Bei einer Startkante ist dieser das erste entfernte Bild, bei einer Endkante das erste anschließend behaltene Bild. Abbrechen verändert den Plan nicht. **Cutlist erzeugen** speichert anschließend die korrigierten Behaltebereiche.
+- Derzeit wird eine Datei mit genau einem Videostream vorausgesetzt. Die Frame-Nummer gilt nur für den geladenen Analyseabschnitt; ein absoluter Dateiindex und der unabhängige Abgleich zum Hauptplayerbild bleiben offen.
+- Navy-CIS-Praxistests bestätigten Navigation, Keyframe-Auswahl und das Speichern einer korrigierten Cutlist. Der externe CutlistDude-Test zeigte einen Ein-Frame-Versatz bei der Zuordnung der Zeiten, einschließlich eines Werbebildes am zweiten Filmstart. CutlistDude/CL_OFFSET und CANs MP4Box-Modus wurden nicht geändert; die Zuordnung muss vor einer Integration gesondert geklärt werden.
 
 ## Oberfläche und Cutlist-Ablauf
 
@@ -26,7 +34,7 @@ Umgesetzt sind Medienanalyse und Wiedergabe, Frame-Navigation, manuelle Schnittp
 
 - Hilfe verlinkt Nutzeranleitung und GitHub-Projekt; Update/GitHub öffnet ebenfalls die Projektseite.
 - Credits zeigt die abgestimmte Danksagung in einem scrollbaren Dialog mit Projektlinks.
-- Version und lokale Buildnummer stehen im Fenstertitel und in der Hauptüberschrift. Ausgangsversion: 0.2.0; zuletzt gebauter lokaler Stand: Build 4.
+- Version und lokale Buildnummer stehen im Fenstertitel und in der Hauptüberschrift. Aktueller Entwicklungsstand: 0.2.1 Build 11 RC2; öffentliche Vorabversion: 0.2.1 Build 7 RC2.
 - Vollständige Builds über `tools/build.ps1` erhöhen den Zähler nur nach Erfolg. Fehlgeschlagener Build und anschließendes Weiterzählen wurden geprüft.
 - Hilfe-Links, Credits-Dialog und Update/GitHub wurden vom Nutzer live bestätigt.
 
@@ -57,7 +65,7 @@ Das Protokoll ist standardmäßig aufgeklappt, kann eingeklappt und in die Zwisc
 
 ## Verifikation
 
-- Letzter bestätigter vollständiger Testlauf am 19.09.2026: **450/450 Tests bestanden**, Debug-Build erfolgreich. Der zuvor dokumentierte Release-Build mit 443 Tests war ebenfalls fehler- und warnungsfrei; ein erneuter Release-Build mit 450 Tests ist hier noch nicht nachgewiesen.
+- Letzter bestätigter vollständiger Testlauf am 03.10.2026: **577/577 Tests bestanden**, Release-Build 11 ohne Warnungen oder Fehler. WPF-Übernahme und Abbrechen mit echten ffprobe-/FFmpeg-Vorschauen sowie variable Bildabstände, Containerstart und Halbierungssuche wurden zusätzlich geprüft.
 - P1 abgeschlossen: Schutz übernommener Namensvorschläge, bewusste Neuberechnung aus der Namensmaske, automatische Herkunftsangabe bei Fremd-Cutlists, einheitliche Zeitdarstellung und kopierbare Namensvorschau. Die Herkunftsübernahme ist durch sieben neue Testfälle und praktische Prüfungen abgesichert.
 - Diplomatin und Rubikon: integrierter AVI-Ablauf mit jeweils zwei Cutlists erfolgreich; Wiedergabe einschließlich Anfang, Ende und Ton-Synchronität vom Nutzer bestätigt.
 - Zusätzlich bestätigter Diplomatin-Schnitt mit HQ-Cutlist trotz unterschiedlicher Quelldateigröße.
@@ -72,7 +80,7 @@ Weitere Prüfschritte stehen im [Testplan](TESTPLAN.md). Aus diesen Beispielen f
 
 ## Nächste Schritte
 
-1. P2: Regressionstests und Release-Vorbereitung fortsetzen. Installations- und Portable-Paket gemäß [Setup-Merkliste](SETUP-MERKLISTE.md) vorbereiten.
+1. CutlistDudes Frame-Zuordnung anhand der korrigierten Navy-CIS-Liste klären und Schnittübergänge sowie Ton weiter vergleichen. Danach Veröffentlichung der Lupenfunktionen gemäß [Setup-Merkliste](SETUP-MERKLISTE.md) vorbereiten.
 2. Offene Player-Probleme untersuchen: schnelle aufeinanderfolgende Frame-Sprünge und Positionsänderungen ohne entsprechendes neues Videobild.
 3. UX-Merkliste: Größe des Dialogs „Cutlist erzeugen“ wiederherstellen, Klick auf die Zeitleiste zum Positionieren verwenden und weitere Bedienungsdetails verbessern.
 4. Für AVI-Container mit irreführenden Dateiendungen wie `.mpg.HD.avi.mp4` einen deutlich hervorgehobenen Warnhinweis ergänzen. Der Hinweis soll erklären, dass Probleme bereits in der unveränderten Originaldatei vorliegen können. Die Verarbeitung bleibt möglich.

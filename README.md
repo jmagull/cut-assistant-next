@@ -4,6 +4,8 @@ Cut Assistant Next (CAN) ist ein Windows-Programm zum Abspielen von Videos, Bear
 
 CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer. Die [öffentliche Vorabversion 0.2.1 Build 7 – RC2](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build7-rc2) enthält den selbst gebauten und dokumentierten libmpv-0.41.0-Stack.
 
+Der aktuelle Entwicklungsstand ergänzt die Frame-Lupe mit Keyframe-Anzeige, ausdrücklicher Schnittkantenkorrektur und zusätzlicher Halbierungssuche. Release-Build 11 wurde ohne Warnungen oder Fehler geprüft; 577/577 Tests bestanden. Diese Ergänzungen sind noch nicht als Installationspaket veröffentlicht.
+
 ## Lizenz
 
 Der vom CAN-Projekt selbst entwickelte Quellcode steht unter **GPL-3.0-or-later**. Der vollständige Lizenztext steht in [LICENSE](LICENSE). Eingebundene Bibliotheken, NuGet-Pakete und die .NET-Laufzeit behalten ihre eigenen Lizenzen; die [libmpv-Hinweise](docs/libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) und die [.NET-/NuGet-Bestandsaufnahme](docs/DOTNET-LICENSING.md) ordnen sie zu. Die öffentliche RC2-Ausgabe ist als Vorabversion gekennzeichnet; die zugehörigen Quellen und Prüfsummen stehen beim Release.
@@ -28,6 +30,8 @@ CAN baut auf Ideen und Arbeit vieler Menschen und Projekte auf. Die [Danksagung]
 - Videos laden, mit ffprobe analysieren und mit mpv wiedergeben.
 - Play/Pause, Seeking, Einzelbildschritte und Lautstärkeregelung.
 - Zu entfernende Bereiche markieren, auswählen, korrigieren und löschen.
+- Eine angeklickte Schnittkante mit Umschalt+F in der Frame-Lupe prüfen, Framedetails und Keyframes anzeigen und den ausgewählten Frame als neue Kante übernehmen.
+- Zusätzlich zur Navigation mit ±1/±10 Frames mit halbierten Suchsprüngen navigieren: standardmäßig 2000, 1000, 500 … bis 1 Frame, mit einstellbarem Startwert und Neustart.
 - Cutlists lokal laden, erzeugen und speichern.
 - Passende Server-Cutlists automatisch suchen und die Suche erneut per Button öffnen.
 - Lokal gespeicherte Cutlists nach Bestätigung auf den konfigurierten Server hochladen.

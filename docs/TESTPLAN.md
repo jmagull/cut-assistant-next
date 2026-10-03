@@ -32,6 +32,10 @@
 ## Automatisierte Tests
 
 - ffprobe-Parsing, Medienanalyse und Fehlerabbildung
+- Frame-Lupe: Kantenauswahl, Halbierungsfolge, Intervallerweiterung anhand echter Frameanzahl, Dateigrenzen, fehlende/mehrdeutige PTS, Vorschaufehler und Abbruch
+- Frame-Lupe-Übernahme: Original-PTS ohne impliziten Frame-/Keyframeversatz, Containerstart bei 0/+2/−2 s, variable Zeitabstände, gesperrter Button während Laden/nach Vorschaufehler; nur die gewählte Kante ändern; unveränderte/ungültige/veraltete Kanten, Überschneidungen und Export der korrigierten Keep-Bereiche
+- PTS-Vorschau: absolute Quellzeitstempel, Zeitbasis-Prüfung und Ablehnung mehrdeutiger Bildausgabe
+- Startwert der Frame-Lupe: Default 2000, Speichern/Laden, ungültige Werte und Speicherfehler
 - `MainWindowViewModel` einschließlich Übernahme der Mediendauer
 - `PlaybackViewModel` einschließlich Play/Pause, Seeking, Frames und Lautstärke
 - `MpvMediaPlayerService` einschließlich Pausenzustand während des Ladens
