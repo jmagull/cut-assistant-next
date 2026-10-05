@@ -1,5 +1,32 @@
 # Entwicklungstagebuch
 
+## 05.10.2026 – Timeline per Mausklick positionieren
+
+- Ein Klick auf die Slider-Spur oder die farbige Schnitt-Timeline setzt die Wiedergabeposition direkt auf die angeklickte Stelle. Reglerziehen und die bisherige Auswahl roter Schnittbereiche bleiben erhalten.
+- Die horizontale Klickposition wird auf die Laufzeit abgebildet und auf Anfang/Ende begrenzt; ungültige Koordinaten oder fehlende Laufzeit lösen keinen Seek aus. Der bestehende asynchrone Wiedergabeablauf übernimmt Position, Slider-Aktualisierung und Fehlerbehandlung.
+- Neue Tests prüfen Zeitumrechnung, Dateigrenzen, Seek-Verfügbarkeit, laufende Positionierung, Abbruch und Fehler.
+- Prüfung am 05.10.2026: Release-Rebuild und anschließender Build des endgültigen Stands erfolgreich, **0 Warnungen, 0 Fehler**; vollständiger Testlauf: **610/610 bestanden**, darunter 33 neue Testfälle, 0 fehlgeschlagen, 0 übersprungen. Die geänderten C#-Dateien wurden formatiert.
+- WPF-Prüfung im geladenen Hauptfenster mit Testplayer: Klicks auf graue/rote Schnitt-Timeline und Slider-Spur bei 25/50/75 % setzen Wiedergabe und Slider gemeinsam. Rote Auswahl bleibt umschaltbar und mit dem Schnittplan synchron; Reglerziehen, Schutz vor doppeltem Seek und fehlende Laufzeit geprüft. Keine Bindungsfehler und keine Nutzereinstellungen gespeichert. Die Prüfdateien liegen im ignorierten `.build`-Ordner.
+- Der gesperrte Restore scheiterte an den bekannten leeren `win-x64`-Abschnitten der Test-Lockdateien; der reguläre Restore war erfolgreich. Vier zunächst falsch typisierte Testdaten wurden korrigiert. Die ausschließlich vom Restore erzeugten Test-Lockdateiänderungen wurden nach Prüfung aus der Sicherung zurückgenommen.
+- Nutzerabnahme am 05.10.2026 bestätigt: Beide Timelines bleiben anklickbar und setzen die Wiedergabeposition; die Auswahl roter Schnittbereiche bleibt erhalten. Die kurz erwogene Beschränkung der unteren Timeline auf die Auswahl wurde vom Nutzer verworfen. Damit sind die drei Punkte Namensmaske, elf Framezeilen und Timeline-Klick abgeschlossen. Version 0.2.1, Build 11 und RC2 bleiben unverändert. Keine Veröffentlichung.
+
+## 05.10.2026 – Elf sichtbare Zeilen in der Frametabelle
+
+- Die Detailtabelle der Frame-Lupe wurde auf elf Framezeilen mit fester Zeilen- und Kopfzeilenhöhe erweitert. Der Detailbereich und die normale Fensterhöhe wurden entsprechend vergrößert; die Vorschau berücksichtigt die tatsächliche Höhe der Details. Kleine Fenster bleiben scrollbar.
+- Die bestehende Auswahl-Nachführung bei ±10-Schritten bleibt erhalten. Navigation, Halbierungssuche und Schnittkantenübernahme wurden nicht verändert.
+- Prüfung: Release-Rebuild am 05.10.2026 erfolgreich, **0 Warnungen, 0 Fehler**; vollständiger Testlauf: **577/577 bestanden**, 0 fehlgeschlagen, 0 übersprungen. Die Formatprüfung der geänderten C#-Datei war erfolgreich.
+- WPF-Darstellungsprüfung mit künstlichen Framedaten: elf vollständige Tabellenzeilen und gemeinsam sichtbarer Ausgangs-/Zielframe nach +10 und −10 bestätigt. Normales Fenster (1050 × 1000), kleines Fenster (780 × 620) und eingeklappte Details geprüft; kleine Fenster bieten Scrollen und erreichbare Abschlussbuttons. Keine WPF-Bindungsfehler. Die Prüfdateien liegen ausschließlich im ignorierten `.build`-Ordner.
+- Nutzerabnahme am 05.10.2026 mit realer Videodatei bestätigt: Die Screenshots zeigen elf vollständige Tabellenzeilen (157–167, ausgewählter Frame 162) sowie die angepasste Bildvorschau bei ein- und ausgeklappten Details. Der Nutzer bestätigte die Darstellung mit „super genauso :-)“.
+- Version 0.2.1, Build 11 und RC2 bleiben unverändert. Keine Veröffentlichung.
+
+## 05.10.2026 – Standard-Namensmaske ohne Bindestrich vor dem Folgentitel
+
+- Die CAN-Standardmaske setzt vor den optionalen Folgentitel nur noch ein Leerzeichen. Der zugehörige Editorbaustein heißt jetzt **Folgentitel (Leerzeichen)**. Bestehende gespeicherte Masken einschließlich des bisherigen Bindestrich-Präfixes bleiben gültig.
+- **CAN-Standardmaske** lädt die neue Vorgabe; die Nutzeranleitung wurde ergänzt und die bestehende Standardmaskenprüfung angepasst.
+- Prüfung: Release-Rebuild am 05.10.2026 vom Nutzer erfolgreich ausgeführt, ohne Warnungen oder Fehler; vollständiger Testlauf: **577/577 bestanden**, 0 fehlgeschlagen, 0 übersprungen. Diese Ergebnisse wurden aus der Übergabe übernommen.
+- Nutzerabnahme am 05.10.2026: Nach **CAN-Standardmaske** zeigt der Editor **Folgentitel (Leerzeichen)** und die Vorschau `Hunting Party - Die Moerderjagd S02E13 Xander Wax [25.08.2026]`. Der Nutzer bestätigte die Darstellung mit „Passt :-)“.
+- Version 0.2.1, RC2 und lokale Buildnummer 11 bleiben unverändert. Keine Veröffentlichung.
+
 ## 03.10.2026 – Navy-CIS-Praxistest und Tagesabschluss
 
 - Der Nutzer bestätigte die Lupe, Einzelframeschritte und die Auswahl von Keyframes in der Detailtabelle. Die Übernahme wurde mit dem ersten Filmstart bei 582,240 s praktisch verwendet; anschließend wurde eine korrigierte Cutlist gespeichert und mit CAN geschnitten.

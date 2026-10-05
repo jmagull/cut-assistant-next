@@ -25,6 +25,9 @@ internal sealed record NameTemplateBlock(
             "%Folge:E%" =>
                 "Folge (E)",
 
+            "%Folgentitel: %" =>
+                "Folgentitel (Leerzeichen)",
+
             "%Folgentitel: - %" =>
                 "Folgentitel (-)",
 

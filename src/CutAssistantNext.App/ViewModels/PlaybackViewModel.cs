@@ -186,6 +186,20 @@ public sealed class PlaybackViewModel
         }
     }
 
+    public Task SeekToAsync(
+        TimeSpan position,
+        CancellationToken cancellationToken = default)
+    {
+        if (!CanSeek || IsSeeking)
+        {
+            return Task.CompletedTask;
+        }
+
+        BeginSeek();
+        UpdateSeekPosition(position.TotalSeconds);
+        return CommitSeekAsync(cancellationToken);
+    }
+
     public void CancelSeek()
     {
         EndSeek();

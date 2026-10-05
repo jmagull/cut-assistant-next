@@ -242,6 +242,7 @@
                                 Value="{Binding TimelinePositionSeconds,
                                     Mode=OneWay}"
                                 IsEnabled="{Binding CanSeek}"
+                                ToolTip="Klicken setzt die Wiedergabeposition; den Regler ziehen zum Verschieben."
                                 PreviewMouseLeftButtonDown="TimelineSlider_PreviewMouseLeftButtonDown"
                                 PreviewMouseLeftButtonUp="TimelineSlider_PreviewMouseLeftButtonUp"
                                 ValueChanged="TimelineSlider_ValueChanged" />
@@ -249,6 +250,9 @@
                         <controls:CutTimelineTrack x:Name="CutTimelineTrack"
                                                    Height="12"
                                                    Margin="0,0,0,10"
+                                                   Cursor="Hand"
+                                                   ToolTip="Klicken setzt die Wiedergabeposition; rote Bereiche bleiben auswählbar."
+                                                   SeekRequested="CutTimelineTrack_SeekRequested"
                                                    MediaDuration="{Binding MediaDuration}"
                                                    RemoveSegments="{Binding RemoveSegments}"
                                                    SelectedRemoveSegment="{Binding SelectedRemoveSegment, Mode=TwoWay}" />

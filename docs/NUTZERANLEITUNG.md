@@ -35,7 +35,7 @@ Trage unter **Einstellungen → Cutlist-Einstellungen …** deine persönliche U
 
 ### Namensmaske bearbeiten und zurücksetzen
 
-Unter **Einstellungen → Namensmaske …** legst du fest, wie CAN vorgeschlagene Dateinamen bildet.
+Unter **Einstellungen → Namensmaske …** legst du fest, wie CAN vorgeschlagene Dateinamen bildet. Die CAN-Standardmaske trennt Staffel/Folge und Folgentitel mit einem Leerzeichen, zum Beispiel `Hunting Party S02E13 Xander Wax [25.08.2026]`.
 
 Ziehe verfügbare Elemente und Trennzeichen mit gedrückter linker Maustaste in die Namensmaske. Vorhandene Bausteine kannst du durch Ziehen verschieben. Zum Entfernen wählst du einen Baustein aus und drückst **Entf**. Die Vorschau aktualisiert sich bei jeder Änderung.
 
@@ -122,6 +122,8 @@ Mit **Videoanfang** bzw. **Videoende** kannst du die entsprechende Dateigrenze v
 
 Ein Klick auf einen Schnittbereich wählt ihn aus und hebt ihn hervor. Ein erneuter Klick auf denselben Bereich hebt die Auswahl wieder auf. In der Schnittliste werden Anfang, Ende und Dauer einheitlich als Stunden:Minuten:Sekunden mit drei Nachkommastellen dargestellt. Die interne Genauigkeit der Schnittmarken wird dadurch nicht verändert.
 
+Ein Klick auf die Zeitleiste oder die farbige Schnitt-Timeline setzt die Wiedergabeposition und den Slider direkt auf die gewählte Stelle. Bei roten Bereichen wird zusätzlich wie bisher die Auswahl umgeschaltet. Das Ziehen des Reglers bleibt möglich.
+
 Play/Pause, Zeitleiste, **−10 Bilder**, **Bild zurück**, **Bild vor** und **+10 Bilder** helfen bei der Positionierung. Einzelbildschritte sind im pausierten Zustand verfügbar. Tastatur: Leertaste für Play/Pause, Pfeil links/rechts für ein Bild, Strg+Pfeil links/rechts für zwanzig Bilder. Mit Strg verwenden auch die größeren Bildschritt-Buttons zwanzig Bilder.
 
 Die Anzeige **Geschnitten** ist eine Vorschau der geplanten Ausgabelaufzeit. Prüfe das tatsächliche Schnittergebnis im Player; Schnittmotor und Videostruktur können die exakten Grenzen beeinflussen.
@@ -135,7 +137,7 @@ Klicke in der Schnitttabelle auf die **Startzeit oder Endzeit** und drücke **Sh
 - **Umschalt+Links/Rechts** oder die beiden Suchbuttons: zusätzliche halbierte Suche. Standardfolge: 2000 → 1000 → 500 → 250 → 125 → 62 → 31 → 15 → 7 → 3 → 1.
 - **Suche neu starten** setzt die Suchweite zurück. Normale Bildschritte verändern diese Suchweite nicht.
 - Unter **Einstellungen → Frame-Lupe** lässt sich der Startwert ändern; er gilt beim nächsten Öffnen.
-- **Frame-Details** zeigt Zeitstempel, Keyframe und Bildtyp. Ein Klick auf einen Frame in der Detailtabelle lädt dessen Vorschau.
+- **Frame-Details** zeigt Zeitstempel, Keyframe und Bildtyp. Die Detailtabelle bietet elf sichtbare Framezeilen; bei ±10-Schritten wird der gewählte Frame weiterhin automatisch in den sichtbaren Tabellenbereich gescrollt. Ein Klick auf einen Frame in der Detailtabelle lädt dessen Vorschau. Bei kleinen Fenstern bleibt der Detailbereich scrollbar.
 - Ab **Build 11** zeigt **Neue Schnittkante** die Zeit des gewählten Frames. **Schnittkante übernehmen** trägt diese Zeit in den Schnittplan ein und schließt die Lupe. Der Button ist erst mit bestätigter Bildvorschau innerhalb der Datei aktiv.
 - CAN bearbeitet Entfernbereiche: An einer **Startkante** wählst du das erste zu entfernende Bild. An einer **Endkante** wählst du das erste Bild, das danach erhalten bleiben soll. Die Grenze liegt jeweils unmittelbar vor dem gewählten Bild; es wird kein zusätzlicher Frameversatz angewendet und nicht automatisch zu einem Keyframe gesprungen.
 - **Abbrechen**, Escape oder das Fensterschließen lassen die Kante unverändert. Würde die neue Kante einen leeren/umgekehrten Bereich oder eine Überschneidung erzeugen, erscheint eine Meldung; die Lupe bleibt zum Korrigieren geöffnet.

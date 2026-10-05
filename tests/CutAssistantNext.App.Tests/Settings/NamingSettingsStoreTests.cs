@@ -61,7 +61,7 @@ public sealed class NamingSettingsStoreTests
             NamingSettings.CreateDefault();
 
         Assert.Equal(
-            "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]",
+            "%Name% %Staffel:S%%Folge:E%%Folgentitel: % [%Tag%.%Monat%.%YYYY%]",
             settings.DefaultNameTemplate);
     }
 

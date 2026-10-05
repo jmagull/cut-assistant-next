@@ -539,6 +539,156 @@ public sealed class PlaybackViewModelTests
             service.SeekPositions);
     }
 
+    [Theory]
+    [InlineData(MediaPlayerState.Paused)]
+    [InlineData(MediaPlayerState.Playing)]
+    [InlineData(MediaPlayerState.Ended)]
+    public async Task SeekToAsync_UpdatesPlayerAndTimeline(MediaPlayerState state)
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = state,
+            Position = TimeSpan.FromSeconds(10),
+            Duration = TimeSpan.FromSeconds(120)
+        };
+        using var viewModel = new PlaybackViewModel(service);
+
+        await viewModel.SeekToAsync(TimeSpan.FromSeconds(42.5));
+
+        Assert.Equal(new[] { TimeSpan.FromSeconds(42.5) }, service.SeekPositions);
+        Assert.Equal(TimeSpan.FromSeconds(42.5), viewModel.Position);
+        Assert.Equal(42.5, viewModel.TimelinePositionSeconds);
+        Assert.False(viewModel.IsSeeking);
+        Assert.Equal(0, service.PlayCallCount);
+        Assert.Equal(0, service.PauseCallCount);
+    }
+
+    [Fact]
+    public async Task SeekToAsync_PendingSeekShowsTargetAndIgnoresSecondRequest()
+    {
+        var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var service = new StubMediaPlayerService
+        {
+            State = MediaPlayerState.Paused,
+            Position = TimeSpan.FromSeconds(10),
+            Duration = TimeSpan.FromSeconds(120),
+            SeekCompletion = completion.Task
+        };
+        using var viewModel = new PlaybackViewModel(service);
+
+        var pending = viewModel.SeekToAsync(TimeSpan.FromSeconds(42.5));
+        Assert.True(viewModel.IsSeeking);
+        Assert.Equal(42.5, viewModel.TimelinePositionSeconds);
+        Assert.Equal(TimeSpan.FromSeconds(10), viewModel.Position);
+
+        await viewModel.SeekToAsync(TimeSpan.FromSeconds(80));
+        Assert.Single(service.SeekPositions);
+        Assert.Equal(42.5, viewModel.TimelinePositionSeconds);
+
+        completion.SetResult();
+        await pending;
+        Assert.False(viewModel.IsSeeking);
+        Assert.Equal(42.5, viewModel.TimelinePositionSeconds);
+    }
+
+    [Theory]
+    [InlineData(MediaPlayerState.Empty)]
+    [InlineData(MediaPlayerState.Loading)]
+    [InlineData(MediaPlayerState.Error)]
+    public async Task SeekToAsync_WhenUnavailable_DoesNothing(MediaPlayerState state)
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = state,
+            Duration = TimeSpan.FromSeconds(120)
+        };
+        using var viewModel = new PlaybackViewModel(service);
+
+        await viewModel.SeekToAsync(TimeSpan.FromSeconds(42.5));
+
+        Assert.Empty(service.SeekPositions);
+        Assert.False(viewModel.IsSeeking);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData(0d)]
+    [InlineData(-1d)]
+    public async Task SeekToAsync_WithoutPositiveDuration_DoesNothing(double? seconds)
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = MediaPlayerState.Paused,
+            Duration = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null
+        };
+        using var viewModel = new PlaybackViewModel(service);
+
+        await viewModel.SeekToAsync(TimeSpan.FromSeconds(42.5));
+
+        Assert.Empty(service.SeekPositions);
+        Assert.False(viewModel.IsSeeking);
+    }
+
+    [Fact]
+    public async Task SeekToAsync_DuringSliderDrag_KeepsBufferedPosition()
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = MediaPlayerState.Paused,
+            Duration = TimeSpan.FromSeconds(120)
+        };
+        using var viewModel = new PlaybackViewModel(service);
+        viewModel.BeginSeek();
+        viewModel.UpdateSeekPosition(35);
+
+        await viewModel.SeekToAsync(TimeSpan.FromSeconds(80));
+
+        Assert.True(viewModel.IsSeeking);
+        Assert.Equal(35, viewModel.TimelinePositionSeconds);
+        Assert.Empty(service.SeekPositions);
+    }
+
+    [Fact]
+    public async Task SeekToAsync_CancellationEndsSeek()
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = MediaPlayerState.Paused,
+            Position = TimeSpan.FromSeconds(10),
+            Duration = TimeSpan.FromSeconds(120)
+        };
+        using var viewModel = new PlaybackViewModel(service);
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            viewModel.SeekToAsync(TimeSpan.FromSeconds(42.5), cancellation.Token));
+
+        Assert.False(viewModel.IsSeeking);
+        Assert.Equal(10, viewModel.TimelinePositionSeconds);
+        Assert.Empty(service.SeekPositions);
+    }
+
+    [Fact]
+    public async Task SeekToAsync_FailureEndsSeekAndPropagatesError()
+    {
+        var service = new StubMediaPlayerService
+        {
+            State = MediaPlayerState.Paused,
+            Position = TimeSpan.FromSeconds(10),
+            Duration = TimeSpan.FromSeconds(120),
+            SeekError = new InvalidOperationException("Seek fehlgeschlagen.")
+        };
+        using var viewModel = new PlaybackViewModel(service);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            viewModel.SeekToAsync(TimeSpan.FromSeconds(42.5)));
+
+        Assert.Equal("Seek fehlgeschlagen.", exception.Message);
+        Assert.False(viewModel.IsSeeking);
+        Assert.Equal(10, viewModel.TimelinePositionSeconds);
+    }
+
     [Fact]
     public void Dispose_UnsubscribesFromServiceEvents()
     {
@@ -591,6 +741,10 @@ public sealed class PlaybackViewModelTests
         public List<int> StepFrameCounts { get; } = [];
 
         public List<TimeSpan> SeekPositions { get; } = [];
+
+        public Task? SeekCompletion { get; set; }
+
+        public Exception? SeekError { get; set; }
 
         public List<double> VolumeValues { get; } = [];
 
@@ -671,15 +825,24 @@ public sealed class PlaybackViewModelTests
             return Task.CompletedTask;
         }
 
-        public Task SeekAsync(
+        public async Task SeekAsync(
             TimeSpan position,
             CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            if (SeekError is not null)
+            {
+                throw SeekError;
+            }
 
             SeekPositions.Add(position);
+            if (SeekCompletion is not null)
+            {
+                await SeekCompletion.WaitAsync(cancellationToken);
+            }
 
-            return Task.CompletedTask;
+            Position = position;
+            RaisePositionChanged();
         }
 
         public Task SetVolumeAsync(

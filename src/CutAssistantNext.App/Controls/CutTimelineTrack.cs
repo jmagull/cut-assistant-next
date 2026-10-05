@@ -6,6 +6,11 @@ using CutAssistantNext.Core.Editing;
 
 namespace CutAssistantNext.App.Controls;
 
+public sealed class TimelineSeekRequestedEventArgs(TimeSpan position) : EventArgs
+{
+    public TimeSpan Position { get; } = position;
+}
+
 public sealed class CutTimelineTrack : FrameworkElement
 {
     private static readonly Brush TrackBrush =
@@ -57,6 +62,8 @@ public sealed class CutTimelineTrack : FrameworkElement
                 null,
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+    public event EventHandler<TimelineSeekRequestedEventArgs>? SeekRequested;
 
     public TimeSpan? MediaDuration
     {
@@ -154,38 +161,38 @@ public sealed class CutTimelineTrack : FrameworkElement
     {
         base.OnMouseLeftButtonDown(e);
 
-        if (!MediaDuration.HasValue ||
-            MediaDuration.Value <= TimeSpan.Zero ||
-            RemoveSegments is null ||
-            ActualWidth <= 0)
+        var duration = MediaDuration;
+        var mousePosition = e.GetPosition(this);
+        var seekPosition = TimelinePositionCalculator.GetPosition(
+            mousePosition.X,
+            ActualWidth,
+            duration);
+
+        if (!seekPosition.HasValue || !duration.HasValue)
         {
             return;
         }
 
-        var position =
-            e.GetPosition(this);
-
-        foreach (var segment in RemoveSegments)
+        if (RemoveSegments is not null)
         {
-            var rectangle =
-                GetSegmentRectangle(
-                    segment,
-                    MediaDuration.Value);
-
-            if (!rectangle.Contains(position))
+            foreach (var segment in RemoveSegments)
             {
-                continue;
-            }
+                var rectangle = GetSegmentRectangle(segment, duration.Value);
+                if (!rectangle.Contains(mousePosition))
+                {
+                    continue;
+                }
 
-            SelectedRemoveSegment =
-                ReferenceEquals(
-                    SelectedRemoveSegment,
-                    segment)
-                    ? null
-                    : segment;
-            e.Handled = true;
-            return;
+                SelectedRemoveSegment =
+                    ReferenceEquals(SelectedRemoveSegment, segment)
+                        ? null
+                        : segment;
+                break;
+            }
         }
+
+        e.Handled = true;
+        SeekRequested?.Invoke(this, new TimelineSeekRequestedEventArgs(seekPosition.Value));
     }
 
     private Rect GetSegmentRectangle(

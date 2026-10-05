@@ -1,7 +1,7 @@
 <Window x:Class="CutAssistantNext.App.Dialogs.FrameLoupeDialog" x:ClassModifier="internal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{Binding Title}" Width="1050" Height="850" MinWidth="780" MinHeight="620"
+        Title="{Binding Title}" Width="1050" Height="1000" MinWidth="780" MinHeight="620"
         WindowStartupLocation="CenterOwner" Background="#F4F6F8"
         Loaded="Window_Loaded" Closed="Window_Closed" PreviewKeyDown="Window_PreviewKeyDown">
     <Window.Resources>
@@ -40,11 +40,12 @@
                 </Grid>
             </Border>
             <Expander x:Name="FrameDetails" Grid.Row="1" Header="Frame-Details" Margin="0,0,0,12"
-                      Expanded="FrameDetails_Changed" Collapsed="FrameDetails_Changed">
-                <ScrollViewer MaxHeight="280" VerticalScrollBarVisibility="Auto">
+                      Expanded="FrameDetails_Changed" Collapsed="FrameDetails_Changed"
+                      SizeChanged="FrameDetails_SizeChanged">
+                <ScrollViewer MaxHeight="440" VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="0,8,0,0">
                         <TextBlock Text="{Binding DetailsText}" TextWrapping="Wrap" Margin="0,0,0,8" FontFamily="Consolas" />
-                        <DataGrid x:Name="FramesGrid" Height="160" IsReadOnly="True" AutoGenerateColumns="False"
+                        <DataGrid x:Name="FramesGrid" Height="290" RowHeight="24" ColumnHeaderHeight="24" IsReadOnly="True" AutoGenerateColumns="False"
                                   CanUserAddRows="False" SelectionMode="Single" SelectionUnit="FullRow"
                                   ItemsSource="{Binding Frames}" SelectedItem="{Binding SelectedFrame, Mode=OneWay}"
                                   IsEnabled="{Binding CanNavigate}" SelectionChanged="FramesGrid_SelectionChanged">

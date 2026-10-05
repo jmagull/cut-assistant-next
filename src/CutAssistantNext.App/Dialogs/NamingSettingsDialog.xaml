@@ -208,10 +208,10 @@
 
                         <Button Margin="0,0,8,8"
                                 Padding="10,5"
-                                Tag="%Folgentitel: - %"
+                                Tag="%Folgentitel: %"
                                 ToolTip="In die Namensmaske ziehen"
                                 PreviewMouseMove="TemplateElement_PreviewMouseMove"
-                                Content="Folgentitel (-)" />
+                                Content="Folgentitel (Leerzeichen)" />
 
                         <Button Margin="0,0,8,8"
                                 Padding="10,5"

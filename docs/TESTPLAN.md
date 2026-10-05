@@ -14,7 +14,7 @@
 | 1 | Anwendung starten | Hauptfenster erscheint ohne Fehler |
 | 2 | MP4 öffnen | Video wird im Hauptfenster geladen |
 | 3 | Play/Pause | Wiedergabe reagiert zuverlässig |
-| 4 | Zeitleiste bewegen | Position ändert sich nachvollziehbar |
+| 4 | Zeitleiste anklicken und Regler ziehen | Klicks links/mittig/rechts auf Slider-Spur und graue/rote Schnitt-Timeline setzen Position und Slider auf die gewählte Stelle; rote Auswahl bleibt umschaltbar; Reglerziehen funktioniert weiter |
 | 5 | Frame vorwärts | einzelner Bildschritt funktioniert |
 | 6 | Frame rückwärts | stabiler Rückwärtsschritt |
 | 7 | Lautstärke ändern | Ton wird angepasst |

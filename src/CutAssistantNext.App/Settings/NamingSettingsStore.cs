@@ -15,7 +15,7 @@ internal sealed class NamingSettings
         return new NamingSettings
         {
             DefaultNameTemplate =
-                "%Name% %Staffel:S%%Folge:E%%Folgentitel: - % [%Tag%.%Monat%.%YYYY%]"
+                "%Name% %Staffel:S%%Folge:E%%Folgentitel: % [%Tag%.%Monat%.%YYYY%]"
         };
     }
 }

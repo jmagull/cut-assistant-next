@@ -48,6 +48,9 @@ internal partial class FrameLoupeDialog : Window
         ScrollToSelectedFrame();
     }
 
+    private void FrameDetails_SizeChanged(object sender, SizeChangedEventArgs e) =>
+        UpdatePreviewHeight();
+
     private void ScrollToSelectedFrame()
     {
         Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.DataBind, new Action(() =>
@@ -64,8 +67,11 @@ internal partial class FrameLoupeDialog : Window
         if (PreviewScroll is not null && PreviewBorder is not null &&
             FrameDetails is not null && PreviewScroll.ViewportHeight > 0)
         {
+            var detailsHeight = FrameDetails.ActualHeight +
+                FrameDetails.Margin.Top + FrameDetails.Margin.Bottom;
+            var previewMargin = PreviewBorder.Margin.Top + PreviewBorder.Margin.Bottom;
             PreviewBorder.Height = Math.Max(140,
-                PreviewScroll.ViewportHeight - (FrameDetails.IsExpanded ? 320 : 46));
+                PreviewScroll.ViewportHeight - detailsHeight - previewMargin);
         }
     }
 

@@ -3,7 +3,9 @@ using System.IO;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using CutAssistantNext.App.Controls;
 using CutAssistantNext.App.Dialogs;
 using CutAssistantNext.App.Services;
 using CutAssistantNext.App.Services.Analysis;
@@ -40,6 +42,7 @@ public partial class MainWindow : Window
     private bool _cutlistSearchInProgress;
     private bool _mediaLoadInProgress;
     private bool _frameLoupeOpening;
+    private bool _timelineSliderDragging;
 
     private Task? _mediaPlayerInitializationTask;
     private bool _isClosed;
@@ -290,16 +293,54 @@ public partial class MainWindow : Window
         }
     }
 
-    private void TimelineSlider_PreviewMouseLeftButtonDown(
+    private async void TimelineSlider_PreviewMouseLeftButtonDown(
         object sender,
         MouseButtonEventArgs e)
     {
-        if (!IsInitialized)
+        if (!IsInitialized || _isClosed || _mediaLoadInProgress || !_playbackViewModel.CanSeek)
         {
             return;
         }
 
-        _playbackViewModel.BeginSeek();
+        if (_playbackViewModel.IsSeeking)
+        {
+            e.Handled = true;
+            return;
+        }
+
+        if (TimelineSlider.Template?.FindName("PART_Track", TimelineSlider) is not Track track ||
+            track.Thumb is null ||
+            e.OriginalSource is DependencyObject source &&
+            (ReferenceEquals(source, track.Thumb) || track.Thumb.IsAncestorOf(source)))
+        {
+            _timelineSliderDragging = true;
+            _playbackViewModel.BeginSeek();
+            return;
+        }
+
+        var positionSeconds = track.ValueFromPoint(e.GetPosition(track));
+        if (!double.IsFinite(positionSeconds))
+        {
+            return;
+        }
+
+        _timelineSliderDragging = false;
+        e.Handled = true;
+        await ExecutePlaybackActionAsync(() =>
+            _playbackViewModel.SeekToAsync(TimeSpan.FromSeconds(positionSeconds)));
+    }
+
+    private async void CutTimelineTrack_SeekRequested(
+        object? sender,
+        TimelineSeekRequestedEventArgs e)
+    {
+        if (!IsInitialized || _isClosed || _mediaLoadInProgress)
+        {
+            return;
+        }
+
+        await ExecutePlaybackActionAsync(() =>
+            _playbackViewModel.SeekToAsync(e.Position));
     }
 
     private void TimelineSlider_ValueChanged(
@@ -319,11 +360,12 @@ public partial class MainWindow : Window
         object sender,
         MouseButtonEventArgs e)
     {
-        if (!IsInitialized)
+        if (!IsInitialized || !_timelineSliderDragging)
         {
             return;
         }
 
+        _timelineSliderDragging = false;
         await ExecutePlaybackActionAsync(
             () => _playbackViewModel.CommitSeekAsync());
     }
