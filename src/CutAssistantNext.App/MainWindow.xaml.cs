@@ -984,6 +984,15 @@ public partial class MainWindow : Window
             viewModel.CreateServerSettings());
     }
 
+    private void VideoFolderSettingsMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        var store = new VideoFolderSettingsStore();
+        new VideoFolderSettingsDialog(new VideoFolderSettingsViewModel(store.Load()), store)
+        {
+            Owner = this
+        }.ShowDialog();
+    }
+
     private void CutApplicationSettingsButton_Click(
         object sender,
         RoutedEventArgs e)
@@ -1178,10 +1187,25 @@ public partial class MainWindow : Window
                     return;
                 }
 
+                string outputDirectory;
+                dialog.IsEnabled = false;
+                try
+                {
+                    outputDirectory = await Task.Run(() => VideoFolderPathResolver.Resolve(
+                        new VideoFolderSettingsStore().Load().CutVideosDirectory));
+                }
+                finally
+                {
+                    if (dialog.IsVisible) dialog.IsEnabled = true;
+                }
+
+                if (!dialog.IsVisible) return;
+
                 var saveDialog =
                     new SaveFileDialog
                     {
                         Title = "Geschnittene Datei speichern",
+                        InitialDirectory = outputDirectory,
                         FileName = suggestedOutputFileName,
                         DefaultExt = ".mp4",
                         AddExtension = true,
@@ -1206,6 +1230,9 @@ public partial class MainWindow : Window
 
                     var cutPlan =
                         _cutPlanViewModel.CreateCutPlanSnapshot();
+
+                    var completionViewModel =
+                        new CutCompletionViewModel(saveDialog.FileName, cutPlan);
 
                     var cutApplicationSettingsStore =
                         new CutApplicationSettingsStore();
@@ -1315,7 +1342,7 @@ public partial class MainWindow : Window
                         progressViewModel.MarkSucceeded();
 
                         progressDialog.MarkOperationCompleted(
-                            startAutoClose: true);
+                            startAutoClose: false);
                     }
                     catch (OperationCanceledException)
                     {
@@ -1349,6 +1376,15 @@ public partial class MainWindow : Window
                                 _logger.Error($"Temporäre MP4-Datei konnte nicht gelöscht werden: {cleanupError.Message}");
                             }
                         }
+                    }
+
+                    if (cutSucceeded)
+                    {
+                        progressDialog.Close();
+                        new CutCompletionDialog(completionViewModel, progressViewModel.ProtocolText)
+                        {
+                            Owner = this
+                        }.Show();
                     }
                 }
                 catch (Exception exception)
@@ -1589,10 +1625,12 @@ public partial class MainWindow : Window
         }
     }
 
-    private void LoadCutlistButton_Click(
+    private async void LoadCutlistButton_Click(
         object sender,
         RoutedEventArgs e)
     {
+        if (_mediaLoadInProgress || _cutlistSearchInProgress || !IsEnabled) return;
+
         var mediaDuration =
             _viewModel.MediaDuration;
 
@@ -1609,10 +1647,25 @@ public partial class MainWindow : Window
             return;
         }
 
+        string cutlistDirectory;
+        IsEnabled = false;
+        try
+        {
+            cutlistDirectory = await Task.Run(() => VideoFolderPathResolver.ResolveCutlists(
+                new VideoFolderSettingsStore().Load()));
+        }
+        finally
+        {
+            if (!_isClosed) IsEnabled = true;
+        }
+
+        if (_isClosed || _shutdownStarted) return;
+
         var dialog =
             new OpenFileDialog
             {
                 Title = "Cutlist laden",
+                InitialDirectory = cutlistDirectory,
                 Filter =
                     "Cutlist-Dateien (*.cutlist)|*.cutlist|" +
                     "Alle Dateien (*.*)|*.*",
@@ -1844,10 +1897,24 @@ public partial class MainWindow : Window
             };
 
         dialog.SaveRequested +=
-            (_, _) =>
+            async (_, _) =>
             {
                 var originalFileName =
                     Path.GetFileName(fileName);
+
+                string cutlistDirectory;
+                dialog.IsEnabled = false;
+                try
+                {
+                    cutlistDirectory = await Task.Run(() => VideoFolderPathResolver.ResolveCutlists(
+                        new VideoFolderSettingsStore().Load(), Path.GetDirectoryName(fileName)));
+                }
+                finally
+                {
+                    if (dialog.IsVisible) dialog.IsEnabled = true;
+                }
+
+                if (!dialog.IsVisible) return;
 
                 var saveDialog =
                     new SaveFileDialog
@@ -1859,8 +1926,7 @@ public partial class MainWindow : Window
                             "Alle Dateien (*.*)|*.*",
                         DefaultExt = ".cutlist",
                         AddExtension = true,
-                        InitialDirectory =
-                            Path.GetDirectoryName(fileName)
+                        InitialDirectory = cutlistDirectory
                     };
 
                 if (saveDialog.ShowDialog(dialog) != true)
@@ -2159,9 +2225,15 @@ public partial class MainWindow : Window
 
     private async Task SelectMediaFileAsync()
     {
+        var originalDirectory = await Task.Run(() => VideoFolderPathResolver.Resolve(
+            new VideoFolderSettingsStore().Load().OriginalVideosDirectory));
+
+        if (_isClosed || _shutdownStarted) return;
+
         var dialog = new OpenFileDialog
         {
             Title = "Videodatei laden",
+            InitialDirectory = originalDirectory,
             Filter = "Videodateien (*.mp4;*.avi;*.mkv;*.mov;*.ts;*.m2ts;*.mpg;*.mpeg;*.wmv;*.webm)|*.mp4;*.avi;*.mkv;*.mov;*.ts;*.m2ts;*.mpg;*.mpeg;*.wmv;*.webm|Alle Dateien (*.*)|*.*",
             CheckFileExists = true,
             Multiselect = false

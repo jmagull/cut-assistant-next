@@ -1,0 +1,118 @@
+<Window x:Class="CutAssistantNext.App.Dialogs.VideoFolderSettingsDialog" x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Standardordner" Width="720" Height="710" MinWidth="520" MinHeight="360"
+        WindowStartupLocation="CenterOwner" Background="#F4F6F8">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="MinHeight" Value="36" />
+            <Setter Property="Padding" Value="14,7" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="#1F2937" />
+            <Setter Property="BorderBrush" Value="#D9DEE5" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" CornerRadius="8" Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.85" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#111827" />
+                                <Setter TargetName="ButtonBorder" Property="BorderThickness" Value="2" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel x:Name="FolderFields">
+                <TextBlock Text="Standardordner" FontSize="26" FontWeight="SemiBold" Foreground="#111827" />
+                <TextBlock Text="Deine Ordner für Videos und Cutlists." Foreground="#6B7280" Margin="0,6,0,22" />
+                <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="18">
+                    <StackPanel>
+                        <TextBlock Text="Originalvideos" FontSize="16" FontWeight="SemiBold" Foreground="#1F2937" />
+                        <TextBlock Text="Hier beginnt die Auswahl beim Laden eines Videos." Foreground="#6B7280" TextWrapping="Wrap" Margin="0,5,0,12" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="OriginalFolderBox" ToolTip="{Binding OriginalVideosDirectory}" Text="{Binding OriginalVideosDirectory, UpdateSourceTrigger=PropertyChanged}"
+                                     Padding="8" VerticalContentAlignment="Center" AutomationProperties.Name="Standardordner für Originalvideos" />
+                            <Button Grid.Column="1" Margin="8,0,0,0" Content="Ordner wählen …" Click="BrowseOriginal_Click" />
+                            <Button x:Name="ClearOriginalButton" Grid.Column="2" Margin="6,0,0,0" Content="×" Padding="10,7"
+                                    ToolTip="Standardordner entfernen" AutomationProperties.Name="Standardordner für Originalvideos entfernen"
+                                    Click="ClearOriginal_Click" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="18" Margin="0,14,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Geschnittene Videos" FontSize="16" FontWeight="SemiBold" Foreground="#1F2937" />
+                        <TextBlock Text="Hier beginnt die Auswahl des Speicherorts beim Schneiden." Foreground="#6B7280" TextWrapping="Wrap" Margin="0,5,0,12" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="CutFolderBox" ToolTip="{Binding CutVideosDirectory}" Text="{Binding CutVideosDirectory, UpdateSourceTrigger=PropertyChanged}"
+                                     Padding="8" VerticalContentAlignment="Center" AutomationProperties.Name="Standardordner für geschnittene Videos" />
+                            <Button Grid.Column="1" Margin="8,0,0,0" Content="Ordner wählen …" Click="BrowseCut_Click" />
+                            <Button x:Name="ClearCutButton" Grid.Column="2" Margin="6,0,0,0" Content="×" Padding="10,7"
+                                    ToolTip="Standardordner entfernen" AutomationProperties.Name="Standardordner für geschnittene Videos entfernen"
+                                    Click="ClearCut_Click" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="18" Margin="0,14,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Eigene Cutlists" FontSize="16" FontWeight="SemiBold" Foreground="#1F2937" />
+                        <TextBlock Text="Hier beginnt die Auswahl beim Öffnen und Speichern lokaler Cutlists." Foreground="#6B7280" TextWrapping="Wrap" Margin="0,5,0,12" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="CutlistsFolderBox" ToolTip="{Binding OwnCutlistsDirectory}" Text="{Binding OwnCutlistsDirectory, UpdateSourceTrigger=PropertyChanged}"
+                                     Padding="8" VerticalContentAlignment="Center" AutomationProperties.Name="Standardordner für eigene Cutlists" />
+                            <Button Grid.Column="1" Margin="8,0,0,0" Content="Ordner wählen …" Click="BrowseCutlists_Click" />
+                            <Button x:Name="ClearCutlistsButton" Grid.Column="2" Margin="6,0,0,0" Content="×" Padding="10,7"
+                                    ToolTip="Standardordner entfernen" AutomationProperties.Name="Standardordner für eigene Cutlists entfernen"
+                                    Click="ClearCutlists_Click" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                <TextBlock Text="Alle Angaben sind optional. Ohne Standardordner bleibt die bisherige Ordnerwahl erhalten. Im Dateidialog kannst Du jederzeit einen anderen Ordner wählen."
+                           TextWrapping="Wrap" Foreground="#6B7280" Margin="0,16,0,0" />
+            </StackPanel>
+        </ScrollViewer>
+        <TextBlock x:Name="ErrorText" Grid.Row="1" TextWrapping="Wrap" Foreground="#B91C1C" Margin="0,12,0,8"
+                   AutomationProperties.LiveSetting="Polite" />
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Abbrechen" MinWidth="110" IsCancel="True" Margin="0,0,10,0" />
+            <Button x:Name="SaveButton" Content="Speichern" MinWidth="110" IsDefault="True" Click="Save_Click"
+                    Background="#007AFF" Foreground="White" BorderBrush="#007AFF" />
+        </StackPanel>
+    </Grid>
+</Window>

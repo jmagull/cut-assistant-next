@@ -29,8 +29,29 @@
 | 16 | Bereich löschen | ausgewählter Bereich wird entfernt |
 | 17 | Fenster neu öffnen | Größe bzw. Maximierung wird wiederhergestellt |
 
+## Getrennte Standardordner für Videos und Cutlists
+
+- Unter **Einstellungen → Standardordner …** verschiedene vorhandene Ordner für Originalvideos, geschnittene Videos und eigene Cutlists wählen, speichern und CAN neu starten. Alle drei Werte bleiben erhalten.
+- **Videodatei laden** beginnt im Originalordner; **Geschnittene Datei speichern** beginnt im Ausgabeordner und behält die Namensvorschau. Eine manuelle abweichende Auswahl ersetzt keine Standardordner-Einstellung.
+- **Lokale Cutlist laden** und **Cutlist speichern** starten im Cutlist-Standardordner. Ohne Vorgabe oder bei nicht verfügbarem Ordner: Öffnen mit Windows-Ordnerwahl, Speichern im Ordner des Originalvideos. Der vorgeschlagene Cutlist-Dateiname bleibt erhalten.
+- Nur einen Ordner festlegen, alle Felder leeren oder denselben Ordner für mehrere Zwecke verwenden: unabhängig möglich. Bestehende Konfiguration mit nur zwei Videoordnern bleibt gültig.
+- Ungültiger, relativer oder nicht vorhandener Pfad: verständliche Meldung, Dialog bleibt offen. Ein nach dem Speichern entfernter Ordner oder nicht angeschlossenes Laufwerk verhindert die Dateiauswahl nicht; gespeicherte Vorgabe bleibt erhalten.
+- **×** leert nur das zugehörige Feld. **Abbrechen** und Fensterkreuz speichern keine Änderungen. Speicherfehler sichtbar; erneuter Versuch möglich.
+- Kleine Fenster, lange Pfade und Ordnerauswahl prüfen: Inhalt scrollbar und Speichern/Abbrechen erreichbar. Werkzeugdialoge behalten ihre bisherigen Startordner.
+
+## Abschlussfenster nach dem Schneiden
+
+- Erfolgreicher Schnitt: Nach Erstellung der Ausgabe und Aufräumen erscheint **Schneiden abgeschlossen**, ohne Countdown und ohne automatischen Playerstart.
+- Entfernte Vor-/Nachläufe und mehrere Werbepausen: Kontrollzeiten beginnen bei 0 und summieren nur die behaltenen Abschnitte. Beispiel: 582,240–1902,960 s und 2551,320–3645,400 s ergeben einen Übergang bei **00:22:00.720** und ein Ende bei **00:40:14.800**.
+- **Hinweise kopieren**: Dateipfad, sämtliche Kontrollstellen, Zeitbezug und Kontrollhinweis sind vollständig in der Zwischenablage; sichtbare Rückmeldung. Bei belegter Zwischenablage kann erneut kopiert werden.
+- Original und Schnittliste bleiben geöffnet und bearbeitbar. Spätere Korrekturen verändern die Hinweise zum abgeschlossenen Schnitt nicht.
+- Viele Übergänge, langer Dateiname und kleines Fenster: Inhalt scrollbar, beide Buttons erreichbar; Protokoll bei Bedarf aufklappbar und mit Strg+C kopierbar.
+- Schließen per Button, Escape oder Fensterkreuz; kein automatisches Schließen.
+- Abbruch oder Fehler: Fortschrittsfenster mit bisheriger Fehlermeldung, kein Erfolgsfenster.
+
 ## Automatisierte Tests
 
+- Video-/Cutlist-Standardordner: unabhängiges Speichern/Laden, Neustart, leere oder beschädigte Einstellungen, fehlende Ordner, relative/ungültige Pfade, Dateien statt Ordnern, Speicherfehler und unveränderte Einstellungen beim Bearbeiten
 - ffprobe-Parsing, Medienanalyse und Fehlerabbildung
 - Frame-Lupe: Kantenauswahl, Halbierungsfolge, Intervallerweiterung anhand echter Frameanzahl, Dateigrenzen, fehlende/mehrdeutige PTS, Vorschaufehler und Abbruch
 - Frame-Lupe-Übernahme: Original-PTS ohne impliziten Frame-/Keyframeversatz, Containerstart bei 0/+2/−2 s, variable Zeitabstände, gesperrter Button während Laden/nach Vorschaufehler; nur die gewählte Kante ändern; unveränderte/ungültige/veraltete Kanten, Überschneidungen und Export der korrigierten Keep-Bereiche
@@ -42,6 +63,7 @@
 - `RemoveSegment` einschließlich Bereichsvalidierung
 - `CutPlan` einschließlich Sortierung, Überschneidungsschutz, Ersetzen und Löschen
 - `CutPlanViewModel` einschließlich Erfassung, Auswahl und Korrekturmodus
+- `CutCompletionViewModel`: Zeiten im geschnittenen Film, kumulierte Behaltezeiten, angrenzende Entfernbereiche, vollständiger Kopiertext, unabhängige Ergebnismomentaufnahme, Stunden über 24 und Millisekunden
 - UTF-8-Protokollierung, Größenbegrenzung und Rotation
 - `NameTemplateRenderer` einschließlich Namensvariablen, optionaler Präfixe, fehlender Werte und unbekannter Variablen
 - `CutlistSettingsStore` einschließlich Standardwerten, Standardautor, Schnelltexten, Laden und Speichern sowie UTF-8 ohne BOM

@@ -54,6 +54,9 @@
         <Menu Grid.Row="0"
               Background="White">
             <MenuItem Header="Einstellungen">
+                <MenuItem Header="Standardordner …"
+                          Click="VideoFolderSettingsMenuItem_Click" />
+
                 <MenuItem Header="Cutlist-Einstellungen …"
                           Click="CutlistSettingsMenuItem_Click" />
 

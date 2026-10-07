@@ -23,6 +23,18 @@ Wähle jeweils die ausführbare Datei, nicht nur ihren Ordner. Der aktuelle Schn
 
 Ohne Server-Konfiguration kannst du Videos weiterhin bearbeiten und lokale Cutlists verwenden. Ohne MP4Box kannst du Schnittmarken vorbereiten und Cutlists speichern, aber keine Videoausgabe schneiden.
 
+### Standardordner für Videos und Cutlists
+
+Unter **Einstellungen → Standardordner …** kannst Du drei Ordner unabhängig voneinander festlegen:
+
+- **Originalvideos:** Startordner bei **Videodatei laden**.
+- **Geschnittene Videos:** Startordner bei **Geschnittene Datei speichern**.
+- **Eigene Cutlists:** Startordner bei **Lokale Cutlist laden** und **Cutlist speichern**.
+
+Wähle vorhandene Ordner über **Ordner wählen …** oder trage vollständige Pfade ein. **Speichern** übernimmt die Auswahl; sie bleibt nach einem Neustart erhalten und gilt beim nächsten Dateidialog. Im Dateidialog kannst Du jederzeit einen anderen Ordner oder Ausgabenamen wählen.
+
+Alle drei Felder sind optional und dürfen denselben Ordner enthalten. Über **×** oder durch Leeren des Felds entfernst Du eine Vorgabe. Ohne Vorgabe bleibt die bisherige Ordnerwahl erhalten: Bei **Cutlist speichern** ist das der Ordner des Originalvideos, bei den übrigen Dialogen die normale Windows-Auswahl. Ist ein gespeicherter Ordner später nicht erreichbar, gilt derselbe Rückfall; CAN behält die Einstellung. Die vorhandenen Videoordner bleiben beim Ergänzen des Cutlist-Ordners erhalten. Es werden keine Video- oder Cutlist-Ordner angelegt und keine vorhandenen Dateien verschoben. **Abbrechen** verwirft die Bearbeitung.
+
 ### Persönliche Cutlist-Server-URL eintragen
 
 Trage unter **Einstellungen → Cutlist-Einstellungen …** deine persönliche URL in der Form `http://cutlist.at/<dein FRED>/` ein. Ersetze den Platzhalter einschließlich der spitzen Klammern durch deinen persönlichen FRED. Der Einstellungsdialog öffnet sich höher und nahe dem oberen Rand des aktuellen Bildschirms. Seine Höhe wird auf den verfügbaren Arbeitsbereich begrenzt; auf kleinen Bildschirmen bleibt der Inhalt scrollbar. Die ausführlichen Hinweise zur Schreibweise blendet CAN unter dem URL-Eingabefeld ein, wenn „Verbindung testen“ wegen einer leeren oder ungültigen URL oder eines Verbindungsfehlers scheitert. Bei einem erneuten Test werden sie zunächst ausgeblendet; nach erfolgreicher Verbindung bleiben sie verborgen.
@@ -209,7 +221,15 @@ Die Prüfungen sind keine vollständige Kontrolle aller Bildzeitstempel. Kontrol
 
 Enthält eine HD-Aufnahme mehrere Tonspuren, bleiben sie beim Schneiden mit MP4Box erhalten. Öffne die geschnittene Datei anschließend in deinem eigenen Player und wähle dort bei Bedarf die gewünschte Tonspur aus. CANs Player bietet derzeit keine Tonspurauswahl.
 
-**Abbrechen** fordert den Abbruch an. Warte, bis er abgeschlossen ist. Nach einem Fehler bleibt das Fenster offen und zeigt den Grund direkt oberhalb des Protokolls. Bei Erfolg meldet es **Fertig.** und bietet einen Schließen-Countdown an.
+**Abbrechen** fordert den Abbruch an. Warte, bis er abgeschlossen ist. Nach einem Fehler bleibt das Fenster offen und zeigt den Grund direkt oberhalb des Protokolls.
+
+### Abschluss und spätere Kontrolle
+
+Nach einem erfolgreichen Schnitt und dem Aufräumen der temporären Arbeitsdatei erscheint **Schneiden abgeschlossen**. Das Fenster zeigt die fertige Datei sowie Anfang, Übergänge und Ende zur Kontrolle. Alle Zeiten beziehen sich auf den **geschnittenen Film**: Sie werden aus den Laufzeiten der behaltenen Abschnitte berechnet und dienen zur Orientierung; die tatsächlichen Schnittgrenzen können geringfügig abweichen.
+
+Mit **Hinweise kopieren** übernimmst du Dateipfad, Kontrollstellen und Hinweise in die Zwischenablage, etwa für eine spätere Prüfung. Das Schnittprotokoll bleibt bei Bedarf aufklappbar und lässt sich markieren und mit **Strg+C** kopieren. **Schließen** beendet das Abschlussfenster; es gibt keinen Countdown.
+
+Der Hinweis **„Bitte im eigenen Player Deiner Wahl öffnen.“** erscheint im Fenster und im kopierten Text. Du entscheidest selbst, wann und mit welchem externen Player du kontrollierst. CAN startet keinen Player und lädt die Ausgabe nicht selbst. Das Originalvideo und die Schnittliste bleiben für Korrekturen geöffnet; das Abschlussfenster blockiert die Bearbeitung nicht. Seine Kontrollliste gehört weiterhin zur gerade erzeugten Datei, auch wenn du anschließend die Schnittmarken änderst.
 
 ## 7. Cutlist auf den Server hochladen
 
