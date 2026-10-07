@@ -123,7 +123,7 @@ Leere Bereiche mit exakt null Dauer werden beim Import ignoriert. Die übrigen g
 
 ## 4. Schnittmarken bearbeiten
 
-CAN markiert **Bereiche, die entfernt werden sollen**. Die roten Abschnitte der Schnitt-Timeline stehen für Vorlauf, Werbung, Nachlauf oder andere unerwünschte Teile.
+CAN markiert **Bereiche, die entfernt werden sollen**. Die roten Abschnitte der Schnitt-Timeline stehen für Vorlauf, Werbung, Nachlauf oder andere unerwünschte Teile. Direkt hinter **Schnittliste** erklärt ein kleinerer, dezenter Klammertext die roten Bereiche und die Buttons **Schnittanfang setzen** und **Schnittende setzen**; bei schmalen Fenstern bricht der Text um.
 
 1. Gehe im Player an den Anfang eines zu entfernenden Abschnitts.
 2. Klicke **Schnittanfang setzen**.

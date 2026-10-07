@@ -406,7 +406,13 @@
                 <TextBlock Grid.Row="0"
                            Margin="0,0,0,8"
                            Style="{StaticResource SectionHeaderStyle}"
-                           Text="Schnittliste" />
+                           TextWrapping="Wrap">
+                    <Run Text="Schnittliste " />
+                    <Run FontSize="13"
+                         FontWeight="Normal"
+                         Foreground="#6B7280"
+                         Text="(Rot markierte Bereiche werden entfernt. Mit ‚Schnittanfang setzen‘ und ‚Schnittende setzen‘ legst Du diese Bereiche fest.)" />
+                </TextBlock>
 
                 <WrapPanel Grid.Row="1">
                     <Button MinWidth="110"

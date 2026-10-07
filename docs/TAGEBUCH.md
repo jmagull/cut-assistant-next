@@ -1,5 +1,12 @@
 # Entwicklungstagebuch
 
+## 07.10.2026 – Bedienhinweis direkt hinter Schnittliste
+
+- Hinter **Schnittliste** steht der vollständige Klammertext: **(Rot markierte Bereiche werden entfernt. Mit ‚Schnittanfang setzen‘ und ‚Schnittende setzen‘ legst Du diese Bereiche fest.)**. Der Hinweis ist mit 13 statt 18 Pixeln, normaler Schriftstärke und dezenter grauer Farbe von der Überschrift abgesetzt. Gemeinsamer Textumbruch hält ihn auch in schmalen Fenstern vollständig lesbar.
+- Geändert: `MainWindow.xaml`, Nutzeranleitung und dieser Tagebucheintrag. Schnittlogik und Buttons unverändert. Betroffene Dateien vorab im ignorierten `.build`-Ordner gesichert.
+- Prüfung: XAML-Einrückung und `git diff --check` geprüft; Release-Rebuild **0 Warnungen, 0 Fehler**; **647/647 Tests bestanden**, keine übersprungen. WPF-Vorschau des tatsächlichen Überschriften-XAML bei 1436 und 690 Pixeln Breite gerendert und visuell geprüft: einzeilig bei breiter Ansicht, vollständiger Umbruch bei schmaler Ansicht.
+- Version **0.2.1 · Build 11 · RC2** unverändert. Vier vorhandene Lockdatei-Änderungen erhalten; kein Commit, Push oder Paket für diese Ergänzung.
+
 ## 07.10.2026 – Standardordner für eigene Cutlists
 
 - **Einstellungen → Standardordner …** enthält zusätzlich **Eigene Cutlists**. Das dritte Feld bietet dieselbe Ordnerauswahl, direkte Pfadeingabe und unabhängige ×-Löschfunktion wie die Videoordner. Der Dialog ist auf 710 Pixel Höhe erweitert und bleibt bei kleinerem Arbeitsbereich scrollbar.
