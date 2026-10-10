@@ -1,8 +1,8 @@
 # Nutzeranleitung – Cut Assistant Next
 
-Stand: 29.09.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand: 10.10.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
-Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, zum Beispiel **Cut Assistant Next · 0.2.0 · Build 6 · RC2**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.2.1 · Build 11 · RC3**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
 
 ## 1. Einmalig einrichten
 
@@ -15,13 +15,28 @@ Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE al
 | Einstellungen → FFmpeg-Werkzeuge … | `ffprobe.exe` | Analyse der Original- und Arbeitsdatei |
 | Einstellungen → FFmpeg-Werkzeuge … | `ffmpeg.exe` | Experimentelles verlustfreies Umpacken vor dem Schnitt |
 | Einstellungen → Schnittanwendung … | Programmdatei `mp4box.exe` | Schneiden und Zusammenfügen |
+| Einstellungen → OTR-CAN-Werkzeuge … | OTR-CAN-EXE und `ffmsindex.exe` | Pfade für den optionalen Motor einrichten und Werkzeuge prüfen |
 | Einstellungen → Cutlist-Einstellungen … | Persönliche Server-URL | Cutlists suchen, herunterladen und hochladen |
 | Einstellungen → Cutlist-Einstellungen … | Standardautor und Kommentarbausteine | Neue Cutlists vorbereiten |
 | Einstellungen → Namensmaske … | Standard-Namensmaske | Namen der geschnittenen Ausgabe bilden |
 
-Wähle jeweils die ausführbare Datei, nicht nur ihren Ordner. Der aktuelle Schnittablauf erwartet MP4Box als Schnittanwendung. Ein beliebiges anderes Programm wird durch Eintragen seines Pfades nicht zu einem unterstützten Schnittmotor.
+Wähle jeweils die ausführbare Datei, nicht nur ihren Ordner. **Schnittanwendung …** richtet MP4Box ein. OTR-CAN hat eine eigene Auswahl; ein beliebiges anderes Programm wird durch Eintragen seines Pfades nicht zu einem unterstützten Schnittmotor.
 
-Ohne Server-Konfiguration kannst du Videos weiterhin bearbeiten und lokale Cutlists verwenden. Ohne MP4Box kannst du Schnittmarken vorbereiten und Cutlists speichern, aber keine Videoausgabe schneiden.
+Ohne Server-Konfiguration kannst du Videos weiterhin bearbeiten und lokale Cutlists verwenden. Ohne eingerichteten Schnittmotor kannst du Schnittmarken vorbereiten und Cutlists speichern.
+
+Unter **Einstellungen → Cutlist-Einstellungen …** kannst du sechs Schnellbausteine bearbeiten. Der sechste ist mit **„Mit otr-can framegenau geschnitten.“** vorbelegt, auch bei älteren Einstellungen mit fünf eigenen Texten. Diese fünf Texte bleiben erhalten. Der Baustein wird in **Cutlist erzeugen** erst nach deinem Klick an den Kommentar angehängt; er wählt keinen Schnittmotor. Ein leeres sechstes Feld wird nach dem Speichern ausgeblendet und beim nächsten Start nicht neu befüllt.
+
+### OTR-CAN-Werkzeuge einrichten
+
+Unter **Einstellungen → OTR-CAN-Werkzeuge …** wählst du die OTR-CAN-Schnittmotor-EXE und `ffmsindex.exe` aus. Den Motor wählst du für jeden Auftrag direkt unter der Schnittliste: **Schneiden MP4Box (schnell)** oder **Schneiden otr-can (framegenau, langsam)**. Der Werkzeugdialog hat keinen Auswahlhaken. Der reguläre Motor **0.1.2** enthält schnelleren Video-Seek bei unverändertem Tonweg. 0.1.1 bleibt zur Schnittstelle kompatibel; die erhaltenen CAN-04- und 0.1.0-Referenzen unterstützen noch nicht die vollständige Werkzeugpfadübergabe.
+
+FFMS2 kannst du aus dem [offiziellen Downloadbereich](https://github.com/ffms/ffms2/releases) beziehen. Entpacke das vollständige Windows-64-Bit-Paket mit seinen DLLs und wähle die darin enthaltene `ffmsindex.exe`. FFmpeg und ffprobe werden ebenfalls von dir installiert und bleiben unter **FFmpeg-Werkzeuge …** eingerichtet. Die Programme dürfen in unterschiedlichen Ordnern liegen; WSL und eine globale OTR-Konfiguration sind nicht erforderlich.
+
+**Werkzeuge prüfen** verwendet die bearbeiteten OTR-CAN-/ffmsindex-Pfade und die bereits gespeicherten FFmpeg-/ffprobe-Pfade. Es werden ausschließlich Hilfe- oder Versionsabfragen ausgeführt: kein Video wird indexiert oder geschnitten. Fehlende Programme, unpassende Schnittstellen und Zeitüberschreitungen erscheinen im Dialog. Die Prüfung läuft im Hintergrund; **Abbrechen** oder Schließen beendet sie, ohne die Bearbeitung zu speichern.
+
+Die beiden Pfade sind optional und dürfen leer bleiben. Du kannst vollständige EXE-Pfade bereits vor der Installation vorbereiten. **Speichern** schreibt ausschließlich diese Pfade. Vor einem otr-can-Schnitt prüft CAN alle benötigten Werkzeuge erneut; bei fehlenden Werkzeugen zeigt es einen Fehler. Ein früher gespeicherter Auswahlhaken hat keine Wirkung mehr. Bei einem Speicherfehler bleibt der Dialog geöffnet; eine gestartete Speicherung wird vor dem Schließen abgeschlossen.
+
+Fehlende OTR-CAN-Werkzeuge haben keine Auswirkungen auf MP4Box oder die Cutlist-Bearbeitung. Der bisherige ffprobe-Bedarf beim Laden und Analysieren einer Videodatei bleibt bestehen. FFMS2 wird von CAN nicht mitgeliefert und ist für die reine Cutlist-Erstellung keine neue Pflichtabhängigkeit.
 
 ### Standardordner für Videos und Cutlists
 
@@ -188,11 +203,11 @@ Klicke **Schneiden** in der Hauptoberfläche.
 
 ### Wenn bereits MP4-Inhalt vorliegt
 
-CAN verwendet den bestehenden MP4Box-Ablauf. Das gilt auch für MP4-Inhalt mit einer anderen Dateiendung.
+Mit **Schneiden MP4Box (schnell)** verwendet CAN den bestehenden Ablauf. Das gilt auch für MP4-Inhalt mit einer anderen Dateiendung.
 
 ### Wenn AVI oder ein anderer Container erkannt wurde
 
-CAN zeigt zuerst einen Hinweis mit dem erkannten Container und fragt, ob es die experimentelle Vorbereitung durchführen soll:
+Bei **Schneiden MP4Box (schnell)** zeigt CAN zuerst einen Hinweis mit dem erkannten Container und fragt, ob es die experimentelle Vorbereitung durchführen soll:
 
 - **Ja:** Weiter zum Schnittdialog; vor dem eigentlichen Schnitt wird eine temporäre MP4 erzeugt.
 - **Nein:** Zurück zur Bearbeitung. Originalvideo und Schnittmarken bleiben geladen.
@@ -205,9 +220,17 @@ Im Schnittdialog prüfst du Name, gegebenenfalls Staffel, Folge und Folgentitel 
 
 Klicke im Dialog auf **Schneiden …** und wähle einen Zielnamen für die MP4-Datei. Verwende einen anderen Pfad als den der Originaldatei. Eine bereits vorhandene Ausgabe wird nur nach der entsprechenden Bestätigung ersetzt.
 
+### Mit OTR-CAN schneiden
+
+Mit **Schneiden otr-can (framegenau, langsam)** wird die Originaldatei direkt verwendet. Eine zusätzliche MP4-Vorbereitung entfällt. CAN erstellt genau einen FFMS2-Index pro Schnittvorgang, übergibt die Behaltebereiche und startet den nativen CPU-Motor. Abschnitte zwischen Keyframes werden kopiert, Schnittgrenzen neu kodiert; alle Tonspuren werden übernommen. CAN prüft die erzeugte MP4 und ihre Video-/Audiostruktur, bevor es die gewählte Ausgabe anlegt oder eine bestätigte vorhandene Datei ersetzt.
+
+Nach Erfolg, Fehler oder Abbruch entfernt CAN seine Arbeitsdateien im Ausgabeordner. Abbruch beendet auch laufende FFmpeg-Kindprozesse. Falls Aufräumen scheitert, zeigt das Protokoll den verbliebenen Pfad. Das Original wird nicht verschoben. Unterstützt sind zunächst genau eine Videospur an Streamposition 0 und Schnittzeiten unter 24 Stunden. Dieser Entwicklungsstand wurde synthetisch und mit Navy CIS/Kimi samt beiden Tonspuren geprüft, einschließlich Kimi mit AC-3 und sechs Kanälen. Die Ausgaben entsprechen CAN 04 bytegenau. Geerbte Zeitstempelauffälligkeiten an Teilübergängen bleiben ein Vorbehalt; prüfe Anfang, Übergänge, Ende und beide Tonspuren persönlich. Die Prüfgrenzen stehen im [Prüfbericht](OTR-CAN-SCHRITT6-PRUEFBERICHT.md).
+
 ### Vorbereitung und Fortschritt
 
 Der Dialog **Video vorbereiten und schneiden** zeigt den aktuellen Schritt und darunter das standardmäßig geöffnete **Protokoll**. Dieses lässt sich einklappen und über **In Zwischenablage** kopieren.
+
+Bei otr-can zeigt CAN die Indexierung mit den tatsächlichen Prozentwerten. Danach siehst du den aktuellen Behaltebereich, Kopieren oder CPU-Neukodierung der Schnittkante und den betreffenden Zeitbereich im Original. Hinzu kommen Laufzeit, Dauer des aktuellen Schritts und Zeit seit der letzten Programmmeldung. Der bewegte Balken bei CPU-Arbeit zeigt den laufenden Vorgang; er ist kein Gesamtprozentwert und keine Restzeitprognose. Motor 0.1.2 verkürzt besonders bei HD den Weg zur Schnittkante; einzelne Verarbeitungsschritte können trotzdem ohne neue Meldung laufen. Die Zeitansicht läuft weiter; Abbrechen bleibt verfügbar. Nach Ende, Fehler oder Abbruch bleibt die gemessene Laufzeit stehen.
 
 Bei experimenteller Vorbereitung geschieht Folgendes:
 

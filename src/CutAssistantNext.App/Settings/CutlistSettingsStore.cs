@@ -7,6 +7,14 @@ namespace CutAssistantNext.App.Settings;
 
 internal sealed class CutlistSettings
 {
+    internal const string OtrCanQuickText = "Mit otr-can framegenau geschnitten.";
+
+    // A separate optional field preserves the existing five customized texts.
+    public string QuickText6 { get; init; } = OtrCanQuickText;
+
+    internal IReadOnlyList<string> GetQuickTexts() =>
+        (QuickTexts ?? []).Concat([QuickText6])
+            .Where(text => !string.IsNullOrWhiteSpace(text)).ToArray();
 
     public string DefaultAuthor { get; init; } =
         string.Empty;

@@ -43,6 +43,8 @@ public partial class MainWindow : Window
     private bool _cutlistSearchInProgress;
     private bool _mediaLoadInProgress;
     private bool _frameLoupeOpening;
+    private bool _otrCanSettingsOpening;
+    private bool _cutOutputOpening;
     private bool _timelineSliderDragging;
 
     private Task? _mediaPlayerInitializationTask;
@@ -1106,10 +1108,46 @@ public partial class MainWindow : Window
         store.Save(
             viewModel.CreateSettings());
     }
-    private void CutOutputButton_Click(
-        object sender,
-        RoutedEventArgs e)
+    private async void OtrCanSettingsButton_Click(object sender, RoutedEventArgs e)
     {
+        if (_otrCanSettingsOpening || _shutdownStarted) return;
+        _otrCanSettingsOpening = true;
+        try
+        {
+            var store = new OtrCanSettingsStore();
+            var settings = await Task.Run(store.Load);
+            if (_isClosed || _shutdownStarted) return;
+
+            var checker = new OtrCanToolChecker();
+            using var viewModel = new OtrCanSettingsViewModel(settings,
+                (candidate, token) => checker.CheckAsync(candidate,
+                    new FfmpegSettingsStore().Load() ?? FfmpegSettings.CreateDefault(), token),
+                candidate => { store.Save(candidate); return Task.CompletedTask; });
+            new OtrCanSettingsDialog(viewModel) { Owner = this }.ShowDialog();
+        }
+        catch (Exception error)
+        {
+            if (!_isClosed)
+            {
+                MessageBox.Show(this, $"Die OTR-CAN-Einstellungen konnten nicht geöffnet werden: {error.Message}",
+                    "OTR-CAN-Werkzeuge", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        finally
+        {
+            _otrCanSettingsOpening = false;
+        }
+    }
+
+    private async void CutMp4BoxButton_Click(object sender, RoutedEventArgs e) =>
+        await ShowCutOutputAsync(CutEngineKind.Mp4Box);
+
+    private async void CutOtrCanButton_Click(object sender, RoutedEventArgs e) =>
+        await ShowCutOutputAsync(CutEngineKind.OtrCan);
+
+    private async Task ShowCutOutputAsync(CutEngineKind engineKind)
+    {
+        if (_cutOutputOpening || _shutdownStarted) return;
         var analysis =
             _viewModel.AnalysisResult;
 
@@ -1125,7 +1163,22 @@ public partial class MainWindow : Window
             return;
         }
 
-        var requiresPreparation = !VideoPreparation.IsMp4(analysis);
+        OtrCanSettings selection;
+        _cutOutputOpening = true;
+        try
+        {
+            selection = engineKind == CutEngineKind.OtrCan
+                ? await Task.Run(() => new OtrCanSettingsStore().Load())
+                : new OtrCanSettings();
+        }
+        catch (Exception error)
+        {
+            MessageBox.Show(this, error.Message, "Schnittmotor", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+        finally { _cutOutputOpening = false; }
+        if (_shutdownStarted || !ReferenceEquals(analysis, _viewModel.AnalysisResult)) return;
+        var requiresPreparation = ConfiguredCutEngineFactory.RequiresPreparation(engineKind, analysis);
         if (requiresPreparation && MessageBox.Show(
                 this,
                 "CAN kann derzeit Videos im MP4-Container schneiden. " +
@@ -1157,7 +1210,8 @@ public partial class MainWindow : Window
             new CutOutputDialog(
                 viewModel)
             {
-                Owner = this
+                Owner = this,
+                Title = engineKind == CutEngineKind.Mp4Box ? "Schneiden – MP4Box" : "Schneiden – otr-can"
             };
 
         dialog.CutRequested +=
@@ -1291,11 +1345,9 @@ public partial class MainWindow : Window
                                     _logger,
                                     runnerProgress)));
 
-                    var cutEngine =
-                        cutEngineFactory.Create(
-                            progress);
-
                     dialog.IsEnabled = false;
+                    var cutEngine = await Task.Run(() => cutEngineFactory.Create(engineKind, selection, progress));
+                    if (!dialog.IsVisible) return;
 
                     progressViewModel.MarkRunning();
 
@@ -1393,6 +1445,7 @@ public partial class MainWindow : Window
                 }
                 catch (Exception exception)
                 {
+                    if (dialog.IsVisible) dialog.IsEnabled = true;
                     MessageBox.Show(
                         dialog,
                         $"Der Schnitt ist fehlgeschlagen:{Environment.NewLine}{exception.Message}",

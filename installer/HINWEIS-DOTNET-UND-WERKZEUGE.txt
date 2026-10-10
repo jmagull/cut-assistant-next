@@ -15,10 +15,24 @@ GPAC einschließlich MP4Box (nicht im CAN-Paket enthalten):
 https://gpac.io/downloads/gpac-nightly-builds/
 Im Abschnitt "Current Stable Installers" die stabile Windows-64-Bit-Version wählen.
 
+Optional für den OTR-CAN-Schnittmotor: FFMS2 / ffmsindex
+(nicht im CAN-Paket enthalten):
+https://github.com/ffms/ffms2/releases
+Das Windows-64-Bit-Paket vollständig einschließlich seiner DLLs entpacken.
+Die Datei ffmsindex.exe gehört zum entpackten Paket. Es ist keine WSL-
+Installation erforderlich. Für MP4Box und die Cutlist-Bearbeitung wird
+FFMS2 nicht benötigt.
+
 Nach der Installation die Pfade in CAN prüfen:
 
 FFmpeg und ffprobe: Einstellungen > FFmpeg-Werkzeuge
 MP4Box: Einstellungen > Schnittanwendung
+OTR-CAN und ffmsindex: Einstellungen > OTR-CAN-Werkzeuge
+Die dortige Prüfung verwendet auch die bestehenden FFmpeg-/ffprobe-Pfade.
+Die Motorwahl erfolgt pro Auftrag über "Schneiden MP4Box (schnell)"
+oder "Schneiden otr-can (framegenau, langsam)" unter der Schnittliste.
+MP4Box bleibt Standardschnittmotor.
 
-Die Wiedergabe benötigt FFmpeg und GPAC nicht; für die Analyse wird ffprobe,
-für den Schnitt MP4Box benötigt. Diese Ausgabe ist ein interner Testkandidat.
+Die Wiedergabe benötigt FFmpeg und GPAC nicht; für die Analyse wird ffprobe
+benötigt. Beim Schneiden werden die Werkzeuge des gewählten Motors benötigt.
+Diese Ausgabe ist ein interner Testkandidat.

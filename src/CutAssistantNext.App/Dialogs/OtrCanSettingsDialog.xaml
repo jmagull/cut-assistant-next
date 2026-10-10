@@ -1,0 +1,54 @@
+<Window x:Class="CutAssistantNext.App.Dialogs.OtrCanSettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OTR-CAN-Werkzeuge"
+        Width="760" Height="660" MinWidth="520" MinHeight="380"
+        WindowStartupLocation="CenterOwner" Background="#F4F6F8">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="0,0,0,18">
+            <TextBlock Text="OTR-CAN-Werkzeuge" FontSize="26" FontWeight="SemiBold" Foreground="#111827" />
+            <TextBlock Text="Werkzeugpfade einrichten und prüfen" Margin="0,5,0,0" FontSize="14" Foreground="#6B7280" />
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Border Padding="18" Background="White" BorderBrush="#D9DEE5" BorderThickness="1" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock Text="Den Schnittmotor wählst du direkt unter der Schnittliste: MP4Box (schnell) oder otr-can (framegenau, langsam). Hier richtest du die Werkzeuge für otr-can ein."
+                               TextWrapping="Wrap" Foreground="#4B5563" Margin="0,0,0,18" />
+                    <StackPanel IsEnabled="{Binding CanEdit}">
+                        <TextBlock Text="OTR-CAN-Schnittmotor (EXE)" FontWeight="SemiBold" Margin="0,0,0,5" />
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBox Height="32" Padding="8,4" Text="{Binding ExecutablePath, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="Durchsuchen …" Margin="10,0,0,0" Padding="12,0" Click="BrowseEngine_Click" />
+                        </Grid>
+                        <TextBlock Text="ffmsindex.exe" FontWeight="SemiBold" Margin="0,18,0,5" />
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBox Height="32" Padding="8,4" Text="{Binding FfmsIndexExecutablePath, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="Durchsuchen …" Margin="10,0,0,0" Padding="12,0" Click="BrowseIndexer_Click" />
+                        </Grid>
+                    </StackPanel>
+                    <TextBlock Margin="0,16,0,0" TextWrapping="Wrap" Foreground="#6B7280"
+                               Text="FFmpeg und ffprobe bleiben unter Einstellungen → FFmpeg-Werkzeuge eingerichtet. Die Prüfung verwendet die dort gespeicherten Pfade." />
+                    <TextBlock Margin="0,12,0,0" TextWrapping="Wrap">
+                        <Hyperlink NavigateUri="https://github.com/ffms/ffms2/releases" RequestNavigate="DownloadLink_RequestNavigate">FFMS2 herunterladen</Hyperlink>
+                    </TextBlock>
+                    <TextBlock Margin="0,5,0,0" TextWrapping="Wrap" Foreground="#6B7280" FontSize="12"
+                               Text="Das Windows-64-Bit-Paket vollständig mit seinen DLLs entpacken. Wähle die Programmdatei, nicht nur den Ordner. Leere Felder bleiben unkonfiguriert." />
+                    <Button Content="Werkzeuge prüfen" IsEnabled="{Binding CanEdit}" HorizontalAlignment="Left"
+                            Padding="14,8" Margin="0,18,0,0" Click="Check_Click" />
+                    <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" Margin="0,14,0,0" Foreground="#374151" />
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
+            <Button Content="Speichern" IsEnabled="{Binding CanEdit}" MinWidth="120" Height="36" Margin="0,0,10,0" Click="Save_Click" />
+            <Button Content="Abbrechen" MinWidth="110" Height="36" Click="Cancel_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

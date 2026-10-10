@@ -9,6 +9,7 @@ public partial class Mp4BoxProgressDialog : Window
 {
     private readonly Mp4BoxProgressViewModel _viewModel;
     private readonly DispatcherTimer _autoCloseTimer;
+    private readonly DispatcherTimer _activityTimer;
 
     private bool _operationCompleted;
     private bool _allowClose;
@@ -36,6 +37,16 @@ public partial class Mp4BoxProgressDialog : Window
 
         _autoCloseTimer.Tick +=
             AutoCloseTimer_Tick;
+        _activityTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        _activityTimer.Tick += ActivityTimer_Tick;
+        Loaded += (_, _) => { if (!_operationCompleted) _activityTimer.Start(); };
+        Closed += (_, _) =>
+        {
+            _activityTimer.Stop();
+            _autoCloseTimer.Stop();
+            _activityTimer.Tick -= ActivityTimer_Tick;
+            _autoCloseTimer.Tick -= AutoCloseTimer_Tick;
+        };
     }
 
     internal event EventHandler? CancelRequested;
@@ -44,6 +55,7 @@ public partial class Mp4BoxProgressDialog : Window
         bool startAutoClose)
     {
         _operationCompleted = true;
+        _activityTimer.Stop();
         CloseButton.IsEnabled = true;
 
         if (startAutoClose &&
@@ -147,6 +159,8 @@ public partial class Mp4BoxProgressDialog : Window
 
         Close();
     }
+
+    private void ActivityTimer_Tick(object? sender, EventArgs e) => _viewModel.RefreshTimings();
 
     private void ProtocolTextBox_TextChanged(
         object sender,

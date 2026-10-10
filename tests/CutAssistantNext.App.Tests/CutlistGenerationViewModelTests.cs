@@ -49,7 +49,7 @@ public sealed class CutlistGenerationViewModelTests
             viewModel.Author);
 
         Assert.Equal(
-            settings.QuickTexts,
+            ["Mit Cut Assistant Next geschnitten.", "Werbung vollständig entfernt.", CutlistSettings.OtrCanQuickText],
             viewModel.QuickTexts);
 
         Assert.Equal(

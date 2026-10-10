@@ -64,6 +64,30 @@ public sealed class CutEngineRequestTests : IDisposable
     }
 
     [Fact]
+    public async Task ExplicitMp4BoxCommandWorksWithEmptyNativeSettings()
+    {
+        var factory = new ConfiguredCutEngineFactory(new ConfiguredMp4BoxCutServiceFactory(
+            () => new CutApplicationSettings { ExecutablePath = FilePath("MP4Box.exe") },
+            (_, _) => new RecordingRunner()),
+            _ => throw new InvalidOperationException("Native tools must not be queried."));
+        var engine = factory.Create(CutEngineKind.Mp4Box, new());
+        Assert.IsType<Mp4BoxCutService>(engine);
+        await engine.RunAsync(Request());
+        Assert.Equal("complete", File.ReadAllText(FilePath("output.mp4")));
+    }
+
+    [Fact]
+    public void ExplicitNativeCommandDoesNotFallBackToMp4BoxOnConfigurationFailure()
+    {
+        var factory = new ConfiguredCutEngineFactory(new ConfiguredMp4BoxCutServiceFactory(
+            () => throw new InvalidOperationException("MP4Box must not be selected."),
+            (_, _) => new RecordingRunner()),
+            _ => throw new FileNotFoundException("Native engine missing."));
+        Assert.Throws<FileNotFoundException>(() => factory.Create(CutEngineKind.OtrCan, new()));
+        Assert.Throws<ArgumentOutOfRangeException>(() => factory.Create((CutEngineKind)99, new()));
+    }
+
+    [Fact]
     public async Task CancelledRequest_NeverStartsRunnerOrChangesExistingOutput()
     {
         var request = Request(overwrite: true);

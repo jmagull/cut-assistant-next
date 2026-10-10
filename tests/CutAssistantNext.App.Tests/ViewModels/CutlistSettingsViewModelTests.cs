@@ -6,7 +6,7 @@ namespace CutAssistantNext.App.Tests.ViewModels;
 public sealed class CutlistSettingsViewModelTests
 {
     [Fact]
-    public void Constructor_UsesAuthorAndPadsQuickTextsToFiveSlots()
+    public void Constructor_UsesAuthorAndPadsQuickTextsWithSixthSuggestion()
     {
         var settings =
             new CutlistSettings
@@ -47,6 +47,7 @@ public sealed class CutlistSettingsViewModelTests
         Assert.Equal(
             string.Empty,
             viewModel.QuickText5);
+        Assert.Equal(CutlistSettings.OtrCanQuickText, viewModel.QuickText6);
     }
     [Fact]
     public void CreateSettings_UsesAuthorAndNonEmptyQuickTexts()

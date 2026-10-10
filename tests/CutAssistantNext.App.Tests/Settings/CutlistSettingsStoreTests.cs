@@ -66,6 +66,8 @@ public sealed class CutlistSettingsStoreTests
                 "Teil 2 von 2"
             ],
             settings.QuickTexts);
+        Assert.Equal(CutlistSettings.OtrCanQuickText, settings.QuickText6);
+        Assert.Equal(6, settings.GetQuickTexts().Count);
     }
 
     [Fact]

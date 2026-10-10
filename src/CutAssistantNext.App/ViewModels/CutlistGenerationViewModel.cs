@@ -55,7 +55,7 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
             settings.DefaultAuthor;
 
         QuickTexts =
-            settings.QuickTexts.ToArray();
+            settings.GetQuickTexts();
 
         TechnicalNotices =
             technicalNotices?.ToArray()
@@ -88,7 +88,7 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
             settings.DefaultAuthor;
 
         QuickTexts =
-            settings.QuickTexts.ToArray();
+            settings.GetQuickTexts();
 
         TechnicalNotices =
             technicalNotices?.ToArray()

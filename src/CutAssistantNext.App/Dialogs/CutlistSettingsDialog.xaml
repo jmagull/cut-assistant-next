@@ -68,7 +68,7 @@
                                    FontSize="12"
                                    Foreground="#6B7280"
                                    TextWrapping="Wrap"
-                                   Text="Bis zu fünf eigene Kommentartexte. Leere Felder werden im Dialog „Cutlist erzeugen“ nicht angezeigt." />
+                                   Text="Bis zu sechs eigene Kommentartexte. Leere Felder werden im Dialog „Cutlist erzeugen“ nicht angezeigt." />
 
                         <TextBox MinHeight="32"
                                  Margin="0,0,0,8"
@@ -91,8 +91,13 @@
                                  Text="{Binding QuickText4}" />
 
                         <TextBox MinHeight="32"
+                                 Margin="0,0,0,8"
                                  Padding="8,4"
                                  Text="{Binding QuickText5}" />
+
+                        <TextBox MinHeight="32"
+                                 Padding="8,4"
+                                 Text="{Binding QuickText6}" />
                     </StackPanel>
                 </Border>
 

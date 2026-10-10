@@ -71,6 +71,9 @@
                 <MenuItem Header="FFmpeg-Werkzeuge …"
                           Click="FfmpegSettingsButton_Click" />
 
+                <MenuItem Header="OTR-CAN-Werkzeuge …"
+                          Click="OtrCanSettingsButton_Click" />
+
                 <MenuItem Header="Frame-Lupe …"
                           Click="FrameLoupeSettingsMenuItem_Click" />
             </MenuItem>
@@ -502,66 +505,65 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <DockPanel Grid.Row="3"
-                           Margin="0,12,0,0"
-                           LastChildFill="True">
-                    <StackPanel DockPanel.Dock="Right"
-                                Orientation="Horizontal"
-                                VerticalAlignment="Top"
-                                Margin="12,0,0,0">
-                        <Button MinWidth="110"
-                                Height="36"
-                                Padding="10,0"
-                                Click="NamingSettingsButton_Click"
-                                Content="Namensmaske" />
+                <WrapPanel x:Name="CutActionsPanel" Grid.Row="3" Margin="0,12,0,0">
+                    <Button MinWidth="110"
+                            Height="36"
+                            Margin="0,0,8,6"
+                            Padding="10,0"
+                            IsEnabled="{Binding CanModifySelectedSegment}"
+                            Click="RemoveCutSegmentButton_Click"
+                            Content="Bereich löschen" />
 
-                        <Button MinWidth="100"
-                                Height="36"
-                                Margin="8,0,0,0"
-                                Padding="10,0"
-                                Click="CutOutputButton_Click"
-                                Content="Schneiden" />
-                    </StackPanel>
+                    <Button MinWidth="110"
+                            Height="36"
+                            Margin="0,0,8,6"
+                            Padding="10,0"
+                            Click="GenerateCutlistButton_Click"
+                            Content="Cutlist erzeugen" />
 
-                    <WrapPanel>
-                        <Button MinWidth="110"
-                                Height="36"
-                                Margin="0,0,8,6"
-                                Padding="10,0"
-                                IsEnabled="{Binding CanModifySelectedSegment}"
-                                Click="RemoveCutSegmentButton_Click"
-                                Content="Bereich löschen" />
+                    <Button MinWidth="170"
+                            Height="36"
+                            Margin="0,0,8,6"
+                            Padding="10,0"
+                            Click="UploadCutlistButton_Click"
+                            Content="Cutlist auf Server hochladen" />
 
-                        <Button MinWidth="110"
-                                Height="36"
-                                Margin="0,0,8,6"
-                                Padding="10,0"
-                                Click="GenerateCutlistButton_Click"
-                                Content="Cutlist erzeugen" />
+                    <Button MinWidth="130"
+                            Height="36"
+                            Margin="0,0,8,6"
+                            Padding="10,0"
+                            Click="LoadCutlistButton_Click"
+                            Content="Lokale Cutlist laden" />
 
-                        <Button MinWidth="170"
-                                Height="36"
-                                Margin="0,0,8,6"
-                                Padding="10,0"
-                                Click="UploadCutlistButton_Click"
-                                Content="Cutlist auf Server hochladen" />
+                    <Button x:Name="LoadServerCutlistButton"
+                            MinWidth="160"
+                            Height="36"
+                            Margin="0,0,8,6"
+                            Padding="10,0"
+                            Click="LoadServerCutlistButton_Click"
+                            Content="Cutlist vom Server laden" />
 
-                        <Button MinWidth="130"
-                                Height="36"
-                                Margin="0,0,8,6"
-                                Padding="10,0"
-                                Click="LoadCutlistButton_Click"
-                                Content="Lokale Cutlist laden" />
+                    <Button MinWidth="110"
+                            Height="36"
+                            Margin="12,0,8,6"
+                            Padding="10,0"
+                            Click="NamingSettingsButton_Click"
+                            Content="Namensmaske" />
 
-                        <Button x:Name="LoadServerCutlistButton"
-                                MinWidth="160"
-                                Height="36"
-                                Margin="0,0,8,6"
-                                Padding="10,0"
-                                Click="LoadServerCutlistButton_Click"
-                                Content="Cutlist vom Server laden" />
-                    </WrapPanel>
-                </DockPanel>
+                    <Button MinWidth="210"
+                            Height="36"
+                            Margin="0,0,8,6"
+                            Padding="10,0"
+                            Click="CutMp4BoxButton_Click"
+                            Content="Schneiden MP4Box (schnell)" />
+
+                    <Button MinWidth="270"
+                            Height="36"
+                            Margin="0,0,0,6"
+                            Padding="10,0"
+                            Click="CutOtrCanButton_Click"
+                            Content="Schneiden otr-can (framegenau, langsam)" />
+                </WrapPanel>
             </Grid>
         </Border>
     </Grid>

@@ -38,11 +38,18 @@
                 BorderThickness="1"
                 CornerRadius="8">
 
-            <TextBlock FontSize="16"
+            <StackPanel>
+                <TextBlock FontSize="16"
                        FontWeight="SemiBold"
                        Foreground="#1F2937"
                        TextWrapping="Wrap"
                        Text="{Binding StatusText}" />
+                <ProgressBar Height="10" Margin="0,12,0,0" Minimum="0" Maximum="100"
+                             IsIndeterminate="{Binding IsIndeterminate, Mode=OneWay}" Value="{Binding ProgressValue, Mode=OneWay}" />
+                <TextBlock Margin="0,8,0,0" Text="{Binding ProgressText}" Foreground="#4B5563" />
+                <TextBlock Margin="0,5,0,0" Text="{Binding TimingText}" TextWrapping="Wrap"
+                           FontSize="12" Foreground="#6B7280" />
+            </StackPanel>
         </Border>
 
         <Expander Grid.Row="2" Header="Protokoll" IsExpanded="True">

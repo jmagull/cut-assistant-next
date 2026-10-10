@@ -20,6 +20,59 @@ public sealed class Mp4BoxProgressViewModel :
 
     private bool _canCancel;
     private bool _hasFailed;
+    private readonly TimeProvider _clock;
+    private bool _running;
+    private bool _completed;
+    private bool _cancelRequested;
+    private long _started;
+    private long _phaseStarted;
+    private long _lastMessage;
+    private TimeSpan _elapsed;
+    private double? _percentage;
+    private string _outcome = "Bereit";
+
+    public Mp4BoxProgressViewModel() : this(TimeProvider.System) { }
+
+    internal Mp4BoxProgressViewModel(TimeProvider clock)
+    {
+        _clock = clock;
+    }
+
+    public bool IsIndeterminate => _running && !_percentage.HasValue;
+    public double ProgressValue => _percentage ?? 0;
+    public string ProgressText => _running
+        ? _percentage.HasValue ? $"{_percentage.Value:0}% dieses Arbeitsschritts" : "Verarbeitung läuft …"
+        : _outcome;
+    public string TimingText => _running
+        ? $"Laufzeit: {Format(_elapsed)} · Schritt: {Format(_clock.GetElapsedTime(_phaseStarted))} · letzte Meldung vor {Format(_clock.GetElapsedTime(_lastMessage))}"
+        : $"Laufzeit: {Format(_elapsed)}";
+
+    public void RefreshTimings()
+    {
+        if (!_running) return;
+        _elapsed = _clock.GetElapsedTime(_started);
+        OnPropertyChanged(nameof(TimingText));
+    }
+
+    private static string Format(TimeSpan time) => $"{(long)time.TotalHours:00}:{time.Minutes:00}:{time.Seconds:00}";
+
+    private void NotifyActivity()
+    {
+        OnPropertyChanged(nameof(IsIndeterminate));
+        OnPropertyChanged(nameof(ProgressValue));
+        OnPropertyChanged(nameof(ProgressText));
+        OnPropertyChanged(nameof(TimingText));
+    }
+
+    private void StopActivity(string outcome)
+    {
+        RefreshTimings();
+        _running = false;
+        _completed = true;
+        _percentage = outcome == "Abgeschlossen" ? 100 : null;
+        _outcome = outcome;
+        NotifyActivity();
+    }
 
     private bool _shouldAutoClose;
 
@@ -123,11 +176,20 @@ public sealed class Mp4BoxProgressViewModel :
         ArgumentNullException.ThrowIfNull(
             update);
 
-        if (update.Kind == CutProgressKind.Status && !_hasFailed)
+        if (_running) _lastMessage = _clock.GetTimestamp();
+        if ((update.Kind == CutProgressKind.Status || update.Kind == CutProgressKind.Progress) &&
+            !_hasFailed && !_completed && !_cancelRequested)
         {
+            if (StatusText != update.Message) _phaseStarted = _clock.GetTimestamp();
             StatusText =
                 update.Message;
+            _percentage = update.Percentage is { } value && double.IsFinite(value) && value >= 0 && value <= 100
+                ? value : null;
+            NotifyActivity();
         }
+
+        // Translated progress is displayed above; its original line is already in the protocol.
+        if (update.Kind == CutProgressKind.Progress) return;
 
         if (_protocolBuilder.Length > 0)
         {
@@ -144,6 +206,13 @@ public sealed class Mp4BoxProgressViewModel :
     public void MarkRunning()
     {
         _hasFailed = false;
+        _completed = false;
+        _cancelRequested = false;
+        _running = true;
+        _started = _phaseStarted = _lastMessage = _clock.GetTimestamp();
+        _elapsed = TimeSpan.Zero;
+        _percentage = null;
+        NotifyActivity();
         CanCancel = true;
         ShouldAutoClose = false;
         AutoCloseSecondsRemaining = 0;
@@ -151,6 +220,8 @@ public sealed class Mp4BoxProgressViewModel :
 
     public void MarkSucceeded()
     {
+        StopActivity("Abgeschlossen");
+        StatusText = "Schneiden abgeschlossen.";
         CanCancel = false;
 
         AutoCloseSecondsRemaining =
@@ -161,6 +232,7 @@ public sealed class Mp4BoxProgressViewModel :
 
     public void MarkFailed(string? reason = null)
     {
+        StopActivity("Fehlgeschlagen");
         _hasFailed = true;
         StatusText = string.IsNullOrWhiteSpace(reason)
             ? "Vorbereitung oder Schnitt fehlgeschlagen. Weitere Informationen stehen im Protokoll."
@@ -173,6 +245,9 @@ public sealed class Mp4BoxProgressViewModel :
 
     public void MarkCancelRequested()
     {
+        _cancelRequested = true;
+        _percentage = null;
+        NotifyActivity();
         CanCancel = false;
         ShouldAutoClose = false;
         AutoCloseSecondsRemaining = 0;
@@ -180,6 +255,8 @@ public sealed class Mp4BoxProgressViewModel :
     }
     public void MarkCancelled()
     {
+        StopActivity("Abgebrochen");
+        StatusText = "Abgebrochen.";
         CanCancel = false;
         ShouldAutoClose = false;
         AutoCloseSecondsRemaining = 0;

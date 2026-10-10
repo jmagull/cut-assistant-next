@@ -50,6 +50,8 @@ internal sealed class CutlistSettingsViewModel
                 settings,
                 4);
 
+        QuickText6 = settings.QuickText6 ?? string.Empty;
+
         PersonalServerUrl =
             serverSettings.PersonalServerUrl;
     }
@@ -65,6 +67,8 @@ internal sealed class CutlistSettingsViewModel
     public string QuickText4 { get; set; }
 
     public string QuickText5 { get; set; }
+
+    public string QuickText6 { get; set; }
 
     public string PersonalServerUrl { get; set; }
 
@@ -90,7 +94,9 @@ internal sealed class CutlistSettingsViewModel
                 DefaultAuthor,
 
             QuickTexts =
-                quickTexts
+                quickTexts,
+
+            QuickText6 = QuickText6
         };
     }
 
@@ -122,7 +128,7 @@ internal sealed class CutlistSettingsViewModel
         CutlistSettings settings,
         int index)
     {
-        if (index >= settings.QuickTexts.Count)
+        if (settings.QuickTexts is null || index >= settings.QuickTexts.Count)
         {
             return string.Empty;
         }

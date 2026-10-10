@@ -1,5 +1,54 @@
 # Architekturentscheidungen
 
+## ADR-016 – Geprüfte Seek-Optimierung als regulärer otr-can-0.1.2-Stand
+
+**Status:** am 10.10.2026 nach ausdrücklicher Nutzerfreigabe übernommen.
+
+- Schneller Video-Eingangsseek mit kurzem Vorlauf und wiederhergestellter absoluter Zeit ist normales Verhalten des optionalen CPU-Motors 0.1.2. Ton und weitere Streams behalten den bisherigen Dekodierweg. Streamreihenfolge, Encoder-/Bitratenparameter, Schnittgrenzen, kopierte Mittelstücke und Ausgabe-/Indexverwaltung bleiben erhalten. Kein NVENC.
+- Experimenteller Cargo-Schalter und Warnhinweis entfernt. Neuer eigener Buildordner; bisherige Referenz-/Versuchs-EXEs erhalten. Cargo.lock ändert nur die eigene Paketversion, keine Abhängigkeiten.
+- CAN verwendet dieselbe geprüfte CLI und seinen konfigurierbaren Motorpfad. Lokale Pfadumstellung vom Nutzer beauftragt; Indexerpfad und übrige Einstellungen erhalten. Keine Änderung des C#-Schnittpfads, keine fest codierten Benutzerpfade, keine neue Cutlist-Pflichtabhängigkeit. MP4Box bleibt Vorgabe.
+- 25 Rust-Tests, 743 CAN-Tests, synthetischer Auftrag über CANs Motorfabrik/Schnittdienst und vier reale bytegleiche Ausgaben. Bekannte Zeitstempel-/Framevorbehalte bleiben bestehen; Details im Seek-Prüfbericht.
+
+## ADR-015 – Messbare Phasen und laufende Zeit statt geschätztem Gesamtfortschritt
+
+**Status:** umgesetzt am 10.10.2026 für die bestehende otr-can-0.1.1-Schnittstelle.
+
+- CAN übersetzt die vorhandenen FFMS2-/otr-can-Protokollzeilen in eine getrennte sichtbare Schrittanzeige. Originalausgaben bleiben im kopierbaren Protokoll. Unbekannte/ungültige Zeilen werden erhalten; nur erkannte Zeilen liefern eine Übersetzung.
+- `CutProgressUpdate` bleibt mit seinem bisherigen Konstruktor kompatibel und erhält die additive Kategorie `Progress` sowie einen optionalen phasenbezogenen Prozentwert. Gültige gemessene Indexwerte werden angezeigt; beim Wechsel zu CPU-/Kopierarbeit verschwindet der Zahlenwert und der Balken wird unbestimmt. Keine Gesamtprozente oder Restzeit werden berechnet.
+- Behaltebereich X von Y, Kopieren/CPU-Kodieren, Originalzeitbereich und Zusammenfügen werden aus dem aktuellen Motorprotokoll erkannt. Ein separater UI-Timer aktualisiert Gesamt-/Schrittzeit und Zeit seit der letzten Meldung, ohne jede Sekunde Protokolltext anzuhängen. Monotone Zeitquelle, eingefrorene Abschluss-/Fehlerzustände und kontrollierte Timerfreigabe.
+- Die bestehende Rust-Variante sammelt FFmpegs stderr bis zum Ende eines Unteraufrufs. Deshalb liefert diese Änderung keinen echten FFmpeg-Prozentwert innerhalb langer HD-Dekodier-/Kodierphasen. Die CPU-Schnittparameter und geprüften Rust-EXEs bleiben erhalten; eine spätere native Fortschrittsschnittstelle ist separat zu entwickeln und zu vergleichen.
+
+## ADR-014 – Motorwahl direkt beim Schnittauftrag
+
+**Status:** umgesetzt am 10.10.2026 auf Benutzerwunsch; ersetzt die gespeicherte Motorwahl aus ADR-013.
+
+- Unter der Schnittliste stehen alle Cutlist-/Schnittbuttons einschließlich Namensmaske in einer gemeinsamen Zeile, sofern die Fensterbreite ausreicht. Die beiden Motorbuttons heißen **Schneiden MP4Box (schnell)** und **Schneiden otr-can (framegenau, langsam)**. Die Buttonwahl bestimmt den jeweiligen Auftrag; der Namensdialog zeigt den gewählten Motor im Fenstertitel. Bei schmalen Fenstern bricht die gemeinsame Leiste um.
+- `CutEngineKind` wird ausdrücklich an Vorbereitung und Motorfabrik übergeben. MP4Box benötigt keine OTR-CAN-Einstellung und behält seine vorhandene MP4-Vorbereitung. OTR-CAN verwendet das Original und wird vor der Schnittausführung weiterhin vollständig geprüft. Bei Werkzeugfehlern gibt es keinen stillen Wechsel auf MP4Box.
+- OTR-CAN-Einstellungen enthalten nur Motor-/Indexerpfade und die manuelle Werkzeugprüfung. Der Auswahlhaken und automatische Aktivierungsprüfung beim Speichern entfallen; leere/teilweise Pfade bleiben zulässig. Ein altes JSON-Feld `UseOtrCan` wird ohne automatische Dateiumschreibung ignoriert; vorhandene Pfade bleiben erhalten.
+- Die angeforderte Beschriftung beschreibt die Bedienwahl. Bestehende Eingabe-/Abnahmegrenzen und Zeitstempelbefunde gelten weiterhin. Schnittparameter, Rust-EXEs, Cutlist-Logik, Versionskennung und Buildnummer werden nicht geändert.
+
+## ADR-013 – Optionaler OTR-CAN-Ablauf unter CAN-Kontrolle
+
+**Status:** Schritt 5 umgesetzt am 10.10.2026; ergänzt ADR-011/012. Reale Referenz-/Decoderprüfung in Schritt 6 abgeschlossen mit [Zeitstempelvorbehalt](OTR-CAN-SCHRITT6-PRUEFBERICHT.md); beide fertigen Testfilme persönlich positiv bestätigt.
+
+- MP4Box bleibt Vorgabe. `UseOtrCan` fehlt in alten Einstellungen und ist dann false. Die ausdrückliche Auswahl wird nur nach Prüfung aller vier Werkzeuge gespeichert; vor einem nativen Schnitt werden sie erneut geprüft. Zurückschalten auf MP4Box erfordert keine nativen Werkzeuge.
+- Der Auftrag ist ein Snapshot. OTR-CAN verwendet dessen Original; die MP4Box-Vorbereitung entfällt ausschließlich im nativen Modus. Namensmaske, Keep-Segmente, Ziel und Prozessablauf bleiben in CAN. Der Media-Prozessstarter verwendet ArgumentList, keine Shell, UTF-8-Ausgaben, parallele Leser und Prozessbaum-Abbruch. Dateiarbeit läuft außerhalb des UI-Threads.
+- Ein GUID-Arbeitsordner und eine private Ergebnisdatei liegen als Geschwister im Ausgabeordner. CAN erzeugt einmal einen Index mit `ffmsindex -c -k`, prüft Index und track00-Begleitdateien und übergibt sie. Der Motor indexiert nicht. Nach erfolgreicher Container-/Video-/Audiostrukturprüfung veröffentlicht CAN durch Dateiverschiebung; Fehler/Abbruch erhalten das bestehende Ziel. Ein neu entstandenes Ziel wird nicht ohne ursprüngliche Ersetzungsfreigabe überschrieben. Bereinigung beschränkt sich auf den kontrollierten Arbeitsbereich; Probleme erscheinen im Protokoll.
+- Rust `can-engine/` 0.1.1 erhält obligatorische CLI-Parameter `--ffmpeg`/`--ffprobe` mit absoluten vorhandenen Dateien. Sämtliche native Werkzeugaufrufe verwenden diese Pfade. Die bisherige Bibliotheksfunktion bleibt als Kompatibilitätseinstieg erhalten; CAN verwendet den expliziten Einstieg. Separate Build-Ausgabe bewahrt CAN 04 und 0.1.0. Seek-Reihenfolge, CPU-Codecs, vollständige Streamzuordnung und Audiobitratenparameter bleiben erhalten. Ein einzelner Teil mit anderer Ausgabeendung wird jetzt tatsächlich umgepackt.
+- CAN übergibt Zeitgrenzen ohne Frameversatz mit sieben Nachkommastellen. Die native Syntax akzeptiert jetzt CAN-Ticks; die vorhandene Mikrosekundenquantisierung bleibt erhalten. Grenzen: genau eine Videospur an Position 0, Zeiten unter 24 Stunden, MP4-kompatible Streams. Die Metadatenprüfung beweist keine Framegenauigkeit oder Synchronität für beliebige Dateien; Navy CIS und Kimi werden anschließend geprüft.
+- Keine neuen Produktionsabhängigkeiten, Werkzeugpakete, globale PATH-/OTR-Konfiguration, WSL, Datei-/Archivverwaltung, neue Cutlist-Pflichtwerkzeuge oder Repository-/Git-Veröffentlichung.
+
+## ADR-012 – Optionale OTR-CAN-Werkzeugkonfiguration und begrenzte Prüfung
+
+**Status:** Vorbereitung umgesetzt am 10.10.2026; der Schnittablauf folgt separat.
+
+- OTR-CAN-EXE und `ffmsindex.exe` erhalten eigene optionale Einstellungen in `Settings/otr-can-settings.json`. Die vorhandenen FFmpeg-/ffprobe- und MP4Box-Einstellungen werden nicht migriert oder dupliziert. Das Speichern aktiviert keinen Schnittmotor; MP4Box bleibt Standard und derzeit alleiniger aktiver Motor.
+- Der separate Dialog erlaubt auch eine leere oder teilweise vorbereitete Konfiguration. Nichtleere Werte müssen vollständige EXE-Pfade sein. Die Verfügbarkeit und erwartete Schnittstelle werden bei **Werkzeuge prüfen** geprüft; dabei dürfen die vier Programme in unterschiedlichen Ordnern liegen. Fehlende OTR-CAN-Werkzeuge sind keine neue Start-, MP4Box- oder Cutlist-Voraussetzung.
+- Die Prüfung startet OTR-CAN mit `cut-can --help`, ffmsindex ohne Eingabedatei und FFmpeg/ffprobe mit `-version`. Es wird kein Video geöffnet, indexiert oder geschnitten. Pfadzugriffe und Prozessstarts laufen außerhalb des WPF-Threads; maximal zehn Sekunden pro Programm, Abbruch beendet den Prozessbaum, Ausgabeströme werden parallel gelesen und Ressourcen freigegeben.
+- Eine Prüfung speichert keine Einstellungen. Abbrechen/Schließen beendet die Prüfung; die Bearbeitung bleibt ungespeichert. Speichern schreibt die separate Einstellung über eine temporäre Datei und anschließende Übernahme; Fehler bleiben sichtbar. Eine ausdrücklich gestartete Speicherung wird vor dem Schließen beendet.
+- FFmpeg, ffprobe und FFMS2 bleiben Benutzerinstallationen. Der FFMS2-Downloadlink steht im Dialog, in der Anleitung und in den Setup-Hinweisen. Das Paketbauskript lehnt versehentlich enthaltene `ffmsindex.exe`/`ffms2.dll` ab. Es werden keine Werkzeuge installiert, mitgeliefert oder globalen PATH-Einstellungen verändert.
+- Die spätere Schnittausführung muss die konfigurierten FFmpeg-/ffprobe-Dateien tatsächlich verwenden. Die derzeitige Rust-PATH-Suche wird durch eine erfolgreiche Hilfeprüfung nicht umgestellt; diese Anbindung und die einmalige jobbezogene FFMS2-Indexierung gehören zu Schritt 5. Keine globale `otr.json`, WSL oder OTR-Dateiverwaltung.
+
 ## ADR-011 – Gemeinsamer Schnittauftrag für optionale Schnittmotoren
 
 **Status:** Schnittvertrag und MP4Box-Anbindung umgesetzt am 10.10.2026; OTR-CAN-Ausführung folgt separat.
