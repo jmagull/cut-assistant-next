@@ -18,9 +18,15 @@ Danke an **xwitty** für [CutlistDude](https://github.com/xwitty/CutlistDude) un
 
 Danke an die Betreiber von [cutlist.at](http://cutlist.at/) für den Cutlist-Server und das Angebot mit FAQ, Links und Shoutbox. Ebenso danke ich allen, die Schnittlisten erstellen, prüfen, verbessern und anderen zur Verfügung stellen. Eure Arbeit erspart vielen Menschen Zeit und macht den gemeinsamen Cutlist-Gedanken erst lebendig.
 
+## otr und otr-utils – Grundlage des nativen Schnittmotors
+
+Ein besonderer Dank gilt **Michael Picht (mipi)** und allen Mitwirkenden an [otr](https://codeberg.org/mipi/otr) und [otr-utils](https://codeberg.org/mipi/otr-utils). Ihre Arbeit und die offen bereitgestellten Quellen bilden die Grundlage unseres optionalen nativen Schnittmotors otr-can.
+
+Insbesondere das Schneiden an Keyframes, das gezielte Neukodieren der Schnittkanten sowie die Zuordnung von Zeiten und Frames haben diese Weiterentwicklung ermöglicht. Dass wir darauf aufbauen und den Motor für Cut Assistant Next anpassen können, verdanken wir dieser Vorarbeit. Wir führen diese Arbeit mit großer Wertschätzung weiter; die ursprünglichen Autoren, ihre Beiträge sowie die Herkunfts- und Lizenzhinweise bleiben sichtbar erhalten.
+
 ## FFmpeg und ffprobe
 
-Danke an das [FFmpeg-Team](https://ffmpeg.org/) und alle Mitwirkenden. CAN verwendet ffprobe zur Medienanalyse und FFmpeg zum verlustfreien Umpacken geeigneter Videos in eine MP4-Arbeitsdatei.
+Danke an das [FFmpeg-Team](https://ffmpeg.org/) und alle Mitwirkenden. CAN verwendet ffprobe zur Medienanalyse und FFmpeg zum verlustfreien Umpacken geeigneter Videos in eine MP4-Arbeitsdatei. Beim nativen otr-can-Schnitt übernimmt FFmpeg das Kopieren der Segmente und das Neukodieren der Schnittkanten.
 
 ## GPAC und MP4Box
 

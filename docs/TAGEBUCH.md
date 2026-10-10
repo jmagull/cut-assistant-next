@@ -1,5 +1,13 @@
 # Entwicklungstagebuch
 
+## 10.10.2026 – Dank an die ursprünglichen otr-/otr-utils-Autoren
+
+- Auf Nutzerwunsch einen ausdrücklichen Dank an **Michael Picht (mipi)** und alle Mitwirkenden von otr und otr-utils formuliert. Ihre offen bereitgestellten Quellen, Keyframe-Schnittlogik, gezielte Kanten-Neukodierung und Zeit-/Framezuordnung werden als Grundlage des nativen Motors gewürdigt. Autoren- und Lizenzhinweise erhalten; kein Decoderbeitrag als Teil des CAN-Schnittmotors ausgegeben.
+- Rust: neue can-engine/DANKSAGUNG.md sowie Verweis und Kurzfassung in Root- und Motor-README. CAN: docs/DANKSAGUNG.md und sichtbares Fenster „Credits und Dank“ mit denselben Autoren-/Projektangaben und Links zu beiden ursprünglichen Codeberg-Projekten ergänzt. FFmpeg-Dank beschreibt jetzt auch seinen Beitrag beim nativen Schnitt.
+- Release-Build im gewohnten CAN-Ausgabeordner: **0 Warnungen/0 Fehler**, **743/743 Tests bestanden**. Credits bei 780 × 720 und 540 × 400 gerendert und visuell geprüft, scrollbar und erreichbarer Schließen-Button, keine Bindungsfehler. Neue Projektlinks über den vorhandenen Navigationshandler geprüft, ohne Websites zu öffnen. Beim ersten lokalen Renderbild fehlte der Außenrand im Prüfbild; nur den Prüfrenderer korrigiert, die App-Ansicht blieb erhalten.
+- Ausschließlich Danksagungs-/README-Texte und statische Credits-Ansicht geändert; Schnittmotor, Parameter, Konfiguration, Referenz-EXEs, Lockdateien und Buildzähler erhalten. Weiterhin **0.2.1 · Build 11 · RC3**, Motor **0.1.2**. Belege im ignorierten .build/otr-credits. Anschließend vom Nutzer zum Commit und Push der Danksagung in beiden Repositories freigegeben.
+
+
 ## 10.10.2026 – Commit und Push des CAN-Integrationsstands freigegeben
 
 - Nutzer beauftragt Commit und Push; nach Klärung ausdrücklich **nur CAN** auf GitHub. Umfang: optionaler nativer Schnittablauf, Werkzeugeinstellungen, explizite Motorbuttons, gemeinsame Buttonzeile, sechster Schnellbaustein, Fortschrittsanzeige, Tests und geprüfte Dokumentation. Installerhinweis vor dem Commit an die inzwischen ausdrücklich pro Auftrag erfolgende Motorwahl angepasst.
