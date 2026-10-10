@@ -1,3 +1,4 @@
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Editing;
 using CutAssistantNext.Cutlists.Editing;
 using CutAssistantNext.Media.Cutting;
@@ -17,9 +18,18 @@ internal static class CutPlanMp4BoxRangeBuilder
             CutlistKeepSegmentBuilder.Build(
                 cutPlan);
 
-        var ranges =
-            new List<Mp4BoxSplitRange>(
-                keepSegments.Count);
+        return Build(
+            keepSegments.Select(segment => new KeepSegment(segment.Start, segment.Duration)).ToArray(),
+            framesPerSecond);
+    }
+
+    public static IReadOnlyList<Mp4BoxSplitRange> Build(
+        IReadOnlyList<KeepSegment> keepSegments,
+        double framesPerSecond)
+    {
+        ArgumentNullException.ThrowIfNull(keepSegments);
+
+        var ranges = new List<Mp4BoxSplitRange>(keepSegments.Count);
 
         foreach (var keepSegment in keepSegments)
         {

@@ -4,7 +4,7 @@ Cut Assistant Next (CAN) ist ein Windows-Programm zum Abspielen von Videos, Bear
 
 CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer. Die [öffentliche Vorabversion 0.2.1 Build 7 – RC2](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build7-rc2) enthält den selbst gebauten und dokumentierten libmpv-0.41.0-Stack.
 
-Der aktuelle Entwicklungsstand ergänzt die Frame-Lupe mit Keyframe-Anzeige, ausdrücklicher Schnittkantenkorrektur und zusätzlicher Halbierungssuche. Release-Build 11 wurde ohne Warnungen oder Fehler geprüft; 577/577 Tests bestanden. Diese Ergänzungen sind noch nicht als Installationspaket veröffentlicht.
+Der aktuelle Entwicklungsstand **0.2.1 · Build 11 · RC3** ergänzt die Frame-Lupe mit Keyframe-Anzeige, ausdrücklicher Schnittkantenkorrektur und zusätzlicher Halbierungssuche sowie den gemeinsamen Schnittauftrag für die vorbereitete OTR-CAN-Integration. MP4Box bleibt der aktive Standardschnittmotor. Der Release-Rebuild wurde ohne Warnungen oder Fehler geprüft; 672/672 Tests bestanden. Dieser Entwicklungsstand ist noch nicht als Installationspaket veröffentlicht.
 
 ## Lizenz
 
@@ -80,7 +80,7 @@ Die Anwendung liegt danach unter `src\CutAssistantNext.App\bin\Release\net10.0-w
 
 Die inhaltliche Version steht zentral in `Version.props`: Patch für Korrekturen, Minor für neue Funktionen, Major für einen größeren Versionssprung. Sie wird bewusst gepflegt.
 
-Die RC-Kennung steht ebenfalls in `Version.props` (`CanCandidate`, derzeit `RC2`) und erscheint auch bei normalen lokalen Builds im Fenstertitel und in der Hauptüberschrift. Eine ausdrücklich übergebene Build-Eigenschaft `CanCandidate` hat Vorrang. Die numerische Version für Cutlists und HTTP-Uploads enthält diese Kennung nicht.
+Die RC-Kennung steht ebenfalls in `Version.props` (`CanCandidate`, derzeit `RC3`) und erscheint auch bei normalen lokalen Builds im Fenstertitel und in der Hauptüberschrift. Eine ausdrücklich übergebene Build-Eigenschaft `CanCandidate` hat Vorrang. Die numerische Version für Cutlists und HTTP-Uploads enthält diese Kennung nicht.
 
 `tools/build.ps1` baut die gesamte Lösung neu und erhöht den lokalen Zähler in `.build/build-number.txt` genau einmal bei erfolgreichem Abschluss. Fehlgeschlagene Builds erhöhen ihn nicht. Titel, Hauptüberschrift und Dateieigenschaften verwenden dieselbe Version und Buildnummer. Einzelne Projekt-Builds und direkte IDE-/dotnet-Builds verwenden die zuletzt erfolgreiche Nummer (bei einem neuen Checkout zunächst 0); für eine neue nummerierte Ausgabe das Skript verwenden. Der Zähler ist lokal, wird nicht mit Git synchronisiert und identifiziert keine weltweit eindeutige Veröffentlichung. Gleichzeitige Skript-Builds im selben Checkout werden durch eine Dateisperre verhindert.
 

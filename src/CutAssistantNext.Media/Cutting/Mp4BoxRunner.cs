@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Logging;
 
 namespace CutAssistantNext.Media.Cutting;
@@ -7,12 +8,12 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
 {
     private readonly string _executablePath;
     private readonly IAppLogger _logger;
-    private readonly IProgress<Mp4BoxProgressUpdate>? _progress;
+    private readonly IProgress<CutProgressUpdate>? _progress;
 
     public Mp4BoxRunner(
         string executablePath,
         IAppLogger? logger = null,
-        IProgress<Mp4BoxProgressUpdate>? progress = null)
+        IProgress<CutProgressUpdate>? progress = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
             executablePath);
@@ -102,8 +103,8 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
                 startInfo.ArgumentList);
 
         _progress?.Report(
-            new Mp4BoxProgressUpdate(
-                Mp4BoxProgressKind.Output,
+            new CutProgressUpdate(
+                CutProgressKind.Output,
                 $"> {commandLine}"));
 
         _logger.Information(
@@ -292,8 +293,8 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
                 startInfo.ArgumentList);
 
         _progress?.Report(
-            new Mp4BoxProgressUpdate(
-                Mp4BoxProgressKind.Output,
+            new CutProgressUpdate(
+                CutProgressKind.Output,
                 $"> {commandLine}"));
 
         _logger.Information(

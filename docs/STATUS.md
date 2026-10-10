@@ -1,12 +1,14 @@
 # Projektstatus
 
-Stand: 03.10.2026. Dieser Überblick beschreibt den aktuellen Feature-Stand; ältere Projektdefinitionen und Architekturentscheidungen dokumentieren teilweise frühere Entwicklungsphasen.
+Stand: 10.10.2026. Dieser Überblick beschreibt den aktuellen Feature-Stand; ältere Projektdefinitionen und Architekturentscheidungen dokumentieren teilweise frühere Entwicklungsphasen.
 
 ## Aktueller Umfang
 
 CAN verwendet C#, .NET 10 und WPF unter Windows 11 x64. ffprobe liefert Medieninformationen, mpv/libmpv übernimmt die Wiedergabe, MP4Box den Schnitt. FFmpeg bereitet bei Bedarf eine MP4-Arbeitsdatei vor.
 
 Umgesetzt sind Medienanalyse und Wiedergabe, Frame-Navigation, Frame-Lupe mit Schnittkantenübernahme und Halbierungssuche, manuelle Schnittplanung, lokale Cutlists, Server-Suche/-Download/-Upload, Namensmasken, Herkunftsübernahme bei Fremd-Cutlists, MP4Box-Schnitt und experimentelle Vorbereitung anderer Container. Die Bedienung ist in der [Nutzeranleitung](NUTZERANLEITUNG.md) beschrieben.
+
+Die optionale OTR-CAN-Integration ist vorbereitet: ein gemeinsamer unveränderlicher Schnittauftrag hält Original-/Zielpfade und Keep-Segmente fest; der aktive MP4Box-Motor verwendet diesen Vertrag. OTR-CAN wird noch nicht aus CAN gestartet. Die lokale Entwicklungskennung wurde auf **0.2.1 · Build 11 · RC3** erhöht; die öffentliche Build-7-RC2-Ausgabe bleibt unverändert.
 
 ## Frame-Lupe und Schnittkantenkorrektur
 
@@ -34,7 +36,7 @@ Umgesetzt sind Medienanalyse und Wiedergabe, Frame-Navigation, Frame-Lupe mit Sc
 
 - Hilfe verlinkt Nutzeranleitung und GitHub-Projekt; Update/GitHub öffnet ebenfalls die Projektseite.
 - Credits zeigt die abgestimmte Danksagung in einem scrollbaren Dialog mit Projektlinks.
-- Version und lokale Buildnummer stehen im Fenstertitel und in der Hauptüberschrift. Aktueller Entwicklungsstand: 0.2.1 Build 11 RC2; öffentliche Vorabversion: 0.2.1 Build 7 RC2.
+- Version und lokale Buildnummer stehen im Fenstertitel und in der Hauptüberschrift. Aktueller Entwicklungsstand: 0.2.1 Build 11 RC3; öffentliche Vorabversion: 0.2.1 Build 7 RC2.
 - Vollständige Builds über `tools/build.ps1` erhöhen den Zähler nur nach Erfolg. Fehlgeschlagener Build und anschließendes Weiterzählen wurden geprüft.
 - Hilfe-Links, Credits-Dialog und Update/GitHub wurden vom Nutzer live bestätigt.
 
@@ -65,7 +67,7 @@ Das Protokoll ist standardmäßig aufgeklappt, kann eingeklappt und in die Zwisc
 
 ## Verifikation
 
-- Letzter bestätigter vollständiger Testlauf am 03.10.2026: **577/577 Tests bestanden**, Release-Build 11 ohne Warnungen oder Fehler. WPF-Übernahme und Abbrechen mit echten ffprobe-/FFmpeg-Vorschauen sowie variable Bildabstände, Containerstart und Halbierungssuche wurden zusätzlich geprüft.
+- Letzter bestätigter vollständiger Testlauf am 10.10.2026: **672/672 Tests bestanden**, Release-Rebuild unter Buildnummer 11 ohne Warnungen oder Fehler. Die WPF-Übernahme und das Abbrechen mit echten ffprobe-/FFmpeg-Vorschauen sowie variable Bildabstände, Containerstart und Halbierungssuche wurden am 03.10.2026 praktisch geprüft. Ein neuer Praxisschnitt nach der Vorbereitung des gemeinsamen Schnittauftrags steht noch aus.
 - P1 abgeschlossen: Schutz übernommener Namensvorschläge, bewusste Neuberechnung aus der Namensmaske, automatische Herkunftsangabe bei Fremd-Cutlists, einheitliche Zeitdarstellung und kopierbare Namensvorschau. Die Herkunftsübernahme ist durch sieben neue Testfälle und praktische Prüfungen abgesichert.
 - Diplomatin und Rubikon: integrierter AVI-Ablauf mit jeweils zwei Cutlists erfolgreich; Wiedergabe einschließlich Anfang, Ende und Ton-Synchronität vom Nutzer bestätigt.
 - Zusätzlich bestätigter Diplomatin-Schnitt mit HQ-Cutlist trotz unterschiedlicher Quelldateigröße.

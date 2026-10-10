@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using CutAssistantNext.Core.Cutting;
 
 namespace CutAssistantNext.Media.Cutting;
 
@@ -9,7 +10,7 @@ public sealed class FfmpegRemuxRunner(string executablePath)
          "-map", "0", "-c", "copy", "-f", "mp4", destination];
 
     public async Task RunAsync(string source, string destination,
-        IProgress<Mp4BoxProgressUpdate>? progress, CancellationToken cancellationToken)
+        IProgress<CutProgressUpdate>? progress, CancellationToken cancellationToken)
     {
         if (!File.Exists(executablePath))
             throw new FileNotFoundException("Bitte unter FFmpeg-Werkzeuge einen gültigen Pfad zu ffmpeg.exe einstellen.", executablePath);
@@ -20,13 +21,15 @@ public sealed class FfmpegRemuxRunner(string executablePath)
         cancellationToken.ThrowIfCancellationRequested();
         var info = new ProcessStartInfo(executablePath)
         {
-            UseShellExecute = false, CreateNoWindow = true,
-            RedirectStandardOutput = true, RedirectStandardError = true
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
         };
         foreach (var argument in BuildArguments(source, destination))
             info.ArgumentList.Add(argument);
         using var process = new Process { StartInfo = info };
-        progress?.Report(new(Mp4BoxProgressKind.Status, "FFmpeg: Video wird verlustfrei für MP4 vorbereitet …"));
+        progress?.Report(new(CutProgressKind.Status, "FFmpeg: Video wird verlustfrei für MP4 vorbereitet …"));
         if (!process.Start())
             throw new InvalidOperationException("FFmpeg konnte nicht gestartet werden.");
         using var registration = cancellationToken.Register(() =>
@@ -45,9 +48,9 @@ public sealed class FfmpegRemuxRunner(string executablePath)
             throw new InvalidOperationException("FFmpeg hat keine nutzbare MP4-Arbeitsdatei erzeugt.");
     }
 
-    private static async Task ReadAsync(StreamReader reader, IProgress<Mp4BoxProgressUpdate>? progress)
+    private static async Task ReadAsync(StreamReader reader, IProgress<CutProgressUpdate>? progress)
     {
         while (await reader.ReadLineAsync() is { } line)
-            progress?.Report(new(Mp4BoxProgressKind.Output, "FFmpeg: " + line));
+            progress?.Report(new(CutProgressKind.Output, "FFmpeg: " + line));
     }
 }

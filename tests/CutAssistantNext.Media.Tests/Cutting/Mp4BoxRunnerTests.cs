@@ -1,3 +1,4 @@
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Media.Cutting;
 
 namespace CutAssistantNext.Media.Tests.Cutting;
@@ -106,7 +107,7 @@ public sealed class Mp4BoxRunnerTests
                 "Der Pfad des aktuellen Testprozesses ist nicht verfügbar.");
 
         var progress =
-            new Progress<Mp4BoxProgressUpdate>();
+            new Progress<CutProgressUpdate>();
 
         var runner =
             new Mp4BoxRunner(

@@ -1,3 +1,4 @@
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Media.Cutting;
 
 namespace CutAssistantNext.Media.Tests.Cutting;
@@ -14,10 +15,10 @@ public sealed class Mp4BoxOutputReaderTests
                 "0.500 secs Interleaving");
 
         var updates =
-            new List<Mp4BoxProgressUpdate>();
+            new List<CutProgressUpdate>();
 
         var progress =
-            new InlineProgress<Mp4BoxProgressUpdate>(
+            new InlineProgress<CutProgressUpdate>(
                 updates.Add);
 
         await Mp4BoxOutputReader.ReadAsync(
@@ -29,7 +30,7 @@ public sealed class Mp4BoxOutputReaderTests
             update =>
             {
                 Assert.Equal(
-                    Mp4BoxProgressKind.Output,
+                    CutProgressKind.Output,
                     update.Kind);
 
                 Assert.Equal(
@@ -39,7 +40,7 @@ public sealed class Mp4BoxOutputReaderTests
             update =>
             {
                 Assert.Equal(
-                    Mp4BoxProgressKind.Output,
+                    CutProgressKind.Output,
                     update.Kind);
 
                 Assert.Equal(
@@ -115,7 +116,7 @@ public sealed class Mp4BoxOutputReaderTests
                     inputLines));
 
         var reportedUpdates =
-            new List<Mp4BoxProgressUpdate>();
+            new List<CutProgressUpdate>();
 
         var progress =
             new SynchronousProgress(
@@ -143,21 +144,22 @@ public sealed class Mp4BoxOutputReaderTests
     }
 
     private sealed class SynchronousProgress :
-        IProgress<Mp4BoxProgressUpdate>
+        IProgress<CutProgressUpdate>
     {
-        private readonly List<Mp4BoxProgressUpdate> _updates;
+        private readonly List<CutProgressUpdate> _updates;
 
         public SynchronousProgress(
-            List<Mp4BoxProgressUpdate> updates)
+            List<CutProgressUpdate> updates)
         {
             _updates =
                 updates;
         }
 
         public void Report(
-            Mp4BoxProgressUpdate value)
+            CutProgressUpdate value)
         {
             _updates.Add(
                 value);
         }
-    }}
+    }
+}

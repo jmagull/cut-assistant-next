@@ -1,5 +1,19 @@
 # Architekturentscheidungen
 
+## ADR-011 – Gemeinsamer Schnittauftrag für optionale Schnittmotoren
+
+**Status:** Schnittvertrag und MP4Box-Anbindung umgesetzt am 10.10.2026; OTR-CAN-Ausführung folgt separat.
+
+- `CutAssistantNext.Core.Cutting` enthält den unveränderlichen `CutRequest`, positive `KeepSegment`-Bereiche, `ICutEngine` und gemeinsame Status-/Protokollmeldungen über `CutProgressUpdate`. Der Vertrag benötigt weder WPF noch konkrete Werkzeuge oder Cutlist-Dateiformate.
+- CAN erzeugt die Keep-Segmente aus seiner bestehenden Remove-Schnittplanung. Der Auftrag enthält vollständige Original-/Zielpfade, unveränderte Zeiten, eine optionale Medienbildrate und die ausdrückliche Überschreiberlaubnis. Er ist eine Momentaufnahme; spätere Änderungen am Schnittplan beeinflussen laufende Aufträge nicht.
+- Eine für MP4Box vorbereitete Arbeitsdatei wird separat als `SourceFilePath` zugeordnet. Der ursprüngliche `OriginalFilePath`, Zielname und Keep-Zeiten bleiben erhalten. Ein späterer OTR-CAN-Aufruf verwendet die Originaldatei und keine automatisch erzeugte MP4-Arbeitsdatei.
+- Der gemeinsame Auftrag führt keine Framekorrektur aus. Die bestehende MP4Box-Endgrenzenanpassung bleibt ausschließlich in dessen Adapter. Eine Bildrate ist für MP4Box erforderlich, aber keine allgemeine Pflicht des Schnittvertrags.
+- `ConfiguredCutEngineFactory` liefert derzeit ausschließlich MP4Box. Der Hauptablauf verwendet `ICutEngine`; Namensmaske, Dateidialoge, Vorbereitung, Fortschrittsfenster, Abbruch und Aufräumen bleiben unter CAN-Kontrolle. Die bisherigen MP4Box-Prozessargumente und Schnitt-/Veröffentlichungsregeln bleiben erhalten.
+- OTR-CAN bleibt ein zukünftiger optionaler Motor. Dieser Schritt führt weder eine Auswahl in der Oberfläche noch OTR-CAN-/ffmsindex-Aufrufe, Werkzeugpfade, Installationspakete oder neue Produktionsabhängigkeiten ein. MP4Box bleibt Standard.
+- Cutlist-Erzeugung und -Speicherung erhalten keine zusätzlichen Werkzeugabhängigkeiten. Die vorhandene ffprobe-Voraussetzung des Videolade-/Analyseablaufs wird hier nicht verändert; ein vollständig ffprobe-freier Bedienablauf ist damit nicht umgesetzt.
+
+Die Vorbereitung wird weiterhin mit Buildnummer 11 geprüft. Die lokale Kandidatenkennung wurde anschließend am 10.10.2026 auf Benutzerwunsch auf **0.2.1 · Build 11 · RC3** erhöht. Ein direkter Release-Rebuild mit `CanBuildNumber=11` bewahrt den lokalen Zähler; das nummernerhöhende Buildskript bleibt unverändert. Git- und Referenzstände werden nicht veröffentlicht.
+
 ## ADR-001 – Neuaufbau statt Delphi-Modernisierung
 
 **Status:** entschieden

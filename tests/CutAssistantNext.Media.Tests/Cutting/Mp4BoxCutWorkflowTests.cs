@@ -1,3 +1,4 @@
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Media.Cutting;
 
 namespace CutAssistantNext.Media.Tests.Cutting;
@@ -175,10 +176,10 @@ public sealed class Mp4BoxCutWorkflowTests : IDisposable
                 runner);
 
         var updates =
-            new List<Mp4BoxProgressUpdate>();
+            new List<CutProgressUpdate>();
 
         var progress =
-            new InlineProgress<Mp4BoxProgressUpdate>(
+            new InlineProgress<CutProgressUpdate>(
                 updates.Add);
 
         var ranges =
@@ -209,7 +210,7 @@ public sealed class Mp4BoxCutWorkflowTests : IDisposable
             update =>
             {
                 Assert.Equal(
-                    Mp4BoxProgressKind.Status,
+                    CutProgressKind.Status,
                     update.Kind);
 
                 Assert.Equal(
@@ -219,7 +220,7 @@ public sealed class Mp4BoxCutWorkflowTests : IDisposable
             update =>
             {
                 Assert.Equal(
-                    Mp4BoxProgressKind.Status,
+                    CutProgressKind.Status,
                     update.Kind);
 
                 Assert.Equal(
@@ -229,7 +230,7 @@ public sealed class Mp4BoxCutWorkflowTests : IDisposable
             update =>
             {
                 Assert.Equal(
-                    Mp4BoxProgressKind.Status,
+                    CutProgressKind.Status,
                     update.Kind);
 
                 Assert.Equal(
@@ -239,7 +240,7 @@ public sealed class Mp4BoxCutWorkflowTests : IDisposable
             update =>
             {
                 Assert.Equal(
-                    Mp4BoxProgressKind.Status,
+                    CutProgressKind.Status,
                     update.Kind);
 
                 Assert.Equal(

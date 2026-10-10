@@ -1,4 +1,5 @@
 using System.IO;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Media;
 using CutAssistantNext.Media.Analysis;
 using CutAssistantNext.Media.Cutting;
@@ -13,8 +14,11 @@ internal static class VideoPreparation
     public static string ContainerName(MediaAnalysisResult analysis) =>
         analysis.FormatName?.Split(',')[0].Trim().ToLowerInvariant() switch
         {
-            "avi" => "AVI", "matroska" => "Matroska (MKV)",
-            "mpegts" => "MPEG-TS", "mpeg" => "MPEG-PS", "asf" => "ASF/WMV",
+            "avi" => "AVI",
+            "matroska" => "Matroska (MKV)",
+            "mpegts" => "MPEG-TS",
+            "mpeg" => "MPEG-PS",
+            "asf" => "ASF/WMV",
             _ => analysis.FormatLongName ?? analysis.FormatName ?? "unbekannter Container"
         };
 
@@ -205,14 +209,14 @@ internal static class VideoPreparation
     }
 
     public static async Task PrepareAsync(string source, string destination, MediaAnalysisResult original,
-        string ffmpeg, string ffprobe, IProgress<Mp4BoxProgressUpdate> progress, CancellationToken token)
+        string ffmpeg, string ffprobe, IProgress<CutProgressUpdate> progress, CancellationToken token)
     {
         if (!File.Exists(ffprobe))
             throw new FileNotFoundException("Bitte unter FFmpeg-Werkzeuge einen gültigen Pfad zu ffprobe.exe einstellen.", ffprobe);
         var packetCounter = new FfprobePacketCounter(ffprobe);
 
         progress.Report(new(
-            Mp4BoxProgressKind.Status,
+            CutProgressKind.Status,
             "Videopakete der Quelldatei werden geprüft …"));
 
         var originalVideoPacketCounts =
@@ -222,7 +226,7 @@ internal static class VideoPreparation
             .RunAsync(source, destination, progress, token);
 
         progress.Report(new(
-            Mp4BoxProgressKind.Status,
+            CutProgressKind.Status,
             "MP4-Arbeitsdatei wird geprüft …"));
 
         var prepared =
@@ -236,12 +240,12 @@ internal static class VideoPreparation
             original,
             prepared,
             detail => progress.Report(
-                new(Mp4BoxProgressKind.Output, detail)),
+                new(CutProgressKind.Output, detail)),
             originalVideoPacketCounts,
             preparedVideoPacketCounts);
 
         progress.Report(new(
-            Mp4BoxProgressKind.Output,
+            CutProgressKind.Output,
             "Stream-, Videopaket-, Bildraten- und Laufzeitprüfung bestanden. Bitte Schnittstellen und Ton-Synchronität im Ergebnis kontrollieren."));
     }
 }

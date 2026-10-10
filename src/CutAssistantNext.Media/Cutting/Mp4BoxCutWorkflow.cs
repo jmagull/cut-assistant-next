@@ -1,3 +1,4 @@
+using CutAssistantNext.Core.Cutting;
 namespace CutAssistantNext.Media.Cutting;
 
 public sealed class Mp4BoxCutWorkflow
@@ -33,7 +34,7 @@ public sealed class Mp4BoxCutWorkflow
         string sourceFilePath,
         string outputFilePath,
         IReadOnlyList<Mp4BoxSplitRange> ranges,
-        IProgress<Mp4BoxProgressUpdate>? progress,
+        IProgress<CutProgressUpdate>? progress,
         CancellationToken cancellationToken = default,
         bool overwriteExistingOutput = false)
     {
@@ -103,8 +104,8 @@ public sealed class Mp4BoxCutWorkflow
             for (var index = 0; index < ranges.Count; index++)
             {
                 progress?.Report(
-                    new Mp4BoxProgressUpdate(
-                        Mp4BoxProgressKind.Status,
+                    new CutProgressUpdate(
+                        CutProgressKind.Status,
                         $"Segment {index + 1} von {ranges.Count} wird geschnitten …"));
 
                 var segmentFilePath =
@@ -134,8 +135,8 @@ public sealed class Mp4BoxCutWorkflow
             else
             {
                 progress?.Report(
-                    new Mp4BoxProgressUpdate(
-                        Mp4BoxProgressKind.Status,
+                    new CutProgressUpdate(
+                        CutProgressKind.Status,
                         "Segmente werden zusammengefügt …"));
 
                 await _runner.RunConcatAsync(
@@ -152,8 +153,8 @@ public sealed class Mp4BoxCutWorkflow
             }
 
             progress?.Report(
-                new Mp4BoxProgressUpdate(
-                    Mp4BoxProgressKind.Status,
+                new CutProgressUpdate(
+                    CutProgressKind.Status,
                     "Fertig."));
         }
         finally

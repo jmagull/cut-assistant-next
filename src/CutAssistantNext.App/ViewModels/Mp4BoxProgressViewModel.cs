@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Media.Cutting;
 
 namespace CutAssistantNext.App.ViewModels;
@@ -117,12 +118,12 @@ public sealed class Mp4BoxProgressViewModel :
         AutoCloseSecondsRemaining == 0;
 
     public void ApplyProgress(
-        Mp4BoxProgressUpdate update)
+        CutProgressUpdate update)
     {
         ArgumentNullException.ThrowIfNull(
             update);
 
-        if (update.Kind == Mp4BoxProgressKind.Status && !_hasFailed)
+        if (update.Kind == CutProgressKind.Status && !_hasFailed)
         {
             StatusText =
                 update.Message;
@@ -164,7 +165,7 @@ public sealed class Mp4BoxProgressViewModel :
         StatusText = string.IsNullOrWhiteSpace(reason)
             ? "Vorbereitung oder Schnitt fehlgeschlagen. Weitere Informationen stehen im Protokoll."
             : $"Vorbereitung oder Schnitt fehlgeschlagen:{Environment.NewLine}{reason.Trim()}";
-        ApplyProgress(new Mp4BoxProgressUpdate(Mp4BoxProgressKind.Output, StatusText));
+        ApplyProgress(new CutProgressUpdate(CutProgressKind.Output, StatusText));
         CanCancel = false;
         ShouldAutoClose = false;
         AutoCloseSecondsRemaining = 0;

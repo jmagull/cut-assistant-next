@@ -1,4 +1,5 @@
 using CutAssistantNext.App.Settings;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Media.Cutting;
 
 namespace CutAssistantNext.App.Services.Cutting;
@@ -9,7 +10,7 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
 
     private readonly Func<
         string,
-        IProgress<Mp4BoxProgressUpdate>?,
+        IProgress<CutProgressUpdate>?,
         IMp4BoxRunner> _runnerFactory;
 
     private readonly ToolPathResolver _toolPathResolver;
@@ -31,7 +32,7 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
         Func<CutApplicationSettings?> settingsProvider,
         Func<
             string,
-            IProgress<Mp4BoxProgressUpdate>?,
+            IProgress<CutProgressUpdate>?,
             IMp4BoxRunner> runnerFactory,
         ToolPathResolver? toolPathResolver = null)
     {
@@ -58,7 +59,7 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
     }
 
     public Mp4BoxCutService Create(
-        IProgress<Mp4BoxProgressUpdate>? progress)
+        IProgress<CutProgressUpdate>? progress)
     {
         var settings =
             _settingsProvider()

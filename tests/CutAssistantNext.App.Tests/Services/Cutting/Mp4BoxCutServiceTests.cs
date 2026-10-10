@@ -1,4 +1,5 @@
 using CutAssistantNext.App.Services.Cutting;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Editing;
 using CutAssistantNext.Media.Cutting;
 
@@ -118,10 +119,10 @@ public sealed class Mp4BoxCutServiceTests : IDisposable
                 TimeSpan.FromSeconds(30)));
 
         var updates =
-            new List<Mp4BoxProgressUpdate>();
+            new List<CutProgressUpdate>();
 
         var progress =
-            new InlineProgress<Mp4BoxProgressUpdate>(
+            new InlineProgress<CutProgressUpdate>(
                 updates.Add);
 
         var outputFilePath =

@@ -1,10 +1,11 @@
+using CutAssistantNext.Core.Cutting;
 namespace CutAssistantNext.Media.Cutting;
 
 public static class Mp4BoxOutputReader
 {
     public static async Task<IReadOnlyList<string>> ReadAsync(
         TextReader reader,
-        IProgress<Mp4BoxProgressUpdate>? progress,
+        IProgress<CutProgressUpdate>? progress,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(
@@ -31,8 +32,8 @@ public static class Mp4BoxOutputReader
                 line))
             {
                 progress?.Report(
-                    new Mp4BoxProgressUpdate(
-                        Mp4BoxProgressKind.Output,
+                    new CutProgressUpdate(
+                        CutProgressKind.Output,
                         line));
             }
         }

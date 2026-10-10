@@ -1,18 +1,19 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows;
 using CutAssistantNext.App.Controls;
 using CutAssistantNext.App.Dialogs;
-using CutAssistantNext.App.Services;
 using CutAssistantNext.App.Services.Analysis;
 using CutAssistantNext.App.Services.Cutting;
+using CutAssistantNext.App.Services;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.State;
 using CutAssistantNext.App.ViewModels;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Editing;
 using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Core.Naming;
@@ -1231,6 +1232,13 @@ public partial class MainWindow : Window
                     var cutPlan =
                         _cutPlanViewModel.CreateCutPlanSnapshot();
 
+                    var cutRequest = CutRequestFactory.Create(
+                        _viewModel.FilePath,
+                        saveDialog.FileName,
+                        cutPlan,
+                        framesPerSecond,
+                        overwriteExistingOutput: true);
+
                     var completionViewModel =
                         new CutCompletionViewModel(saveDialog.FileName, cutPlan);
 
@@ -1244,7 +1252,7 @@ public partial class MainWindow : Window
                         new CancellationTokenSource();
 
                     var progress =
-                        new Progress<Mp4BoxProgressUpdate>(
+                        new Progress<CutProgressUpdate>(
                             progressViewModel.ApplyProgress);
 
                     var progressDialog =
@@ -1274,17 +1282,17 @@ public partial class MainWindow : Window
                             }
                         };
 
-                    var cutServiceFactory =
-                        new ConfiguredMp4BoxCutServiceFactory(
+                    var cutEngineFactory =
+                        new ConfiguredCutEngineFactory(new ConfiguredMp4BoxCutServiceFactory(
                             cutApplicationSettingsStore.Load,
                             (executablePath, runnerProgress) =>
                                 new Mp4BoxRunner(
                                     executablePath,
                                     _logger,
-                                    runnerProgress));
+                                    runnerProgress)));
 
-                    var cutService =
-                        cutServiceFactory.Create(
+                    var cutEngine =
+                        cutEngineFactory.Create(
                             progress);
 
                     dialog.IsEnabled = false;
@@ -1296,7 +1304,7 @@ public partial class MainWindow : Window
                     string? temporaryVideo = null;
                     try
                     {
-                        var sourceForCut = _viewModel.FilePath;
+                        var sourceForCut = cutRequest.OriginalFilePath;
                         if (requiresPreparation)
                         {
                             temporaryVideo = Path.Combine(Path.GetTempPath(), $"can-{Guid.NewGuid():N}.mp4");
@@ -1325,17 +1333,13 @@ public partial class MainWindow : Window
                                 ffprobePath,
                                 progress,
                                 cancellationTokenSource.Token);
-                            sourceForCut = temporaryVideo;
+                            cutRequest = cutRequest.WithSourceFilePath(temporaryVideo);
                         }
 
-                        await cutService.RunAsync(
-                            sourceForCut,
-                            saveDialog.FileName,
-                            cutPlan,
-                            framesPerSecond,
+                        await cutEngine.RunAsync(
+                            cutRequest,
                             progress,
-                            cancellationTokenSource.Token,
-                            overwriteExistingOutput: true);
+                            cancellationTokenSource.Token);
 
                         cutSucceeded = true;
 
@@ -1347,8 +1351,8 @@ public partial class MainWindow : Window
                     catch (OperationCanceledException)
                     {
                         progressViewModel.ApplyProgress(
-                            new Mp4BoxProgressUpdate(
-                                Mp4BoxProgressKind.Status,
+                            new CutProgressUpdate(
+                                CutProgressKind.Status,
                                 "Abgebrochen."));
 
                         progressViewModel.MarkCancelled();
@@ -1370,8 +1374,8 @@ public partial class MainWindow : Window
                             try { File.Delete(temporaryVideo); }
                             catch (Exception cleanupError)
                             {
-                                progressViewModel.ApplyProgress(new Mp4BoxProgressUpdate(
-                                    Mp4BoxProgressKind.Output,
+                                progressViewModel.ApplyProgress(new CutProgressUpdate(
+                                    CutProgressKind.Output,
                                     $"Temporäre Datei konnte nicht gelöscht werden: {temporaryVideo} ({cleanupError.Message})"));
                                 _logger.Error($"Temporäre MP4-Datei konnte nicht gelöscht werden: {cleanupError.Message}");
                             }

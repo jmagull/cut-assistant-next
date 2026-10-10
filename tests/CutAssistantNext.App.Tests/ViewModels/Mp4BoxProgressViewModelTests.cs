@@ -1,4 +1,5 @@
 using CutAssistantNext.App.ViewModels;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Media.Cutting;
 
 namespace CutAssistantNext.App.Tests.ViewModels;
@@ -12,7 +13,7 @@ public sealed class Mp4BoxProgressViewModelTests
         viewModel.MarkRunning();
         viewModel.MarkFailed("FFmpeg wurde nicht gefunden.");
         var failure = viewModel.StatusText;
-        viewModel.ApplyProgress(new Mp4BoxProgressUpdate(Mp4BoxProgressKind.Status, "Alte Fortschrittsmeldung"));
+        viewModel.ApplyProgress(new CutProgressUpdate(CutProgressKind.Status, "Alte Fortschrittsmeldung"));
 
         Assert.Contains("FFmpeg wurde nicht gefunden.", failure);
         Assert.Equal(failure, viewModel.StatusText);
@@ -22,7 +23,7 @@ public sealed class Mp4BoxProgressViewModelTests
         Assert.False(viewModel.ShouldAutoClose);
 
         viewModel.MarkRunning();
-        viewModel.ApplyProgress(new Mp4BoxProgressUpdate(Mp4BoxProgressKind.Status, "Neuer Versuch"));
+        viewModel.ApplyProgress(new CutProgressUpdate(CutProgressKind.Status, "Neuer Versuch"));
         Assert.Equal("Neuer Versuch", viewModel.StatusText);
     }
 
@@ -44,18 +45,18 @@ public sealed class Mp4BoxProgressViewModelTests
             new Mp4BoxProgressViewModel();
 
         viewModel.ApplyProgress(
-            new Mp4BoxProgressUpdate(
-                Mp4BoxProgressKind.Status,
+            new CutProgressUpdate(
+                CutProgressKind.Status,
                 "Segment 1 von 3 wird geschnitten …"));
 
         viewModel.ApplyProgress(
-            new Mp4BoxProgressUpdate(
-                Mp4BoxProgressKind.Output,
+            new CutProgressUpdate(
+                CutProgressKind.Output,
                 "> MP4Box.exe source.mp4 -splitx 10:20"));
 
         viewModel.ApplyProgress(
-            new Mp4BoxProgressUpdate(
-                Mp4BoxProgressKind.Output,
+            new CutProgressUpdate(
+                CutProgressKind.Output,
                 "splitting: file 1 done"));
 
         Assert.Equal(
@@ -208,4 +209,5 @@ public sealed class Mp4BoxProgressViewModelTests
         Assert.Equal(
             "Abbruch wird angefordert …",
             viewModel.StatusText);
-    }}
+    }
+}

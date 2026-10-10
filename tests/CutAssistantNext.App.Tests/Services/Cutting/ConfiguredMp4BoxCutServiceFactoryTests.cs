@@ -1,5 +1,6 @@
 using CutAssistantNext.App.Services.Cutting;
 using CutAssistantNext.App.Settings;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Media.Cutting;
 
 namespace CutAssistantNext.App.Tests.Services.Cutting;
@@ -153,7 +154,7 @@ public sealed class ConfiguredMp4BoxCutServiceFactoryTests
                     @"C:\Tools\MP4Box.exe"
             };
 
-        IProgress<Mp4BoxProgressUpdate>? receivedProgress =
+        IProgress<CutProgressUpdate>? receivedProgress =
             null;
 
         var factory =
@@ -168,7 +169,7 @@ public sealed class ConfiguredMp4BoxCutServiceFactoryTests
                 });
 
         var expectedProgress =
-            new Progress<Mp4BoxProgressUpdate>();
+            new Progress<CutProgressUpdate>();
 
         _ =
             factory.Create(
