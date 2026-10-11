@@ -1,5 +1,7 @@
 # Lizenzprüfung des CAN-libmpv-0.41.0-Kandidaten
 
+**Historische Bewertung vor der ersten öffentlichen Ausgabe im September 2026.** Die nachstehenden technischen Befunde und komponentenbezogenen Bedingungen gelten für den bezeichneten Stack. Die damaligen Aussagen „noch keine öffentliche Freigabe“ und „noch nicht öffentlich erreichbar“ beschreiben den Prüfzeitpunkt: Quellen- und Relink-Paket wurden anschließend veröffentlicht und mit Build 7 RC2 unverändert weitergegeben; siehe [Veröffentlichungsnachweis](../../RELEASE-PUBLICATION-BUILD7-RC2.md). Der alte Juli-Kandidat ist abgelöst. Aktuelle Aufgaben stehen im [Projektstatus](../../STATUS.md).
+
 **Technische Lizenzprüfung für genau diesen Vier-DLL-Kandidaten; noch keine öffentliche Freigabe.** Maßgeblich sind die vier SHA-256-Werte in [README.md](README.md). Die zugeordneten [Drittanbieterhinweise](THIRD-PARTY-NOTICES.md), Original-Lizenztexte und ein geprüftes Relink-Paket liegen vor. Quellen- und Relink-Paket sind noch nicht öffentlich erreichbar. Für CANs eigenen Quellcode ist GPL-3.0-or-later gewählt. Setup und Publish verwenden diesen Kandidaten bereits; ein VM-Installations-, Schnitt- und Deinstallationstest wurde erfolgreich berichtet. Für die öffentliche Ausgabe ist ein frameworkabhängiges Paket mit separat installierter .NET Desktop Runtime gewählt. Die begründete Bewertung dieser Paketform und ihre Voraussetzungen sind in [DOTNET-LICENSING.md](../../DOTNET-LICENSING.md) dokumentiert.
 
 ## GPLv3-Weg

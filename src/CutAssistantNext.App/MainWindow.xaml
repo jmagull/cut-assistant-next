@@ -156,6 +156,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock FontWeight="SemiBold"
@@ -168,7 +169,29 @@
                            TextWrapping="Wrap"
                            Text="{Binding FileName}" />
 
-                <ProgressBar Grid.Row="2"
+                <Border x:Name="SourceWarningBanner"
+                        Grid.Row="2"
+                        Margin="0,10,0,0"
+                        Padding="12"
+                        Background="#FFF4CE"
+                        BorderBrush="#C79524"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Visibility="{Binding HasSourceWarning,
+                            Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock FontWeight="SemiBold"
+                                   Foreground="#664D03"
+                                   Text="Hinweis zum AVI-Original"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Margin="0,4,0,0"
+                                   Foreground="#664D03"
+                                   Text="{Binding SourceWarningMessage}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+
+                <ProgressBar Grid.Row="3"
                              Height="6"
                              Margin="0,10,0,0"
                              IsIndeterminate="{Binding IsAnalyzing}"

@@ -1,19 +1,31 @@
 # Setup-Merkliste
 
-Stand: 20.09.2026. Interne Testphase für Cut Assistant Next 0.2.0, Build 6.
-Windows-Installer TEST2 und Portable ZIP TEST2 wurden erfolgreich getestet.
-Eine öffentliche Veröffentlichung ist noch nicht freigegeben; insbesondere
-Lizenz- und Weitergabebedingungen sind noch zu klären.
+Stand: 11.10.2026. Die ursprüngliche Planung vom September ist mit dem aktuellen Projektstand abgeglichen. Öffentliche Vorabversion: **0.2.1 Build 7 RC2**; persönlich abgenommener lokaler Paketsatz: **0.2.1 Build 12 RC3 mit otr-can 0.1.4**, noch nicht veröffentlicht. Eine spätere Quelländerung ersetzt nicht dessen Paketabnahme.
+
+Aktuelle Nachweise: [Projektstatus](STATUS.md), [Build-12-Paketprüfung](RELEASE-BUILD12-RC3-RESULT.md), [RC2-Veröffentlichung](RELEASE-PUBLICATION-BUILD7-RC2.md).
 
 ## Bedienung – Ergänzung vom 11.10.2026
 
+- [x] Timeline-Klick und Reglerziehen: am 05.10.2026 umgesetzt, technisch geprüft und persönlich bestätigt; Nachweis im [Tagebuch](TAGEBUCH.md#05102026--timeline-per-mausklick-positionieren).
 - [x] Fenstergrößen von Schneiden, Fortschritt/Protokoll, Schneiden abgeschlossen und Cutlist erzeugen getrennt speichern und beim nächsten Aufruf sowie nach einem Programmneustart wiederherstellen.
 - [x] Besonders **Video vorbereiten und schneiden**: gewählte Breite/Höhe und Maximierung beibehalten, damit auch der Protokollbereich beim nächsten Schnitt wieder ausreichend Platz hat.
 - [x] **Cutlist erzeugen**: vorhandene Größen-Datei weiterverwenden und Speicherung um Maximierung ergänzen.
 
-Am 11.10.2026 umgesetzt, gebaut und geprüft: 767 CAN-Tests und echter WPF-Neustarttest. Details im [Prüfbericht](DIALOG-FENSTERGROESSEN-PRUEFBERICHT-20261011.md). Aktueller Entwicklungsstand: CAN 0.2.1 · Build 11 · RC3. Die folgenden Setup-Einträge bewahren den älteren Stand vom 20.09.2026.
+Fenstergrößen am 11.10.2026 unter Build 11 umgesetzt, gebaut und geprüft: damals 767 CAN-Tests und echter WPF-Neustarttest, anschließend persönlich bestätigt. Details im [Prüfbericht](DIALOG-FENSTERGROESSEN-PRUEFBERICHT-20261011.md).
 
-## Windows-Installer und portable Ausgabe
+## Aktueller Installer und portable Ausgabe
+
+- [x] Frameworkabhängige Ausgabe mit separat installierter .NET 10 Desktop Runtime; geprüfter CAN-libmpv-0.41.0-Stack enthalten. FFmpeg/ffprobe und GPAC/MP4Box separat einrichten.
+- [x] Build-12-RC3-Setup und Portable-ZIP mit optionalem otr-can 0.1.4, passenden Quellen, Lizenztexten und Prüfsummen gebaut und automatisch geprüft: **785 CAN-/40 Rust-Tests**.
+- [x] Persönliche Überinstallation, Windows-11-VM-Installation, beide Schnittmotoren, Bild/Ton, Setup-Deinstallation und separater Portable-ZIP-Test bestätigt; [Prüfbericht](RELEASE-BUILD12-RC3-RESULT.md).
+- [x] Werkzeug-/Quellzuordnung, SHA-256-Werte und Verfahren für erneuten Paketbau dokumentiert; [Paketbau](RELEASE-BUILD12-RC3-RESULT.md#reproduzierbarer-lokaler-paketbau).
+- [x] Juli-libmpv-Kandidat abgelöst: der geprüfte September-Stack 0.41.0 mit vier DLLs, Quellen-/Relink-Paketen und Lizenzhinweisen wurde bereits mit RC2 veröffentlicht; [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD7-RC2.md). Keine Wiederbeschaffung des alten Juli-Archivs erforderlich.
+
+Der KI-Absatz im Credits-Dialog wurde nach dieser Paketabnahme ergänzt. Für eine Ausgabe mit dieser Ergänzung sind neue zusammengehörige Quellen-/Binärpakete erforderlich.
+
+## Historische TEST2-Prüfungen vom 20.09.2026
+
+Die folgenden Punkte beschreiben ausschließlich die damaligen internen, selbstenthaltenen Testpakete. Ihr Paketkonzept mit gebündelter .NET-Laufzeit und Werkzeugen gilt nicht für die aktuelle frameworkabhängige Ausgabe.
 
 - [x] Windows-Installer TEST2: CAN 0.2.0 Build 6, selbstenthaltene .NET-Laufzeit, libmpv sowie FFmpeg und ffprobe 8.1.2 enthalten.
 - [x] GPAC 26.07: Originalinstaller separat eingebunden. Fehlende Installation wird nach ausdrücklicher Zustimmung durchgeführt; eine vorhandene Installation wird übersprungen. Beide Fälle auf VM 108 erfolgreich getestet.
@@ -27,25 +39,22 @@ Am 11.10.2026 umgesetzt, gebaut und geprüft: 767 CAN-Tests und echter WPF-Neust
 - [x] Installer auf VM 108 getestet: Installation, Wiedergabe, Analyse, MP4Box-Schnitt und Deinstallation.
 - [x] Beide GPAC-Szenarien getestet: Nachinstallation mit Zustimmung sowie Überspringen einer vorhandenen Installation.
 - [x] Portable ZIP: Inhalt, Entpacken und Programmstart auf dem Entwicklungsrechner getestet.
-- [ ] Portable ZIP zusätzlich auf einem Rechner ohne vorhandene CAN-Konfiguration testen.
-- [ ] Werkzeugversionen, Downloadquellen und SHA-256-Prüfsummen vollständig für einen reproduzierbaren Paketbau dokumentieren.
-- [ ] libmpv-Juli-Build `2026-07-30-74356c0fc6`: Originalarchiv wiederbeschaffen und dauerhaft sichern (hinterlegte Download-URL am 20.09.2026 mit HTTP 404 geprüft). Passende Quellcodes, Buildinformationen und Lizenzpflichten für genau diesen Build klären. Der September-Build ist nur ein Untersuchungskandidat und ersetzt die getestete Juli-DLL nicht.
-- [ ] Lizenztexte, Weitergaberechte und gegebenenfalls erforderliche Quellcode-Angebote prüfen und beilegen.
-- [ ] Release-Verfahren für künftige, gemeinsam getestete Paketversionen dokumentieren.
+
+Die damaligen offenen Aufgaben zu Quellen, Lizenzen und Paketbau wurden durch die oben verlinkten späteren Prüfungen und Veröffentlichungsnachweise abgelöst. Die damalige Forderung nach einem Portable-Test ohne vorhandene CAN-Konfiguration ist kein offener TEST2-Releaseblocker mehr; ein ausdrücklich neuer Benutzerprofiltest kann als zusätzliche Prüfung erfolgen. Aus der persönlichen ZIP-Abnahme wird kein gesonderter Nachweis eines frischen Profils abgeleitet.
 
 Zusätzliche Werkzeug-Downloadlinks unter Hilfe sind für dieses Konzept nicht vorgesehen. Die Projektlinks in den Credits bleiben erhalten. Der Menüpunkt Update/GitHub öffnet derzeit nur die Projektseite; ein automatischer Updater ist damit nicht umgesetzt.
 
 ## Projektlizenz und Entstehung
 
-- [ ] Allgemeine Lizenzbedingungen für CAN festlegen: GPL 3.0 oder eine geeignete Alternative prüfen. Die endgültige Auswahl und Freigabe stehen noch aus; dieser Merkpunkt ändert die derzeitige Lizenz nicht.
-- [ ] Nach der Entscheidung die Projektlizenz und zugehörigen Hinweise in Repository, Dokumentation und Veröffentlichung einheitlich aufnehmen; die Bedingungen mitgelieferter Komponenten gesondert berücksichtigen.
-- [ ] Einen Hinweis zur KI-unterstützten Entwicklung in Credits und Dokumentation aufnehmen. Vorgesehener Wortlaut nach Angabe des Projektverantwortlichen:
+- [x] Projektlizenz **GPL-3.0-or-later** gewählt und in [LICENSE](../LICENSE), README und Veröffentlichung aufgenommen. Die Bedingungen fremder Komponenten bleiben gesondert zugeordnet.
+- [x] Lizenztexte und Komponentenhinweise beigelegt; [.NET-/NuGet-Bestandsaufnahme](DOTNET-LICENSING.md), [libmpv-Hinweise](libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) und [Paketprüfbericht](RELEASE-BUILD12-RC3-RESULT.md) dokumentieren den jeweiligen Umfang.
+- [x] KI-Hinweis in [Danksagung](DANKSAGUNG.md) vorhanden und im aktuellen Credits-Dialog ergänzt. In den unveränderten Build-12-Paketen fehlt der Dialogabsatz noch. Wortlaut nach Angabe des Projektverantwortlichen:
 
   „Cut Assistant Next entstand mit Unterstützung von ChatGPT/Codex unter Einsatz von GPT-5.6 Sol (Denkaufwand: hoch) und GPT-6 Astra (Denkaufwand: mittel). Die abschließende Entscheidung über Vorschläge, Änderungen und deren Übernahme lag stets beim Nutzer und Projektverantwortlichen Jörg.“
 
-## Vorher
+## Nächster Schritt
 
-Jörg nimmt sich in dieser Woche Zeit für weitere Praxistests. Erkenntnisse und Fehler werden mit CAN-Version, Buildnummer und gegebenenfalls Schnittprotokoll festgehalten. Die Veröffentlichung folgt nach Auswertung dieser Tests und Freigabe.
+Den geprüften Quellstand sichern und die nächste RC3-Veröffentlichung mit konkreter Quellen-/Paketzuordnung vorbereiten. Neue Änderungen nach der Build-12-Abnahme gesondert prüfen und gegebenenfalls neu paketieren. Version 1.0 ist weiterhin nicht festgelegt.
 
 ## V2
 

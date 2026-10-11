@@ -1,4 +1,6 @@
 # Freigabecheckliste: CAN 0.2.0 Build 6 und CAN-libmpv 0.41.0
+**Historische Vorbereitung vom September 2026.** Diese Checkliste hält den damaligen Stand fest; Aussagen wie „noch keine Veröffentlichung“ gelten für diesen Zeitpunkt. RC1 und RC2 wurden anschließend veröffentlicht; siehe [RC1](RELEASE-PUBLICATION-RC1.md) und [RC2](RELEASE-PUBLICATION-RC2.md). Aktuelle Aufgaben stehen im [Projektstatus](STATUS.md).
+
 ## Aktueller Stand: RC1 lokal bereit (27.09.2026)
 
 Die unten genannten Vorbereitungsarbeiten 1 und 2 sind für RC1 abgeschlossen: Der eindeutige CAN-Quellstand wurde archiviert, daraus wurden ZIP und Setup gebaut und geprüft. 484/484 Tests bestanden; 148 ZIP-Dateien wurden gegen ihre Prüfsummen abgeglichen. Der vollständige lokale Release-Satz liegt unter `artifacts/release-build6-RC1/`. Details, Dateigrößen und Hashes stehen im [RC1-Prüfbericht](RELEASE-BUILD6-RC1-RESULT.md).

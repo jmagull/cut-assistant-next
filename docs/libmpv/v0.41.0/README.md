@@ -1,6 +1,6 @@
 # CAN-libmpv 0.41.0: geprüfter Kandidat
 
-**Status: lokaler Prüf- und Testkandidat, nicht zur öffentlichen Verteilung freigegeben.** Diese Unterlagen dokumentieren den selbst gebauten Vier-DLL-Kandidaten. CANs Build und Publish verwenden jetzt diesen Kandidaten. Ein internes Test-Setup und ein portables Test-ZIP wurden erzeugt; die öffentliche Freigabe steht noch aus.
+**Status: geprüfter und bereits veröffentlichter Vier-DLL-Stack.** Diese Unterlagen dokumentieren den selbst gebauten September-Stand. Die vier DLLs, das Quellen-Prüfpaket und das Relink-Paket wurden mit RC2 veröffentlicht und mit Build 7 RC2 unverändert weitergegeben; siehe [Veröffentlichungsnachweis](../../RELEASE-PUBLICATION-BUILD7-RC2.md). Sie ersetzen den früheren Juli-Kandidaten. Ältere Prüfabschnitte halten ihren damaligen Stand fest; Aussagen zur seinerzeit noch offenen Freigabe sind keine aktuelle Aufgabenliste.
 
 ## Herkunft und Binärdateien
 
@@ -43,20 +43,22 @@ Der Windows-Ladertest mit nur diesen vier DLLs und Systembibliotheken gelang. `l
 
 Die Dateien in `metadata/` sind ein kleiner, versionierbarer Lock- und Prüfindex. Die zugehörigen Originalarchive, Lizenztexte und Bauprotokolle befinden sich im gesicherten Prüfpaket. Ein bitidentischer Neuaufbau aller MSYS2-Pakete wurde nicht durchgeführt.
 
-[LICENSING-REVIEW.md](LICENSING-REVIEW.md) hält die Lizenzprüfung und die vor einer öffentlichen Ausgabe verbleibenden Schritte fest.
+[LICENSING-REVIEW.md](LICENSING-REVIEW.md) hält die Lizenzprüfung und den historischen Vorbereitungsstand fest.
 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) ordnet die Komponenten den hier gesicherten Originaltexten unter `licenses/` zu. Diese Hinweise gelten ausschließlich für die vier oben gehashten DLLs.
 
-## Lizenz- und Release-Status
+## Lizenz- und Release-Status – historischer Vorbereitungsstand
+
+Die folgenden Befunde beschreiben die Prüfung vor der ersten öffentlichen Ausgabe. Die damaligen Veröffentlichungsarbeiten wurden anschließend erledigt; siehe den oben verlinkten Veröffentlichungsnachweis. Für künftige Ausgaben bleiben die Quellenzuordnung und komponentenbezogenen Bedingungen zu beachten.
 
 mpvs `Copyright` nennt GPLv2 oder später für den Standard-Build. FFmpeg wurde hier als GPLv3-oder-später-Build konfiguriert. Das mitgelinkte LittleCMS-`fast_float`-Modul trägt ebenfalls GPLv3-Bedingungen. Für CANs eigenen Quellcode ist GPL-3.0-or-later festgelegt; der vollständige Text steht im Repository unter `LICENSE`. Die selbstenthaltene Windows-Ausgabe enthält zusätzlich .NET-/WPF-Binärdateien mit eigenen Bedingungen; siehe [DOTNET-LICENSING.md](../../DOTNET-LICENSING.md).
 
 Die statisch eingebundenen Bibliotheken libplacebo, GLib, FriBidi, libiconv und libintl bleiben unter LGPL; der Weg über ersetzbare Archive und Relink-Material nach LGPLv2.1 §6 wurde technisch geprüft. Graphite2 bietet ausdrücklich GPLv2 oder später als Alternative; für diesen Kandidaten ist GPLv3 gewählt. FreeTypes FTL-Credit und die Hinweise für die drei Begleit-DLLs stehen in den Drittanbieterhinweisen. Die 28 Crates der konservativen libdovi-Produktionsliste sind mit Originaltexten zugeordnet. Die technische Relink-Probe ist noch keine öffentliche Freigabe.
 
-Vor einer öffentlichen CAN-Ausgabe sind deshalb noch nötig:
+Vor der damaligen ersten öffentlichen CAN-Ausgabe waren deshalb noch nötig:
 
 1. Den exakten freizugebenden Quellstand festhalten; die Herkunftsbestätigung für CAN-Code und Programmsymbol ist in der [Freigabecheckliste](../../RELEASE-CHECKLIST-BUILD6.md) dokumentiert.
 2. Die in [DOTNET-LICENSING.md](../../DOTNET-LICENSING.md) begründet bewertete frameworkabhängige Paketform und ihre Voraussetzungen beim endgültigen Publish beibehalten.
 3. Die beiden unveränderten Quellen-/Relink-ZIP-Pakete mit den vier DLLs dauerhaft öffentlich bereitstellen und die Hashes prüfen.
 4. Aus dem festgehaltenen Quellstand ein endgültiges frameworkabhängiges Installer- und Portable-Paket mit allen aktuellen Hinweisen bauen und prüfen. Die VM-Tests vom 27.09.2026 gelten für die dokumentierten internen Pakete.
 
-**Die dokumentierte Bewertung ist keine verbindliche Rechtsberatung oder Garantie. Die genannten Veröffentlichungsarbeiten bleiben erforderlich.**
+**Die dokumentierte Bewertung ist keine verbindliche Rechtsberatung oder Garantie. Die komponentenbezogenen Bedingungen bleiben bei jeder Weitergabe zu beachten.**

@@ -1,5 +1,89 @@
 # Entwicklungstagebuch
 
+## 11.10.2026 – Build 13 RC3: Quellstand sichern und neue Pakete vorbereiten
+
+- Nutzer beauftragt nach Credits-Ergänzung und erfolgreichem Build-/Testlauf ausdrücklich den nächsten Schritt mit „ok lets go“: lokalen Quellstand sichern und aktualisierten RC3-Paketsatz erstellen.
+- Der geprüfte Arbeitsstand einschließlich AVI-Hinweis, Motorpaketierung, Credits-Ergänzung und Dokumentationsabgleich wird lokal eingecheckt. Vier vorbestehende src-Lockdateiänderungen bleiben unverändert und außerhalb des Commits; für den gesperrten Paketbau gelten die eingecheckten Lockdateien. Der libmpv-Überblick beschreibt jetzt ebenfalls den bereits veröffentlichten September-Stack.
+- Paketvorbereitung aus einem festen Git-Commit mit SOURCE-SNAPSHOT.json und SOURCE-FILES.sha256, Buildnummer 13 und RC3. Motor 0.1.4 und libmpv-Quellen-/Relink-Pakete bleiben unverändert. Ergebnisse werden nach dem Paketbau gesondert dokumentiert; persönliche Build-12-Abnahme wird nicht auf Build 13 übertragen. Kein Push, Tag oder öffentliche Veröffentlichung beauftragt.
+
+## 11.10.2026 – September-Aufgaben abgeglichen und KI-Hinweis im Credits-Dialog ergänzt
+
+- Den vom Nutzer mitgeteilten letzten Chatstand mit dem Arbeitsverzeichnis abgeglichen: Die September-Bereinigung war hier noch nicht enthalten. Merkliste und Testplan aktualisiert, Aufgabenpunkt 4 im Status abgeschlossen. Timeline-Klick, Dialoggrößen, GPL-3.0-or-later-Lizenzwahl, KI-Dokumentation und Build-12-Paketprüfung mit bestehenden Nachweisen eingeordnet. Juli-libmpv-Kandidat durch den geprüften, bereits mit RC2 veröffentlichten September-Stack abgelöst.
+- Historische Build-6-Releasevorbereitung und libmpv-Lizenzprüfung mit Hinweisen auf spätere Veröffentlichungsnachweise versehen. Frühere technische Befunde, Prüfsummen und komponentenbezogene Lizenzbedingungen erhalten. Ein frisches Portable-Benutzerprofil nicht aus der allgemeinen ZIP-Abnahme abgeleitet.
+- Die verbleibende echte Lücke geschlossen: CreditsDialog.xaml enthält jetzt den KI-Abschnitt mit dem unveränderten Wortlaut aus DANKSAGUNG.md. Zwei statische XAML-Absätze, bestehender Stil und Einrückung; keine neue Fachlogik, Abhängigkeit oder Änderung am Schnittmotor.
+- Vorgeschriebener Release-Rebuild über tools/build.ps1 erfolgreich: **0.2.1 · Build 13 · RC3**, **0 Warnungen/0 Fehler**, **785/785 CAN-Tests** (Core 74, Cutlists 65, Media 125, App 521). Kein Rust-Neubau; letzter nativer Prüfstand unverändert 40 Tests. Erster Restore in eingeschränkter Umgebung endete ohne Diagnose/Output; Wiederholung mit Cachezugriff und deaktivierter Lockdateischreibung erfolgreich. Alle acht ursprünglichen Lockdateien per SHA-256 unverändert.
+- Echter WPF-Dialog aus neu gebauter Assembly bei 780 × 720 und 540 × 400 gerendert und visuell geprüft: vollständiger umbrochener KI-Text, scrollbar, erreichbarer Schließen-Button, keine Bindungsfehler. Absatzinhalt exakt mit DANKSAGUNG.md verglichen; vorhandene OTR-Projektlinks und Navigationshandler geprüft. Keine persönlichen Einstellungen geschrieben. Belege im ignorierten .build/credits-ai-20261011.
+- README, Anleitung und Status unterscheiden den neuen lokalen Build 13 vom unveränderten, persönlich abgenommenen Build-12-Paketsatz. Build 13 noch nicht paketiert oder persönlich als Installationspaket abgenommen; kein Commit, Push, Tag oder Veröffentlichung. Nächster Schritt: Quellstand sichern und neue Quellen-/Binärpakete für eine RC3-Ausgabe mit Credits-Ergänzung vorbereiten.
+
+## 11.10.2026 – Separater ZIP-Test bestätigt, Paketvorbereitung abgeschlossen
+
+- Nach der Setup-Deinstallation kündigt der Nutzer den separaten ZIP-Test an und bestätigt anschließend **„bei zip auch alles check“**, ergänzt um otr-can und „Durchs Feuer“. Positive persönliche Portable-Prüfung des zuvor beschriebenen Ablaufs mit beiden Motoren und Bild-/Tonkontrolle festgehalten.
+- Kein separates ZIP-Schnittprotokoll oder neue Messwerte in dieser Nachricht übermittelt. Setup-Protokollwerte bleiben ihrem eigenen VM-Lauf zugeordnet; keine neuen Paket-/Samplezahlen, Hashes oder Laufzeiten für ZIP behauptet.
+- Persönliche Paketabnahme des lokalen 0.2.1 · Build 12 · RC3-Satzes abgeschlossen. Aufgabenpunkt 3 im Status abgehakt; Punkt 4 (ältere Aufgabenlisten abgleichen) bleibt offen. Prüfbericht, README und aktuelle Anleitung sowie lokale Release-Hinweise aktualisiert.
+- Nur Dokumentation und Diff-/Paketprüfsummenkontrolle; unveränderte Quell-/Binärarchive nicht neu gebaut. Code, Motor, Lockdateien, aktive EXEs und Buildnummer erhalten; kein Commit, Push, Tag, Version-1.0-Wechsel oder Veröffentlichung. Letzter automatisierter Stand 785 CAN-/40 Rust-Tests.
+
+## 11.10.2026 – Build 12 RC3: VM-Deinstallation persönlich bestätigt
+
+- Nach erfolgreicher Windows-11-VM-Installation, Schnitt mit beiden Motoren und persönlicher Bild-/Tonprüfung bestätigt der Nutzer **„deinstallation check“**. Deinstallation der Setup-Ausgabe damit erfolgreich zurückgemeldet.
+- Status und Release-Prüfbericht einschließlich lokaler Kopie aktualisiert; für die persönliche Paketabnahme bleibt der separate Portable-Test offen.
+- Nur Dokumentation geändert und Diff geprüft. Kein neuer Build/Testlauf, Commit, Push oder Veröffentlichung; Binär-/Quellpakete, Prüfsummen und Lockdateien erhalten. Letzter automatisierter Prüfstand 785 CAN-/40 Rust-Tests.
+
+## 11.10.2026 – VM-Schnittergebnisse: Bild und Ton persönlich bestätigt
+
+- Im Anschluss an den erfolgreichen Windows-11-VM-Test mit MP4Box und otr-can bestätigt der Nutzer **„ton und bild check“**. Positive persönliche Bild-/Tonbewertung der geprüften VM-Schnittergebnisse festgehalten.
+- Status und Release-Prüfbericht einschließlich lokaler Berichtskopie aktualisiert. Für diesen Paketsatz bleiben die Deinstallation und der separate Portable-Test offen.
+- Nur Dokumentation geändert und Diff geprüft; kein neuer Build/Testlauf, Commit, Push oder Veröffentlichung. Binär-/Quellpakete, Prüfsummen und Lockdateien erhalten. Letzter automatisierter Prüfstand 785 CAN-/40 Rust-Tests.
+
+## 11.10.2026 – Build 12 RC3 in Windows-11-VM: Installation und beide Schnittmotoren bestätigt
+
+- Nutzer bestätigt Installation, CAN-Werkzeugeinrichtung, Video laden, Cutlist laden sowie MP4Box und otr-can jeweils als „check“. Persönlicher VM-Nachweis für den aktuellen lokalen Paketsatz; Überinstallation/Versionsanzeige zuvor bereits bestätigt.
+- Neues otr-can-0.1.4-Protokoll für Grey’s Anatomy / Durchs Feuer (HQ), Aufnahme 30.09.2026: eine FFMS2-Indexierung, drei abgeschlossene Behaltebereiche, Video-/Audio-/Mux- und abschließende CAN-Ausgabeprüfung erfolgreich. 60651 Video-Pakete mit rohen PTS/DTS, AAC-Stereo/48 kHz mit 116449920 decodierten Samples und kontinuierlichen PTS, Zielbitrate 165457 bit/s.
+- Keep-Summe und Video-/Audiowerte ergeben nominal 40:26.040; Kontrollübergänge 19:26.600 und 30:57.880. Berechnung anhand des übermittelten Protokolls, keine unabhängige VM-Datei-/Hashprüfung oder Voll-Videodekodierung. Keine Laufzeit oder gesonderte persönliche Bild-/Tonbewertung mitgeteilt; Deinstallation und separater Portable-Test bleiben offen.
+- Status und Release-Prüfbericht einschließlich lokaler Kopie sowie Tagebuch aktualisiert, Dokumentationsdiff geprüft. Binär-/Quellpakete, Prüfsummen, Motor und Lockdateien unverändert. Kein neuer Build/Testlauf, Commit, Push oder Veröffentlichung; letzter automatisierter Stand 785 CAN-/40 Rust-Tests.
+
+## 11.10.2026 – Build 12 RC3: Überinstallation persönlich bestätigt
+
+- Nutzer bestätigt **„Drüber installieren : check 0.2,1, 12, RC3“**. Erfolgreiche Überinstallation über die vorhandene Ausgabe und angezeigte Version 0.2.1 · Build 12 · RC3 dokumentiert.
+- Nutzer kündigt anschließend den VM-Test an. Noch keine neue Rückmeldung zu VM-Installation, Filmschnitt, Ton, Deinstallation oder separater Portable-Ausgabe aus dieser Nachricht abgeleitet.
+- Nur Status, Tagebuch und Release-Prüfbericht einschließlich lokaler Berichtskopie aktualisiert; Diffprüfung bestanden. Binär-/Quellpakete und Prüfsummen unverändert. Kein neuer Build/Testlauf, Commit, Push oder Veröffentlichung; letzter Prüfstand 785 CAN-/40 Rust-Tests.
+
+## 11.10.2026 – Build-12-RC3-Paketsatz für die nächste Veröffentlichung vorbereitet
+
+- Nach Klärung von „3) check“ beauftragt der Nutzer ausdrücklich **„Jetzt vorbereiten“**. Lokal Setup, Portable-ZIP, passende CAN-/Motorquellen, libmpv-Quellen-/Relink-Pakete und vollständigen Prüfsummensatz erstellt. Noch kein Tag, Commit/Push, GitHub-Release oder Version-1.0-Festlegung.
+- tools/package-release.ps1 um optionales, manifestgeprüftes Motorpaket und Provenienz erweitert. otr-can 0.1.4 unter tools/otr-can, Original-EXE bytegleich erhalten. Motorquellen aus dem sauberen Rust-Commit, MPL-/Autorenhinweise und 40 Windows-Crate-Lizenzbestände direkt beigelegt; private Alt-/Decoder-/Vendorquellen nicht übernommen. Motor importiert VCRUNTIME140.dll: separate Microsoft-Visual-C++-x64-Laufzeit als Voraussetzung in Einrichtung und Anleitung ergänzt.
+- Aus eingefrorenem CAN-Quellarchiv mit 458 Dateien gebaut; Basis 885538f plus benannte Arbeitsbaumänderungen, vier vorbestehende src-Lockänderungen ausgeschlossen und alle acht Original-Lockdateien unverändert. Gesperrter Windows-Restore erfolgreich, Release/Publish ohne Warnungen/Fehler, **785/785 CAN-Tests**. Motorquellen offline gebaut, **40/40 Rust-Tests**; Kontrollbuild nicht bytegleich zur beigelegten ursprünglichen EXE, keine bytegenaue Reproduzierbarkeit behauptet.
+- Alle **249 Portable-Dateien** geprüft. Entpackte Paketdateien bestehen künstlichen Zwei-Bereich-Schnitt mit AAC-Stereo und AC-3/5.1, 90 tatsächlichen Videobildern, einer Indexierung, Original-/Indexerhaltung und vollständiger Bereinigung. Hauptfenster aus entpackten Assemblies und echten libmpv-DLLs initialisiert, Titel/AVI-Hinweis und reguläres Schließen mit isolierten Einstellungen geprüft; kein unveränderter CAN-Apphost-Start oder VM-Installationsnachweis daraus abgeleitet.
+- Ersten Paketsatz wegen alter Buildnummer im Anleitungstext erhalten, korrigierten Quellstand neu gebaut. Wiederholung mit bereits vorhandenem Quellarchiv abgebrochen und korrigiert. Ersten WPF-Helferaufruf über dotnet wegen nativer Suchpfade auf eigenen EXE-Start umgestellt; erneute Prüfung bestanden und ausschließlich den ersten eigenen Restprozess beendet. Prüfverlauf und Paketgrenzen im [Release-Prüfbericht](RELEASE-BUILD12-RC3-RESULT.md).
+- Persönlicher VM-Test von Setup/Deinstallation und separate Portable-/Filmabnahme dieses Kandidaten als nächster Schritt vorbereitet. Alter öffentlicher RC2-Satz, aktive Motor-/Referenz-EXEs und persönliche Einstellungen erhalten. Lokaler Entwicklungsstand weiterhin 0.2.1 · Build 12 · RC3; Rust-Repository sauber und privat.
+
+## 11.10.2026 – Aufgabenpunkte 1 und 2 vom Nutzer abgeschlossen
+
+- Nutzer bestätigt **„1) check / 2) check“**: weitere Praxistests für den aktuellen Motorstand sowie AVI-Sonderfälle/Originalwarnhinweis sind in der gemeinsam besprochenen Liste abgeschlossen. Der AVI-Hinweis wurde zuvor mit „prima :-)“ positiv bestätigt; die untaugliche alte Aufnahme bleibt ausdrücklich von Untersuchungen ausgeschlossen.
+- Statusliste aktualisiert. Nächste Punkte sind die Vorbereitung der nächsten Veröffentlichung und der Abgleich älterer Aufgabenlisten. Die Rückmeldung enthält keine zusätzlichen Messdaten oder einzelnen Tonspurbeobachtungen; bestehende Prüfberichte bleiben erhalten.
+- Nur Status und Tagebuch geändert, Diffprüfung bestanden. Kein neuer Build/Testlauf, Commit, Push oder Paket; letzter Prüfstand CAN 0.2.1 · Build 12 · RC3 mit 785/785 CAN-Tests, Rust-Motor 0.1.4 mit 40 Tests.
+
+## 11.10.2026 – AVI-Originalhinweis umgesetzt und geprüft
+
+- Tatsächlich erkanntes AVI zeigt nach erfolgreicher Analyse einen gelben **Hinweis zum AVI-Original** direkt unter dem geladenen Dateinamen. Der Text nennt mögliche Bildfehler, ungenaue Bildsprünge und Tonversatz bereits im Original; abweichende Endungen wie `.avi.mp4` werden erklärt. Sichtbarer Hinweis ohne zusätzliche Bestätigung; Bearbeitung bleibt möglich.
+- Eigene reine Warnlogik in Core, Anzeigezustand im MainWindowViewModel und umbrochener Kasten in MainWindow.xaml. Keine Änderung an Schnittmotoren oder Cutlist-Fehlermetadaten und keine neue Abhängigkeit. Tatsächlicher Container entscheidet; echte MP4-Dateien erhalten auch mit `.avi` im Namen keine AVI-Warnung. Dateiwechsel, Folgefehler und Abbruch entfernen den alten Hinweis.
+- **18 neue Tests, 785/785 CAN-Tests bestanden**. Formatierung der betroffenen C#-Dateien und Release-Build **0 Warnungen/0 Fehler**. Echter WPF-Test mit Testplayer und erfundenen Medieninformationen: normale/kleine Fenstergröße, vollständiger Textumbruch, scrollbar erreichbare Bearbeitung, AVI-/MP4-Wechsel und keine Bindungsfehler. Prüfbilder gesichtet; keine persönlichen Einstellungen geschrieben und keine realen Videos untersucht.
+- Erster gesperrter Restore scheiterte an vorbestehenden Runtime-Identifier-Abweichungen in Test-Lockdateien. Restore mit deaktivierter Lockdateischreibung und separatem unbenutztem Lockpfad erfolgreich; alle acht Lockdateien per SHA-256 unverändert. Erster Build durch noch laufendes CAN gesperrt; nach vom Nutzer bestätigtem regulärem Schließen erfolgreicher Neubau. Erstprotokolle erhalten, kein Test entfernt oder verändert. Der erste einzelne Bannerausschnitt war durch seine Position im Fenster abgeschnitten; nur den lokalen Renderhelfer korrigiert, anschließend die WPF-Prüfung erneut erfolgreich ausgeführt und den vollständigen Ausschnitt gesichtet.
+- Neuer lokaler Stand **0.2.1 · Build 12 · RC3**, regulärer Rust-Motor 0.1.4 unverändert. README, Nutzeranleitung, Status und Testplan aktualisiert; AVI-Warnhinweis aus den offenen Aufgaben entfernt. Alte untaugliche Aufnahme weiterhin ausgeschlossen. Vorbestehende Dokumentations- und Lockdateiänderungen erhalten; kein Commit, Push oder Veröffentlichung.
+- Lokale Belege im ignorierten .build/avi-source-warning-20261011: BUILD.log, BUILD-FINAL.log, TESTS-FINAL.log, UI.log, UI-RESULT.json, AVI-normal.png, AVI-small.png, AVI-warning.png und LOCKS-BEFORE.json.
+
+## 11.10.2026 – Untaugliches Original von „Wo die Liebe hinfällt“ nicht weiter untersuchen
+
+- Nutzer stellt klar: **„Da war das Original schon untauglich, keine Mühe drauf verwenden :-) ich warte auf einen neuen Sendetermin“**. Die bisher dokumentierten Auffälligkeiten dieser Aufnahme bleiben als historische Beobachtung erhalten; die vorgeschlagene Untersuchung entfällt ausdrücklich.
+- Status, Testplan und Nutzeranleitung um die persönliche Einordnung und den Verzicht auf weitere Arbeit an dieser Aufnahme ergänzt. Weitere AVI-Prüfungen beziehen sich auf neue geeignete Aufnahmen; der allgemeine AVI-Warnhinweis bleibt offen. Keine Suche oder Überwachung eines Sendetermins beauftragt.
+- Nur Dokumentation geändert und Diff geprüft; keine Medienanalyse, Codeänderung, neuer Build oder Testlauf. Build 11/RC3, Motor 0.1.4 und vier vorbestehende Lockdateiänderungen erhalten. Kein Commit oder Push.
+
+## 11.10.2026 – Brilliant Minds mit MP4Box: persönlich ohne Blitzer bestätigt
+
+- Nutzer bestätigt zum übermittelten Schnittprotokoll: **„Einwand frei ohne Blitzer :-)“**. Positive persönliche Schnitt-/Bildbewertung für Brilliant Minds (HQ), Aufnahme vom 09.10.2026 um 21:05 auf 5plus.
+- Protokoll zeigt MP4Box mit drei Behaltebereichen **733,200–1193,400 s**, **1844,080–3338,200 s** und **3987,000–4434,920 s**. Alle drei Teilstücke geschnitten, zusammengefügt und Dateischreiben mit **„Fertig.“** abgeschlossen. Keine otr-can-Ausführung in diesem Protokoll.
+- Nominale Summe der Keep-Dauern **2402,240 s / 40:02.240**, rechnerische Übergänge bei **07:40.200** und **32:34.320**. Planwerte aus den protokollierten Grenzen; tatsächliche Ausgabedauer nicht unabhängig gemessen. Keine gesonderte Tonspur-/Synchronitätsprüfung oder Laufzeit mitgeteilt.
+- Nur Tagebuch und Status ergänzt, Dokumentationsdiff geprüft. Code, Motoren, Einstellungen, Buildnummer und vier bestehende Lockdateiänderungen erhalten. Kein neuer Build oder Testschnitt; letzter gebauter Stand 767 CAN-/40 Rust-Tests. Kein Commit oder Push im Rahmen dieser Rückmeldung.
+
 ## 11.10.2026 – Chicago Fire mit 0.1.4: Bild und Ton persönlich bestätigt
 
 - Nach dem Bildvergleich bestätigt der Nutzer abschließend: **„ton und bild beide ok :-)“**. Chicago Fire / Ein komischer Vogel ist damit persönlich in Bild und Ton positiv bewertet; zuvor bereits kein Blitzer am nativen Anfang gemeldet.

@@ -1,5 +1,7 @@
 # CAN 0.2.0 Build 6 – lokaler RC1-Prüfbericht
 
+**Historischer Prüfstand vor der öffentlichen Freigabe.** Die anschließende Veröffentlichung ist im [RC1-Nachweis](RELEASE-PUBLICATION-RC1.md) dokumentiert. Damalige offene Schritte sind keine aktuellen Blocker; siehe [Projektstatus](STATUS.md).
+
 Stand: 27.09.2026. **Lokal erstellt und technisch geprüft; noch nicht veröffentlicht.**
 
 ## Zusammengehöriger Release-Satz

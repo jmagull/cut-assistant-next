@@ -48,6 +48,8 @@
                     <Paragraph>Danke an die Entwickler von <Hyperlink NavigateUri="https://mpv.io/" RequestNavigate="ProjectLink_RequestNavigate">mpv und libmpv</Hyperlink>. Ihre Arbeit ermöglicht die direkte Video- und Audiowiedergabe in CAN, ohne dass zusätzliche Windows-Codec-Pakete installiert werden müssen.</Paragraph>
                     <Paragraph Style="{StaticResource Heading}">Hinweise, Tests und Unterstützung</Paragraph>
                     <Paragraph>Danke an alle, die mit Ideen, Fehlermeldungen, Testdateien und geduldigen Rückmeldungen zur Verbesserung beitragen. Dazu gehören auch <Bold>chrisdudes Hinweise zur Feinabstimmung der Schnittbereiche</Bold>, die wir für die weitere Entwicklung aufgegriffen haben.</Paragraph>
+                    <Paragraph Style="{StaticResource Heading}">KI-unterstützte Entwicklung</Paragraph>
+                    <Paragraph>Cut Assistant Next entstand mit Unterstützung von ChatGPT/Codex unter Einsatz von GPT-5.6 Sol (Denkaufwand: hoch) und GPT-6 Astra (Denkaufwand: mittel). Die abschließende Entscheidung über Vorschläge, Änderungen und deren Übernahme lag stets beim Nutzer und Projektverantwortlichen Jörg.</Paragraph>
                     <Paragraph>Und falls ich jemanden übersehen habe: Bitte meldet euch – diese Danksagung darf ebenso wachsen wie Cut Assistant Next.</Paragraph>
                     <Paragraph><Bold>Vielen Dank!</Bold><LineBreak />Jörg</Paragraph>
                 </FlowDocument>

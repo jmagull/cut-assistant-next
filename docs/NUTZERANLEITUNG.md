@@ -1,12 +1,12 @@
 # Nutzeranleitung – Cut Assistant Next
 
-Stand: 10.10.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand: 11.10.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
-Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.2.1 · Build 11 · RC3**. Bitte diese Angaben bei Fehlermeldungen mit angeben.
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, im lokalen Entwicklungsstand **Cut Assistant Next · 0.2.1 · Build 13 · RC3**. Der persönlich abgenommene lokale Paketsatz trägt weiterhin Build 12 RC3. Bitte diese Angaben bei Fehlermeldungen mit angeben.
 
 ## 1. Einmalig einrichten
 
-Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE allein. Der bisherige selbstenthaltene Build-6-Teststand bringt die .NET-Laufzeit mit. Die neue laufzeitabhängige Testausgabe benötigt dagegen die separat installierte [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). Ein internes Test-Setup ist vorhanden; eine öffentliche Ausgabe ist noch nicht freigegeben.
+Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE allein. Der lokale Build-12-RC3-Kandidat bietet Setup und Portable-ZIP mit libmpv und optionalem otr-can 0.1.4. Er benötigt die separat installierte [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). FFmpeg/ffprobe, GPAC/MP4Box und bei Bedarf FFMS2 werden separat eingerichtet. Überinstallation, Installation und Deinstallation in einer Windows-11-VM sowie der separate Portable-Test mit positiver Bild-/Tonprüfung wurden persönlich bestätigt; die öffentliche Build-7-RC2-Ausgabe bleibt unverändert.
 
 Öffne die Einstellungen und hinterlege die benötigten Werkzeuge:
 
@@ -28,7 +28,7 @@ Unter **Einstellungen → Cutlist-Einstellungen …** kannst du sechs Schnellbau
 
 ### OTR-CAN-Werkzeuge einrichten
 
-Unter **Einstellungen → OTR-CAN-Werkzeuge …** wählst du die OTR-CAN-Schnittmotor-EXE und `ffmsindex.exe` aus. Den Motor wählst du für jeden Auftrag direkt unter der Schnittliste: **Schneiden MP4Box (schnell)** oder **Schneiden otr-can (framegenau, langsam)**. Der Werkzeugdialog hat keinen Auswahlhaken. Der reguläre Motor **0.1.4** enthält die korrigierte Frame-/Zeitstempelplanung und kodiert jede vollständige Tonspur neu. Codec, Kanallayout, Samplerate und Zielbitrate bleiben erhalten; zusätzliche Kodierverluste und Laufzeit sind damit verbunden. 0.1.1 bleibt zur Schnittstelle kompatibel; die erhaltenen CAN-04- und 0.1.0-Referenzen unterstützen noch nicht die vollständige Werkzeugpfadübergabe.
+Unter **Einstellungen → OTR-CAN-Werkzeuge …** wählst du die OTR-CAN-Schnittmotor-EXE und `ffmsindex.exe` aus. Im lokalen Build-12-RC3-Paket liegt der Motor bereits unter `tools/otr-can/otr_can.exe` im CAN-Ordner; wähle diese Datei aus. Die Motorquellen und Lizenztexte sind dort ebenfalls enthalten. FFMS2 / `ffmsindex.exe` einschließlich seiner DLLs bleibt separat zu installieren. Der Windows-Motor benötigt außerdem die Microsoft Visual C++ v14-Laufzeit für x64; bei fehlender `VCRUNTIME140.dll` das [aktuelle Microsoft-Paket](https://aka.ms/vc14/vc_redist.x64.exe) installieren. Den Motor wählst du für jeden Auftrag direkt unter der Schnittliste: **Schneiden MP4Box (schnell)** oder **Schneiden otr-can (framegenau, langsam)**. Der Werkzeugdialog hat keinen Auswahlhaken. Der reguläre Motor **0.1.4** enthält die korrigierte Frame-/Zeitstempelplanung und kodiert jede vollständige Tonspur neu. Codec, Kanallayout, Samplerate und Zielbitrate bleiben erhalten; zusätzliche Kodierverluste und Laufzeit sind damit verbunden. 0.1.1 bleibt zur Schnittstelle kompatibel; die erhaltenen CAN-04- und 0.1.0-Referenzen unterstützen noch nicht die vollständige Werkzeugpfadübergabe.
 
 FFMS2 kannst du aus dem [offiziellen Downloadbereich](https://github.com/ffms/ffms2/releases) beziehen. Entpacke das vollständige Windows-64-Bit-Paket mit seinen DLLs und wähle die darin enthaltene `ffmsindex.exe`. FFmpeg und ffprobe werden ebenfalls von dir installiert und bleiben unter **FFmpeg-Werkzeuge …** eingerichtet. Die Programme dürfen in unterschiedlichen Ordnern liegen; WSL und eine globale OTR-Konfiguration sind nicht erforderlich.
 
@@ -112,6 +112,8 @@ noch aus.
 ## 2. Video laden
 
 Klicke oben auf **Videodatei laden** und wähle das Originalvideo. Der Dateidialog bietet unter anderem MP4, AVI, MKV, MOV, TS, MPEG und WMV an. „Alle Dateien“ erlaubt die Auswahl weiterer Endungen. Die Auswahlmöglichkeit ist keine Zusage, dass jeder enthaltene Codec verarbeitet werden kann.
+
+Nach erfolgreicher Analyse erscheint bei einem tatsächlich erkannten **AVI-Container** direkt unter dem Dateinamen der gelbe **Hinweis zum AVI-Original**. Er erklärt, dass Bildfehler, ungenaue Bildsprünge oder Tonversatz bei älteren Aufnahmen bereits im Original auftreten können. Eine abweichende Endung wie `.avi.mp4` wird ausdrücklich genannt. Prüfe Originalwiedergabe und Schnittergebnis; die Bearbeitung bleibt möglich. Der Hinweis verschwindet beim Laden einer anderen Datei, sofern diese kein AVI enthält. Entscheidend ist der erkannte Container: Eine echte MP4 mit `.avi` im Namen erhält keinen AVI-Hinweis.
 
 CAN analysiert die Datei und lädt sie in den Player. Unter **Video-Informationen …** findest du Container, Video- und Audiowerte. Maßgeblich ist der erkannte Inhalt: Eine Datei mit `.avi` am Ende kann bereits MP4-Inhalt enthalten.
 
@@ -301,6 +303,6 @@ Das sind konkrete Beispiele, keine Garantie für alle historischen AVI-, MKV- od
 
 Ein weiterer Praxistest mit „Enigma – Das Geheimnis“ (AVI, H.264/MP3, 25 fps) führte erfolgreich über FFmpeg-Vorbereitung und MP4Box-Schnitt zur fertigen MP4. Anfang, Mitte, Ende, Abspann und Ton wurden kontrolliert. Dabei aufgetretene Zeitstempel-Auffälligkeiten sind im Testplan dokumentiert.
 
-Bei einer anderen Full-HD-Aufnahme („Wo die Liebe hinfällt“) wurden dagegen bereits bei der Wiedergabe und Frame-Navigation Auffälligkeiten festgestellt. Die Datei besitzt einen AVI-Container, obwohl ihr Name auf `.avi.mp4` endet. Für diese Aufnahme liegt keine erfolgreiche Schnittabnahme vor.
+Bei einer anderen Full-HD-Aufnahme („Wo die Liebe hinfällt“) wurden dagegen bereits bei der Wiedergabe und Frame-Navigation Auffälligkeiten festgestellt. Die Datei besitzt einen AVI-Container, obwohl ihr Name auf `.avi.mp4` endet. Für diese Aufnahme liegt keine erfolgreiche Schnittabnahme vor. Am 11.10.2026 bestätigt der Nutzer das Original als bereits untauglich; diese Aufnahme wird auf seinen Wunsch nicht weiter untersucht. Er wartet auf einen neuen Sendetermin.
 
 Besonders bei solchen älteren AVI-Aufnahmen können Bild-, Ton- oder Navigationsprobleme schon in der unveränderten Originaldatei vorliegen. CAN verändert das Original beim Einlesen nicht. Kontrolliere vor dem Schneiden die Wiedergabe und anschließend das tatsächliche Schnittergebnis sorgfältig.

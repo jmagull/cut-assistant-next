@@ -1,5 +1,16 @@
 # Testplan – aktueller Funktionsstand
 
+Stand des Abgleichs: 11.10.2026. Vollständiger Release-Testlauf für den lokalen **Build 13 RC3: 785/785 CAN-Tests**, 0 Warnungen/0 Fehler. Nativer Motor otr-can 0.1.4 unverändert, letzter nativer Prüfstand: **40/40 Rust-Tests**. Ältere Zahlen weiter unten gehören zu den ausdrücklich datierten Prüfständen.
+
+Timeline-Klick ist seit 05.10.2026 persönlich abgenommen; die vier Schnittdialoge speichern ihre Größen und Maximierung und bestanden am 11.10.2026 den WPF-Neustarttest sowie die persönliche Prüfung. Der lokale Build-12-RC3-Paketsatz bestand Setup-, Überinstallations-, Windows-11-VM-, Schnitt-, Bild-/Ton-, Deinstallations- und separate Portable-Prüfungen; siehe [Paketprüfbericht](RELEASE-BUILD12-RC3-RESULT.md). Diese Punkte sind keine offenen September-Aufgaben mehr. Weitere Format-/Tonspurprüfungen bleiben Ausbauprüfungen mit den dokumentierten Grenzen.
+
+## Credits – KI-Hinweis
+
+- **Hilfe → Credits und Dank** öffnen und bis zum Abschnitt **KI-unterstützte Entwicklung** scrollen. Vollständiger Wortlaut aus [DANKSAGUNG.md](DANKSAGUNG.md), einschließlich Modellangaben und Entscheidungshoheit von Jörg.
+- Normales Fenster und Mindestgröße 540 × 400 prüfen: Text umbrochen, bis zum Ende scrollbar, Schließen erreichbar. Keine persönlichen Einstellungen verändern.
+- Diese Dialogergänzung gehört zum neuen lokalen Entwicklungsstand; die bereits abgenommenen Build-12-Pakete enthalten sie noch nicht.
+- Automatischer echter WPF-Dialogtest und visuelle Kontrolle am 11.10.2026 bestanden: Absatz exakt mit DANKSAGUNG.md verglichen, 780 × 720 und 540 × 400 gerendert, Schließen erreichbar, keine Bindungsfehler; vorhandene OTR-Projektlinks und Handler ebenfalls geprüft. Belege in .build/credits-ai-20261011; keine neue persönliche Paketabnahme für Build 13.
+
 ## Testumgebung
 
 - Windows 11 x64
@@ -28,6 +39,14 @@
 | 15 | Bereich korrigieren | Anfang und Ende lassen sich korrigieren |
 | 16 | Bereich löschen | ausgewählter Bereich wird entfernt |
 | 17 | Fenster neu öffnen | Größe bzw. Maximierung wird wiederhergestellt |
+
+## AVI-Originalhinweis – Stand 11.10.2026
+
+- Tatsächlichen AVI-Container mit `.avi`, `.AVI`, `.avi.mp4` und ohne Endung laden: gelber Hinweis direkt unter dem Dateinamen; abweichende Endungen werden erklärt. Analyse bleibt erfolgreich, Wiedergabe und Cutlist-Bearbeitung bleiben verfügbar.
+- Echte MP4 mit `.avi.mp4` oder `.avi` im Namen laden: kein AVI-Hinweis. Andere bzw. unbekannte Container erhalten ebenfalls keine AVI-Warnung.
+- Nach AVI eine MP4 laden: alter Hinweis bereits während der neuen Analyse entfernt. Auch bei fehlgeschlagener oder abgebrochener Folgeanalyse kein veralteter Hinweis.
+- Schmales Hauptfenster: Hinweistext vollständig umbrochen, Bearbeitungsbereich weiterhin über die Scrollleiste erreichbar.
+- 18 neue automatisierte Fälle für echte Container, Endungen und Warnungslebenszyklus; **785/785 CAN-Tests** und Release-Build ohne Warnungen/Fehler. Echte WPF-Prüfung mit Testplayer und erfundenen Analysedaten: normale und kleine Ansicht, Dateiwechsel, kein Bindungsfehler und keine persönlichen Einstellungen geschrieben. Die untaugliche alte Aufnahme „Wo die Liebe hinfällt“ nicht für diese Prüfung verwendet.
 
 ## Getrennte Standardordner für Videos und Cutlists
 
@@ -77,7 +96,7 @@
 - `CutlistFileReader` einschließlich UTF-8 und historischem Windows-1252-/ANSI-Fallback
 - `CutlistGenerationViewModel` einschließlich Herkunftsübernahme, Duplikatschutz, fehlendem beziehungsweise eigenem Autor und Erhalt vorhandener Benutzerkommentare
 
-Aktueller vollständiger Testlauf vom 19.09.2026: **450 von 450 Tests erfolgreich** (Debug-Build). Ein erneuter Release-Testlauf mit diesem Stand steht noch aus.
+Historischer vollständiger Testlauf vom 19.09.2026: **450 von 450 Tests erfolgreich** (Debug-Build). Der damalige offene Release-Test ist durch die später dokumentierten Release-Läufe abgelöst; aktueller Prüfstand steht oben.
 
 Zusätzlich wurde die lokale Cutlist-Dateiausgabe in einem Smoke-Test praktisch geprüft. Dabei wurde eine vollständige `.cutlist`-Datei erzeugt und anschließend explizit als UTF-8 eingelesen; auch Umlaute wurden korrekt erhalten.
 
@@ -110,9 +129,9 @@ Cutlist-Reader und Parser sind umgesetzt und automatisiert getestet. Beim Einles
 | Künstliche AVI ohne Ton, AVI mit MP3 und H.264/AAC-MKV | Remux und Metadatenprüfung technisch ausgeführt und bestanden |
 | Vorhandene Remux-Zieldatei / vorab abgebrochener Auftrag | Im technischen Integrationstest abgewiesen |
 | Enigma AVI, H.264/MP3, 25 fps | Remux und MP4Box-Schnitt erfolgreich; praktische Filmkontrolle und Decoderlauf mit normalisierten Ausgabezeitstempeln bestanden; PTS-/DTS-Auffälligkeiten dokumentiert |
-| Wo die Liebe hinfällt, Full-HD-AVI mit Endung `.avi.mp4` | Bildfehler und fehlerhafte Bildaktualisierung bei Frame-Sprüngen in CAN beobachtet; Tonversatz in MPC-HC berichtet; kein erfolgreicher Schnittnachweis |
+| Wo die Liebe hinfällt, Full-HD-AVI mit Endung `.avi.mp4` | Bildfehler und fehlerhafte Bildaktualisierung bei Frame-Sprüngen in CAN beobachtet; Tonversatz in MPC-HC berichtet; kein erfolgreicher Schnittnachweis. Nutzer bestätigt am 11.10.2026 das Original als untauglich; keine weitere Untersuchung dieser Aufnahme beauftragt, neue Ausstrahlung abwarten |
 
-Der letzte vollständige automatisierte Testlauf umfasst 450 erfolgreiche Tests. Die frühere Aufschlüsselung auf die vier Testsuiten bezog sich auf den Stand mit 443 Tests und wurde für diesen Dokumentationsstand nicht erneut einzeln erhoben. Vollständige automatisierte GUI- oder Video-Synchronitätstests sind nicht nachgewiesen.
+Der damalige vollständige automatisierte Testlauf umfasste 450 erfolgreiche Tests. Die frühere Aufschlüsselung auf die vier Testsuiten bezog sich auf 443 Tests; beide Zahlen dokumentieren den September-Stand. Die späteren gezielten WPF- und Medienprüfungen stehen in den jeweiligen Berichten; eine allgemeine automatisierte GUI- oder Video-Synchronitätsabdeckung wird daraus nicht abgeleitet.
 
 ### Weitere manuelle Fehler- und Grenzfallprüfungen
 

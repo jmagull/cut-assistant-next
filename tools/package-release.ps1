@@ -5,7 +5,8 @@ param(
     [Parameter(Mandatory = $true)][string]$SourceArchivePath,
     [Parameter(Mandatory = $true)][string]$OutputDirectory,
     [Parameter(Mandatory = $true)][string]$InnoCompilerPath,
-    [ValidatePattern('^[A-Za-z0-9][A-Za-z0-9.-]*$')][string]$Candidate = 'RC1'
+    [ValidatePattern('^[A-Za-z0-9][A-Za-z0-9.-]*$')][string]$Candidate = 'RC1',
+    [string]$OtrCanPackageDirectory
 )
 
 Set-StrictMode -Version Latest
@@ -88,6 +89,35 @@ $fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $
 if ($fileVersion -ne "$version.$BuildNumber") { throw "Unexpected file version: $fileVersion" }
 Copy-Item -LiteralPath (Join-Path $repo 'docs\NUTZERANLEITUNG.md') -Destination (Join-Path $publish 'NUTZERANLEITUNG.md')
 Copy-Item -LiteralPath (Join-Path $repo 'installer\HINWEIS-DOTNET-UND-WERKZEUGE.txt') -Destination (Join-Path $publish 'VORAUSSETZUNGEN.txt')
+$engineProvenance = $null
+if ($OtrCanPackageDirectory) {
+    $enginePackage = (Resolve-Path -LiteralPath $OtrCanPackageDirectory).Path
+    foreach ($name in @('otr_can.exe', 'LICENSE', 'THIRD-PARTY-NOTICES.md', 'ENGINE-PROVENANCE.json', 'ENGINE-FILES.sha256', 'sources\otr-can-0.1.4-source.zip')) {
+        if (-not (Test-Path -LiteralPath (Join-Path $enginePackage $name) -PathType Leaf)) { throw "Missing motor package file: $name" }
+    }
+    foreach ($line in (Get-Content -LiteralPath (Join-Path $enginePackage 'ENGINE-FILES.sha256') -Encoding UTF8)) {
+        if ($line -notmatch '^([0-9A-Fa-f]{64})  (.+)$') { throw 'Invalid motor manifest entry.' }
+        $expected = $Matches[1]
+        $engineFile = [System.IO.Path]::GetFullPath((Join-Path $enginePackage $Matches[2]))
+        if (-not $engineFile.StartsWith($enginePackage.TrimEnd('\') + '\', [System.StringComparison]::OrdinalIgnoreCase)) { throw 'Motor manifest entry escapes package.' }
+        if ((Get-FileHash -LiteralPath $engineFile -Algorithm SHA256).Hash -ne $expected) { throw "Motor package changed: $engineFile" }
+    }
+    $engineProvenance = Get-Content -LiteralPath (Join-Path $enginePackage 'ENGINE-PROVENANCE.json') -Encoding UTF8 -Raw | ConvertFrom-Json
+    if ($engineProvenance.Version -ne '0.1.4') { throw 'Unexpected motor package version.' }
+    if ((Get-FileHash -LiteralPath (Join-Path $enginePackage 'otr_can.exe') -Algorithm SHA256).Hash -ne $engineProvenance.ExecutableSha256) { throw 'Motor EXE differs from provenance.' }
+    if ((Get-FileHash -LiteralPath (Join-Path $enginePackage 'sources\otr-can-0.1.4-source.zip') -Algorithm SHA256).Hash -ne $engineProvenance.SourceArchiveSha256) { throw 'Motor sources differ from provenance.' }
+    $bundledEngine = Join-Path $publish 'tools\otr-can'
+    [System.IO.Directory]::CreateDirectory($bundledEngine) | Out-Null
+    foreach ($file in (Get-ChildItem -LiteralPath $enginePackage -File -Recurse)) {
+        $relative = $file.FullName.Substring($enginePackage.Length + 1)
+        $destination = Join-Path $bundledEngine $relative
+        [System.IO.Directory]::CreateDirectory([System.IO.Path]::GetDirectoryName($destination)) | Out-Null
+        Copy-Item -LiteralPath $file.FullName -Destination $destination
+        if ((Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash) { throw "Motor copy differs: $relative" }
+    }
+    Invoke-Step 'motor-version' (Join-Path $bundledEngine 'otr_can.exe') @('--version')
+    if ((Get-Content -LiteralPath (Join-Path $logs 'motor-version.log') -Raw).Trim() -ne 'otr_can 0.1.4') { throw 'Bundled motor version check failed.' }
+}
 $sourceHash = (Get-FileHash -LiteralPath $sourceArchive -Algorithm SHA256).Hash
 $provenance = [ordered]@{
     Version = $version; BuildNumber = $BuildNumber; Candidate = $Candidate
@@ -95,6 +125,7 @@ $provenance = [ordered]@{
     SourceFilesManifestSha256 = $archivedManifestHash; BaseGitCommit = $snapshot.BaseGitCommit
     IncludesWorkingTreeChanges = $snapshot.IncludesWorkingTreeChanges
     DotnetSdk = (& $dotnet --version | Out-String).Trim()
+    OtrCan = $engineProvenance
     InnoCompilerSha256 = (Get-FileHash -LiteralPath $compiler -Algorithm SHA256).Hash
 }
 [System.IO.File]::WriteAllText((Join-Path $publish 'RELEASE-PROVENANCE.json'), ($provenance | ConvertTo-Json), $utf8)

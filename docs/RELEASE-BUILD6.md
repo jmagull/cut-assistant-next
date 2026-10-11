@@ -1,5 +1,7 @@
 # CAN 0.2.0 Build 6: lokaler Release-Kandidat RC1
 
+**Historischer Stand vor der Veröffentlichung vom 27.09.2026.** Die damaligen offenen Schritte sind keine aktuelle Aufgabenliste. Die spätere Freigabe steht im [RC1-Veröffentlichungsnachweis](RELEASE-PUBLICATION-RC1.md); aktuelle Aufgaben und Paketabnahmen im [Projektstatus](STATUS.md).
+
 RC1 bezeichnet die zusammengehörigen lokalen Quell-, ZIP- und Setup-Pakete. Die Programmversion bleibt 0.2.0, die Buildnummer 6. Eine öffentliche Veröffentlichung ist damit noch nicht erfolgt.
 
 ## Quellstand

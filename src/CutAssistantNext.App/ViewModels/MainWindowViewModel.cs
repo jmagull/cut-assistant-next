@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Core.Media;
+using CutAssistantNext.Core.Metadata;
 using CutAssistantNext.Media.Analysis;
 
 namespace CutAssistantNext.App.ViewModels;
@@ -18,6 +19,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private bool _isAnalyzing;
     private string _statusMessage = "Bereit.";
     private string _errorMessage = string.Empty;
+    private string _sourceWarningMessage = string.Empty;
     private string _fileName = NotAvailable;
     private string _filePath = NotAvailable;
     private string _containerFormat = NotAvailable;
@@ -80,6 +82,20 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     }
 
     public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
+
+    public string SourceWarningMessage
+    {
+        get => _sourceWarningMessage;
+        private set
+        {
+            if (SetProperty(ref _sourceWarningMessage, value))
+            {
+                OnPropertyChanged(nameof(HasSourceWarning));
+            }
+        }
+    }
+
+    public bool HasSourceWarning => !string.IsNullOrWhiteSpace(SourceWarningMessage);
 
     public string FileName
     {
@@ -211,6 +227,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             AnalysisResult = result;
 
             ApplyResult(result);
+            SourceWarningMessage = AviSourceWarningDetector.Detect(FileName, result) ?? string.Empty;
 
             StatusMessage = "Analyse erfolgreich abgeschlossen, geladen:";
 
@@ -308,6 +325,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
     private void ResetDisplayValues()
     {
+        SourceWarningMessage = string.Empty;
         FileName = NotAvailable;
         FilePath = NotAvailable;
         ContainerFormat = NotAvailable;
