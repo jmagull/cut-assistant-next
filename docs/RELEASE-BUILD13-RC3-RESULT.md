@@ -1,6 +1,6 @@
-# CAN 0.2.1 Build 13 – lokaler RC3-Paketsatz
+# CAN 0.2.1 Build 13 – RC3-Paketprüfbericht
 
-Stand: 11.10.2026. **Setup, Portable-ZIP und passende Quellen erstellt und automatisch geprüft. Noch nicht veröffentlicht; keine neue persönliche Paketabnahme für Build 13.** Die vollständige persönliche [Build-12-Abnahme](RELEASE-BUILD12-RC3-RESULT.md) bleibt ihrem unveränderten Paketsatz zugeordnet. Öffentliche Vorabversion bleibt Build 7 RC2.
+Stand: 11.10.2026. **Setup, Portable-ZIP und passende Quellen erstellt, automatisch geprüft und auf Nutzerauftrag als RC3 veröffentlicht. Keine neue persönliche Paketabnahme für Build 13.** Die vollständige persönliche [Build-12-Abnahme](RELEASE-BUILD12-RC3-RESULT.md) bleibt ihrem unveränderten Paketsatz zugeordnet. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD13-RC3.md).
 
 ## Quellstand und Änderung gegenüber Build 12
 
@@ -37,7 +37,7 @@ Prüfbelege: artifacts/release-build13-RC3/logs, test-results, PUBLISH-FILES.sha
 
 Für diesen neuen Paketsatz liegt noch kein persönlicher Setup-/Portable-Test vor. Ein kurzer Bestätigungslauf kann sich auf Überinstallation/Versionsanzeige **Build 13 RC3**, den neuen KI-Abschnitt unter **Credits**, regulären Start/Schließen und einen Schnitt konzentrieren. Die dokumentierte vollständige Build-12-Abnahme wird dadurch nicht umetikettiert.
 
-Kein Push, Tag, GitHub-Release oder Versionssprung auf 1.0 vorgenommen. Nächster Schritt: persönlichen Paketcheck festhalten und anschließend die Veröffentlichung dieses konkreten Paketsatzes beauftragen.
+Der Nutzer beauftragte anschließend ausdrücklich die sofortige Veröffentlichung. Commits übertragen, Tag auf den gebauten Quellcommit gesetzt und sieben Uploads vor/nach der Freigabe anhand der GitHub-Digests geprüft. Veröffentlichung am 11.10.2026 um 18:07:42 Uhr MESZ als Vorabversion; [Nachweis](RELEASE-PUBLICATION-BUILD13-RC3.md). Unveränderte Pakete, kein Versionssprung auf 1.0. Eine persönliche Build-13-Rückmeldung kann später separat ergänzt werden.
 
 ## Reproduzierbarer lokaler Paketbau
 

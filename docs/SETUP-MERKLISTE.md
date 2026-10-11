@@ -1,8 +1,8 @@
 # Setup-Merkliste
 
-Stand: 11.10.2026. Die ursprüngliche Planung vom September ist mit dem aktuellen Projektstand abgeglichen. Öffentliche Vorabversion: **0.2.1 Build 7 RC2**; persönlich abgenommener lokaler Paketsatz: **0.2.1 Build 12 RC3 mit otr-can 0.1.4**, noch nicht veröffentlicht. Eine spätere Quelländerung ersetzt nicht dessen Paketabnahme.
+Stand: 11.10.2026. Die ursprüngliche Planung vom September ist mit dem aktuellen Projektstand abgeglichen. Öffentliche Vorabversion: **0.2.1 Build 13 RC3 mit otr-can 0.1.4**, auf Nutzerauftrag nach den technischen Prüfungen veröffentlicht. Persönliche vollständige Paketabnahme: **Build 12 RC3**, dessen Pakete unverändert separat erhalten bleiben.
 
-Aktuelle Nachweise: [Projektstatus](STATUS.md), [Build-12-Paketprüfung](RELEASE-BUILD12-RC3-RESULT.md), [RC2-Veröffentlichung](RELEASE-PUBLICATION-BUILD7-RC2.md).
+Aktuelle Nachweise: [Projektstatus](STATUS.md), [Build-13-Prüfung](RELEASE-BUILD13-RC3-RESULT.md), [RC3-Veröffentlichung](RELEASE-PUBLICATION-BUILD13-RC3.md), [persönliche Build-12-Abnahme](RELEASE-BUILD12-RC3-RESULT.md).
 
 ## Bedienung – Ergänzung vom 11.10.2026
 
@@ -54,7 +54,7 @@ Zusätzliche Werkzeug-Downloadlinks unter Hilfe sind für dieses Konzept nicht v
 
 ## Nächster Schritt
 
-Der Quellstand ist lokal gesichert, der neue Build-13-RC3-Paketsatz erstellt. Persönlichen kurzen Paketcheck mit Versionsanzeige und Credits-Ergänzung festhalten, anschließend Veröffentlichung dieses konkreten Satzes beauftragen. Version 1.0 ist weiterhin nicht festgelegt.
+Build 13 RC3 ist veröffentlicht. Weitere Rückmeldungen mit konkreter Versions-/Buildkennung festhalten; eine zusätzliche persönliche Build-13-Paketprüfung kann nachgetragen werden. Nächste Funktionsaufgabe getrennt festlegen. Version 1.0 ist weiterhin nicht festgelegt.
 
 ## V2
 

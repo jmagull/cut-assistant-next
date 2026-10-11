@@ -1,5 +1,13 @@
 # Entwicklungstagebuch
 
+## 11.10.2026 – Build 13 RC3 öffentlich als Vorabversion veröffentlicht
+
+- Nutzer klärt „ok lets go“ ausdrücklich als **„Build 13 RC3 jetzt veröffentlichen“**. Veröffentlichung freigegeben; keine neue persönliche Build-13-Installations-/Portable-Abnahme daraus abgeleitet.
+- GitHub-main vor der Übertragung geprüft; zwei lokale Commits ohne Force-Push übertragen. Annotierter Tag **v0.2.1-build13-rc3** zeigt auf den tatsächlich gebauten Quellcommit **c98041a066685414481ac46a3a6af8d105b085bd**, nicht auf den späteren Dokumentationscommit. Vier vorbestehende lokale Lockdateiänderungen außerhalb der Übertragung erhalten.
+- Release-Text und sieben Dateien als Entwurf hochgeladen: Setup, Portable, CAN-/Motorquellen, libmpv-Quellen-/Relink-Pakete und SHA256SUMS.txt. Sämtliche Größen und GitHub-SHA-256-Digests sowie Release-Text und Quellziel geprüft; danach am **11.10.2026 um 18:07:42 Uhr MESZ** öffentlich als Vorabversion freigegeben. Erneute vollständige Digestprüfung bestätigt **isDraft: false**, **isPrerelease: true**, Release-ID 409771075 und Tag/Quellziel.
+- Der öffentliche Tag-Endpunkt lieferte während des Entwurfs erwartungsgemäß kein Ergebnis; Entwurf stattdessen über die authentifizierte Release-Liste gelesen. Zeitstempel anhand des unveränderten ISO-UTC-Werts in Europe/Berlin umgerechnet. Keine Änderung an Paketen, Motor, Prüfsummen oder Version.
+- [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD13-RC3.md) ergänzt, aktuelle README/Anleitung/Status/Merkliste/Testplan und Paketbericht auf RC3 umgestellt. Nur Dokumentation nach der Veröffentlichung verändert; kein erneuter Build/Testlauf notwendig, unveränderter Prüfstand 785 CAN-/40 zuletzt bestätigte Rust-Tests. Alte Releases, Build-12-Abnahme und lokale Einstellungen erhalten.
+
 ## 11.10.2026 – Build 13 RC3 lokal gesichert und neuer Paketsatz technisch geprüft
 
 - Geprüften Quellstand mit AVI-Hinweis, Credits-Ergänzung, Motorpaketierung und bereinigter Dokumentation lokal als **c98041a066685414481ac46a3a6af8d105b085bd** gesichert. Vier vorbestehende src-Lockdateiänderungen außerhalb des Commits erhalten. Fester CAN-Quell-Snapshot mit 459 manifestierten Dateien, ohne Arbeitsbaumüberlagerung; daraus neue Pakete gebaut.

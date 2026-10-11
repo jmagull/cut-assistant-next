@@ -1,12 +1,12 @@
 # Nutzeranleitung – Cut Assistant Next
 
-Stand: 11.10.2026. Diese Anleitung beschreibt den aktuellen Entwicklungsstand für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand: 11.10.2026. Diese Anleitung beschreibt die öffentliche Vorabversion **0.2.1 Build 13 RC3** für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
-Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, im lokalen Entwicklungsstand **Cut Assistant Next · 0.2.1 · Build 13 · RC3**. Der persönlich abgenommene lokale Paketsatz trägt weiterhin Build 12 RC3. Bitte diese Angaben bei Fehlermeldungen mit angeben.
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.2.1 · Build 13 · RC3**. Die vollständige persönliche Paketabnahme betrifft den vorherigen Build 12 RC3. Bitte die tatsächlich angezeigten Angaben bei Fehlermeldungen mit angeben.
 
 ## 1. Einmalig einrichten
 
-Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE allein. Der lokale Build-12-RC3-Kandidat bietet Setup und Portable-ZIP mit libmpv und optionalem otr-can 0.1.4. Er benötigt die separat installierte [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). FFmpeg/ffprobe, GPAC/MP4Box und bei Bedarf FFMS2 werden separat eingerichtet. Überinstallation, Installation und Deinstallation in einer Windows-11-VM sowie der separate Portable-Test mit positiver Bild-/Tonprüfung wurden persönlich bestätigt; die öffentliche Build-7-RC2-Ausgabe bleibt unverändert.
+Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE allein. Die [öffentliche Build-13-RC3-Ausgabe](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build13-rc3) bietet Setup und Portable-ZIP mit libmpv und optionalem otr-can 0.1.4. Sie benötigt die separat installierte [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). FFmpeg/ffprobe, GPAC/MP4Box und bei Bedarf FFMS2 werden separat eingerichtet. Die vollständige persönliche Überinstallations-/VM-/Portable-Abnahme betrifft den vorherigen Build 12; Build 13 ist technisch geprüft und ausdrücklich zur Veröffentlichung freigegeben. [Nachweis](RELEASE-PUBLICATION-BUILD13-RC3.md).
 
 Öffne die Einstellungen und hinterlege die benötigten Werkzeuge:
 
