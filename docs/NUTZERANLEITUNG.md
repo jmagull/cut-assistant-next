@@ -266,7 +266,9 @@ Teile Cutlists für die regulär verfügbaren Originalaufnahmen. Die von CAN int
 
 ## 8. Fenster, Einstellungen und Protokolle
 
-Fenstergröße und Maximierung werden beim Schließen gespeichert und beim nächsten Start wiederhergestellt, auch ohne zuvor ein Video zu laden. Die Lautstärke wird ebenfalls gespeichert.
+Das Hauptfenster merkt Größe und Maximierung beim Schließen und stellt sie beim nächsten Start wieder her, auch ohne zuvor ein Video zu laden. Die Lautstärke wird ebenfalls gespeichert.
+
+Auch **Schneiden**, **Video vorbereiten und schneiden**, **Schneiden abgeschlossen** und **Cutlist erzeugen** merken ihre Größe und Maximierung jeweils getrennt. Vergrößere beispielsweise das Fortschrittsfenster für mehr Platz im Protokoll: Nach dem Schließen öffnet es beim nächsten Schnitt und nach einem Programmneustart wieder in dieser Größe. Sehr große gespeicherte Maße werden an die verfügbare Bildschirmfläche angepasst.
 
 Bei geringer Breite umbrechen Bediengruppen. Bei geringer Höhe erreichst du die unteren Bereiche über die rechte Scrollleiste.
 

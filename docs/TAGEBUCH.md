@@ -1,5 +1,33 @@
 # Entwicklungstagebuch
 
+## 11.10.2026 – Chicago Fire mit 0.1.4: Bild und Ton persönlich bestätigt
+
+- Nach dem Bildvergleich bestätigt der Nutzer abschließend: **„ton und bild beide ok :-)“**. Chicago Fire / Ein komischer Vogel ist damit persönlich in Bild und Ton positiv bewertet; zuvor bereits kein Blitzer am nativen Anfang gemeldet.
+- Die Fenstergrößenübernahme ist im selben Schnittablauf ebenfalls als „check“ bestätigt. Status und Motor-Prüfbericht aktualisiert. Die sichtbare 40-ms-Differenz zwischen nominaler Dauer und Playeranzeige bleibt als dokumentierter Metadaten-/Anzeigebefund erhalten.
+- Nur Dokumentation und Diffprüfung; keine Code-/Einstellungsänderung, neuer Build, Testschnitt, Commit oder Push. Letzter gebauter Stand 767 CAN-/40 Rust-Tests.
+
+## 11.10.2026 – Chicago Fire: MP4Box-/otr-can-Bildanfang verglichen
+
+- Nutzer ordnet die Bilder ausdrücklich zu: Bild 1 MP4Box, Bild 2 otr-can; bestätigt das otr-can-Ergebnis als **„ohne Blitzer“**. Am gezeigten MP4Box-Anfang ist TV-SPONSORING sichtbar, beim nativen Schnitt das NBC-Logo.
+- Als persönliche positive Bildprüfung des Chicago-Fire-Schnitts mit Motor 0.1.4 festgehalten. Die Screenshots zeigen leicht unterschiedliche Abspielpositionen nahe dem Anfang; kein neuer automatischer Einzelbild- oder Originalvergleich daraus abgeleitet.
+- MPC-HC zeigt für MP4Box 39:38.178 und für otr-can 39:37.200 an. Der Schnittplan/Protokollbefund ergibt nominal 39:37.160. Die 40-ms-Abweichung der nativen Player-Dauer ist als Anzeige-/Metadatenbefund festgehalten, ohne daraus ein zusätzliches decodiertes Bild abzuleiten. Keine neue persönliche Tonabnahme mitgeteilt.
+- Nur Tagebuch, Status und Motor-Prüfbericht aktualisiert und geprüft; kein Code-/Einstellungswechsel, neuer Build, Testschnitt, Commit oder Push.
+
+## 11.10.2026 – Fenstergrößen persönlich bestätigt, Chicago Fire mit 0.1.4 abgeschlossen
+
+- Nutzer bestätigt im neuen Praxistest: **„Fenstergröße Übernahme : check“**. Die Größenwiederherstellung ist damit zusätzlich zur automatisierten Vier-Dialog-/Neustartprüfung persönlich positiv zurückgemeldet.
+- Übermitteltes Chicago-Fire-Protokoll (Ein komischer Vogel, HD) zeigt Motor 0.1.4, eine FFMS2-Indexierung und einen Behaltebereich von 651,340 bis 3028,500 s. 118858 Video-Pakete und rohe PTS/DTS geprüft; AAC-Stereo und AC-3/6 Kanäle mit je 114103680 decodierten Samples bei 48 kHz und durchgehenden PTS. Finale Mux- und CAN-Ausgabeprüfung erfolgreich.
+- Video-/Audiowerte passen zur Ergebnisdauer 2377,160 s / **39:37.160**. Nur ein Behaltebereich, keine inneren Keep-Übergänge. Noch keine persönliche Bild-/Tonabnahme und keine Laufzeit für diesen Film mitgeteilt.
+- Nur Tagebuch, Status und beide Prüfberichte aktualisiert; Dokumentationsdiff geprüft. Code und Einstellungen erhalten, kein neuer Build/Testschnitt, kein Commit/Push. Letzter gebauter Stand: 767 CAN-/40 Rust-Tests.
+
+## 11.10.2026 – Fenstergrößen der Schnittdialoge umgesetzt
+
+- Auf Nutzerauftrag speichern Schneiden, Video vorbereiten und schneiden, Schneiden abgeschlossen sowie Cutlist erzeugen jetzt getrennt Breite/Höhe und Maximierung. Wiederherstellung beim nächsten Aufruf und nach Programmneustart; der größere Protokollbereich bleibt erhalten.
+- Gemeinsame Größen-/Lebenszykluslogik, vorhandene Cutlist-Datei kompatibel erhalten, zusätzliche Dialogdateien im lokalen Einstellungsordner. Normale Rückkehrmaße bei Maximierung/Minimierung verwenden, keine minimierte Wiederöffnung, Bildschirmgrenzen beachten und erst nach tatsächlichem Schließen speichern.
+- **767/767 CAN-Tests**, davon 14 neue Größen-/Speicherfälle; Release-Build **0 Warnungen/0 Fehler** im bisherigen Ausgabeordner. Alle vier echten WPF-Dialoge in zwei getrennten Prozessen geprüft, Maximierung/Minimierung, abgebrochener Schließversuch und altes Cutlist-JSON bestanden. Vergrößertes Protokollfenster gerendert und geprüft; persönliche Einstellungen isoliert.
+- Eigene zu breite Textersetzung im Erstbuild korrigiert. Bestehender Prozessabbruchtest traf einmal auf gesperrte PID-Datei; gezielter und vollständiger Folgelauf bestanden, Test nicht geändert. WPF-Helfer für maximierte Fenster korrigiert; Erstprotokolle erhalten.
+- Merkliste abgehakt, README, Status und Anleitung aktualisiert; [Prüfbericht](DIALOG-FENSTERGROESSEN-PRUEFBERICHT-20261011.md). Acht Lockdateien und Rust-Motor erhalten. CAN weiterhin 0.2.1 · Build 11 · RC3, Motor 0.1.4. Keine neue Abhängigkeit, kein Commit/Push.
+
 ## 11.10.2026 – Sicherung des geprüften CAN- und Rust-Stands freigegeben
 
 - Nutzer gibt ausdrücklich Commit und Push für beide Repositories frei. CAN: native Frame-/Audio-Prüfberichte, zusätzliche Fortschrittsphasen, gegen Warnungsfluten robuste Protokollanzeige, Tests, persönliche Rückmeldungen und Fenstergrößen-Merkliste. Rust: regulärer Schnittmotor 0.1.4 und dokumentierte getrennte Versuchsquellen.

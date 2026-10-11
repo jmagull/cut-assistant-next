@@ -7,11 +7,11 @@ Lizenz- und Weitergabebedingungen sind noch zu klären.
 
 ## Bedienung – Ergänzung vom 11.10.2026
 
-- [ ] Fenstergrößen der Dialoge im Schnittablauf speichern und beim nächsten Aufruf sowie nach einem Programmneustart wiederherstellen.
-- [ ] Besonders **Video vorbereiten und schneiden**: die vom Benutzer gewählte Breite/Höhe beibehalten, damit auch der Protokollbereich beim nächsten Schnitt wieder ausreichend Platz hat.
-- [ ] Bereits vorgemerkt: Größe des Dialogs **Cutlist erzeugen** wiederherstellen.
+- [x] Fenstergrößen von Schneiden, Fortschritt/Protokoll, Schneiden abgeschlossen und Cutlist erzeugen getrennt speichern und beim nächsten Aufruf sowie nach einem Programmneustart wiederherstellen.
+- [x] Besonders **Video vorbereiten und schneiden**: gewählte Breite/Höhe und Maximierung beibehalten, damit auch der Protokollbereich beim nächsten Schnitt wieder ausreichend Platz hat.
+- [x] **Cutlist erzeugen**: vorhandene Größen-Datei weiterverwenden und Speicherung um Maximierung ergänzen.
 
-Vom Nutzer zunächst für die Merkliste beauftragt; noch keine Umsetzung. Aktueller Entwicklungsstand: CAN 0.2.1 · Build 11 · RC3. Die folgenden Setup-Einträge bewahren den älteren Stand vom 20.09.2026.
+Am 11.10.2026 umgesetzt, gebaut und geprüft: 767 CAN-Tests und echter WPF-Neustarttest. Details im [Prüfbericht](DIALOG-FENSTERGROESSEN-PRUEFBERICHT-20261011.md). Aktueller Entwicklungsstand: CAN 0.2.1 · Build 11 · RC3. Die folgenden Setup-Einträge bewahren den älteren Stand vom 20.09.2026.
 
 ## Windows-Installer und portable Ausgabe
 

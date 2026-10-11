@@ -1,4 +1,5 @@
 using System.Windows;
+using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.ViewModels;
 
 namespace CutAssistantNext.App.Dialogs;
@@ -6,12 +7,13 @@ namespace CutAssistantNext.App.Dialogs;
 public partial class CutOutputDialog : Window
 {
     internal CutOutputDialog(
-        CutOutputViewModel viewModel)
+        CutOutputViewModel viewModel, WindowSettingsStore? windowSettingsStore = null)
     {
         ArgumentNullException.ThrowIfNull(
             viewModel);
 
         InitializeComponent();
+        DialogWindowPersistence.Attach(this, CutDialogKind.Output, windowSettingsStore);
 
         DataContext =
             viewModel;

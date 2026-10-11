@@ -52,6 +52,18 @@ Am 11.10.2026 übermittelt der Nutzer einen erfolgreichen neuen Schnitt aus CAN 
 
 Nach der persönlichen Videoprüfung bestätigt der Nutzer: **„übergang ist sauber, ton ist synchron“**. Zusätzlich nimmt er die Stereospur als lauter als die 5.1-Spur wahr. Keine Laufzeitmessung für diesen Nutzerlauf mitgeteilt. Zusätzlich wünscht er gespeicherte Fenstergrößen der Schnittdialoge, besonders des Fortschritts-/Protokollfensters; zunächst auf der [Merkliste](SETUP-MERKLISTE.md) vermerkt.
 
+## Weiterer Nutzerlauf: Chicago Fire / Ein komischer Vogel
+
+Am 11.10.2026 übermitteltes Abschlussprotokoll aus CAN mit regulärem Motor 0.1.4. Original Chicago_Fire__Ein_komischer_Vogel_26.10.05_21-00_sf2_45_TVOON_DE.HD.mp4; eine FFMS2-Indexierung, ein Behaltebereich **651,340–3028,500 s**.
+
+Geprüft laut Protokoll: **118858 Video-Pakete** mit rohen PTS/DTS; AAC-Stereo mit Zielbitrate 160104 bit/s und AC-3 mit sechs Kanälen/384000 bit/s, jeweils **114103680 decodierte Samples bei 48 kHz** und durchgehende rohe Audio-PTS. Finale Paket-/Decoder-Konfigurationsprüfung und CAN-Ausgabeprüfung erfolgreich.
+
+Die nominale Dauer beträgt **2377,160 s / 39:37.160**; Video bei 50 fps und beide Audio-Samplezahlen passen dazu. Keine inneren Übergänge zwischen Keeps bei diesem Ein-Bereich-Auftrag. Die anschließende persönliche Bild-/Tonprüfung steht in den folgenden Absätzen; Laufzeit wurde nicht mitgeteilt. Der Nutzer bestätigt in diesem Ablauf die Fenstergrößenübernahme; diese Rückmeldung ist im [Fenstergrößenbericht](DIALOG-FENSTERGROESSEN-PRUEFBERICHT-20261011.md) dokumentiert.
+
+Der Nutzer stellt anschließend zwei Playerbilder gegenüber: **Bild 1 MP4Box, Bild 2 otr-can**, und bestätigt das native Ergebnis persönlich als **„ohne Blitzer“**. Am gezeigten MP4Box-Dateianfang (00:00.023) steht noch TV-SPONSORING; beim otr-can-Anfang (00:00.005) ist das NBC-Logo sichtbar. Das ist eine persönliche positive Bildprüfung und eine illustrative Gegenüberstellung nahe dem Anfang, kein automatischer Abgleich identischer Framepositionen oder Nachweis einer unveränderten gemeinsamen Cutlist.
+
+Die Playeranzeigen nennen 39:38.178 für MP4Box und 39:37.200 für otr-can. Die nominale native Schnittdauer bleibt 39:37.160 laut Schnittplan, Paket- und Audio-Samplezahlen; **40 ms Unterschied zur Player-Dauer** als Anzeige-/Metadatenbefund dokumentiert. Aus dem Screenshot allein folgt kein Nachweis eines zusätzlichen decodierten Videobildes. Der Nutzer bestätigt nach der Kontrolle abschließend: **„ton und bild beide ok :-)“**. Damit liegt eine persönliche positive Bild-/Tonbewertung des neuen Chicago-Fire-Schnitts vor. Keine Laufzeit dieses Films mitgeteilt.
+
 ## Belege und nächste Kontrolle
 
 Ignoriert unter .build/radical-stall-20261011: can-stacks.txt, native.stderr.txt, verworfener begrenzter Lauf, state-result.json, identity/RESULT.json, mixed/RESULT.json, SOURCE-PCM-COMPARISON.json, UI-RESULT.json und UI-replay.png, Build-/Testprotokolle sowie reguläre CAN-Aufträge und Abschlussbeleg. Große PCM-Referenzen sind ausdrücklich benannte Diagnosebelege, keine privaten Motor-Zwischenreste und kein Paketinhalt.

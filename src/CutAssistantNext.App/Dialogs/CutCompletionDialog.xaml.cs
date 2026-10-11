@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using CutAssistantNext.App.Settings;
 using System.Windows;
 using System.Windows.Input;
 using CutAssistantNext.App.ViewModels;
@@ -9,17 +10,14 @@ internal partial class CutCompletionDialog : Window
 {
     private readonly CutCompletionViewModel _viewModel;
 
-    internal CutCompletionDialog(CutCompletionViewModel viewModel, string protocolText)
+    internal CutCompletionDialog(CutCompletionViewModel viewModel, string protocolText, WindowSettingsStore? windowSettingsStore = null)
     {
         ArgumentNullException.ThrowIfNull(viewModel);
         _viewModel = viewModel;
         InitializeComponent();
         DataContext = viewModel;
         ProtocolTextBox.Text = protocolText;
-        Width = Math.Min(Width, SystemParameters.WorkArea.Width);
-        Height = Math.Min(Height, SystemParameters.WorkArea.Height);
-        MinWidth = Math.Min(MinWidth, Width);
-        MinHeight = Math.Min(MinHeight, Height);
+        DialogWindowPersistence.Attach(this, CutDialogKind.Completion, windowSettingsStore);
     }
 
     private void CopyButton_Click(object sender, RoutedEventArgs e)

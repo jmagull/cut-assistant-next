@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using CutAssistantNext.App.Settings;
 using System.Windows;
 using System.Windows.Threading;
 using CutAssistantNext.App.ViewModels;
@@ -19,12 +20,14 @@ public partial class Mp4BoxProgressDialog : Window
     private bool _allowClose;
 
     internal Mp4BoxProgressDialog(
-        Mp4BoxProgressViewModel viewModel, BufferedCutProgressReporter? progress = null)
+        Mp4BoxProgressViewModel viewModel, BufferedCutProgressReporter? progress = null,
+        WindowSettingsStore? windowSettingsStore = null)
     {
         ArgumentNullException.ThrowIfNull(
             viewModel);
 
         InitializeComponent();
+        DialogWindowPersistence.Attach(this, CutDialogKind.Progress, windowSettingsStore);
 
         _viewModel =
             viewModel;
