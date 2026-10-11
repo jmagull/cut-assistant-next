@@ -21,7 +21,7 @@ Fenstergrößen am 11.10.2026 unter Build 11 umgesetzt, gebaut und geprüft: dam
 - [x] Werkzeug-/Quellzuordnung, SHA-256-Werte und Verfahren für erneuten Paketbau dokumentiert; [Paketbau](RELEASE-BUILD12-RC3-RESULT.md#reproduzierbarer-lokaler-paketbau).
 - [x] Juli-libmpv-Kandidat abgelöst: der geprüfte September-Stack 0.41.0 mit vier DLLs, Quellen-/Relink-Paketen und Lizenzhinweisen wurde bereits mit RC2 veröffentlicht; [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD7-RC2.md). Keine Wiederbeschaffung des alten Juli-Archivs erforderlich.
 
-Der KI-Absatz im Credits-Dialog wurde nach dieser Paketabnahme ergänzt. Für eine Ausgabe mit dieser Ergänzung sind neue zusammengehörige Quellen-/Binärpakete erforderlich.
+Der KI-Absatz im Credits-Dialog wurde nach dieser Paketabnahme ergänzt. Der dafür neu erstellte **Build-13-RC3-Satz aus Commit c98041a** enthält zusammengehörige Quellen-/Binärpakete und ist automatisch geprüft: 785/785 Tests, 249 Portable-Dateien, entpackte WPF-/Credits-Komponenten und künstlicher Zwei-Tonspur-Schnitt. [Prüfbericht](RELEASE-BUILD13-RC3-RESULT.md). Persönliche Paketbestätigung für Build 13 noch offen.
 
 ## Historische TEST2-Prüfungen vom 20.09.2026
 
@@ -54,7 +54,7 @@ Zusätzliche Werkzeug-Downloadlinks unter Hilfe sind für dieses Konzept nicht v
 
 ## Nächster Schritt
 
-Den geprüften Quellstand sichern und die nächste RC3-Veröffentlichung mit konkreter Quellen-/Paketzuordnung vorbereiten. Neue Änderungen nach der Build-12-Abnahme gesondert prüfen und gegebenenfalls neu paketieren. Version 1.0 ist weiterhin nicht festgelegt.
+Der Quellstand ist lokal gesichert, der neue Build-13-RC3-Paketsatz erstellt. Persönlichen kurzen Paketcheck mit Versionsanzeige und Credits-Ergänzung festhalten, anschließend Veröffentlichung dieses konkreten Satzes beauftragen. Version 1.0 ist weiterhin nicht festgelegt.
 
 ## V2
 

@@ -1,5 +1,14 @@
 # Entwicklungstagebuch
 
+## 11.10.2026 – Build 13 RC3 lokal gesichert und neuer Paketsatz technisch geprüft
+
+- Geprüften Quellstand mit AVI-Hinweis, Credits-Ergänzung, Motorpaketierung und bereinigter Dokumentation lokal als **c98041a066685414481ac46a3a6af8d105b085bd** gesichert. Vier vorbestehende src-Lockdateiänderungen außerhalb des Commits erhalten. Fester CAN-Quell-Snapshot mit 459 manifestierten Dateien, ohne Arbeitsbaumüberlagerung; daraus neue Pakete gebaut.
+- Gesperrter Windows-x64-Restore, Release-Build und Publish erfolgreich; **0 Warnungen/0 Fehler im Build**, **785/785 CAN-Tests**, kein übersprungener Test. Setup mit Inno Setup 7 erstellt. Version 0.2.1, Build 13 und RC3 erhalten; kein weiterer Zähleranstieg durch Paketbau. Motor 0.1.4 unverändert, kein Rust-Neubau, letzter nativer Prüfstand 40 Tests.
+- Vollständiges Portable-ZIP entpackt, alle **249 Dateien** und Quellenprovenienz geprüft. Sechs Release-Artefakte mit Quellen-/Relink- und Motorarchiven samt SHA256SUMS.txt vorbereitet. Motor-EXE/-Quellen sowie libmpv-Quellen-/Relink-Archive bytegleich erhalten; alle acht ursprünglichen Lockdateien und Build-12-Releasebestände per SHA-256 unverändert.
+- Mit entpackten Paket-Assemblies Credits bei normaler/Mindestgröße und Hauptfenster mit echten libmpv-DLLs geprüft und Prüfbilder gesichtet: vollständiger KI-Text, korrekter Build-13-RC3-Titel, AVI-Hinweis, erfolgreiche Playerinitialisierung und reguläres asynchrones Schließen. Nur isolierte Fensterdaten geschrieben. Kein unveränderter CAN-Apphost-/VM-Installationsnachweis daraus abgeleitet.
+- Künstlicher Zwei-Bereich-Schnitt über entpackte CAN-Services mit beiliegendem Motor: einmal indexiert, 90 tatsächlich decodierte Videobilder, AAC-Stereo und AC-3/5.1, vollständiger Decoderlauf und Aufräumen erfolgreich, Original-/Indexdaten unverändert. Ausgabe bytegleich zum Build-12-Pakettest; rund 2,9 s, kein Realfilm-Benchmark oder persönliche Bild-/Tonabnahme.
+- [Build-13-Prüfbericht](RELEASE-BUILD13-RC3-RESULT.md), Status, Merkliste, Testplan und README nach dem Paketbau aktualisiert. Der Bericht gehört nicht zum eingefrorenen Quell-ZIP. Persönliche Build-12-Abnahme unverändert separat; kurzer persönlicher Build-13-Paketcheck und Veröffentlichung bleiben nächste Schritte. Kein Push, Tag oder Veröffentlichung.
+
 ## 11.10.2026 – Build 13 RC3: Quellstand sichern und neue Pakete vorbereiten
 
 - Nutzer beauftragt nach Credits-Ergänzung und erfolgreichem Build-/Testlauf ausdrücklich den nächsten Schritt mit „ok lets go“: lokalen Quellstand sichern und aktualisierten RC3-Paketsatz erstellen.

@@ -2,9 +2,11 @@
 
 Stand: 11.10.2026. Dieser Überblick beschreibt den aktuellen Feature-Stand; ältere Projektdefinitionen und Architekturentscheidungen dokumentieren teilweise frühere Entwicklungsphasen.
 
-Lokaler Entwicklungsstand nach Credits-Ergänzung und Dokumentationsabgleich: **0.2.1 · Build 13 · RC3**, Release-Build ohne Warnungen/Fehler und **785/785 CAN-Tests**. Der KI-Absatz wurde im echten WPF-Dialog bei normaler und kleiner Ansicht geprüft. Der persönlich abgenommene Paketsatz bleibt **Build 12 RC3**; dessen eingefrorene Quellen-/Binärpakete enthalten diese Ergänzung noch nicht. Build 13 ist noch nicht paketiert. Motor otr-can 0.1.4 unverändert, letzter nativer Prüfstand 40 Tests.
+Lokaler Entwicklungsstand nach Credits-Ergänzung und Dokumentationsabgleich: **0.2.1 · Build 13 · RC3**, Release-Build ohne Warnungen/Fehler und **785/785 CAN-Tests**. Der KI-Absatz wurde im echten WPF-Dialog bei normaler und kleiner Ansicht geprüft. Der persönlich abgenommene Paketsatz bleibt **Build 12 RC3**; dessen eingefrorene Quellen-/Binärpakete enthalten diese Ergänzung noch nicht. Der aktualisierte Build-13-Paketsatz ist erstellt und technisch geprüft; persönliche Paketbestätigung noch offen. Motor otr-can 0.1.4 unverändert, letzter nativer Prüfstand 40 Tests.
 
 ## Aktueller Umfang
+
+Der aktualisierte **Build-13-RC3-Paketsatz ist lokal erstellt und automatisch geprüft**: fester Quellcommit c98041a, 785/785 Tests, 249 vollständig geprüfte Portable-Dateien, Credits-/WPF-Prüfung mit entpackten Komponenten und künstlicher Zwei-Tonspur-Schnitt bestanden. Die Schnittausgabe ist bytegleich zum Build-12-Pakettest. [Neuer Prüfbericht](RELEASE-BUILD13-RC3-RESULT.md). Persönliche Installations-/Portable-Bestätigung für Build 13 noch offen; kein neues Paket veröffentlicht.
 
 CAN verwendet C#, .NET 10 und WPF unter Windows 11 x64. ffprobe liefert Medieninformationen, mpv/libmpv übernimmt die Wiedergabe, MP4Box den Schnitt. FFmpeg bereitet bei Bedarf eine MP4-Arbeitsdatei vor.
 
@@ -117,6 +119,8 @@ Am 11.10.2026 bestätigt der Nutzer die Punkte **„1) check / 2) check“** der
 - [x] **2. AVI-Sonderfälle und Warnhinweis:** gelber Originalhinweis umgesetzt und geprüft, vom Nutzer bestätigt. Die als untauglich bestätigte alte Aufnahme „Wo die Liebe hinfällt“ wird ausdrücklich nicht weiter untersucht; der Nutzer wartet auf einen neuen Sendetermin.
 - [x] **3. Nächste Veröffentlichung vorbereiten:** lokaler 0.2.1-Build-12-RC3-Paketsatz samt otr-can 0.1.4, Quellen, Lizenztexten und Prüfsummen erstellt und automatisch geprüft. Überinstallation/Versionsanzeige sowie Windows-11-VM-Installation, beide Schnittmotoren, Bild/Ton, Deinstallation und separater Portable-ZIP-Test vom Nutzer bestätigt. Persönliche Paketabnahme abgeschlossen; [Prüfbericht](RELEASE-BUILD12-RC3-RESULT.md). Noch nicht veröffentlicht, Version 1.0 weiterhin nicht festgelegt.
 - [x] **4. Ältere Aufgabenlisten abgleichen:** Merkliste und Testplan auf den bestätigten Stand gebracht; ältere Build-6-Releaseunterlagen und libmpv-Lizenzprüfung als historische Nachweise eingeordnet. Timeline-Klick, Fenstergrößen, GPL-3.0-or-later-Lizenzwahl, KI-Dokumentation und Paketprüfung sind erledigt. Der KI-Absatz im Credits-Dialog wurde zusätzlich ergänzt. Der alte Juli-libmpv-Kandidat ist durch den geprüften September-Stack abgelöst, dessen Quellen-/Relink-Pakete bereits mit RC2 veröffentlicht wurden.
+- [x] **5. Aktualisierten Build 13 RC3 sichern und paketieren:** Commit c98041a, neues CAN-Quellarchiv, Setup, Portable-ZIP und vollständiger Quellen-/Prüfsummensatz erstellt und technisch geprüft. Vorbestehende Lockdateiänderungen und Build-12-Pakete erhalten; [Prüfbericht](RELEASE-BUILD13-RC3-RESULT.md).
+- [ ] **6. Persönlicher Build-13-Paketcheck und Veröffentlichung:** neue Paketkennung und KI-Abschnitt bestätigen; Ergebnisse getrennt von Build 12 festhalten. Öffentliche Bereitstellung dieses konkreten Satzes noch nicht beauftragt.
 
 Für V2 vorgemerkt: Klebezentrum (experimentell) für mehrteilige Aufnahmen und Feinabstimmung der Schnittbereiche gemäß chrisdudes Hinweisen. Stapelverarbeitung und Smart Rendering bleiben spätere Wünsche. Eine automatische Neukodierung ist nicht Teil des aktuellen Vorbereitungsablaufs.
 

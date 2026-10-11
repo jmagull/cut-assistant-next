@@ -13,6 +13,8 @@ Timeline-Klick ist seit 05.10.2026 persönlich abgenommen; die vier Schnittdialo
 
 ## Testumgebung
 
+Neuer Build-13-Paketsatz am 11.10.2026 technisch geprüft: gesperrter Restore und 785/785 Release-Tests aus Commit c98041a, alle 249 entpackten Portable-Dateien, Credits und Hauptfenster einschließlich libmpv sowie künstlicher Zwei-Bereich-Schnitt mit 90 decodierten Bildern und AAC-Stereo/AC-3-5.1. Schnittausgabe bytegleich zu Build 12, vollständiger Decoderlauf bestanden. Keine neue persönliche Setup-/Portable-Abnahme; [Prüfbericht](RELEASE-BUILD13-RC3-RESULT.md).
+
 - Windows 11 x64
 - Release-Build
 - repräsentative MP4- und OTR-Dateien, einschließlich MP4-Inhalt mit Dateiendung `.avi`
