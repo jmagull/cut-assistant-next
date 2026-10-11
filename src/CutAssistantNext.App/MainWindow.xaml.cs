@@ -1306,12 +1306,11 @@ public partial class MainWindow : Window
                         new CancellationTokenSource();
 
                     var progress =
-                        new Progress<CutProgressUpdate>(
-                            progressViewModel.ApplyProgress);
+                        new BufferedCutProgressReporter(progressViewModel.ApplyProgress);
 
                     var progressDialog =
                         new Mp4BoxProgressDialog(
-                            progressViewModel)
+                            progressViewModel, progress)
                         {
                             Owner = dialog
                         };
@@ -1395,6 +1394,7 @@ public partial class MainWindow : Window
 
                         cutSucceeded = true;
 
+                        progress.Flush();
                         progressViewModel.MarkSucceeded();
 
                         progressDialog.MarkOperationCompleted(
@@ -1407,6 +1407,7 @@ public partial class MainWindow : Window
                                 CutProgressKind.Status,
                                 "Abgebrochen."));
 
+                        progress.Flush();
                         progressViewModel.MarkCancelled();
 
                         progressDialog.MarkOperationCompleted(
@@ -1414,6 +1415,7 @@ public partial class MainWindow : Window
                     }
                     catch (Exception exception)
                     {
+                        progress.Flush();
                         progressViewModel.MarkFailed(exception.Message);
 
                         progressDialog.MarkOperationCompleted(

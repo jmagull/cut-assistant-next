@@ -4,9 +4,9 @@ Cut Assistant Next (CAN) ist ein Windows-Programm zum Abspielen von Videos, Bear
 
 CAN ist weiterhin ein Proof of Concept mit experimenteller Unterstützung weiterer Eingangscontainer. Die [öffentliche Vorabversion 0.2.1 Build 7 – RC2](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build7-rc2) enthält den selbst gebauten und dokumentierten libmpv-0.41.0-Stack.
 
-Der aktuelle Entwicklungsstand **0.2.1 · Build 11 · RC3** ergänzt die Frame-Lupe mit Keyframe-Anzeige, ausdrücklicher Schnittkantenkorrektur und zusätzlicher Halbierungssuche sowie den gemeinsamen Schnittauftrag und den optionalen OTR-CAN-CPU-Motor. MP4Box bleibt die Vorgabe. Direkt unter der Schnittliste wählst du Schneiden MP4Box (schnell) oder Schneiden otr-can (framegenau, langsam) für diesen Auftrag. Die Werkzeug-Einstellungen enthalten nur Pfade und Prüfung. CAN indexiert für OTR-CAN einmal pro Schnitt und steuert Ausgabe, Abbruch und Aufräumen. Release-Rebuild ohne Warnungen oder Fehler, 743/743 Tests bestanden. Reale Navy-CIS-/Kimi-Schnitte mit jeweils zwei Tonspuren sind bytegleich mit CAN 04 und vollständig decodierbar; geerbte Zeitstempelauffälligkeiten bleiben ein Vorbehalt. Details und Abnahmegrenzen stehen im [Schritt-6-Prüfbericht](docs/OTR-CAN-SCHRITT6-PRUEFBERICHT.md). Dieser Entwicklungsstand ist noch nicht als Installationspaket veröffentlicht.
+Der aktuelle Entwicklungsstand **0.2.1 · Build 11 · RC3** ergänzt Frame-Lupe, Schnittkantenkorrektur, Halbierungssuche und den optionalen OTR-CAN-CPU-Motor. MP4Box bleibt die Vorgabe. Direkt unter der Schnittliste wählst du **Schneiden MP4Box (schnell)** oder **Schneiden otr-can (framegenau, langsam)** für diesen Auftrag. CAN steuert Original, Keep-Segmente, Ziel, einmalige Indexierung, Abbruch und Aufräumen. Release-Build ohne Warnungen oder Fehler, **753/753 Tests bestanden**. Noch kein neues Installationspaket veröffentlicht.
 
-Der reguläre optionale Schnittmotor **otr-can 0.1.2** übernimmt die persönlich geprüfte Seek-Optimierung: schneller Videozugriff bei unverändertem Tonweg. Vier reale Filmvergleiche liefern bytegleiche Ergebnisse zum bisherigen Motor. Der lokale CAN-Motorpfad ist auf 0.1.2 eingestellt; MP4Box bleibt die Vorgabe. Details stehen im [Seek-Prüfbericht](docs/OTR-CAN-SEEK-PRUEFBERICHT.md).
+Der reguläre optionale Motor **otr-can 0.1.4** kombiniert die geprüfte Frame-/Zeitstempelkorrektur mit **vollständiger Audio-Neukodierung jeder Tonspur**. Codec, Kanallayout, Samplerate und Zielbitrate bleiben erhalten; zusätzliche Kodierverluste und Laufzeit sind bewusst akzeptiert. 40 Rust-Tests bestanden. Der reguläre Pines-Auftrag mit Motor 0.1.3 über CAN benötigte rund **3:33 Minuten**; die vollständige Ausgabe ist bytegleich zum persönlich als synchron bestätigten Testfilm. CAN zeigt eigene Video-/Audio-/Mux-Phasen. Motor 0.1.4 erhält zusätzlich den Audiofilterzustand bei wechselnden AC-3-Begleitdaten; CAN bleibt auch bei großen Warnprotokollen bedienbar. Der lokale Motorpfad ist auf 0.1.4 eingestellt. Details im [Radical-Korrekturbericht](docs/OTR-CAN-RADICAL-KORREKTUR-20261011.md). Ältere EXEs bleiben erhalten. Nachweise und Unterstützungsgrenzen stehen im [0.1.3-Prüfbericht](docs/OTR-CAN-0.1.3-PRUEFBERICHT.md). Weitere reale Formate und getrennte Tonspurkontrollen folgen vor Version 1.0.
 
 ## Lizenz
 
@@ -42,7 +42,7 @@ CAN baut auf Ideen und Arbeit vieler Menschen und Projekte auf. Die [Danksagung]
 - Ausgabenamen über Namensmasken und Cutlist-Namensvorschläge vorbereiten.
 - MP4-Inhalte direkt mit MP4Box schneiden, auch bei abweichender Dateiendung.
 - Andere Container nach Bestätigung experimentell mit FFmpeg verlustfrei nach MP4 umpacken und anschließend mit MP4Box schneiden.
-- Optional mit OTR-CAN direkt aus dem Original schneiden, FFMS2 einmal indexieren und alle Tonspuren übernehmen; CPU-Encoding an den Schnittgrenzen.
+- Optional mit OTR-CAN direkt aus dem Original schneiden, FFMS2 einmal indexieren und alle Tonspuren übernehmen; CPU-Encoding an den Video-Schnittgrenzen und vollständige Audio-Neukodierung.
 - Fortschritt und Protokoll anzeigen, kopieren und den Vorgang abbrechen.
 - Fenstergröße, Maximierung und Lautstärke speichern; Inhalte bei kleinen Fenstern umbrechen bzw. scrollbar halten.
 
@@ -50,9 +50,9 @@ Die reine Cutlist-Erstellung benötigt keine Video-Umwandlung. Erst beim Schneid
 
 ## Grenzen
 
-MP4 ist ein Container, keine Bezeichnung für einen bestimmten Videocodec. Ob sich ein anderes Format verlustfrei vorbereiten lässt, hängt von seinen Streams ab. Die MP4Box-Vorbereitung verwendet Stream-Copy. Der optionale OTR-CAN-Motor kopiert Keyframe-Abschnitte und kodiert Schnittgrenzen auf der CPU neu. Ungeeignete Dateien oder deutliche Abweichungen werden mit einer Fehlermeldung gestoppt.
+MP4 ist ein Container, keine Bezeichnung für einen bestimmten Videocodec. Ob sich ein anderes Format verlustfrei vorbereiten lässt, hängt von seinen Streams ab. Die MP4Box-Vorbereitung verwendet Stream-Copy. Der optionale OTR-CAN-Motor kopiert geeignete IDR-Abschnitte, kodiert Video-Schnittgrenzen und jede vollständige Tonspur auf der CPU neu. Ungeeignete Dateien oder deutliche Abweichungen werden mit einer Fehlermeldung gestoppt.
 
-Die Prüfung der Arbeitsdatei ist eine Plausibilitätsprüfung anhand der Medieninformationen. Sie ersetzt nicht die Kontrolle der Schnittstellen und der Ton-Synchronität. OTR-CANs Smart Rendering ist zunächst synthetisch geprüft; Stapelverarbeitung und integrierte mehrteilige Aufnahmen sind noch nicht umgesetzt.
+Die Prüfung der Arbeitsdatei ist eine Plausibilitätsprüfung anhand der Medieninformationen. Sie ersetzt nicht die Kontrolle der Schnittstellen und der Ton-Synchronität. OTR-CANs Video-Smart-Rendering und Audio-Neukodierung sind synthetisch und mit Pines geprüft; Stapelverarbeitung und integrierte mehrteilige Aufnahmen sind noch nicht umgesetzt.
 
 Insbesondere bei historischen AVI-Dateien können bereits im Original Probleme mit Zeitstempeln, Bildaktualisierung oder Ton-Synchronität auftreten. Eine irreführende Dateiendung wie `.avi.mp4` ändert nichts am tatsächlich erkannten Container. Für solche Fälle sind weitere Praxistests und ein deutlicherer Warnhinweis vorgesehen.
 

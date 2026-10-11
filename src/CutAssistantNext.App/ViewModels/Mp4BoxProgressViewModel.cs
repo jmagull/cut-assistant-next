@@ -15,6 +15,10 @@ public sealed class Mp4BoxProgressViewModel :
     private readonly StringBuilder _protocolBuilder =
         new();
 
+    private const int DisplayProtocolLimit = 32768;
+    private readonly StringBuilder _displayProtocolBuilder = new();
+    private bool _displayTruncated;
+
     private string _statusText =
         "Bereit.";
 
@@ -100,6 +104,10 @@ public sealed class Mp4BoxProgressViewModel :
 
     public string ProtocolText =>
         _protocolBuilder.ToString();
+
+    public string DisplayProtocolText =>
+        (_displayTruncated ? "… Ältere Meldungen sind über „In Zwischenablage“ vollständig verfügbar." + Environment.NewLine : "")
+        + _displayProtocolBuilder.ToString();
 
     public bool CanCancel
     {
@@ -199,8 +207,23 @@ public sealed class Mp4BoxProgressViewModel :
         _protocolBuilder.Append(
             update.Message);
 
-        OnPropertyChanged(
-            nameof(ProtocolText));
+        if (update.Message.Length > DisplayProtocolLimit)
+        {
+            _displayProtocolBuilder.Clear();
+            _displayProtocolBuilder.Append(update.Message.AsSpan(update.Message.Length - DisplayProtocolLimit));
+            _displayTruncated = true;
+        }
+        else
+        {
+            if (_displayProtocolBuilder.Length > 0) _displayProtocolBuilder.AppendLine();
+            _displayProtocolBuilder.Append(update.Message);
+        }
+        if (_displayProtocolBuilder.Length > DisplayProtocolLimit)
+        {
+            _displayProtocolBuilder.Remove(0, _displayProtocolBuilder.Length - DisplayProtocolLimit);
+            _displayTruncated = true;
+        }
+        OnPropertyChanged(nameof(DisplayProtocolText));
     }
 
     public void MarkRunning()
@@ -234,10 +257,14 @@ public sealed class Mp4BoxProgressViewModel :
     {
         StopActivity("Fehlgeschlagen");
         _hasFailed = true;
-        StatusText = string.IsNullOrWhiteSpace(reason)
+        var detail = reason?.Trim();
+        var summary = detail;
+        if (summary?.Length > 500) summary = summary[..500] + " … (Details im Protokoll)";
+        StatusText = string.IsNullOrWhiteSpace(summary)
             ? "Vorbereitung oder Schnitt fehlgeschlagen. Weitere Informationen stehen im Protokoll."
-            : $"Vorbereitung oder Schnitt fehlgeschlagen:{Environment.NewLine}{reason.Trim()}";
-        ApplyProgress(new CutProgressUpdate(CutProgressKind.Output, StatusText));
+            : $"Vorbereitung oder Schnitt fehlgeschlagen:{Environment.NewLine}{summary}";
+        ApplyProgress(new CutProgressUpdate(CutProgressKind.Output,
+            string.IsNullOrWhiteSpace(detail) ? StatusText : $"Vorbereitung oder Schnitt fehlgeschlagen:{Environment.NewLine}{detail}"));
         CanCancel = false;
         ShouldAutoClose = false;
         AutoCloseSecondsRemaining = 0;

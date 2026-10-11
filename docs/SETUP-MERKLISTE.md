@@ -5,6 +5,14 @@ Windows-Installer TEST2 und Portable ZIP TEST2 wurden erfolgreich getestet.
 Eine öffentliche Veröffentlichung ist noch nicht freigegeben; insbesondere
 Lizenz- und Weitergabebedingungen sind noch zu klären.
 
+## Bedienung – Ergänzung vom 11.10.2026
+
+- [ ] Fenstergrößen der Dialoge im Schnittablauf speichern und beim nächsten Aufruf sowie nach einem Programmneustart wiederherstellen.
+- [ ] Besonders **Video vorbereiten und schneiden**: die vom Benutzer gewählte Breite/Höhe beibehalten, damit auch der Protokollbereich beim nächsten Schnitt wieder ausreichend Platz hat.
+- [ ] Bereits vorgemerkt: Größe des Dialogs **Cutlist erzeugen** wiederherstellen.
+
+Vom Nutzer zunächst für die Merkliste beauftragt; noch keine Umsetzung. Aktueller Entwicklungsstand: CAN 0.2.1 · Build 11 · RC3. Die folgenden Setup-Einträge bewahren den älteren Stand vom 20.09.2026.
+
 ## Windows-Installer und portable Ausgabe
 
 - [x] Windows-Installer TEST2: CAN 0.2.0 Build 6, selbstenthaltene .NET-Laufzeit, libmpv sowie FFmpeg und ffprobe 8.1.2 enthalten.

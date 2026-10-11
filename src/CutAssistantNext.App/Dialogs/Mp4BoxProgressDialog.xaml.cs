@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
 using CutAssistantNext.App.ViewModels;
+using CutAssistantNext.App.Services.Cutting;
 
 namespace CutAssistantNext.App.Dialogs;
 
@@ -10,12 +11,15 @@ public partial class Mp4BoxProgressDialog : Window
     private readonly Mp4BoxProgressViewModel _viewModel;
     private readonly DispatcherTimer _autoCloseTimer;
     private readonly DispatcherTimer _activityTimer;
+    private readonly BufferedCutProgressReporter? _progress;
+    private DispatcherOperation? _protocolScroll;
+    private bool _closed;
 
     private bool _operationCompleted;
     private bool _allowClose;
 
     internal Mp4BoxProgressDialog(
-        Mp4BoxProgressViewModel viewModel)
+        Mp4BoxProgressViewModel viewModel, BufferedCutProgressReporter? progress = null)
     {
         ArgumentNullException.ThrowIfNull(
             viewModel);
@@ -24,6 +28,8 @@ public partial class Mp4BoxProgressDialog : Window
 
         _viewModel =
             viewModel;
+
+        _progress = progress;
 
         DataContext =
             viewModel;
@@ -42,6 +48,8 @@ public partial class Mp4BoxProgressDialog : Window
         Loaded += (_, _) => { if (!_operationCompleted) _activityTimer.Start(); };
         Closed += (_, _) =>
         {
+            _closed = true;
+            _protocolScroll?.Abort();
             _activityTimer.Stop();
             _autoCloseTimer.Stop();
             _activityTimer.Tick -= ActivityTimer_Tick;
@@ -160,12 +168,21 @@ public partial class Mp4BoxProgressDialog : Window
         Close();
     }
 
-    private void ActivityTimer_Tick(object? sender, EventArgs e) => _viewModel.RefreshTimings();
+    private void ActivityTimer_Tick(object? sender, EventArgs e)
+    {
+        _progress?.Flush();
+        _viewModel.RefreshTimings();
+    }
 
     private void ProtocolTextBox_TextChanged(
         object sender,
         System.Windows.Controls.TextChangedEventArgs e)
     {
-        ProtocolTextBox.ScrollToEnd();
+        if (_closed || _protocolScroll?.Status == DispatcherOperationStatus.Pending) return;
+        // TextChanged runs inside the binding's text change. Scroll only after layout settles.
+        _protocolScroll = Dispatcher.InvokeAsync(() =>
+        {
+            if (!_closed) ProtocolTextBox.ScrollToEnd();
+        }, DispatcherPriority.Background);
     }
 }

@@ -1,5 +1,93 @@
 # Entwicklungstagebuch
 
+## 11.10.2026 – Sicherung des geprüften CAN- und Rust-Stands freigegeben
+
+- Nutzer gibt ausdrücklich Commit und Push für beide Repositories frei. CAN: native Frame-/Audio-Prüfberichte, zusätzliche Fortschrittsphasen, gegen Warnungsfluten robuste Protokollanzeige, Tests, persönliche Rückmeldungen und Fenstergrößen-Merkliste. Rust: regulärer Schnittmotor 0.1.4 und dokumentierte getrennte Versuchsquellen.
+- Geprüfter Stand: CAN Release ohne Warnungen/Fehler, 753 CAN-/40 Rust-Tests, 24 gemeinsame Bild-/Audio-Grenzfälle; Radical über CAN technisch und persönlich positiv geprüft. Nur Dokumentationspräzisierungen vor der Sicherung, keine erneuten unveränderten Builds/Tests.
+- Die vier vorbestehenden CAN-Lockdateiänderungen bleiben uncommittet und unverändert. Keine EXEs, Filme, PCM-/Indexdateien, Buildausgaben, lokalen Einstellungen oder Diagnosewerkzeuge eingecheckt.
+- Ziel sind die jeweiligen main-Zweige bei GitHub: jmagull/cut-assistant-next und das weiterhin private jmagull/otr-native-poc. Der ursprüngliche Codeberg-upstream bleibt unangetastet. CAN bleibt 0.2.1 · Build 11 · RC3; kein Tag, Paket oder Release erstellt.
+
+## 11.10.2026 – Radical: Stereo auch im Original lauter als 5.1
+
+- Nutzer bestätigt zum vorgeschlagenen Originalvergleich: „ist im Orginal auch so :-)“. Der wahrgenommene Lautstärkeunterschied bestand bereits vor dem Schnitt.
+- Positive persönliche Schnittabnahme bleibt: Übergang sauber, Ton synchron. Status und Radical-Prüfbericht um den Originalvergleich ergänzt. Keine Pegelanpassung erforderlich aus dieser Beobachtung abgeleitet.
+- Nur Dokumentation, Diffprüfung bestanden. Kein Code-/Einstellungswechsel, neuer Build, Testschnitt, Commit oder Push.
+
+## 11.10.2026 – Radical mit 0.1.4: Übergang sauber, Ton synchron
+
+- Persönliche Rückmeldung des Nutzers zum neuen direkten CAN-Schnitt: „übergang ist sauber, ton ist synchron“. Die angekündigte Bild-/Tonprüfung ist damit positiv zurückgemeldet.
+- Zusätzliche Beobachtung: Stereo klingt lauter als 5.1. Als wahrgenommener Pegelunterschied festgehalten; keine dB-/Loudnessmessung und kein Nachweis, dass dieser Unterschied erst durch otr-can entstanden ist. Unterschiedliche Abmischungen, AC-3-Lautstärkemetadaten und der Player-Downmix sind mögliche Erklärungen; Vergleich mit den Originalspuren im selben Player bleibt offen.
+- Status und [Radical-Prüfbericht](OTR-CAN-RADICAL-KORREKTUR-20261011.md) aktualisiert. Nur Dokumentation; keine automatische Pegelanpassung, keine Code-/Einstellungsänderung, kein neuer Build oder Testschnitt. Letzter gebauter Stand 753 CAN-/40 Rust-Tests; kein Commit/Push.
+
+## 11.10.2026 – Fenstergrößen vorgemerkt, Radical direkt über CAN abgeschlossen
+
+- Nutzer wünscht für den nächsten Lauf gespeicherte Fenstergrößen der Schnittdialoge, insbesondere des Fortschritts-/Protokollfensters **Video vorbereiten und schneiden**. In Setup-Merkliste und Status ergänzt, zusätzlich zur bereits vorgemerkten Größe von Cutlist erzeugen. Noch keine Fensterpersistenz implementiert.
+- Neues vom Nutzer übermitteltes Protokoll bestätigt den direkten CAN-Schnitt mit Motor **0.1.4** am Radical-Original: eine FFMS2-Indexierung, 350454 Video-Pakete, AAC-Stereo und AC-3/6 Kanäle mit je 336435840 decodierten Samples / 48 kHz und durchgehenden PTS, erfolgreiche Mux-/CAN-Prüfung. Ausgabe im persönlichen Zielordner erfolgreich abgeschlossen.
+- Übergang 57:26.860, Ende 1:56:49.080. Nutzer prüft das Video jetzt; persönliche Bild-/Tonabnahme noch offen. Keine Laufzeit aus dem neuen Nutzerlauf abgeleitet.
+- Nur Merkliste, Status, Tagebuch und [Radical-Prüfbericht](OTR-CAN-RADICAL-KORREKTUR-20261011.md) aktualisiert; Dokumentationsdiff geprüft. Kein Code-/Motor-/Einstellungswechsel, kein neuer Build oder Testschnitt und kein Commit/Push. Letzter gebauter Prüfstand: 753 CAN-/40 Rust-Tests.
+
+## 11.10.2026 – Radical: Protokollflut blockiert UI, Audiofilterzustand korrigiert
+
+- Nutzer meldet Stillstand nach 42 s während Originalton-Vorbereitung. Motor bereits beendet, CAN-UI-Thread im synchronen TextBox-Scroll-/Layoutpfad; gesichertes Warnprotokoll mit mehreren hunderttausend DTS-Korrekturen. 0.1.3-Lauf separat reproduziert und korrekt abgelehnt.
+- CAN puffert Prozessmeldungen, übernimmt sie gebündelt und zeigt nur einen begrenzten Protokollausschnitt; vollständiger Inhalt kopierbar. Scrollen auf späteren Dispatcher-Schritt verlegt, lange Statusfehler begrenzt, vollständige Gründe erhalten. **753 CAN-Tests**, Release ohne Warnungen/Fehler. Echter WPF-Replay mit 807910 Zeilen / 50447542 erhaltenen Zeichen bleibt bedienbar; Fehler und Schließen sichtbar.
+- AC-3-Downmixdaten wechseln an Film-/Werbegrenzen und veranlassen FFmpeg zur Filter-Reinitialisierung. Begrenzung bis letzte Behaltegrenze allein reicht nicht. Separater Versuch erhält zusätzlich Audiofilterzustand mit -reinit_filter:a 0; kein Drop von Samples, keine unterdrückten Zeitstempelwarnungen.
+- **40 Rust-Tests**, Format-/Releaseprüfung, erneut **24 exakte Bildfälle mit beiden Tonspuren**. Radical im Versuch: 350454 Video-Pakete / 50 fps, AAC-Stereo und AC-3/6 Kanäle mit je 336435840 Samples / 48 kHz, kontinuierliche PTS, finaler Mux identisch zu Einzelstufen. Unabhängige Original-Sampleauswahl vor Kodierung für beide Spuren bytegenau; Original-AC-3-Warnung des unabhängigen Decoders erhalten.
+- Als regulären Motor **0.1.4** separat gebaut; 0.1.3 und Referenzen erhalten. Regulärer Radical-Auftrag über CAN bestanden: 247,08 s / rund 4:07 min, genau eine Indexierung, Original-/Indexerhaltung und vollständige Bereinigung; MP4 bytegleich zum Korrekturversuch. Danach Motorpfad über CANs Einstellungsverwaltung auf 0.1.4 gestellt, bisherigen Pfad gesichert und FFMS2-Pfad erhalten. CAN bleibt **0.2.1 · Build 11 · RC3**; Details und Abschluss im [Radical-Korrekturbericht](OTR-CAN-RADICAL-KORREKTUR-20261011.md). Persönliche Kontrolle der neuen Datei folgt, kein Commit/Push oder Release.
+
+## 11.10.2026 – Torchwood / Vergiftet: regulären 0.1.3-Schnitt persönlich bestätigt
+
+- Nutzer schneidet die HQ-Aufnahme Torchwood__Vergiftet_26.09.28_23-05_tele5_75_TVOON_DE.HQ.mp4 direkt über CAN mit regulärem Motor 0.1.3 und drei Behaltebereichen. Übermitteltes Abschlussprotokoll zeigt eine FFMS2-Indexierung, Video-/Audio-/Mux-Prüfung und erfolgreichen CAN-Abschluss.
+- Protokoll: 77956 Video-Pakete bei 25 fps und eine AAC-Stereospur mit 48 kHz / 149675520 decodierten Samples. Beide entsprechen 3118,240 s / 51:58.240; AAC-Zielbitrate 164300 bit/s. Berechnete Übergänge im Ergebnis 15:03.640 und 36:12.280.
+- Persönliche Rückmeldung nach der Videoprüfung: „kein Blitzer, ton ist top :-)“. Positiver zusätzlicher Realfilm-/HQ-Nachweis mit einer Tonspur für den regulären 0.1.3-Stand. Keine Laufzeit mitgeteilt; keine getrennte Mehrtonspur-Abnahme daraus abgeleitet.
+- Nur Tagebuch, Status und [0.1.3-Prüfbericht](OTR-CAN-0.1.3-PRUEFBERICHT.md) ergänzt, Dokumentationsdiff geprüft. Kein neuer automatisierter Testschnitt/Build, keine Code-/Versions-/Einstellungsänderung, kein Commit/Push. Letzter gebauter Prüfstand 40 Rust-/750 CAN-Tests.
+
+## 11.10.2026 – Korrigierten Bild-/Tonmotor 0.1.3 regulär in CAN übernommen
+
+- Nach positivem gemeinsamen Pines-Test wählt der Nutzer ausdrücklich die vollständige Audio-Neukodierung. Video- und Audio-Korrekturen zunächst in experiments/combined-engine zusammengeführt, anschließend als regulärer can-engine 0.1.3 übernommen; normale CAN-CLI, kein Versuchsschalter. Alle Tonspuren einmal durchgehend kodieren, Codec/Layout/Rate/Zielbitrate erhalten; zusätzliche verlustbehaftete Kodierung und Laufzeit bewusst dokumentiert.
+- **40/40 Rust- und 750/750 CAN-Tests bestanden**; formatiert und separate Release-Builds, CAN ohne Warnungen/Fehler. Sechs neue Audio-/Mux-Phasen in der Fortschrittsanzeige übersetzt und getestet; Originalprotokoll erhalten, keine geratenen Gesamtprozente.
+- Gemeinsamer Versuch besteht 24 exakte nummerierte Bildfolgen mit zwei Audio-Spuren; 25/50 fps, 44,1/48 kHz, Stereo und sechs Kanäle. Regulärer Normal-/Vollvideo-Prüfmodus liefert bytegleiche Dateien.
+- Regulärer Motor über CANs tatsächliche Motorfabrik/Schnittdienst geprüft: genau eine Indexierung/ein Motoraufruf, unveränderte Indizes und Originale, Unicode-/Leerzeichenpfad ohne Werkzeuge im PATH, vollständige Bereinigung. Pines-Auftrag **213,24 s / rund 3:33 min** inklusive Indexierung und CAN-Prüfung; vollständige Ausgabe bytegleich zur persönlich bestätigten Pines-Testdatei v3. 137625 Bilder, beide Tonspuren je 264240000 Samples / 5505,000 s.
+- CAN-Motorpfad über die eigene Einstellungsverwaltung auf den separaten regulären 0.1.3-Build gestellt; bisherigen Pfad gesichert, FFMS2-Pfad erhalten. MP4Box bleibt Standard. CAN weiterhin **0.2.1 · Build 11 · RC3**, acht Lockdateien und frühere EXEs erhalten. Keine neuen Abhängigkeiten, kein Commit/Push oder Paket.
+- README, Anleitung, ADR-017, Status, Rust-Dokumentation und [Prüfbericht](OTR-CAN-0.1.3-PRUEFBERICHT.md) aktualisiert. Nach Neustart Aktivierung und Abschlussprüfung beendet. Weitere reale Formate/getrennte Tonspurkontrollen und Paket-/Installationsabnahme bleiben vor einer 1.0-Veröffentlichung nötig.
+
+
+
+## 11.10.2026 – Gemeinsamer Pines-Testfilm: Bild und Ton persönlich bestätigt
+
+- Nutzer bestätigt: „ok bild und ton passen einwandfrei zusammen :-)“. Positive persönliche Bild-/Ton-Synchronitätsbewertung der gemeinsamen Testdatei Pines-frame-audio-test-v3.mp4 festgehalten. Keine ausdrückliche getrennte Abnahme jeder Tonspur oder allgemeine Releasefreigabe daraus abgeleitet.
+- Audio-Prüfbericht und Status aktualisiert. Die geprüfte vollständige Audio-Neukodierung bleibt eine bewusste Qualitäts-/Laufzeitentscheidung vor einem einheitlichen nativen Auftrag und einer CAN-Übernahme.
+- Nur Dokumentation und lokaler Rückmeldungsbeleg ergänzt; Code, Filme, Motorpfad, Version, Build und Lockdateien erhalten. Keine erneuten unveränderten Builds oder Tests; kein Commit/Push.
+
+
+## 11.10.2026 – Audio-Spuren samplegenau geprüft, gemeinsame Pines-Testdatei erstellt
+
+- Neuer getrennter Rust-Versuch experiments/audio-continuity / otr_can_audio_test.exe, expliziter --audio-experiment-Schalter. Originalton einmal mit vollständiger Dekodiervorgeschichte lesen, Keep-Samples je Spur als PCM zusammenfügen und jede komplette Spur einmal kodieren. **Vollständige verlustbehaftete Audio-Neukodierung**, keine bitgleiche ursprüngliche Tonübernahme oder CAN-Umstellung.
+- 31/31 Rust-Tests, Formatprüfung und Release-Build bestanden. 35 synthetische Aufträge / 70 Tonspuren mit Mono, Stereo, 5.1(side), 25/50 fps und 44,1/48 kHz: PCM vor Kodierung bytegleich zur unabhängig ausgewählten Original-Samplefolge; Ergebnis-Samplezahl und rohe PTS lückenlos. Geeignete unregelmäßige Signale: keine Kanalvertauschung, 155/160 Korrelationsmaxima bei null, fünf LFE-Abweichungen bis zwei Samples / 0,0417 ms. Kodierverluste und Grenzen der ersten periodischen Prüftöne ausdrücklich dokumentiert.
+- Pines-Audio: beide 48-kHz-Stereospuren je 264.240.000 Samples / 5505,000 s, vollständige PCM-Referenzen unabhängig bytegenau bestätigt. Audio-Prüflauf 168,6 s inklusive kompletter Dekodierung/Kodierung/Prüfung; kein Produktionsbenchmark. AAC-Ziel 163535, gemessen 163499 bit/s; AC-3 384000 bit/s.
+- Gemeinsame Pines-Testdatei v3 mit zuvor geprüftem Video: 137.625 Bilder und beide Tonspuren exakt 5505,000 s. Erster Copy-Mux verlängerte AC-3 um 896 Samples; Präsentationsende ausdrücklich erhalten und AC-3-Rahmengröße gesetzt. Finale Muxausgabe ohne Warnung. Sämtliche Pakete, rohe Zeiten, Flags/Padding und Decoder-Konfigurationen identisch zu den geprüften Einzelreferenzen.
+- [Audio-Prüfbericht](OTR-CAN-AUDIO-PRUEFBERICHT-20261011.md) mit Belegen, Prüfsummen, persönlicher Abnahme und Qualitäts-/Laufzeitentscheidung vor Übernahme. Noch kein einheitlicher produktiver CAN-Motor; vorbereitete Video-/Audio-Referenzen im diagnostischen Skript zusammengeführt. Eigene Prüfhelferfehler behoben und Erstprotokolle erhalten.
+- Aktiver Motor 0.1.2, CAN 0.2.1 · Build 11 · RC3, Produktionsquellen, Lockdateien, Referenzen und Einstellungen erhalten. Private Zwischenordner bereinigt, ausdrücklich benannte PCM-Belege im ignorierten .build/audio-fix-20261011 behalten. Kein Commit, Push oder Branchwechsel. Regulärer Teststand 743 CAN-/25 Rust-Tests.
+
+
+## 11.10.2026 – Getrennte Video-Testvariante korrigiert die Framefolge
+
+- Freigegebener begrenzter Versuch im Rust-Repository experiments/frame-boundaries, eigene otr_can_frame_test.exe und ausdrücklicher --video-only-Schalter. Regulärer Motor 0.1.2 und CAN-Pfad erhalten. Neue halboffene Planung, tatsächliche IDR-Prüfung, exakte Video-Paketanzahl, geprüfter IDR-Vorlauf und getrennte Video-Zusammenfügung mit erhaltenen PTS; FFmpeg-Warnungen werden nicht als sauberer Erfolg übergangen.
+- **31/31 Rust-Experimenttests**, Formatprüfung und Release-Build ohne Compilerwarnungen/Fehler. Finale EXE besteht **16/16 ursprüngliche Bildfälle** und **7/7 Zusatzfälle** mit 50 fps, offenen GOPs und Dateiende; versetzter Quellstart wird abgelehnt. Erster späte Open-GOP-Vorlauf verworfen und korrigiert. Frühere fehlerhafte eigene Zeitstempel-/Prüfhelfer-Versuche bleiben als Belege erhalten.
+- Pines-Video tatsächlich mit **137.625 Bildern** und korrekten rohen PTS / steigenden Paket-DTS geprüft. Vollständiger Prüflauf einschließlich Dekodierung 352,9 s, kein normaler Schnittbenchmark. 84 Graubildvergleiche an Filmkanten und neun internen Teilübergängen passen zur beabsichtigten Originalposition; 39 davon wegen ähnlicher Nachbarbilder nicht eindeutig. Keine pauschale Realfilm-Identitäts- oder persönliche Sichtabnahme behauptet.
+- Nach Ergänzung der Stream-Eingangswächter finale EXE erneut synthetisch geprüft und an drei späten Pines-Bildern bestätigt; kompletter Pines-Lauf mit erhaltenem vorherigem Testbuild und unverändertem Videoalgorithmus. Prüfsummen und genaue Grenzen im [Korrekturbericht](OTR-CAN-FRAME-KORREKTUR-20261011.md).
+- **Nur Video, kein Ton in den Versuchsausgaben.** Audio-Timeline bleibt eigener nächster Schritt vor gemeinsamer Bild-/Tonabnahme und Übernahme in CAN. Keine 1.0-Freigabe.
+- Neue isolierte Rust-Quellen und CAN-Dokumentation; Produktionsquellen, reguläre EXEs, Referenzen, Einstellungen, Lockdateien und Build 11/RC3 erhalten. Belege im ignorierten .build/frame-fix-20261011. Kein Commit, Push oder Branchwechsel; regulärer Teststand weiterhin 743 CAN-/25 Rust-Tests.
+
+
+## 11.10.2026 – Schritt 1 vor Version 1.0: Framefehler reproduziert, Lupe bestätigt
+
+- Unveränderte Motor-EXE 0.1.2 mit zwei künstlichen 25-fps-Dateien und binären Bildkennungen geprüft, mit/ohne B-Frames. 12 von 16 Keep-Grenzfällen liefern falsche Bildfolgen. Ein Beispiel hat korrekt 45 Bilder, enthält aber Bild 24 nicht und Bild 53 doppelt; dabei roher Video-PTS-Rücksprung um 40 ms. Einzelbild direkt vor Keyframe ergibt ohne B-Frames nur Audio, mit B-Frames zwei unerwünschte Folgebilder.
+- Ursachen: inkonsistente Ende-exklusive Segmentgrenzen mit minus/plus eins, Keyframe am ausgeschlossenen Keep-Ende und Copy-Überhang durch PTS/DTS-Bildreihenfolge. Nachgestellte drei Teile ergeben bytegleiche Motor-Ausgabe, zeigen aber acht bisher im Motorprotokoll unterdrückte Audio-DTS-Korrekturen. Decodierte AAC-/AC-3-Übergänge haben unter anderem 53,333/64 ms Lücken. Kein neuer vollständiger Realfilm-/Lippen-Synchronitätsnachweis behauptet.
+- Vorhandene Lupen-Vorschaukette über echte PNGs und ffprobe/FFmpeg: 30 Prüfungen mit passenden Original-PTS und Schnittzeiten, einschließlich Keyframes, Fenstererweiterung, spätem Seek und Halbierungssuche. Nutzer meldet aktuell keine Bildnavigation-Auffälligkeit. Historischer AVI-Problemfall daraus nicht als behoben gewertet.
+- [Diagnose und konkreter Korrekturvorschlag](OTR-CAN-FRAME-DIAGNOSE-20261011.md) erstellt: getrennte Versuchsvariante mit halboffener Planung, decoder-sicherem Video-Copy, getrennt betrachteter Audio-Timeline und echten Bildidentitäts-/Rohzeitstempeltests. Keine Kernkorrektur oder 1.0-Freigabe vorgenommen. Zwei Fehler eigener Prüfhilfen korrigiert und Erstprotokolle erhalten.
+- Nur Dokumentation ergänzt; Produktionscode, Motor 0.1.2, Referenzen, Einstellungen, acht Lockdateien, Build 11 und RC3 erhalten. Kein Commit oder Push. Belege im ignorierten .build/quality-20261011. Letzter regulärer Teststand weiterhin 743 CAN-/25 Rust-Tests; keine unveränderten Builds allein wegen der Dokumentation wiederholt.
+
+
 ## 10.10.2026 – Dank an die ursprünglichen otr-/otr-utils-Autoren
 
 - Auf Nutzerwunsch einen ausdrücklichen Dank an **Michael Picht (mipi)** und alle Mitwirkenden von otr und otr-utils formuliert. Ihre offen bereitgestellten Quellen, Keyframe-Schnittlogik, gezielte Kanten-Neukodierung und Zeit-/Framezuordnung werden als Grundlage des nativen Motors gewürdigt. Autoren- und Lizenzhinweise erhalten; kein Decoderbeitrag als Teil des CAN-Schnittmotors ausgegeben.

@@ -63,4 +63,29 @@ public sealed class OtrCanProgressReporterTests
         Assert.Same(update, Assert.Single(sink.Updates));
         new OtrCanProgressReporter(null, 2, false).Report(update);
     }
+
+    [Theory]
+    [InlineData("INFO: Stage 1/3: corrected video cutting", "OTR-CAN: Video framegenau schneiden")]
+    [InlineData("INFO: Stage 2/3: continuous CPU audio encoding", "OTR-CAN: Tonspuren vorbereiten und neu kodieren")]
+    [InlineData("INFO: Decoding original audio once and assembling exact kept PCM samples", "OTR-CAN: Originalton lesen und Behaltebereiche vorbereiten")]
+    [InlineData("INFO: Encoding each complete audio track once with original codec/layout/rate/target bitrate", "OTR-CAN: Alle Tonspuren auf CPU neu kodieren")]
+    [InlineData("INFO: Stage 3/3: assembling final MP4 and verifying unchanged stream packets", "OTR-CAN: Bild und Ton zusammenführen und prüfen")]
+    [InlineData("INFO: Final MP4 verified: video and all audio packets, PTS/DTS, padding and decoder configurations preserved", "OTR-CAN: Bild, Ton und Zeitstempel geprüft")]
+    public void CombinedEnginePhasesAreTranslatedAndRawOutputIsPreserved(string line, string expected)
+    {
+        var sink = new Sink();
+        new OtrCanProgressReporter(sink, 2, indexing: false).Report(new(CutProgressKind.Output, line));
+        Assert.Collection(sink.Updates,
+            raw => { Assert.Equal(CutProgressKind.Output, raw.Kind); Assert.Equal(line, raw.Message); },
+            progress => { Assert.Equal(CutProgressKind.Progress, progress.Kind); Assert.Equal(expected, progress.Message); Assert.Null(progress.Percentage); });
+    }
+
+    [Fact]
+    public void CombinedCutPhasesAreNotReportedDuringIndexing()
+    {
+        var sink = new Sink();
+        var update = new CutProgressUpdate(CutProgressKind.Output, "INFO: Stage 2/3: continuous CPU audio encoding");
+        new OtrCanProgressReporter(sink, 2, indexing: true).Report(update);
+        Assert.Same(update, Assert.Single(sink.Updates));
+    }
 }

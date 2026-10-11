@@ -210,4 +210,25 @@ public sealed class Mp4BoxProgressViewModelTests
             "Abbruch wird angefordert …",
             viewModel.StatusText);
     }
+
+    [Fact]
+    public void LargeProtocolKeepsFullCopyButBoundsDisplayedTailAndFailure()
+    {
+        var viewModel = new Mp4BoxProgressViewModel();
+        viewModel.MarkRunning();
+        var output = string.Join(Environment.NewLine, Enumerable.Range(0, 20000).Select(i => $"Warning {i}"));
+        viewModel.ApplyProgress(new(CutProgressKind.Output, output));
+        var failure = "Native process failed (Code 1)." + Environment.NewLine + new string('x', 20000);
+        viewModel.MarkFailed(failure);
+        Assert.Contains("Warning 0" + Environment.NewLine, viewModel.ProtocolText);
+        Assert.Contains(failure, viewModel.ProtocolText);
+        Assert.True(viewModel.DisplayProtocolText.Length <= 33000);
+        Assert.Contains("Zwischenablage", viewModel.DisplayProtocolText);
+        Assert.True(viewModel.StatusText.Length < 700);
+        Assert.Contains("Code 1", viewModel.StatusText);
+        Assert.Contains("Protokoll", viewModel.StatusText);
+        Assert.False(viewModel.CanCancel);
+        viewModel.ApplyProgress(new(CutProgressKind.Progress, "Old phase"));
+        Assert.Contains("Code 1", viewModel.StatusText);
+    }
 }

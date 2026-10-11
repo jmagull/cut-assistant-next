@@ -1,5 +1,25 @@
 # Architekturentscheidungen
 
+## ADR-018 – Gepufferte Schnittprotokolle und stabiler Audiofilterzustand
+
+**Status:** 11.10.2026 nach reproduziertem Radical-Fehler umgesetzt.
+
+- Große Prozessprotokolle nicht Zeile für Zeile auf dem UI-Thread rendern. Worker-Meldungen puffern, auf UI-Ticks und vor Erfolg/Fehler/Abbruch geordnet gebündelt übernehmen. Sichtbaren Protokollausschnitt und Fehlerstatus begrenzen; vollständigen Text für Kopieren erhalten. Automatisches Scrollen nach der Textänderung statt synchron darin ausführen.
+- Im Audio-PCM-Weg den Filterzustand über geänderte Downmix-Begleitdaten erhalten: -reinit_filter:a 0. Original ab Anfang bis zum letzten benötigten Keep lesen; keine Sample-/Paketdrops und keine ignorierten Warnungen. Vor-Kodierungs-Samplefolge und vollständige Ergebnis-Sample-/Zeitprüfungen weiterhin nachweisen.
+- Native Version 0.1.4 in separatem Buildordner, ältere EXEs erhalten. 40 Rust-/753 CAN-Tests, 24 gemeinsame Grenzfälle, echter WPF-Großprotokolltest und unabhängiger Radical-PCM-Vergleich. Persönliche Abnahme beider neuer Tonspuren folgt. [Prüfbericht](OTR-CAN-RADICAL-KORREKTUR-20261011.md).
+
+## ADR-017 – Korrigierte Framefolge und vollständige Audio-Neukodierung in otr-can 0.1.3
+
+**Status:** am 11.10.2026 nach persönlicher Pines-Bild-/Tonprüfung und ausdrücklicher Nutzerwahl der Audio-Neukodierung umgesetzt; ersetzt den Tonweg und die Grenzplanung aus ADR-016.
+
+- Halboffene Framebereiche, IDR-geprüfte GOP-Kopie, exakte Paketanzahl, sicherer Video-Seek und konsistente PTS/DTS aus der getrennten Framekorrektur übernehmen.
+- Originalton einmal mit vollständiger Dekodiervorgeschichte lesen, Keep-Samples als PCM zusammenfügen und jede komplette Tonspur einmal auf CPU neu kodieren. Codec, Layout, Samplerate und Zielbitrate erhalten. Zusätzliche Kodierverluste und Laufzeit bewusst akzeptiert; keine bitgleiche ursprüngliche Tonübernahme behaupten.
+- Geprüfte Video-/Audiostufen im MP4 zusammenführen, Präsentationsende und Padding erhalten, sämtliche finalen Stream-Pakete und Decoder-Konfigurationen vergleichen. Normalmodus prüft Video-Pakete/Zeiten und vollständig decodierte Audio-Samples; optional --verify-video dekodiert zusätzlich alle Videobilder.
+- Reguläre CLI bleibt kompatibel. CAN verwaltet weiter Original, Ziel, einmalige FFMS2-Indexierung, Prozesse und Bereinigung; MP4Box bleibt Standard. Keine neue Pflicht für reine Cutlist-Erstellung. Sechs zusätzliche Phasen übersetzen, ohne erfundene Prozentwerte.
+- 40 Rust- und 750 CAN-Tests; 24 exakte synthetische gemeinsame Bildfolgen. Regulärer Pines-Auftrag über CAN 213,24 s, gesamte MP4 bytegleich zur persönlich bestätigten Testdatei. Lokaler Motorpfad auf 0.1.3, bisheriger Pfad gesichert, alte EXEs erhalten. Weitere reale Abnahme und Paketprüfung vor 1.0; [Prüfbericht](OTR-CAN-0.1.3-PRUEFBERICHT.md).
+
+
+
 ## ADR-016 – Geprüfte Seek-Optimierung als regulärer otr-can-0.1.2-Stand
 
 **Status:** am 10.10.2026 nach ausdrücklicher Nutzerfreigabe übernommen.
