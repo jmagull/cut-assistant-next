@@ -1,5 +1,13 @@
 # Entwicklungstagebuch
 
+## 12.10.2026 – Quellen für Build 16 RC3 lokal gesichert, Schritt 2
+
+- Nutzer gibt ausdrücklich Schritt 2 frei. Sieben Motoränderungen als **2a47462**, 18 CAN-Änderungen als **603d64d** lokal gesichert; vier vorbestehende Produktions-Lockdateiänderungen außerhalb der Commits erhalten. Keine Übertragung oder Tags.
+- Quellen direkt aus diesen Commits exportiert, ohne Überlagerung: CAN 464 manifestierte Dateien, Motor 25; ZIPs mit allen Snapshot-Dateien bytegenau verglichen. Alle acht exportierten CAN-Locks entsprechen nach reiner Zeilenendennormalisierung dem Quellcommit; alle acht lokalen Ausgangshashes unverändert.
+- 0.1.5-Motorpaket mit unveränderter getesteter EXE, Quellen, MPL-/Autorenhinweisen, Lizenztexten für 40 unveränderte Windows-Crates und Herkunftsnachweis vorbereitet. Exportierte Motorquellen offline gebaut und **44/44 Tests** bestanden. Kontrollbuild nicht bytegleich; beide Hashes dokumentiert, getestete EXE beibehalten.
+- Echter Motorblock aus dem eingefrorenen CAN-Paketskript akzeptiert das echte vorbereitete Motorpaket, einschließlich Versions-/MP3- und Kopierprüfungen. Kein Produktions-Restore, CAN-Neubuild, Publish, Setup oder Portable erstellt. Buildnummer 16 und CAN-Prüfstand 793/793 erhalten; Film-/Zeitstempelbefund unverändert.
+- [Quellen-/Prüfbericht](QUELLSTAND-BUILD16-RC3-20261012.md) und Abschlussstatus in separatem Dokumentationscommit gesichert. Dieser Nachweis liegt nach dem Quellenexport und gehört nicht zum eingefrorenen Archiv. Für Schritt 3 bleibt Quellcommit **603d64d** maßgeblich. Lokale Eingaben unter .build/quellstand-build16-20261012/PACKAGE-INPUTS.json.
+
 ## 12.10.2026 – Paketbau für otr-can 0.1.5 vorbereitet, Schritt 1
 
 - Nutzer gibt ausdrücklich Schritt 1 frei. Paketskript auf zentrale Sollversion 0.1.5 mit passendem Quellenarchiv und Snapshot-/Provenienzvergleich umgestellt. Zusätzlich die tatsächliche kopierte Motor-EXE auf die MP3-Fähigkeit geprüft; bestehende Prüfsummen- und Pfadschutzprüfungen erhalten, Motor weiterhin optional.

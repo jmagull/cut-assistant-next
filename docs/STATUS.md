@@ -1,5 +1,9 @@
 # Projektstatus
 
+## 12.10.2026 – Quellstand Build 16 RC3 gesichert
+
+Schritt 2 abgeschlossen: CAN-Quellcommit **603d64d**, Motor-Quellcommit **2a47462** lokal gesichert. Feste CAN-/Motorquellenarchive ohne Arbeitsbaumüberlagerung und ein vollständiges 0.1.5-Motorpaket mit Quellen, Lizenzbeständen und Provenienz vorbereitet. Exportierter Motor offline gebaut, **44/44 Tests**, Archive/Manifeste vollständig geprüft; echter Motorblock des eingefrorenen CAN-Paketskripts akzeptiert das Paket. Getestete EXE erhalten; Kontrollbuild nicht bytegleich, keine bytegenaue Reproduzierbarkeit behauptet. Alle acht lokalen CAN-Lockdateien unverändert; vier vorbestehende Produktionsänderungen bleiben offen. CAN-Prüfstand weiterhin Build 16, 793/793 Tests. [Quellen-/Prüfbericht](QUELLSTAND-BUILD16-RC3-20261012.md). Kein Setup/Portable, Push, Tag oder Release. Nächster Schritt: Paketbau aus genau diesen Quellen.
+
 ## 12.10.2026 – Paketbau-Vorbereitung für otr-can 0.1.5
 
 Schritt 1 abgeschlossen: Paketskript erwartet 0.1.5 samt passendem Snapshot/Quellenarchiv und prüft zusätzlich die MP3-Fähigkeit der kopierten EXE. Installationshinweise aktualisiert. Je 10 PowerShell-Prüffälle unter PowerShell 7 und Windows PowerShell 5.1 bestanden. Validierungsbuild **0.2.1 · Build 16 · RC3**, ohne Warnungen/Fehler, **793/793 CAN-Tests**. Anwendungscode/Motor unverändert; Filmabnahme betrifft den zuvor geprüften Build-15-Ablauf. Kein neuer Paketsatz erstellt. [Prüfbericht](PAKETBAU-OTR-CAN-015-20261012.md). Nächster Schritt: Quellstand sichern und passende feste Quellen vorbereiten; lokale Lockdateiänderungen erhalten.
