@@ -1,6 +1,6 @@
-# CAN 0.2.1 Build 16 RC3 – lokaler Paketprüfbericht
+# CAN 0.2.1 Build 16 RC3 – Paketprüfbericht
 
-Stand: 12.10.2026. Schritt 3 auf ausdrücklichen Nutzerauftrag abgeschlossen: Setup und Portable-ZIP erstellt. **Setup-/VM- und Portable-Prüfungen mit beiden Motoren vom Nutzer bestätigt; frische VM-Installation und Deinstallation geprüft. Nicht veröffentlicht.** Keine Übertragung, Tags oder neuen Quellcommits in diesem Schritt.
+Stand: 12.10.2026. Schritt 3 auf ausdrücklichen Nutzerauftrag abgeschlossen: Setup und Portable-ZIP erstellt. **Setup-/VM- und Portable-Prüfungen mit beiden Motoren vom Nutzer bestätigt; frische VM-Installation und Deinstallation geprüft. Anschließend auf Nutzerauftrag als Vorabversion veröffentlicht.** Der Paketbauschritt selbst änderte keine Tags; der spätere [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD16-RC3.md) dokumentiert Freigabe und Uploadprüfungen.
 
 ## Quellen und Inhalt
 
@@ -80,6 +80,6 @@ Nachweise: .build/release-build16-RC3/user-portable-154b56ab.log, user-portable-
 
 Die persönliche Teufelsbrigade-Prüfung ist für einen neuen Setup-Build-16-Lauf ausführlich bestätigt. Frische VM-Installation, beide Motoren, Deinstallation sowie Portable mit beiden Motoren sind zusätzlich positiv zurückgemeldet; der jeweilige Umfang ist oben getrennt dokumentiert. Der vorbestehende Video-PTS-Befund bleibt dokumentiert. Die Kontroll-Rust-EXE aus dem Quellenarchiv ist nicht bytegleich zur getesteten EXE; keine bytegenaue Reproduzierbarkeit behauptet, getestete EXE beibehalten.
 
-**Praktische Paketabnahme:** Frische VM-Setup-Installation, beide Motoren und Deinstallation sowie Portable mit beiden Motoren sind vom Nutzer bestätigt. Der Setup-AVI-Lauf ist zusätzlich detailliert für Anfang/Ende, Schnitte, Bild und Ton abgenommen. Überinstallation, ein frisches Portable-Einstellungsprofil und zusätzliche quantitative/strenge Video-Prüfungen sind nicht gesondert bestätigt; bekannte Grenzen bleiben dokumentiert. Nächster separater Schritt 5: Veröffentlichung nach ausdrücklichem Auftrag.
+**Praktische Paketabnahme:** Frische VM-Setup-Installation, beide Motoren und Deinstallation sowie Portable mit beiden Motoren sind vom Nutzer bestätigt. Der Setup-AVI-Lauf ist zusätzlich detailliert für Anfang/Ende, Schnitte, Bild und Ton abgenommen. Überinstallation, ein frisches Portable-Einstellungsprofil und zusätzliche quantitative/strenge Video-Prüfungen sind nicht gesondert bestätigt; bekannte Grenzen bleiben dokumentiert. Schritt 5 anschließend auf ausdrücklichen Nutzerauftrag abgeschlossen: [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD16-RC3.md).
 
 Nachweise: .build/release-build16-RC3/{PACKAGE.log,PACKAGE-CONTENTS.json,PRESERVATION.json,ARTIFACTS-VERIFIED.json}, portable-extracted und artifacts/release-build16-RC3/{logs,test-results}. Keine realen Medien eingecheckt.

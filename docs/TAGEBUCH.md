@@ -1,5 +1,11 @@
 # Entwicklungstagebuch
 
+## 12.10.2026 – Build 16 RC3 veröffentlicht
+
+Auf ausdrücklichen Nutzerauftrag **5) go :-)** um **12.10.2026 15:26:56 Uhr MESZ** als öffentliche Vorabversion veröffentlicht. CAN-Tag **v0.2.1-build16-rc3** verweist auf den gebauten Quellcommit **603d64d**; Motor **0.1.5 / 2a47462**. Alle **sieben Uploads**, Größen, GitHub-SHA-256-Digests, Release-Text und Quellziel vor und nach Freigabe geprüft. **793/793 CAN-Tests**, **44/44 Rust-Tests**, 249 Portable-Dateien geprüft; gemeldete persönliche Setup-/VM-/Portable-Prüfungen positiv. Bekannter PTS-Befund und weitere Prüfgrenzen bleiben erhalten. [Öffentliches Release](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build16-rc3), [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD16-RC3.md). Pakete und Prüfsummen unverändert, vier vorbestehende Produktions-Lockdateiänderungen nicht übertragen.
+
+Nach Veröffentlichung nur aktuelle Dokumentation ergänzt, ohne Neubuild oder Änderung der freigegebenen Archive. Frühere Releases bleiben unverändert. Lokale Belege: .build/release-build16-RC3/GITHUB-DRAFT-PROOF.json, GITHUB-PUBLISHED-PROOF.json, UPLOAD-EXPECTED.json und UPLOAD.log.
+
 ## 12.10.2026 – Portable-ZIP mit beiden Motoren in der VM bestätigt
 
 - Nutzer bestätigt **„VM und zip: / MP4Box check / otr-can check“**. Positive Portable-Funktionsprüfung mit beiden Motoren übernommen. Zusammen mit frischer Setup-VM-Installation und Deinstallation sind die gemeldeten praktischen Paketprüfungen erfolgreich abgeschlossen.

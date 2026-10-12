@@ -1,5 +1,9 @@
 # Projektstatus
 
+## 12.10.2026 – Build 16 RC3 veröffentlicht
+
+Auf ausdrücklichen Nutzerauftrag **5) go :-)** um **12.10.2026 15:26:56 Uhr MESZ** als öffentliche Vorabversion veröffentlicht. CAN-Tag **v0.2.1-build16-rc3** verweist auf den gebauten Quellcommit **603d64d**; Motor **0.1.5 / 2a47462**. Alle **sieben Uploads**, Größen, GitHub-SHA-256-Digests, Release-Text und Quellziel vor und nach Freigabe geprüft. **793/793 CAN-Tests**, **44/44 Rust-Tests**, 249 Portable-Dateien geprüft; gemeldete persönliche Setup-/VM-/Portable-Prüfungen positiv. Bekannter PTS-Befund und weitere Prüfgrenzen bleiben erhalten. [Öffentliches Release](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build16-rc3), [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD16-RC3.md). Pakete und Prüfsummen unverändert, vier vorbestehende Produktions-Lockdateiänderungen nicht übertragen.
+
 ## 12.10.2026 – Portable-Prüfung in der VM bestätigt
 
 Nutzer bestätigt **„VM und zip: MP4Box check / otr-can check“**. Portable-ZIP mit beiden Motoren positiv geprüft; vorherige frische Setup-VM-Installation, beide Motoren und Deinstallation ebenfalls bestätigt. Beide neuen Anhänge sind identisch und enthalten MP4Box: eigene Arbeits-/Segmentdateien, sechs Bereiche, Zusammenfügen, „Fertig.“. otr-can aus ausdrücklicher Nutzerbestätigung übernommen, keine neuen nativen Messwerte behauptet. [Paketprüfbericht](RELEASE-BUILD16-RC3-RESULT.md). Praktische gemeldete Paketprüfungen positiv abgeschlossen; Überinstallation, frisches Portable-Profil und strenger Video-Nachweis nicht daraus abgeleitet. Bekannte Grenzen erhalten. Nächster separater Schritt: Veröffentlichung. Pakete/Prüfsummen und Build 16 unverändert.
@@ -99,7 +103,7 @@ Audio-Versuch am 11.10.2026: 35 synthetische Aufträge / 70 Tonspuren und beide 
 
 - Hilfe verlinkt Nutzeranleitung und GitHub-Projekt; Update/GitHub öffnet ebenfalls die Projektseite.
 - Credits zeigt die abgestimmte Danksagung in einem scrollbaren Dialog mit Projektlinks. Der KI-Hinweis aus der Dokumentation wurde nach der Build-12-Paketabnahme auch im aktuellen Dialog ergänzt; die eingefrorenen Build-12-Pakete enthalten diese Ergänzung noch nicht.
-- Version und lokale Buildnummer stehen im Fenstertitel und in der Hauptüberschrift. Aktueller Entwicklungsstand: 0.2.1 Build 13 RC3; öffentliche Vorabversion: 0.2.1 Build 13 RC3.
+- Version und lokale Buildnummer stehen im Fenstertitel und in der Hauptüberschrift. Aktueller Entwicklungsstand: 0.2.1 Build 16 RC3; öffentliche Vorabversion: 0.2.1 Build 16 RC3.
 - Vollständige Builds über `tools/build.ps1` erhöhen den Zähler nur nach Erfolg. Fehlgeschlagener Build und anschließendes Weiterzählen wurden geprüft.
 - Hilfe-Links, Credits-Dialog und Update/GitHub wurden vom Nutzer live bestätigt.
 
