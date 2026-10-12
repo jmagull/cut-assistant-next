@@ -65,9 +65,11 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="135" />
                                             <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding PositionText}" FontFamily="Consolas" FontSize="14" Foreground="#111827" />
-                                        <TextBlock Grid.Column="1" Text="{Binding Label}" Foreground="#4B5563" TextWrapping="Wrap" />
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding PositionText}" FontFamily="Consolas" FontSize="14" Foreground="#111827" />
+                                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Label}" Foreground="#4B5563" TextWrapping="Wrap" />
+                                        <Button Grid.Column="2" Content="Prüfen" Margin="8,0,0,0" Click="ReviewButton_Click" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

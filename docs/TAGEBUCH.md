@@ -1,5 +1,77 @@
 # Entwicklungstagebuch
 
+## 12.10.2026 – Quellstand zur Sicherung freigegeben
+
+Nutzerauftrag: heute ausschließlich Commit und Push zur Sicherung der fertig geprüften Bedienrunde einschließlich Anfang-/Ende-Kontrolle. Keine weitere Implementierung und kein Paket-/Releasebau. AVI-Frame-Lupe auf **13.10.2026** zurückgestellt.
+
+Gesicherter Arbeitsstand: lokaler Build 25 RC3, 999/999 CAN-Tests, 36 WPF-/Native-Kontrollen sowie persönliche positive Bedien- und Anfang-/Ende-Abnahme. Die vier vorbestehenden Produktions-Lockänderungen bleiben ausdrücklich außerhalb des Commits erhalten. Der künstliche MP4Box-Sonderfall bleibt separat dokumentiert.
+
+## 12.10.2026 – Kontrollplayer: Anfang und Ende ergänzt
+
+Auf Nutzerwunsch Prüfen auch für Anfang und Ende ergänzt, bei einem oder mehreren Behalteabschnitten: Anfang direkt bei 0:00, Ende drei Sekunden vor der tatsächlich geladenen Dauer, kurze Dateien auf 0:00 begrenzt. Automatisches Play nach Seek; Navigation als Vorherige/Nächste Prüfstelle über Anfang → Übergänge → Ende. Vorhandene unabhängige Instanz, Fehler/Abbruch/Dispose und Original-/Schnittzustand erhalten.
+
+Lokaler **Build 25 RC3**, **0 Warnungen/Fehler**, **999/999 CAN-Tests**, **36 WPF-/Native-Kontrollen** bestanden, ohne Bindungsfehler. [Prüfbericht](KONTROLLPLAYER-ANFANG-ENDE-20261012.md). Der Nutzer bestätigt anschließend „prüfen: Anfang und Ende super :-)“. Neue Erweiterung persönlich positiv geprüft. Zwei Kimi-Bilder zeigen den gut erkennbaren Unterschied zwischen Senderblende bei MP4Box und Filmszene bei otr-can; illustrativer Vergleich bei unterschiedlichen Playerpositionen, kein identischer Frameabgleich.
+
+Die Bedienrunde aus Build 24 wurde inzwischen vom Nutzer positiv geprüft: direktes Cutlist-/Filmspeichern, freie Namen, x-Maske auch im Cutlist-Dialog, beide Motoren einschließlich Bild/Ton, Übergangsplayer und Original-AVI mit beiden Motoren. Erster Maskenverdacht vom Nutzer korrigiert. **AVI-Frame-Lupe weiterhin ohne Bildvorschau bei fehlenden Original-PTS; separat offen, hier unverändert.** Künstlichen MP4Box-Testbefund separat behandeln; keine nachgewiesene Regression des bewährten Radical-/AVI-Ablaufs.
+
+Acht Lockdateien, zwölf persönliche Einstellungen und sieben Build-16-Artefakte unverändert. Kein Commit, Push, Paket oder Release.
+
+## 12.10.2026 – Schritt 8: Gesamtabnahme durchgeführt, MP4Box-Befund offen
+
+Auf Auftrag „8) go“ Bedienrunde zusammen geprüft und zwei Verbundtests für alte/neue Masken, manuellen Filmnamen, unabhängige Cutlist-Namen, Speichern/Wiederladen, Behaltebereiche und Ausgabeübergänge ergänzt. Keine Produktionsfunktion verändert; vorhandene Kurztexte bleiben ausdrücklich anwählbar und persönliche Vorlagen erhalten.
+
+Lokaler **Build 24 RC3**, **0 Warnungen/Fehler**, **987/987 CAN-Tests** bestanden. Kompilierte WPF-Prüfungen gegen Build 24 wiederholt, einschließlich 25 Kontrollplayer-Prüfungen. Acht reale synthetische CAN-Schnittaufträge erfolgreich: AAC/AC3 und geeignete AVI/MP3 mit beiden Motoren, zwei AAC-Spuren mit otr-can, jeweils auch wieder geladene Cutlists. Alle acht Ausgaben streng dekodiert und im unabhängigen Player geprüft; Hauptposition, Auswahl, Lupenziel und Schnittdaten erhalten.
+
+**Offener Befund:** MP4Box 26.07 bricht bei der synthetischen Datei mit zwei gleichartigen AAC-Spuren beim Zusammenfügen mit Bitstream-/I/O-Fehler ab, auch direkt ohne CAN reproduziert. Quelle erhalten, keine fertige Ausgabe veröffentlicht, Arbeitsdateien entfernt. Keine pauschale Aussage über alle Mehrspurdateien; AAC/AC3-Prüfung erfolgreich. Negativer AVI-ohne-B-Frames/CFR-Vorlauf dokumentiert. [Vollständige Ergebnisse und Grenzen](GESAMTABNAHME-BEDIENUNG-20261012.md). Technische Prüfrunde durchgeführt, uneingeschränkte Gesamt-/Releasefreigabe und persönliche Filmabnahme noch offen.
+
+Acht Lockdateien, zwölf persönliche Einstellungen, sieben öffentliche Build-16-Artefakte erhalten. Kein Motorumbau, Commit, Push, Paket oder Release.
+
+## 12.10.2026 – Schritt 7: Unabhängiger Kontrollplayer für fertige Übergänge
+
+Auf Auftrag „ok dann 7) los :-)“ Prüfen-Aktionen für innere Übergänge ergänzt. Ein unabhängiges, wiederverwendbares libmpv-Fenster lädt die tatsächliche Ausgabe, startet nach erfolgreichem Laden/Seek drei Sekunden vor dem Übergang und bietet vorherigen/nächsten Schnitt, Play/Pause, Position und Lautstärke. Eigene Ausgabezeiten pro Abschluss, Originalplayer und Schnittliste erhalten; fehlende/defekte Dateien verständlich behandeln. Abbruch/Dispose vor HWND-Zerstörung, Wiederöffnung, Hauptfensterende und Navigation nach natürlichem Filmende abgesichert.
+
+Lokaler **Build 23 RC3**, **0 Warnungen/Fehler**, **985/985 CAN-Tests** (22 zusätzliche Fälle) bestanden. Zwei echte libmpv-Kontexte unabhängig geprüft, anschließend **25 WPF-/Native-Kontrollen** mit synthetischem H.264/AAC-Video bestanden, ohne Bindungsfehler. [Prüfbericht und Grenzen](SCHNITTUEBERGAENGE-KONTROLLPLAYER-20261012.md). Persönliche Film-/Tonabnahme noch offen; keine neuen realen Motor-Schnittaufträge für diesen Schritt. Acht Lockdateien, zwölf persönliche Einstellungen und sieben öffentliche Build-16-Artefakte unverändert. Kein Commit, Push, Paket oder Release. Schritt 8 offen.
+
+## 12.10.2026 – Schritt 6: Rechtsklick-Kontrolle und SVG
+
+Auf Auftrag „6) gogogo“ Rechtsklick auf Anfang/Ende ergänzt: Originalposition −3/+3 Sekunden, auf Datei und unmittelbar angrenzende Filmstücke begrenzt; bei innen direkt berührenden roten Bereichen Hinweis statt ungültigem Sprung. Auswahl, Lupenkante und Schnittzeiten erhalten; keine automatische Wiedergabe. Linksklick und Text-/Editierfokus unverändert. SVG unter docs/images/schnittkontrolle-3sek.svg erstellt, vor heller/dunkler Umgebung geprüft und mit dem vorgegebenen Erklärungstext in README eingebunden.
+
+Lokaler **Build 22 RC3**, **0 Warnungen/Fehler**, **963/963 CAN-Tests** (25 zusätzliche Fälle) bestanden; kompilierte Tabelle mit Rechts-/Linksklick-Ereignissen und simuliertem Player geprüft, einschließlich kurzer Filmstücke, Dateigrenzen, erhaltenem Zustand und vorhandener Tastaturnavigation. [Prüfbericht und Grenzen](SCHNITTKONTROLLE-3SEK-20261012.md). Kein realer Film-/Lupe-Praxistest oder automatisierte Bestätigung des Hinweisdialogs behauptet. Acht Lockdateihashes erhalten; keine persönlichen Einstellungen geändert. Kein Restore, Commit, Push, Setup oder Release. Schritt 7 noch nicht begonnen.
+
+## 12.10.2026 – Schritt 5: Tabellen-/Timeline-Auswahl vereinheitlicht
+
+Auf Auftrag „also los mit 5)“ erneuten Zeilenklick auch auf Anfang/Ende zur Abwahl gemacht. Grenzsprung bleibt unabhängig von Auswahl/Abwahl erhalten; gemeinsame Auswahlquelle und Kantenfreigabe beibehalten. Bisherige Nicht-Kanten-Fokusbehandlung erhalten, Text-/Editierquellen ausgenommen; Timeline-Bindung bei interaktiven Wertwechseln erhalten. Zeitkorrektur, Löschen und Frame-Lupe unverändert.
+
+Lokaler **Build 21 RC3**, **0 Warnungen/Fehler**, **938/938 CAN-Tests** (14 zusätzliche Fälle) bestanden. Kompilierte Tabelle/Timeline mit simuliertem Player und echten WPF-Ereignissen geprüft: Start/Ende/Dauer, Wiederklick, Zeilenwechsel, exakte Sprünge, Bindung, Textfokus und native Tastaturnavigation; keine Schnittzeitänderung oder Bindungsfehler. [Prüfbericht und Grenzen](SCHNITTBEREICH-AUSWAHL-20261012.md). Acht lokale Lockdateihashes erhalten, keine persönlichen Einstellungen gespeichert. Kein Restore, Commit, Push, Setup oder Release. Persönliche Abnahme noch offen; Schritt 6 noch nicht begonnen.
+
+## 12.10.2026 – Schritt 4: Getrennte Namensmasken-Bausteine
+
+Auf Auftrag „4) gogogo“ S, Staffel, E, Folge und x einzeln in der Palette angeboten; führende Nullen erhalten. S/E nur mit zugehörigem Wert, x nur mit beiden Werten. Neue Standardmaske erzeugt **Ghostbusters S01E01 Hexenprobleme [19.09.2026]**; Datum aus OTR 26.09.19, Serienangaben ausdrücklich ergänzte Beispieldaten. Filmfall ohne Serienwerte bleibt ohne SE. Alte Masken und individuelle Präfixe unterstützt; bekannte Legacy-Paare im Editor geteilt, unveränderte Paare wieder in originaler Syntax gespeichert. Keine ungefragte Änderung gespeicherter Masken.
+
+Lokaler **Build 20 RC3**, **0 Warnungen/Fehler**, **924/924 CAN-Tests** (43 zusätzliche Fälle) bestanden. Echter WPF-Editor mit Palette, Vorschau, synthetischen Drop-/Move-Ereignissen, Entf, Standard/Verwerfen und modalem Speichern/Abbrechen geprüft; Normal-/Mindestgröße, keine Bindungsfehler, ausschließlich isolierte Einstellungen. [Prüfbericht](NAMENSMASKEN-EINZELBAUSTEINE-20261012.md). Alle acht lokalen Lockdateihashes erhalten, keine persönlichen Einstellungen geändert. Kein Restore, Commit, Push, Setup oder Release. Persönliche Bedienabnahme noch offen; Schritt 5 noch nicht begonnen.
+
+## 12.10.2026 – Schritt 3: Cutlist automatisch speichern
+
+Auf Nutzerauftrag „ok dann 3)“ den zusätzlichen Cutlist-Dateispeicherdialog entfernt. Ausschließlich eingerichteten Ordner **Eigene Cutlists** verwenden; Originaldateiname plus .cutlist unverändert, kein Fallback und keine Ordneranlage. Überschreibfrage mit Nein als Vorgabe; geschützter temporärer Schreibweg erhält bestehende Dateien bei Fehlern. Schreibarbeiten im Hintergrund; Uploadpfad und Erfolgsmeldung erst nach erfolgreicher Speicherung. Ordnerprüfung aus Schritt 2 gemeinsam verwendet; Einstellungen-Hilfetexte angepasst, Lade-Dialoge und Motoren unverändert.
+
+Lokaler Entwicklungsbuild **0.2.1 · Build 19 · RC3**, **0 Warnungen/Fehler**, **881/881 CAN-Tests** (21 zusätzliche Fälle) bestanden. Bytegleichheit, Original-/Schnittzuordnung, Rechte/Dateisperren, Konflikte und Aufräumen geprüft; kompilierten Cutlist- und Ordnerdialog mit isolierten Einstellungen geprüft. [Prüfbericht und Grenzen](CUTLIST-AUTOSPEICHERN-20261012.md). Erster Dateisperrtest erwartete eine andere Windows-Fehlerklasse; Erwartung korrigiert, Schutzprüfungen erhalten. Acht lokale Lockdateihashes erhalten. Kein Restore, Commit, Push, Setup oder Release. Persönliche Speicherabnahme noch offen; Schritt 4 noch nicht begonnen.
+
+## 12.10.2026 – Schritt 2: Filmname editierbar, direktes Ausgabeziel
+
+Auf Nutzerauftrag „2) go“ vollständigen Filmnamen im gemeinsamen Dialog frei editierbar gemacht; exakter Hilfetext und bewusste Neuerzeugung erhalten. Film-Dateispeicherdialog entfernt: ausschließlich konfiguriertes Verzeichnis „Geschnittene Videos“, einmal .mp4, strenge Namens-/Pfad-/Schreibprüfung, Originalschutz und ausdrückliche Überschreibfrage mit Nein als Vorgabe. Manueller Filmname bleibt getrennt von Cutlist-Namenszustand und gespeicherter Maske. Cutlist-Speicherdialog und beide Motorimplementierungen unverändert.
+
+Lokaler Entwicklungsbuild **0.2.1 · Build 18 · RC3**, ohne Warnungen/Fehler, **860/860 CAN-Tests** (67 zusätzliche Fälle) bestanden; beide CAN-Motorservices mit simulierten Werkzeugen einschließlich Konflikten geprüft. Kompilierter WPF-Dialog mit echten Bindungen/Buttons bei Normal-/Mindestgröße geprüft, keine Bindungsfehler, isolierte Fenstereinstellungen. [Umsetzung und Prüfgrenzen](AUSGABENAME-DIREKTSPEICHERN-20261012.md). Initiale Testdaten-/ACL-Prüffehler korrigiert, keine Tests entfernt oder übersprungen. Acht lokale Lockdateihashes erhalten; kein Restore, Commit, Push, Setup oder Release. Persönliche neue Filmprobe noch offen; Schritt 3 noch nicht begonnen.
+
+## 12.10.2026 – Schritt 1: Schaltflächen neu angeordnet
+
+Auf Nutzerauftrag **„1) go“** die acht Schaltflächen exakt umgeordnet: Bereich löschen → Lokale Cutlist laden → Cutlist vom Server laden → MP4Box → otr-can → Cutlist erzeugen → Upload → Namensmaske. Nur MainWindow.xaml funktional geändert; vorhandene Beschriftungen, Click-Handler, Bindings und Aktivierungsregeln erhalten. WrapPanel beibehalten, zwei Abstände angepasst. Cutlist-Speichern bleibt eine eigenständige Aktion, keine neue zeitliche Voraussetzung.
+
+Lokaler Entwicklungsbuild **0.2.1 · Build 17 · RC3**, **0 Warnungen/Fehler**, **793/793 CAN-Tests** bestanden, keine übersprungen. Gebautes MainWindow bei 960×780 und Mindestgröße 760×600 vermessen; alle acht Buttons vollständig angeordnet, visuelle Reihenfolge und Bindings geprüft. Kompilierte Buttons im unsichtbaren Vorschaufenster gerendert; keine Hauptplayerinitialisierung oder Speicherung von Benutzereinstellungen. Keine neue persönliche Klick-/Filmabnahme behauptet. [Plan und Nachweise](ENTWICKLUNGSPLAN-BEDIENUNG-20261012.md#umsetzungsstand--schritt-1-abgeschlossen). Alle acht Lockdateihashes erhalten. Kein Restore, Commit, Push, Setup oder Release; veröffentlichter Build 16 bleibt unverändert. Schritt 2 noch nicht begonnen.
+
+## 12.10.2026 – Nächste Bedienungsrunde geordnet und analysiert
+
+Gesammelte Nutzerwünsche in acht Schritten geordnet: Schaltflächen; freier Filmname und direktes Ausgabeziel; automatisches Cutlist-Speichern; Namensmasken; gemeinsame Auswahl; Rechtsklickkontrolle samt SVG; unabhängiger Kontrollplayer; Gesamtabnahme und gesonderter Kurztextabgleich. Gemeinsamer Motor-/Namensablauf, bisherige Dateinamen-Sanierung und Verzeichnis-Fallbacks, Cutlist-Schreibschutzbedarf, Anfang-/Ende-Auswahlpfad sowie libmpv-Instanzlebenszyklus untersucht. [Entwicklungsplan mit Bestandsaufnahme und konkreten Vorschlägen](ENTWICKLUNGSPLAN-BEDIENUNG-20261012.md). Noch keine funktionalen Änderungen; keine Builds, Pakete, Commits oder Veröffentlichung für diesen Planungsschritt. Vier lokale Produktions-Lockänderungen erhalten.
+
 ## 12.10.2026 – Build 16 RC3 veröffentlicht
 
 Auf ausdrücklichen Nutzerauftrag **5) go :-)** um **12.10.2026 15:26:56 Uhr MESZ** als öffentliche Vorabversion veröffentlicht. CAN-Tag **v0.2.1-build16-rc3** verweist auf den gebauten Quellcommit **603d64d**; Motor **0.1.5 / 2a47462**. Alle **sieben Uploads**, Größen, GitHub-SHA-256-Digests, Release-Text und Quellziel vor und nach Freigabe geprüft. **793/793 CAN-Tests**, **44/44 Rust-Tests**, 249 Portable-Dateien geprüft; gemeldete persönliche Setup-/VM-/Portable-Prüfungen positiv. Bekannter PTS-Befund und weitere Prüfgrenzen bleiben erhalten. [Öffentliches Release](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build16-rc3), [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD16-RC3.md). Pakete und Prüfsummen unverändert, vier vorbestehende Produktions-Lockdateiänderungen nicht übertragen.

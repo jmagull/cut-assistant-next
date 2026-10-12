@@ -68,7 +68,7 @@
                 <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="18" Margin="0,14,0,0">
                     <StackPanel>
                         <TextBlock Text="Geschnittene Videos" FontSize="16" FontWeight="SemiBold" Foreground="#1F2937" />
-                        <TextBlock Text="Hier beginnt die Auswahl des Speicherorts beim Schneiden." Foreground="#6B7280" TextWrapping="Wrap" Margin="0,5,0,12" />
+                        <TextBlock Text="Hier werden geschnittene Filme direkt gespeichert." Foreground="#6B7280" TextWrapping="Wrap" Margin="0,5,0,12" />
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -87,7 +87,7 @@
                 <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="18" Margin="0,14,0,0">
                     <StackPanel>
                         <TextBlock Text="Eigene Cutlists" FontSize="16" FontWeight="SemiBold" Foreground="#1F2937" />
-                        <TextBlock Text="Hier beginnt die Auswahl beim Öffnen und Speichern lokaler Cutlists." Foreground="#6B7280" TextWrapping="Wrap" Margin="0,5,0,12" />
+                        <TextBlock Text="Hier werden eigene Cutlists direkt gespeichert. Beim Laden lokaler Cutlists beginnt hier die Dateiauswahl." Foreground="#6B7280" TextWrapping="Wrap" Margin="0,5,0,12" />
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -103,7 +103,7 @@
                         </Grid>
                     </StackPanel>
                 </Border>
-                <TextBlock Text="Alle Angaben sind optional. Ohne Standardordner bleibt die bisherige Ordnerwahl erhalten. Im Dateidialog kannst Du jederzeit einen anderen Ordner wählen."
+                <TextBlock Text="Zum Schneiden und zum Speichern eigener Cutlists muss der jeweilige Ordner eingerichtet und beschreibbar sein. Beim Laden kannst Du im Dateidialog einen anderen Ordner wählen."
                            TextWrapping="Wrap" Foreground="#6B7280" Margin="0,16,0,0" />
             </StackPanel>
         </ScrollViewer>

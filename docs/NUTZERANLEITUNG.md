@@ -8,11 +8,11 @@ Bei geeigneten H.264-AVI-Dateien bietet **Schneiden otr-can** eine ausdrücklich
 
 Ein alter Motor wird für MP3-Aufträge mit einem Upgrade-Hinweis abgelehnt. Ungeeignete Zeitstrukturen und fehlende Samples werden nicht automatisch repariert. Bitte jede Tonspur und alle Übergänge kontrollieren. Die neue Teufelsbrigade-Datei wurde am 12.10.2026 persönlich positiv abgenommen: Anfang, Ende, alle Schnittübergänge sowie Ton und Bild. Eine bereits im vorherigen Ergebnis vorhandene Video-Zeitstempelauffälligkeit bleibt offen. [Prüfstand und Grenzen](AVI-OTR-CAN-MP3-20261012.md).
 
-Die folgenden Kapitel beschreiben die veröffentlichte Build-16-Ausgabe.
+Die folgenden Kapitel beschreiben den lokalen Entwicklungsstand Build 22. Die öffentliche Build-16-Ausgabe enthält die neue Schaltflächenreihenfolge, direktes Speichern von Filmen/Cutlists, getrennte Serienbausteine und die neue Tabellen-/Rechtsklickbedienung noch nicht. [Prüfbericht](AUSGABENAME-DIREKTSPEICHERN-20261012.md).
 
-Stand: 12.10.2026. Diese Anleitung beschreibt die öffentliche Vorabversion **0.2.1 Build 16 RC3** für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand: 12.10.2026. Diese Anleitung beschreibt den lokalen Entwicklungsstand **0.2.1 Build 25 RC3** für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
-Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.2.1 · Build 16 · RC3**. Frische VM-Setup-Installation, beide Motoren, Deinstallation und Portable mit beiden Motoren wurden vom Nutzer positiv bestätigt. Bitte die tatsächlich angezeigten Angaben bei Fehlermeldungen mit angeben.
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.2.1 · Build 25 · RC3**. Die persönliche Setup-/VM-/Portable-Abnahme betrifft weiterhin Build 16. Bitte die tatsächlich angezeigten Angaben bei Fehlermeldungen mit angeben.
 
 ## 1. Einmalig einrichten
 
@@ -53,12 +53,14 @@ Fehlende OTR-CAN-Werkzeuge haben keine Auswirkungen auf MP4Box oder die Cutlist-
 Unter **Einstellungen → Standardordner …** kannst Du drei Ordner unabhängig voneinander festlegen:
 
 - **Originalvideos:** Startordner bei **Videodatei laden**.
-- **Geschnittene Videos:** Startordner bei **Geschnittene Datei speichern**.
-- **Eigene Cutlists:** Startordner bei **Lokale Cutlist laden** und **Cutlist speichern**.
+- **Geschnittene Videos:** Verbindlicher Ausgabeordner beim Schneiden mit beiden Motoren; ab Build 18 erscheint kein zusätzlicher Film-Speicherdialog.
+- **Eigene Cutlists:** Verbindlicher Speicherordner für eigene Cutlists; beim Laden lokaler Cutlists weiterhin Startordner der Dateiauswahl.
 
-Wähle vorhandene Ordner über **Ordner wählen …** oder trage vollständige Pfade ein. **Speichern** übernimmt die Auswahl; sie bleibt nach einem Neustart erhalten und gilt beim nächsten Dateidialog. Im Dateidialog kannst Du jederzeit einen anderen Ordner oder Ausgabenamen wählen.
+Wähle vorhandene Ordner über **Ordner wählen …** oder trage vollständige Pfade ein. **Speichern** übernimmt die Auswahl; sie bleibt nach einem Neustart erhalten. Beim Laden von Originalen und lokalen Cutlists kannst Du weiterhin einen anderen Ordner im Dateidialog auswählen. Film- und Cutlist-Speicherung verwenden unmittelbar den jeweils eingestellten Zielordner.
 
-Alle drei Felder sind optional und dürfen denselben Ordner enthalten. Über **×** oder durch Leeren des Felds entfernst Du eine Vorgabe. Ohne Vorgabe bleibt die bisherige Ordnerwahl erhalten: Bei **Cutlist speichern** ist das der Ordner des Originalvideos, bei den übrigen Dialogen die normale Windows-Auswahl. Ist ein gespeicherter Ordner später nicht erreichbar, gilt derselbe Rückfall; CAN behält die Einstellung. Die vorhandenen Videoordner bleiben beim Ergänzen des Cutlist-Ordners erhalten. Es werden keine Video- oder Cutlist-Ordner angelegt und keine vorhandenen Dateien verschoben. **Abbrechen** verwirft die Bearbeitung.
+Die Felder dürfen leer bleiben und denselben Ordner enthalten. Zum Filmschneiden ist ein vorhandener, beschreibbarer Ordner für **Geschnittene Videos** erforderlich; zum Speichern eigener Cutlists entsprechend ein Ordner für **Eigene Cutlists**. Fehlt der benötigte Ordner oder ist er nicht nutzbar, weist CAN auf die Einstellungen hin und verwendet keinen Ersatzordner. Der Filmname wird direkt im Schneidedialog festgelegt.
+
+Über **×** oder durch Leeren eines Felds entfernst Du eine Vorgabe. Beim Laden bleibt die bisherige Dateiauswahl erhalten. Beim Speichern einer Cutlist wird dagegen niemals auf den Originalordner zurückgefallen. Vorhandene Einstellungen bleiben erhalten; keine Ordner werden automatisch angelegt und keine Dateien verschoben. **Abbrechen** verwirft die Bearbeitung.
 
 ### Persönliche Cutlist-Server-URL eintragen
 
@@ -74,12 +76,20 @@ Trage unter **Einstellungen → Cutlist-Einstellungen …** deine persönliche U
 
 Unter **Einstellungen → Namensmaske …** legst du fest, wie CAN vorgeschlagene Dateinamen bildet. Die CAN-Standardmaske trennt Staffel/Folge und Folgentitel mit einem Leerzeichen, zum Beispiel `Hunting Party S02E13 Xander Wax [25.08.2026]`.
 
+Ab Build 20 stehen **S**, **Staffel**, **E**, **Folge** und **x** als einzelne Bausteine zur Verfügung. Damit lassen sich beispielsweise **S01E01**, **4x01**, **04x01** oder mit einem Bindestrich **02-13** zusammensetzen. Eine Eingabe **1** bleibt **1**, **01** bleibt **01**; CAN ergänzt keine führenden Nullen.
+
+**S** und **E** erscheinen nur bei vorhandenem zugehörigem Wert. **x** erscheint nur, wenn Staffel und Folge vorhanden sind. Die neue CAN-Standardmaske erzeugt **Ghostbusters S01E01 Hexenprobleme [19.09.2026]**. Ein Film ohne Serienangaben ergibt beispielsweise **Die Teufelsbrigade [21.01.2021]**. Bewusst gesetzte freie Texte und Trennzeichen bleiben erhalten.
+
+Das Editorbeispiel verwendet **Ghostbusters__Hexenprobleme_26.09.19_10-50_pro7maxx_25_TVOON_DE.HQ.mp4**. Das OTR-Datum **26.09.19** steht für **19.09.2026**; Name, Folgentitel und die Serienwerte **01/01** sind ergänzte Beispieldaten. Der Ausgabedateiname erhält beim Schneiden zusätzlich **.mp4**.
+
+Deine bereits gespeicherte Maske wird nicht automatisch ersetzt. Die bisherigen S-/E-Präfixbausteine erscheinen im Editor getrennt, unveränderte Paare behalten beim Speichern ihre bisherige Syntax. Andere eigene Präfixe bleiben ebenfalls erhalten. **CAN-Standardmaske** lädt bewusst die neue Standardmaske; erst **Speichern** übernimmt sie dauerhaft. Unabhängig davon kannst du den endgültigen Filmnamen im Schneidedialog frei bearbeiten.
+
 Ziehe verfügbare Elemente und Trennzeichen mit gedrückter linker Maustaste in die Namensmaske. Vorhandene Bausteine kannst du durch Ziehen verschieben. Zum Entfernen wählst du einen Baustein aus und drückst **Entf**. Die Vorschau aktualisiert sich bei jeder Änderung.
 
 | Schaltfläche | Wirkung |
 |---|---|
 | **Änderungen verwerfen** | Stellt die Maske wieder her, die beim Öffnen des Editors geladen war. Der Editor bleibt geöffnet. |
-| **CAN-Standardmaske** | Lädt die ursprüngliche, mit CAN ausgelieferte Namensmaske in den Editor. Bausteine und Vorschau werden aktualisiert. |
+| **CAN-Standardmaske** | Lädt die aktuelle CAN-Standardmaske mit getrennten Serienbausteinen und Ghostbusters-Beispiel. Dauerhafte Übernahme erst mit Speichern. |
 | **Speichern** | Übernimmt die angezeigte Maske dauerhaft und schließt den Editor. Beim nächsten Öffnen ist sie der Ausgangsstand. |
 | **Abbrechen** | Schließt den Editor, ohne die Änderungen zu übernehmen. Die bisher gespeicherte Maske bleibt erhalten. |
 
@@ -159,13 +169,32 @@ CAN markiert **Bereiche, die entfernt werden sollen**. Die roten Abschnitte der 
 
 Mit **Videoanfang** bzw. **Videoende** kannst du die entsprechende Dateigrenze verwenden. Bestehende Bereiche lassen sich in der Tabelle oder Timeline auswählen und korrigieren. **Bereich löschen** entfernt die ausgewählte Markierung aus dem Schnittplan; es löscht keine Videodatei.
 
-Ein Klick auf einen Schnittbereich wählt ihn aus und hebt ihn hervor. Ein erneuter Klick auf denselben Bereich hebt die Auswahl wieder auf. In der Schnittliste werden Anfang, Ende und Dauer einheitlich als Stunden:Minuten:Sekunden mit drei Nachkommastellen dargestellt. Die interne Genauigkeit der Schnittmarken wird dadurch nicht verändert.
+Ein Klick auf einen Schnittbereich wählt ihn aus und hebt ihn hervor. Ein erneuter Klick auf denselben Bereich hebt die Auswahl wieder auf – sowohl in der Timeline als auch in jeder Tabellenzelle. Ein Klick auf eine andere Zeile wechselt die Auswahl; Timeline und Tabelle bleiben synchron. In der Schnittliste werden Anfang, Ende und Dauer einheitlich als Stunden:Minuten:Sekunden mit drei Nachkommastellen dargestellt. Die interne Genauigkeit der Schnittmarken wird dadurch nicht verändert.
+
+Ein Klick auf **Anfang** oder **Ende** springt zusätzlich weiterhin an die jeweilige Grenze im Original, auch wenn damit gerade abgewählt wird. Nach einer Abwahl ist keine Kante mehr für die Frame-Lupe ausgewählt. Klicke erneut auf die gewünschte Grenze, um sie wieder auszuwählen. Zeitkorrektur und Löschen verwenden wie bisher den aktuell ausgewählten Bereich.
 
 Ein Klick auf die Zeitleiste oder die farbige Schnitt-Timeline setzt die Wiedergabeposition und den Slider direkt auf die gewählte Stelle. Bei roten Bereichen wird zusätzlich wie bisher die Auswahl umgeschaltet. Das Ziehen des Reglers bleibt möglich.
 
 Play/Pause, Zeitleiste, **−10 Bilder**, **Bild zurück**, **Bild vor** und **+10 Bilder** helfen bei der Positionierung. Einzelbildschritte sind im pausierten Zustand verfügbar. Tastatur: Leertaste für Play/Pause, Pfeil links/rechts für ein Bild, Strg+Pfeil links/rechts für zwanzig Bilder. Mit Strg verwenden auch die größeren Bildschritt-Buttons zwanzig Bilder.
 
 Die Anzeige **Geschnitten** ist eine Vorschau der geplanten Ausgabelaufzeit. Prüfe das tatsächliche Schnittergebnis im Player; Schnittmotor und Videostruktur können die exakten Grenzen beeinflussen.
+
+### Schnittkanten vor dem Schneiden prüfen
+
+Ab Build 22 kannst du die Filmszenen vor und nach einem roten Schnittbereich schnell im Originalplayer kontrollieren:
+
+- **Rechtsklick auf Anfang:** drei Sekunden vor den eingetragenen Anfang springen.
+- **Rechtsklick auf Ende:** drei Sekunden nach das eingetragene Ende springen.
+
+Ein Bereich von **10:00 bis 12:00** führt damit zu **09:57** beziehungsweise **12:03**. Playerposition und Slider folgen; die Wiedergabe startet nicht automatisch. Auswahl, aktuell gewählte Lupenkante und Schnittwerte bleiben erhalten. Linksklick verhält sich weiterhin wie oben beschrieben.
+
+An Dateianfang/-ende begrenzt CAN den Sprung auf die Originaldatei. Ist ein benachbarter Filmabschnitt kürzer als drei Sekunden, bleibt die errechnete Position innerhalb dieses Abschnitts. Berühren sich zwei rote Bereiche im Inneren direkt, erscheint ein Hinweis, weil dazwischen kein Filmstück zum Prüfen vorhanden ist.
+
+Dauerzelle und Texteingaben erhalten keine neue Rechtsklick-Navigation. Zur genauen Korrektur verwende anschließend die vorhandene Frame-Lupe.
+
+![Schnittkontrolle drei Sekunden vor dem Anfang und nach dem Ende](images/schnittkontrolle-3sek.svg)
+
+Rechtsklick auf Anfang: 3 Sekunden zurück. Rechtsklick auf Ende: 3 Sekunden vorwärts. So lassen sich die Filmszenen unmittelbar vor und nach einem Schnittbereich kontrollieren.
 
 ### Frame-Lupe im Entwicklungsbuild ab Build 10
 
@@ -183,7 +212,7 @@ Klicke in der Schnitttabelle auf die **Startzeit oder Endzeit** und drücke **Sh
 
 Beim Laden eines größeren Abschnitts kann die Analyse etwas dauern. **Schließen** beendet auch laufende Vorgänge. Fehlen eindeutige Zeitstempel, zeigt die Lupe keine bestätigte Bildzuordnung an; Fehlerdetails stehen im aufklappbaren Detailbereich.
 
-Die Übernahme in den Schnittplan speichert noch keine Datei. Prüfe anschließend die übrigen Kanten und verwende **Cutlist erzeugen**, um eine neue `.cutlist` zu speichern. Verwende beispielsweise einen Namen mit `.korrigiert.cutlist`, wenn du die ursprüngliche Liste behalten möchtest. Beim Export werden die korrigierten Entfernbereiche wie bisher in zu behaltende Abschnitte umgerechnet.
+Die Übernahme in den Schnittplan speichert noch keine Datei. Prüfe anschließend die übrigen Kanten und verwende **Cutlist erzeugen**, um die korrigierte Fassung im eingerichteten Cutlist-Ordner zu speichern. Der Dateiname bleibt an die Originalaufnahme gebunden. Bei einer vorhandenen Fassung kannst du das Ersetzen ablehnen; wenn du beide Fassungen behalten möchtest, sichere die alte Datei zuvor als Kopie. Beim Export werden die korrigierten Entfernbereiche wie bisher in zu behaltende Abschnitte umgerechnet.
 
 Die Übernahme verwendet Original-PTS und Zeitbasis und zieht den bekannten Containerstart ab. Sie verwendet weder die geschätzte Framenummer des Hauptplayers noch eine Rechnung aus Bildrate und lokaler Lupennummer. Die interne Zeitauflösung beträgt 100 Nanosekunden; die Anzeige mit Millisekunden verringert die interne Genauigkeit nicht. Die Framenummer zählt nur im geladenen Abschnitt; ein absoluter Datei-Frameindex und der unabhängige Abgleich zum sichtbaren Hauptplayerbild folgen. Dateien mit mehreren Videostreams benötigen zuvor die noch ausstehende Zuordnung zur aktiven Player-Videospur.
 
@@ -191,7 +220,11 @@ Die Wahl einer genauen Schnittzeit garantiert nicht, dass jeder Schnittmotor sie
 
 ## 5. Nur eine Cutlist erstellen
 
-Mit **Cutlist erzeugen** öffnest du den Erstellungsdialog. Prüfe die Metadaten, den vorgeschlagenen Namen und den Kommentar und speichere die `.cutlist` lokal.
+Mit **Cutlist erzeugen** öffnest du den Erstellungsdialog. Prüfe Metadaten, vorgeschlagenen Filmnamen, Bewertung und Kommentar. **Cutlist speichern** schreibt die Datei direkt in den eingestellten Ordner **Eigene Cutlists**. Ein zusätzlicher Dateispeicherdialog erscheint nicht.
+
+Der Cutlist-Dateiname wird fest aus dem vollständigen Originaldateinamen und der Endung **.cutlist** gebildet, beispielsweise **Aufnahme.HQ.mp4.cutlist**. Ein manuell geänderter Name für den geschnittenen Film verändert diesen Cutlist-Dateinamen nicht.
+
+Fehlt der Cutlist-Ordner oder ist er nicht nutzbar, erscheint **Cutlist konnte nicht gespeichert werden** mit dem Hinweis, den Pfad unter Einstellungen zu überprüfen. CAN verwendet keinen anderen Ordner. Existiert die Cutlist bereits, fragt CAN vor dem Ersetzen nach; **Nein** ist vorausgewählt und erhält die Datei. Nach erfolgreichem Speichern folgt die bisherige Bestätigung.
 
 Dafür muss das Video nicht geschnitten oder nach MP4 vorbereitet werden. CAN kann somit auch ausschließlich zum Erstellen und Korrigieren von Cutlists verwendet werden.
 
@@ -228,9 +261,15 @@ Die Vorbereitung kopiert die Streams mit FFmpeg ohne Neukodierung. Das Original 
 
 ### Namen und Ziel wählen
 
-Im Schnittdialog prüfst du Name, gegebenenfalls Staffel, Folge und Folgentitel sowie die Vorschau. Ein Namensvorschlag aus der Cutlist kann bereits übernommen sein. **Aus obigen Eingaben neu erzeugen** bildet die Vorschau erneut aus den Eingaben und der Namensmaske.
+Im Schnittdialog prüfst du Name, gegebenenfalls Staffel, Folge und Folgentitel. Im Feld **Ausgabedateiname** kannst du den gesamten vorgeschlagenen Namen ändern: etwa **Ghosts - 4x01 - Patience**, **Ghostbusters** oder **Die Teufelsbrigade [21.01.2021]**. Auch Datum und Trennzeichen sind frei editierbar.
 
-Klicke im Dialog auf **Schneiden …** und wähle einen Zielnamen für die MP4-Datei. Verwende einen anderen Pfad als den der Originaldatei. Eine bereits vorhandene Ausgabe wird nur nach der entsprechenden Bestätigung ersetzt.
+**Du kannst den gesamten Dateinamen abändern.**
+
+Änderungen an den oberen Namensfeldern überschreiben deinen manuell gewählten Namen nicht. **Aus obigen Eingaben neu erzeugen** ersetzt ihn bewusst durch einen neuen Vorschlag aus den oberen Feldern und der gespeicherten Standardmaske. Ein aus einer Cutlist übernommener Vorschlag kann weiterhin als Ausgangswert dienen. Die manuelle Filmnamensänderung verändert weder Standardmaske noch Cutlist-Namensdaten.
+
+Klicke auf **Schneiden …**. CAN verwendet unmittelbar den eingestellten Ordner **Geschnittene Videos** und ergänzt **.mp4** einmal. Ein weiterer Speicherdialog erscheint für beide Motoren nicht. Gib nur den Dateinamen ein, keinen Ordnerpfad. Ungültige Windows-Namen werden verständlich abgelehnt und nicht automatisch umbenannt.
+
+Ist der Ausgabeordner nicht eingerichtet oder nicht nutzbar, überprüfe ihn unter **Einstellungen → Standardordner …**. CAN verwendet keinen Ausweichordner. Bestehende Ausgaben werden nur nach ausdrücklichem **Ja** in der Überschreibfrage ersetzt; **Nein** ist vorausgewählt und führt zurück zur Namensbearbeitung. Das Original darf auch nach einer Bestätigung nicht ersetzt werden.
 
 ### Mit OTR-CAN schneiden
 
@@ -260,13 +299,19 @@ Enthält eine HD-Aufnahme mehrere Tonspuren, bleiben sie beim Schneiden mit MP4B
 
 **Abbrechen** fordert den Abbruch an. Warte, bis er abgeschlossen ist. Nach einem Fehler bleibt das Fenster offen und zeigt den Grund direkt oberhalb des Protokolls.
 
+Die technische Gesamtabnahme von Build 24 enthält einen offenen Befund: Bei einer erzeugten Testdatei mit zwei gleichartigen AAC-Spuren scheitert MP4Box 26.07 beim Zusammenfügen. CAN zeigt den Fehler im Protokoll und veröffentlicht keine fertige Ausgabe. AAC/AC3 sowie die geeignete AVI/MP3-Testaufnahme wurden mit beiden Motoren erfolgreich geprüft. Dies ersetzt keine persönliche Prüfung realer Aufnahmen. [Prüfergebnisse und Grenzen](GESAMTABNAHME-BEDIENUNG-20261012.md).
+
 ### Abschluss und spätere Kontrolle
 
 Nach einem erfolgreichen Schnitt und dem Aufräumen der temporären Arbeitsdatei erscheint **Schneiden abgeschlossen**. Das Fenster zeigt die fertige Datei sowie Anfang, Übergänge und Ende zur Kontrolle. Alle Zeiten beziehen sich auf den **geschnittenen Film**: Sie werden aus den Laufzeiten der behaltenen Abschnitte berechnet und dienen zur Orientierung; die tatsächlichen Schnittgrenzen können geringfügig abweichen.
 
 Mit **Hinweise kopieren** übernimmst du Dateipfad, Kontrollstellen und Hinweise in die Zwischenablage, etwa für eine spätere Prüfung. Das Schnittprotokoll bleibt bei Bedarf aufklappbar und lässt sich markieren und mit **Strg+C** kopieren. **Schließen** beendet das Abschlussfenster; es gibt keinen Countdown.
 
-Der Hinweis **„Bitte im eigenen Player Deiner Wahl öffnen.“** erscheint im Fenster und im kopierten Text. Du entscheidest selbst, wann und mit welchem externen Player du kontrollierst. CAN startet keinen Player und lädt die Ausgabe nicht selbst. Das Originalvideo und die Schnittliste bleiben für Korrekturen geöffnet; das Abschlussfenster blockiert die Bearbeitung nicht. Seine Kontrollliste gehört weiterhin zur gerade erzeugten Datei, auch wenn du anschließend die Schnittmarken änderst.
+Ab dem lokalen **Build 25** besitzen **Anfang, alle Übergänge und Ende** eine Schaltfläche **Prüfen**, auch bei nur einem Behalteabschnitt. Sie öffnet die fertige Datei in einem eigenen CAN-Kontrollfenster. Nach dem Laden beginnt die Wiedergabe am Anfang **bei 0:00**, für einen Übergang **drei Sekunden davor** und am Ende **drei Sekunden vor der tatsächlichen Filmdauer**. Ist der Film kürzer als drei Sekunden, beginnt die Endprüfung bei 0:00. **Vorherige Prüfstelle** und **Nächste Prüfstelle** wechseln in der Reihenfolge Anfang → Übergänge → Ende und starten dort erneut. Play/Pause, Positionsregler und eine eigene Lautstärke stehen zur Verfügung; die Wiedergabe läuft über den Übergang hinaus weiter. Am Anfang beziehungsweise Ende ist der unmögliche Wechsel deaktiviert. Nach dem natürlichen Filmende kannst du erneut einen Übergang prüfen oder über den Positionsregler zurückgehen.
+
+CAN verwendet immer ein Kontrollfenster und übernimmt beim Wechsel die Datei und Übergänge des angeklickten Abschlussfensters. Nach dem Schließen kannst du es erneut öffnen. **Schließen** im Abschlussfenster beendet das Kontrollfenster nicht; beim Beenden von CAN wird es mit geschlossen. Originalplayer und Schnittliste bleiben für Korrekturen geöffnet. Die ursprüngliche Wiedergabe läuft gegebenenfalls weiter; zum getrennten Anhören kannst du sie selbst pausieren.
+
+Anfang und Ende lassen sich immer prüfen. Die Zeiten im Abschlussfenster bleiben berechnete Planwerte; für den Start der Endprüfung verwendet und zeigt der Kontrollplayer die tatsächliche geladene Dauer. Bitte Bild, Ton, Tonsynchronität und sämtliche Übergänge persönlich kontrollieren. Die Tonspurauswahl bleibt dem externen Player vorbehalten. Fehlende oder defekte Ausgaben werden im Kontrollfenster verständlich gemeldet. [Prüfbericht für Anfang/Ende und verbleibende Abnahme](KONTROLLPLAYER-ANFANG-ENDE-20261012.md).
 
 ## 7. Cutlist auf den Server hochladen
 

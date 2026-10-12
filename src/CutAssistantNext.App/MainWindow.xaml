@@ -497,6 +497,7 @@
                           SelectionUnit="FullRow"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           PreviewMouseLeftButtonDown="RemoveSegmentsDataGrid_PreviewMouseLeftButtonDown"
+                          PreviewMouseRightButtonDown="RemoveSegmentsDataGrid_PreviewMouseRightButtonDown"
                           SelectedItem="{Binding SelectedRemoveSegment, Mode=TwoWay}"
                           ItemsSource="{Binding RemoveSegments}">
                     <DataGrid.Columns>
@@ -537,20 +538,6 @@
                             Click="RemoveCutSegmentButton_Click"
                             Content="Bereich löschen" />
 
-                    <Button MinWidth="110"
-                            Height="36"
-                            Margin="0,0,8,6"
-                            Padding="10,0"
-                            Click="GenerateCutlistButton_Click"
-                            Content="Cutlist erzeugen" />
-
-                    <Button MinWidth="170"
-                            Height="36"
-                            Margin="0,0,8,6"
-                            Padding="10,0"
-                            Click="UploadCutlistButton_Click"
-                            Content="Cutlist auf Server hochladen" />
-
                     <Button MinWidth="130"
                             Height="36"
                             Margin="0,0,8,6"
@@ -566,13 +553,6 @@
                             Click="LoadServerCutlistButton_Click"
                             Content="Cutlist vom Server laden" />
 
-                    <Button MinWidth="110"
-                            Height="36"
-                            Margin="12,0,8,6"
-                            Padding="10,0"
-                            Click="NamingSettingsButton_Click"
-                            Content="Namensmaske" />
-
                     <Button MinWidth="210"
                             Height="36"
                             Margin="0,0,8,6"
@@ -582,10 +562,31 @@
 
                     <Button MinWidth="270"
                             Height="36"
-                            Margin="0,0,0,6"
+                            Margin="0,0,8,6"
                             Padding="10,0"
                             Click="CutOtrCanButton_Click"
                             Content="Schneiden otr-can (framegenau, langsam)" />
+
+                    <Button MinWidth="110"
+                            Height="36"
+                            Margin="0,0,8,6"
+                            Padding="10,0"
+                            Click="GenerateCutlistButton_Click"
+                            Content="Cutlist erzeugen" />
+
+                    <Button MinWidth="170"
+                            Height="36"
+                            Margin="0,0,8,6"
+                            Padding="10,0"
+                            Click="UploadCutlistButton_Click"
+                            Content="Cutlist auf Server hochladen" />
+
+                    <Button MinWidth="110"
+                            Height="36"
+                            Margin="12,0,0,6"
+                            Padding="10,0"
+                            Click="NamingSettingsButton_Click"
+                            Content="Namensmaske" />
                 </WrapPanel>
             </Grid>
         </Border>

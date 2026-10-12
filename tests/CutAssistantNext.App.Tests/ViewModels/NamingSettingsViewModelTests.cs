@@ -177,7 +177,7 @@ public sealed class NamingSettingsViewModelTests
                 block => block.Value));
     }
     [Fact]
-    public void RemoveTemplateBlockAt_RemovesWholeBlockAndUpdatesPreview()
+    public void RemoveTemplateBlockAt_RemovesIndependentPrefixAndKeepsNumericValue()
     {
         var settings =
             new NamingSettings
@@ -203,20 +203,22 @@ public sealed class NamingSettingsViewModelTests
             removed);
 
         Assert.Equal(
-            "%Name% %Folge:E%",
+            "%Name% %Staffel%%Folge:E%",
             viewModel.DefaultNameTemplate);
 
         Assert.Equal(
             [
                 "%Name%",
                 " ",
-                "%Folge:E%"
+                "%Staffel%",
+                "%E%",
+                "%Folge%"
             ],
             viewModel.TemplateBlocks.Select(
                 block => block.Value));
 
         Assert.Equal(
-            "Sliders E05",
+            "Sliders 05E05",
             viewModel.Preview);
     }
     [Fact]
@@ -241,10 +243,10 @@ public sealed class NamingSettingsViewModelTests
         var newIndex =
             viewModel.MoveTemplateBlock(
                 sourceIndex: 1,
-                insertionIndex: 4);
+                insertionIndex: 6);
 
         Assert.Equal(
-            3,
+            5,
             newIndex);
 
         Assert.Equal(
@@ -254,8 +256,10 @@ public sealed class NamingSettingsViewModelTests
         Assert.Equal(
             [
                 "%Name%",
-                "%Staffel:S%",
-                "%Folge:E%",
+                "%S%",
+                "%Staffel%",
+                "%E%",
+                "%Folge%",
                 " "
             ],
             viewModel.TemplateBlocks.Select(
@@ -301,7 +305,8 @@ public sealed class NamingSettingsViewModelTests
             [
                 "%Name%",
                 "%Sender%",
-                "%Folge:E%"
+                "%E%",
+                "%Folge%"
             ],
             viewModel.TemplateBlocks.Select(
                 block => block.Value));
@@ -345,7 +350,8 @@ public sealed class NamingSettingsViewModelTests
             [
                 "%Name%",
                 " ",
-                "%Folge:E%"
+                "%E%",
+                "%Folge%"
             ],
             viewModel.TemplateBlocks.Select(
                 block => block.Value));

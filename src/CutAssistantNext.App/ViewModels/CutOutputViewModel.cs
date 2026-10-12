@@ -10,6 +10,7 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
     private NameTemplateContext _nameContext;
     private string _nameTemplate;
     private string _suggestedMovieName;
+    private string _outputMovieName;
     private string _defaultNameTemplate;
 
     public CutOutputViewModel(
@@ -35,6 +36,8 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
             NameTemplateRenderer.Render(
                 _nameTemplate,
                 _nameContext);
+
+        _outputMovieName = _suggestedMovieName;
     }
     public CutOutputViewModel(
         CutNamingState namingState)
@@ -53,6 +56,8 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
 
         _suggestedMovieName =
             namingState.SuggestedMovieName;
+
+        _outputMovieName = _suggestedMovieName;
     }
 
     public CutOutputViewModel(
@@ -76,6 +81,8 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
 
         _suggestedMovieName =
             namingState.SuggestedMovieName;
+
+        _outputMovieName = _suggestedMovieName;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -148,16 +155,14 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
                 _defaultNameTemplate,
                 _nameContext);
 
-        if (_suggestedMovieName == suggestedMovieName)
+        if (_suggestedMovieName != suggestedMovieName)
         {
-            return;
+            _suggestedMovieName = suggestedMovieName;
+            OnPropertyChanged(nameof(SuggestedMovieName));
         }
 
-        _suggestedMovieName =
-            suggestedMovieName;
-
-        OnPropertyChanged(
-            nameof(SuggestedMovieName));
+        // Rebuilding the suggestion deliberately replaces any manual output name.
+        OutputMovieName = suggestedMovieName;
     }
 
     public CutNamingState CreateNamingState()
@@ -167,6 +172,23 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
             _nameContext)
             .UseSuggestedMovieName(
                 _suggestedMovieName);
+    }
+
+    /// <summary>The name for this output only; it is not stored in cutlist naming state.</summary>
+    public string OutputMovieName
+    {
+        get => _outputMovieName;
+        set
+        {
+            var outputMovieName = value ?? string.Empty;
+            if (_outputMovieName == outputMovieName)
+            {
+                return;
+            }
+
+            _outputMovieName = outputMovieName;
+            OnPropertyChanged();
+        }
     }
 
     public string SuggestedMovieName =>

@@ -105,6 +105,36 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         }
     }
 
+    public TimeSpan? GetEdgeReviewPosition(RemoveSegment segment, CutEdgeSide side) =>
+        CutEdgeReviewPositionCalculator.Calculate(GetInitializedCutPlan(), segment, side);
+
+    public void ToggleSegmentSelection(RemoveSegment segment, CutEdgeSide? side = null)
+    {
+        ArgumentNullException.ThrowIfNull(segment);
+        if (side.HasValue && !Enum.IsDefined(side.Value))
+        {
+            throw new ArgumentOutOfRangeException(nameof(side));
+        }
+
+        if (!GetInitializedCutPlan().RemoveSegments.Contains(segment))
+        {
+            throw new InvalidOperationException("Der ausgewählte Schnittbereich gehört nicht zum aktuellen Schnittplan.");
+        }
+
+        if (ReferenceEquals(SelectedRemoveSegment, segment))
+        {
+            SelectedRemoveSegment = null;
+        }
+        else if (side is { } edgeSide)
+        {
+            SelectEdge(segment, edgeSide);
+        }
+        else
+        {
+            SelectedRemoveSegment = segment;
+        }
+    }
+
     public void SelectEdge(RemoveSegment segment, CutEdgeSide side)
     {
         ArgumentNullException.ThrowIfNull(segment);

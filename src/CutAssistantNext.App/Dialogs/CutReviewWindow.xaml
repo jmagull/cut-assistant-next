@@ -1,0 +1,66 @@
+<Window x:Class="CutAssistantNext.App.Dialogs.CutReviewWindow" x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:CutAssistantNext.App.Controls"
+        Title="Geschnittenen Film prüfen" Width="880" Height="660" MinWidth="600" MinHeight="480"
+        WindowStartupLocation="CenterOwner" Background="#F4F6F8" PreviewKeyDown="Window_PreviewKeyDown">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="MinHeight" Value="38" />
+            <Setter Property="Margin" Value="0,0,10,8" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="0,0,0,12">
+            <TextBlock Text="Geschnittenen Film prüfen" FontSize="24" FontWeight="SemiBold" Foreground="#111827" />
+            <TextBlock Text="{Binding FileName}" TextWrapping="Wrap" Foreground="#4B5563" Margin="0,6,0,4" />
+            <TextBlock Text="{Binding CurrentTransitionText}" FontSize="15" FontWeight="SemiBold" />
+        </StackPanel>
+        <Border Grid.Row="1" Background="Black" Margin="0,0,0,12">
+            <controls:MpvVideoHost x:Name="VideoHost" />
+        </Border>
+        <StackPanel Grid.Row="2" IsEnabled="{Binding IsIdle}">
+            <StackPanel DataContext="{Binding Playback}">
+                <Slider x:Name="PositionSlider" Minimum="0" Maximum="{Binding DurationSeconds}"
+                        Value="{Binding TimelinePositionSeconds, Mode=OneWay}" IsEnabled="{Binding CanSeek}"
+                        IsMoveToPointEnabled="True" PreviewMouseLeftButtonDown="PositionSlider_MouseDown"
+                        PreviewMouseLeftButtonUp="PositionSlider_MouseUp" ValueChanged="PositionSlider_ValueChanged"
+                        PreviewKeyDown="PositionSlider_PreviewKeyDown" LostMouseCapture="PositionSlider_LostMouseCapture"
+                        AutomationProperties.Name="Wiedergabeposition im geschnittenen Film" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,6,0,8">
+                    <TextBlock Text="{Binding PositionText}" FontFamily="Consolas" />
+                    <TextBlock Text=" / " />
+                    <TextBlock Text="{Binding DurationText}" FontFamily="Consolas" />
+                </StackPanel>
+            </StackPanel>
+            <WrapPanel>
+                <Button x:Name="PreviousButton" Content="Vorherige Prüfstelle" IsEnabled="{Binding CanPrevious}" Click="PreviousButton_Click" />
+                <Button x:Name="NextButton" Content="Nächste Prüfstelle" IsEnabled="{Binding CanNext}" Click="NextButton_Click" />
+                <Button x:Name="PlayButton" Content="Play/Pause" IsEnabled="{Binding Playback.CanTogglePlayback}" Click="PlayButton_Click" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                    <TextBlock Text="Lautstärke" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <Slider x:Name="VolumeSlider" Width="100" Minimum="0" Maximum="100"
+                            Value="{Binding Playback.Volume, Mode=OneWay}" IsEnabled="{Binding Playback.CanSetVolume}"
+                            PreviewMouseLeftButtonUp="VolumeSlider_MouseUp" PreviewKeyUp="VolumeSlider_KeyUp"
+                            AutomationProperties.Name="Lautstärke des Kontrollplayers" />
+                </StackPanel>
+            </WrapPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="3" Margin="0,4,0,12">
+            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" Foreground="#4B5563" />
+            <TextBlock x:Name="ErrorText" TextWrapping="Wrap" Foreground="#B91C1C" Margin="0,4,0,0"
+                       AutomationProperties.LiveSetting="Polite" />
+            <TextBlock Text="{Binding Playback.ErrorMessage}" TextWrapping="Wrap" Foreground="#B91C1C" />
+        </StackPanel>
+        <Button Grid.Row="4" Content="Schließen" HorizontalAlignment="Right" Margin="0"
+                Click="CloseButton_Click" />
+    </Grid>
+</Window>

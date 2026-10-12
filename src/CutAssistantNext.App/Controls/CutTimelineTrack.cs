@@ -183,10 +183,10 @@ public sealed class CutTimelineTrack : FrameworkElement
                     continue;
                 }
 
-                SelectedRemoveSegment =
-                    ReferenceEquals(SelectedRemoveSegment, segment)
-                        ? null
-                        : segment;
+                // Keep the two-way selection binding while changing the current value.
+                SetCurrentValue(
+                    SelectedRemoveSegmentProperty,
+                    ReferenceEquals(SelectedRemoveSegment, segment) ? null : segment);
                 break;
             }
         }

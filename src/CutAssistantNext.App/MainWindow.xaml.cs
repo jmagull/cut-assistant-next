@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows;
 using CutAssistantNext.App.Controls;
 using CutAssistantNext.App.Dialogs;
+using CutAssistantNext.App.Naming;
 using CutAssistantNext.App.Services.Analysis;
 using CutAssistantNext.App.Services.Cutting;
 using CutAssistantNext.App.Services;
@@ -36,6 +37,7 @@ public partial class MainWindow : Window
     private readonly IMediaPlayerService _mediaPlayerService;
     private readonly PlaybackViewModel _playbackViewModel;
     private readonly CutPlanViewModel _cutPlanViewModel;
+    private readonly CutReviewController _cutReviewController;
     private CutNamingState? _cutNamingState;
     private string? _loadedCutlistAuthor;
     private string? _lastSavedCutlistFilePath;
@@ -63,6 +65,7 @@ public partial class MainWindow : Window
             ?? throw new ArgumentNullException(nameof(logger));
 
         InitializeComponent();
+        _cutReviewController = new CutReviewController(this, _logger);
 
         _windowSettingsStore =
             new WindowSettingsStore();
@@ -190,6 +193,7 @@ public partial class MainWindow : Window
 
         PreviewKeyUp -= MainWindow_PreviewKeyUp;
 
+        await _cutReviewController.CloseAsync();
         _playbackViewModel.Dispose();
 
         try
@@ -570,6 +574,12 @@ public partial class MainWindow : Window
             FindVisualParent<DataGridCell>(
                 source);
 
+        // Do not intercept text focus or editing if a cell contains an editor.
+        if (clickedCell?.IsEditing == true || FindVisualParent<TextBoxBase>(source) is not null)
+        {
+            return;
+        }
+
         if (clickedCell is not null &&
             clickedRow.Item is RemoveSegment segment)
         {
@@ -596,27 +606,24 @@ public partial class MainWindow : Window
                 e.Handled =
                     true;
 
-                dataGrid.SelectedItem =
-                    clickedRow.Item;
-
-                _cutPlanViewModel.SelectEdge(
-                    segment,
-                    ReferenceEquals(clickedCell.Column, RemoveSegmentStartColumn)
-                        ? CutEdgeSide.Start
-                        : CutEdgeSide.End);
-
-                _playbackViewModel.BeginSeek();
-
-                if (!_playbackViewModel.IsSeeking)
+                var selectionApplied = false;
+                ExecuteCutPlanAction(() =>
+                {
+                    _cutPlanViewModel.ToggleSegmentSelection(
+                        segment,
+                        ReferenceEquals(clickedCell.Column, RemoveSegmentStartColumn)
+                            ? CutEdgeSide.Start
+                            : CutEdgeSide.End);
+                    selectionApplied = true;
+                });
+                if (!selectionApplied)
                 {
                     return;
                 }
 
-                _playbackViewModel.UpdateSeekPosition(
-                    seekPosition.Value.TotalSeconds);
-
+                // Navigation is independent of whether this click selected or deselected the row.
                 await ExecutePlaybackActionAsync(
-                    () => _playbackViewModel.CommitSeekAsync());
+                    () => _playbackViewModel.SeekToAsync(seekPosition.Value));
 
                 return;
             }
@@ -637,6 +644,70 @@ public partial class MainWindow : Window
 
         _cutPlanViewModel.SelectedRemoveSegment =
             null;
+    }
+
+    private async void RemoveSegmentsDataGrid_PreviewMouseRightButtonDown(
+        object sender,
+        MouseButtonEventArgs e)
+    {
+        if (sender is not DataGrid dataGrid ||
+            e.OriginalSource is not DependencyObject source ||
+            _isClosed || _mediaLoadInProgress)
+        {
+            return;
+        }
+
+        var cell = FindVisualParent<DataGridCell>(source);
+        if (cell is null || cell.IsEditing || FindVisualParent<TextBoxBase>(source) is not null)
+        {
+            return;
+        }
+
+        var row = ItemsControl.ContainerFromElement(dataGrid, source) as DataGridRow;
+        if (row?.Item is not RemoveSegment segment)
+        {
+            return;
+        }
+
+        CutEdgeSide? side = ReferenceEquals(cell.Column, RemoveSegmentStartColumn)
+            ? CutEdgeSide.Start
+            : ReferenceEquals(cell.Column, RemoveSegmentEndColumn) ? CutEdgeSide.End : null;
+        if (side is null)
+        {
+            return;
+        }
+
+        // Right-click navigation must not select another row or change the current loupe target.
+        e.Handled = true;
+        if (!_playbackViewModel.CanSeek)
+        {
+            return;
+        }
+
+        TimeSpan? position = null;
+        var calculated = false;
+        ExecuteCutPlanAction(() =>
+        {
+            position = _cutPlanViewModel.GetEdgeReviewPosition(segment, side.Value);
+            calculated = true;
+        });
+        if (!calculated)
+        {
+            return;
+        }
+
+        if (position is null)
+        {
+            MessageBox.Show(
+                this,
+                "An dieser Schnittkante gibt es keinen angrenzenden Filmabschnitt zum Prüfen.",
+                "Schnittkante prüfen",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+            return;
+        }
+
+        await ExecutePlaybackActionAsync(() => _playbackViewModel.SeekToAsync(position.Value));
     }
 
     private void SetCutStartButton_Click(
@@ -1037,25 +1108,7 @@ public partial class MainWindow : Window
         var settings =
             new NamingSettingsLoader().Load();
 
-        var nameContext =
-            new NameTemplateContext(
-                Name:
-                    "Hunting Party - Die Moerderjagd",
-                Year: "2026",
-                Month: "08",
-                Day: "25",
-                Season: "02",
-                Episode: "13",
-                OriginalName:
-                    "Hunting_Party_-_Die_Moerderjagd__Xander_Wax_S02E13_26.08.25_22-10_sat1_60_TVOON_DE.HQ.mp4",
-                ShortYear: "26",
-                Hour: "22",
-                Minute: "10",
-                Sender: "sat1",
-                Series:
-                    "Hunting Party - Die Moerderjagd",
-                EpisodeTitle:
-                    "Xander Wax");
+        var nameContext = NamingEditorSample.CreateContext();
 
         var viewModel =
             new NamingSettingsViewModel(
@@ -1213,83 +1266,63 @@ public partial class MainWindow : Window
             async (_, _) =>
             {
 
-                string suggestedOutputFileName;
-
-                try
+                if (!dialog.IsEnabled)
                 {
-                    suggestedOutputFileName =
-                        OutputFileNameBuilder.Build(
-                            viewModel.SuggestedMovieName,
-                            ".mp4");
-
-                    _cutNamingState =
-                        viewModel.CreateNamingState();
-                }
-                catch (ArgumentException exception)
-                {
-                    MessageBox.Show(
-                        dialog,
-                        exception.Message,
-                        "Schneiden",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
-
                     return;
                 }
 
-                string outputDirectory;
                 dialog.IsEnabled = false;
+                Mp4BoxProgressDialog? progressDialog = null;
+
                 try
                 {
-                    outputDirectory = await Task.Run(() => VideoFolderPathResolver.Resolve(
-                        new VideoFolderSettingsStore().Load().CutVideosDirectory));
-                }
-                finally
-                {
-                    if (dialog.IsVisible) dialog.IsEnabled = true;
-                }
+                    var movieName = viewModel.OutputMovieName;
+                    var originalFilePath = _viewModel.FilePath;
+                    var outputTarget = await Task.Run(() => MovieOutputTargetResolver.Resolve(
+                        new VideoFolderSettingsStore().Load().CutVideosDirectory,
+                        movieName,
+                        originalFilePath));
 
-                if (!dialog.IsVisible) return;
-
-                var saveDialog =
-                    new SaveFileDialog
+                    if (!dialog.IsVisible)
                     {
-                        Title = "Geschnittene Datei speichern",
-                        InitialDirectory = outputDirectory,
-                        FileName = suggestedOutputFileName,
-                        DefaultExt = ".mp4",
-                        AddExtension = true,
-                        Filter = "MP4-Datei (*.mp4)|*.mp4",
-                    };
+                        return;
+                    }
 
-                if (saveDialog.ShowDialog(
-                    dialog) != true)
-                {
-                    return;
-                }
+                    var overwriteConfirmed = false;
+                    if (outputTarget.Exists)
+                    {
+                        overwriteConfirmed = MessageBox.Show(
+                            dialog,
+                            $"Die Ausgabedatei existiert bereits:{Environment.NewLine}{outputTarget.FilePath}" +
+                            $"{Environment.NewLine}{Environment.NewLine}Möchtest Du diese Datei überschreiben?",
+                            "Ausgabedatei überschreiben",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning,
+                            MessageBoxResult.No) == MessageBoxResult.Yes;
+                        if (!overwriteConfirmed)
+                        {
+                            return;
+                        }
+                    }
 
-                try
-                {
                     var framesPerSecond =
                         CutMediaAnalysisValidator.GetFramesPerSecond(
                             analysis);
-
-                    if (string.Equals(Path.GetFullPath(_viewModel.FilePath),
-                            Path.GetFullPath(saveDialog.FileName), StringComparison.OrdinalIgnoreCase))
-                        throw new InvalidOperationException("Die Ausgabedatei darf nicht die Originaldatei überschreiben.");
 
                     var cutPlan =
                         _cutPlanViewModel.CreateCutPlanSnapshot();
 
                     var cutRequest = CutRequestFactory.Create(
-                        _viewModel.FilePath,
-                        saveDialog.FileName,
+                        originalFilePath,
+                        outputTarget.FilePath,
                         cutPlan,
                         framesPerSecond,
-                        overwriteExistingOutput: true);
+                        overwriteExistingOutput: overwriteConfirmed);
+
+                    _cutNamingState = viewModel.CreateNamingState();
 
                     var completionViewModel =
-                        new CutCompletionViewModel(saveDialog.FileName, cutPlan);
+                        new CutCompletionViewModel(outputTarget.FilePath, cutPlan);
 
                     var cutApplicationSettingsStore =
                         new CutApplicationSettingsStore();
@@ -1303,7 +1336,7 @@ public partial class MainWindow : Window
                     var progress =
                         new BufferedCutProgressReporter(progressViewModel.ApplyProgress);
 
-                    var progressDialog =
+                    progressDialog =
                         new Mp4BoxProgressDialog(
                             progressViewModel, progress)
                         {
@@ -1434,7 +1467,8 @@ public partial class MainWindow : Window
                     if (cutSucceeded)
                     {
                         progressDialog.Close();
-                        new CutCompletionDialog(completionViewModel, progressViewModel.ProtocolText)
+                        new CutCompletionDialog(completionViewModel, progressViewModel.ProtocolText,
+                            reviewAsync: _cutReviewController.ReviewAsync)
                         {
                             Owner = this
                         }.Show();
@@ -1442,13 +1476,22 @@ public partial class MainWindow : Window
                 }
                 catch (Exception exception)
                 {
-                    if (dialog.IsVisible) dialog.IsEnabled = true;
-                    MessageBox.Show(
-                        dialog,
-                        $"Der Schnitt ist fehlgeschlagen:{Environment.NewLine}{exception.Message}",
-                        "Schneiden",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
+                    if (dialog.IsVisible)
+                    {
+                        MessageBox.Show(
+                            dialog,
+                            $"Schneiden ist nicht möglich:{Environment.NewLine}{exception.Message}",
+                            "Schneiden",
+                            MessageBoxButton.OK,
+                            exception is ArgumentException ? MessageBoxImage.Warning : MessageBoxImage.Error);
+                    }
+                }
+                finally
+                {
+                    if (dialog.IsVisible && (progressDialog is null || !progressDialog.IsVisible))
+                    {
+                        dialog.IsEnabled = true;
+                    }
                 }
             };
 
@@ -1950,46 +1993,29 @@ public partial class MainWindow : Window
                 Owner = this
             };
 
+        var saveInProgress = false;
+        dialog.Closing += (_, e) =>
+        {
+            // Keep the original and upload association stable until this save has finished.
+            if (saveInProgress)
+            {
+                e.Cancel = true;
+            }
+        };
+
         dialog.SaveRequested +=
             async (_, _) =>
             {
-                var originalFileName =
-                    Path.GetFileName(fileName);
-
-                string cutlistDirectory;
-                dialog.IsEnabled = false;
-                try
-                {
-                    cutlistDirectory = await Task.Run(() => VideoFolderPathResolver.ResolveCutlists(
-                        new VideoFolderSettingsStore().Load(), Path.GetDirectoryName(fileName)));
-                }
-                finally
-                {
-                    if (dialog.IsVisible) dialog.IsEnabled = true;
-                }
-
-                if (!dialog.IsVisible) return;
-
-                var saveDialog =
-                    new SaveFileDialog
-                    {
-                        Title = "Cutlist speichern",
-                        FileName = $"{originalFileName}.cutlist",
-                        Filter =
-                            "Cutlist-Dateien (*.cutlist)|*.cutlist|" +
-                            "Alle Dateien (*.*)|*.*",
-                        DefaultExt = ".cutlist",
-                        AddExtension = true,
-                        InitialDirectory = cutlistDirectory
-                    };
-
-                if (saveDialog.ShowDialog(dialog) != true)
+                if (saveInProgress || !dialog.IsEnabled)
                 {
                     return;
                 }
 
+                saveInProgress = true;
+                dialog.IsEnabled = false;
                 try
                 {
+                    var originalFileName = Path.GetFileName(fileName);
                     var applicationVersion =
                         typeof(MainWindow)
                             .Assembly
@@ -2006,17 +2032,36 @@ public partial class MainWindow : Window
                             applicationVersion,
                             analysis,
                             intendedCutApplication);
+                    var namingState = cutlistViewModel.CreateNamingState();
 
-                    CutlistFileWriter.Write(
-                        saveDialog.FileName,
-                        document);
+                    var target = await Task.Run(() => CutlistOutputTargetResolver.Resolve(
+                        new VideoFolderSettingsStore().Load().OwnCutlistsDirectory,
+                        originalFileName));
 
-                    _lastSavedCutlistFilePath =
-                        Path.GetFullPath(
-                            saveDialog.FileName);
+                    var overwriteConfirmed = false;
+                    if (target.Exists)
+                    {
+                        overwriteConfirmed = MessageBox.Show(
+                            dialog,
+                            $"Die Cutlist existiert bereits:{Environment.NewLine}{target.FilePath}" +
+                            $"{Environment.NewLine}{Environment.NewLine}Möchtest Du diese Cutlist überschreiben?",
+                            "Cutlist überschreiben",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning,
+                            MessageBoxResult.No) == MessageBoxResult.Yes;
+                        if (!overwriteConfirmed)
+                        {
+                            return;
+                        }
+                    }
 
-                    _cutNamingState =
-                        cutlistViewModel.CreateNamingState();
+                    await Task.Run(() => CutlistFileWriter.WriteSafely(
+                        target.FilePath,
+                        document,
+                        overwriteExisting: overwriteConfirmed));
+
+                    _lastSavedCutlistFilePath = target.FilePath;
+                    _cutNamingState = namingState;
 
                     MessageBox.Show(
                         dialog,
@@ -2025,20 +2070,35 @@ public partial class MainWindow : Window
                         MessageBoxButton.OK,
                         MessageBoxImage.Information);
 
+                    saveInProgress = false;
                     dialog.Close();
                 }
                 catch (Exception exception)
                 {
+                    var message = exception.Message;
+                    if (exception is IOException or UnauthorizedAccessException &&
+                        !message.Contains("Einstellungen", StringComparison.Ordinal))
+                    {
+                        message += Environment.NewLine +
+                            "Bitte überprüfe das Verzeichnis für eigene Cutlists unter Einstellungen.";
+                    }
+
                     MessageBox.Show(
                         dialog,
-                        $"Die Cutlist konnte nicht gespeichert werden:" +
-                        $"{Environment.NewLine}{exception.Message}",
-                        "Cutlist speichern",
+                        message,
+                        "Cutlist konnte nicht gespeichert werden",
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
                 }
+                finally
+                {
+                    saveInProgress = false;
+                    if (dialog.IsVisible)
+                    {
+                        dialog.IsEnabled = true;
+                    }
+                }
             };
-
 
         dialog.ShowDialog();
     }

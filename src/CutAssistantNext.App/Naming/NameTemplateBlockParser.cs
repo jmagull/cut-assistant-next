@@ -11,13 +11,20 @@ internal enum NameTemplateBlockKind
 
 internal sealed record NameTemplateBlock(
     NameTemplateBlockKind Kind,
-    string Value)
+    string Value,
+    string? LegacyToken = null)
 {
     public string DisplayText =>
         Value switch
         {
             "%Name%" =>
                 "Name",
+
+            "%S%" => "S",
+            "%Staffel%" => "Staffel",
+            "%E%" => "E",
+            "%Folge%" => "Folge",
+            "%x%" => "x",
 
             "%Staffel:S%" =>
                 "Staffel (S)",
@@ -113,6 +120,30 @@ internal static class NameTemplateBlockParser
         return blocks;
     }
 
+    internal static IReadOnlyList<NameTemplateBlock> ParseForEditor(string template)
+    {
+        var blocks = new List<NameTemplateBlock>();
+        foreach (var block in Parse(template))
+        {
+            switch (block.Value)
+            {
+                case "%Staffel:S%":
+                    blocks.Add(new(NameTemplateBlockKind.Token, "%S%", block.Value));
+                    blocks.Add(new(NameTemplateBlockKind.Token, "%Staffel%", block.Value));
+                    break;
+                case "%Folge:E%":
+                    blocks.Add(new(NameTemplateBlockKind.Token, "%E%", block.Value));
+                    blocks.Add(new(NameTemplateBlockKind.Token, "%Folge%", block.Value));
+                    break;
+                default:
+                    blocks.Add(block);
+                    break;
+            }
+        }
+
+        return blocks;
+    }
+
     internal static string Render(
         IEnumerable<NameTemplateBlock> blocks)
     {
@@ -122,10 +153,22 @@ internal static class NameTemplateBlockParser
         var result =
             new StringBuilder();
 
-        foreach (var block in blocks)
+        var items = blocks.ToList();
+        for (var index = 0; index < items.Count; index++)
         {
-            result.Append(
-                block.Value);
+            var block = items[index];
+            if (index + 1 < items.Count && block.LegacyToken is { } legacy &&
+                items[index + 1].LegacyToken == legacy &&
+                ((legacy == "%Staffel:S%" && block.Value == "%S%" && items[index + 1].Value == "%Staffel%") ||
+                 (legacy == "%Folge:E%" && block.Value == "%E%" && items[index + 1].Value == "%Folge%")))
+            {
+                // An unchanged legacy pair keeps its original syntax and empty-value behavior.
+                result.Append(legacy);
+                index++;
+                continue;
+            }
+
+            result.Append(block.Value);
         }
 
         return result.ToString();

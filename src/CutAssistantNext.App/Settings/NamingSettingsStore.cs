@@ -15,7 +15,7 @@ internal sealed class NamingSettings
         return new NamingSettings
         {
             DefaultNameTemplate =
-                "%Name% %Staffel:S%%Folge:E%%Folgentitel: % [%Tag%.%Monat%.%YYYY%]"
+                "%Name% %S%%Staffel%%E%%Folge%%Folgentitel: % [%Tag%.%Monat%.%YYYY%]"
         };
     }
 }
@@ -105,8 +105,8 @@ internal sealed class NamingSettingsStore
         }
         catch
         {
-            // Einstellungsfehler dürfen die Anwendung
-            // nicht beeinträchtigen.
+            // Einstellungsfehler dï¿½rfen die Anwendung
+            // nicht beeintrï¿½chtigen.
         }
     }
 

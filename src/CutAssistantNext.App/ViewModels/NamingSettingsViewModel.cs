@@ -73,7 +73,7 @@ internal sealed class NamingSettingsViewModel :
             _nameContext);
 
     public IReadOnlyList<NameTemplateBlock> TemplateBlocks =>
-        NameTemplateBlockParser.Parse(
+        NameTemplateBlockParser.ParseForEditor(
             _defaultNameTemplate);
 
     internal int InsertTemplateElement(
@@ -112,7 +112,7 @@ internal sealed class NamingSettingsViewModel :
         int blockIndex)
     {
         var blocks =
-            NameTemplateBlockParser.Parse(
+            NameTemplateBlockParser.ParseForEditor(
                 _defaultNameTemplate)
                 .ToList();
 
@@ -137,7 +137,7 @@ internal sealed class NamingSettingsViewModel :
         int insertionIndex)
     {
         var blocks =
-            NameTemplateBlockParser.Parse(
+            NameTemplateBlockParser.ParseForEditor(
                 _defaultNameTemplate)
                 .ToList();
 
@@ -186,7 +186,7 @@ internal sealed class NamingSettingsViewModel :
             templateElement);
 
         var blocks =
-            NameTemplateBlockParser.Parse(
+            NameTemplateBlockParser.ParseForEditor(
                 _defaultNameTemplate)
                 .ToList();
 

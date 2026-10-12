@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="340" viewBox="0 0 960 340" role="img" aria-labelledby="title description">
+  <title id="title">Schnittkanten im Original kontrollieren: drei Sekunden davor und danach</title>
+  <desc id="description">Ein roter Werbebereich liegt zwischen zwei grünen Filmabschnitten. Rechtsklick auf Anfang bei 10:00 springt zu 09:57; Rechtsklick auf Ende bei 12:00 springt zu 12:03. Die Pfeile zeigen minus und plus drei Sekunden.</desc>
+  <rect x="1" y="1" width="958" height="338" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="40" y="39" font-size="21" font-weight="700" fill="#0f172a">Schnittkanten vor dem Schneiden kontrollieren</text>
+    <text x="40" y="63" font-size="13" fill="#475569">Originalaufnahme · Grün bleibt im Film, Rot wird entfernt</text>
+
+    <text x="170" y="96" text-anchor="middle" font-size="18" font-weight="700" fill="#1d4ed8">09:57</text>
+    <text x="790" y="96" text-anchor="middle" font-size="18" font-weight="700" fill="#1d4ed8">12:03</text>
+    <text x="255" y="119" text-anchor="middle" font-size="14" fill="#1d4ed8">−3 Sekunden</text>
+    <text x="705" y="119" text-anchor="middle" font-size="14" fill="#1d4ed8">+3 Sekunden</text>
+
+    <path d="M330 169 V135 H178" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M166 135 L179 128 L179 142 Z" fill="#2563eb"/>
+    <path d="M630 169 V135 H782" fill="none" stroke="#2563eb" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M794 135 L781 128 L781 142 Z" fill="#2563eb"/>
+    <path d="M170 144 V164 M790 144 V164" stroke="#60a5fa" stroke-width="2" stroke-dasharray="4 4"/>
+
+    <rect x="60" y="170" width="270" height="82" fill="#dcfce7" stroke="#86efac"/>
+    <rect x="330" y="170" width="300" height="82" fill="#fee2e2" stroke="#fca5a5"/>
+    <rect x="630" y="170" width="270" height="82" fill="#dcfce7" stroke="#86efac"/>
+    <path d="M330 160 V260 M630 160 V260" stroke="#475569" stroke-width="2"/>
+    <circle cx="170" cy="170" r="5" fill="#2563eb"/>
+    <circle cx="790" cy="170" r="5" fill="#2563eb"/>
+
+    <text x="195" y="207" text-anchor="middle" font-size="20" font-weight="700" fill="#14532d">FILM</text>
+    <text x="195" y="230" text-anchor="middle" font-size="13" fill="#166534">behalten</text>
+    <text x="480" y="207" text-anchor="middle" font-size="20" font-weight="700" fill="#7f1d1d">WERBUNG</text>
+    <text x="480" y="230" text-anchor="middle" font-size="13" fill="#991b1b">entfernen</text>
+    <text x="765" y="207" text-anchor="middle" font-size="20" font-weight="700" fill="#14532d">FILM</text>
+    <text x="765" y="230" text-anchor="middle" font-size="13" fill="#166534">behalten</text>
+
+    <text x="330" y="282" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">10:00</text>
+    <text x="630" y="282" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">12:00</text>
+    <text x="330" y="301" text-anchor="middle" font-size="12" fill="#475569">ANFANG</text>
+    <text x="630" y="301" text-anchor="middle" font-size="12" fill="#475569">ENDE</text>
+    <text x="40" y="324" font-size="11" fill="#64748b">Schema · Beispiel: Werbebereich von 10:00 bis 12:00 · Zeitachse nicht maßstabsgetreu</text>
+  </g>
+</svg>
