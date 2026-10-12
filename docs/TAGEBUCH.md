@@ -1,5 +1,35 @@
 # Entwicklungstagebuch
 
+## 12.10.2026 – Portable-ZIP mit beiden Motoren in der VM bestätigt
+
+- Nutzer bestätigt **„VM und zip: / MP4Box check / otr-can check“**. Positive Portable-Funktionsprüfung mit beiden Motoren übernommen. Zusammen mit frischer Setup-VM-Installation und Deinstallation sind die gemeldeten praktischen Paketprüfungen erfolgreich abgeschlossen.
+- Beide beigefügten Texte sind identische MP4Box-Protokolle. Sie zeigen einen neuen Lauf mit anderer temporärer Arbeitsdatei und anderen Segmentdateien: Stream-Copy-Vorbereitung, exakte Videopaketprüfung, sechs erfolgreiche Bereiche und vollständiges Zusammenfügen bis „Fertig.“. Kein zusätzliches otr-can-Protokoll; Erfolg aus ausdrücklicher Nutzerbestätigung, keine neuen Samplezahlen/Laufzeiten oder VM-Dateihashes behauptet.
+- [Paketprüfbericht](RELEASE-BUILD16-RC3-RESULT.md), README, Status und lokale Paketnotizen aktualisiert. Keine zusätzliche detaillierte Portable-Bild-/Tonmessung, kein frisches Profil oder gesonderter Überinstallationstest daraus abgeleitet. Frühere ausführliche Setup-Filmabnahme und bekannter PTS-Befund erhalten.
+- Nur Dokumentation geändert; kein Neubuild, Commit, Push oder Release. Pakete, Quellarchive, Build 16, Prüfsummen und acht lokale Lockdateien erhalten. Belege unter .build/release-build16-RC3. Nächster separater Schritt: Veröffentlichung nach Nutzerauftrag.
+
+## 12.10.2026 – Frische VM-Installation, beide Motoren und Deinstallation bestätigt
+
+- Nutzer meldet **„setup frisch bei VM / MP4Box check / ot-can check / Deinstallation check :-)“**. Frische VM-Installation des aktuellen Setup-Pakets, beide Motoren und Deinstallation positiv zurückgemeldet.
+- Zugehöriges Protokoll betrifft MP4Box mit Teufelsbrigade-AVI (H.264/720×576/25 fps, MP3-Stereo/48 kHz): verlustfreie Vorbereitung mit exakter Videopaketprüfung, sechs erfolgreiche Bereichsschnitte und vollständiges Zusammenfügen bis „Fertig.“. PTS-Warnungen weiterhin vorhanden; Motorgrenzen nicht geändert.
+- otr-can und Deinstallation aus ausdrücklicher Nutzerbestätigung übernommen. Kein zusätzliches natives Protokoll, keine neuen Samplezahlen/Laufzeiten oder unabhängigen VM-Dateihashes sowie keine neue detaillierte Bild-/Tonbewertung behauptet. Frühere Setup-Abnahme mit „alles top“ separat erhalten.
+- [Paketprüfbericht](RELEASE-BUILD16-RC3-RESULT.md), Status, README und lokale Paketnotizen aktualisiert. Portable bleibt nächster Pakettest; Überinstallation nicht gesondert als eigener Test bestätigt. Code, Einstellungen, Pakete, Buildnummer 16 und Prüfsummen erhalten; kein Neubuild, Commit oder Release. Belege unter .build/release-build16-RC3.
+
+## 12.10.2026 – Setup-AVI-Lauf persönlich bestätigt und Motorpfad angepasst
+
+- Neues vollständiges Teufelsbrigade-Protokoll: AVI mit H.264/MP3 wird ohne Neukodierung nach MP4 umgepackt, tatsächliche Arbeitsquelle einmal indexiert und mit otr-can 0.1.5 geschnitten. Sechs Bereiche, 182.574 Videopakete und 350.542.080 decodierte Samples/48 kHz, einmalige MP3→AAC-LC-Kodierung und finaler CAN-Abschluss erfolgreich.
+- Nutzer ordnet den Lauf ausdrücklich **„setup Build 16“** zu und bestätigt **„Anfang, Ende, Schnitte, Bild, Ton alles top :-)“**. Persönliche positive Setup-Anwendungs-/Filmprüfung dokumentiert; keine neue quantitative Synchronitäts-, Ausgabehash- oder Voll-Videoprüfung daraus abgeleitet. Übergangspositionen unverändert zum vorherigen Test.
+- Installierte Version 0.2.1.16 und alle 249 erklärten Paketdateien bytegenau zum Paketsatz geprüft. Motor-Einstellung zeigte noch auf unseren Entwicklungspfad; installierte EXE ist bytegleich. Über CANs Einstellungsverwaltung auf installierte EXE umgestellt, vorherige Einstellung gesichert, Indexer und alte EXE erhalten. Übermittelter Schnitt lief vor Umstellung; keine erneute Filmverarbeitung ausgeführt.
+- [Paketprüfbericht](RELEASE-BUILD16-RC3-RESULT.md), Status, README und lokale Paketnotizen aktualisiert. PTS-Warnungen beim Remux und vorbestehender technischer Befund bleiben offen. Überinstallation/frische VM nicht aus „Setup“ abgeleitet; Portable, MP4Box-Paketlauf und Deinstallation bleiben offene Prüfungen.
+- Nur Dokumentation und reversible Motorpfadeinstellung aktualisiert; kein Code-/Paketneubau, keine Commits oder Veröffentlichung. Build 16, Prüfstand 793 CAN-/44 Rust-Tests sowie Quellen-/Artefakthashes erhalten. Protokoll und Prüfwerte im ignorierten .build/release-build16-RC3.
+
+## 12.10.2026 – Setup und Portable Build 16 RC3 gebaut, Schritt 3
+
+- Nutzer gibt ausdrücklich Schritt 3 frei. Paketbau aus eingefrorenen CAN-Quellen **603d64d** mit BuildNumber 16/RC3 und vorbereitetem 0.1.5-Motorpaket. Ausschließlich im exportierten Quellbaum gesperrt wiederhergestellt, gebaut, getestet und veröffentlicht (lokales dotnet Publish, keine öffentliche Veröffentlichung).
+- Build **0 Warnungen/0 Fehler**, **793/793 CAN-Tests**; Inno Setup 7 kompiliert Setup erfolgreich. Portable-ZIP entpackt und alle **249 Dateien** vollständig per Manifest geprüft. Dateiversion 0.2.1.16 und RC3-Metadatum ohne GUI-Start bestätigt; tatsächliche Motor-EXE meldet 0.1.5 und MP3-Fähigkeit.
+- Sechs Binär-/Quellenartefakte plus SHA256SUMS.txt bereit: Setup, Portable, CAN-/Motorquellen und unveränderte libmpv-Quellen-/Relink-Archive. Sämtliche Artefakthashes geprüft; getestete EXE und Motorquellen erhalten. Keine externen FFmpeg-/ffprobe-/MP4Box-/FFMS2-Werkzeuge zusätzlich beigefügt.
+- Alle acht lokalen und acht exportierten CAN-Locks gegen Ausgangshashes unverändert; alle manifestierten Quellen unverändert, Zähler bleibt 16. Frühere Pakete erhalten. [Prüfbericht](RELEASE-BUILD16-RC3-RESULT.md) und lokale Paketnotizen nach Paketbau ergänzt; diese Berichte gehören nicht zum eingefrorenen Quellenarchiv.
+- Keine Appinstallation, neue persönliche Paket-/Filmabnahme, Push, Tags oder öffentliche Veröffentlichung. Nächster Schritt: Paketprüfung in installierter/entpackter Umgebung, danach persönliche Abnahme. Vorbestehender Video-PTS-Befund und Motor-Reproduzierbarkeitsgrenze bleiben dokumentiert.
+
 ## 12.10.2026 – Quellen für Build 16 RC3 lokal gesichert, Schritt 2
 
 - Nutzer gibt ausdrücklich Schritt 2 frei. Sieben Motoränderungen als **2a47462**, 18 CAN-Änderungen als **603d64d** lokal gesichert; vier vorbestehende Produktions-Lockdateiänderungen außerhalb der Commits erhalten. Keine Übertragung oder Tags.

@@ -1,5 +1,21 @@
 # Projektstatus
 
+## 12.10.2026 – Portable-Prüfung in der VM bestätigt
+
+Nutzer bestätigt **„VM und zip: MP4Box check / otr-can check“**. Portable-ZIP mit beiden Motoren positiv geprüft; vorherige frische Setup-VM-Installation, beide Motoren und Deinstallation ebenfalls bestätigt. Beide neuen Anhänge sind identisch und enthalten MP4Box: eigene Arbeits-/Segmentdateien, sechs Bereiche, Zusammenfügen, „Fertig.“. otr-can aus ausdrücklicher Nutzerbestätigung übernommen, keine neuen nativen Messwerte behauptet. [Paketprüfbericht](RELEASE-BUILD16-RC3-RESULT.md). Praktische gemeldete Paketprüfungen positiv abgeschlossen; Überinstallation, frisches Portable-Profil und strenger Video-Nachweis nicht daraus abgeleitet. Bekannte Grenzen erhalten. Nächster separater Schritt: Veröffentlichung. Pakete/Prüfsummen und Build 16 unverändert.
+
+## 12.10.2026 – Frische VM-Setup-Prüfung bestätigt
+
+Nutzer bestätigt **frische Setup-Installation in der VM**, **MP4Box**, **otr-can** und **Deinstallation**. Beigefügtes MP4Box-Protokoll zeigt erfolgreiche Stream-Copy-Vorbereitung der Teufelsbrigade-AVI, sechs Bereichsschnitte, Zusammenfügen und „Fertig.“. otr-can und Deinstallation ausdrücklich als „check“ bestätigt; keine neuen nativen Messwerte oder zusätzliche detaillierte VM-Bild-/Tonabnahme daraus abgeleitet. [Paketprüfbericht](RELEASE-BUILD16-RC3-RESULT.md). Vorherige detaillierte Setup-Filmabnahme bleibt gültig, PTS-Befund erhalten. Nächster Pakettest: Portable-ZIP; Überinstallation nicht gesondert bestätigt. Kein neuer Build oder Release.
+
+## 12.10.2026 – Setup Build 16: AVI/MP3 persönlich bestätigt
+
+Nutzer bestätigt neuen Teufelsbrigade-Lauf aus **Setup Build 16**: **„Anfang, Ende, Schnitte, Bild, Ton alles top :-)“**. Protokoll: verlustfreie AVI-Vorbereitung, eine Indexierung, Motor 0.1.5, sechs Bereiche, 182.574 Videopakete und 350.542.080 Tonsamples/48 kHz, alle Motor-/CAN-Prüfungen abgeschlossen. Alle 249 erklärten installierten Dateien nachträglich gegen Paketmanifest bytegenau geprüft. Motorpfad vom verbliebenen Entwicklungspfad auf die bytegleiche installierte EXE korrigiert und gesichert; kein neuer Schnitt nach dieser Umstellung behauptet. [Aktualisierter Paketprüfbericht](RELEASE-BUILD16-RC3-RESULT.md). Installationstyp noch nicht ausdrücklich bestätigt; Portable, MP4Box-Paketlauf, weitere Installations-/Deinstallationsprüfungen und Veröffentlichung bleiben offen. Bekannte PTS-Warnungen bleiben dokumentiert.
+
+## 12.10.2026 – Setup/Portable Build 16 RC3 erstellt
+
+Schritt 3 abgeschlossen: fester CAN-Quellcommit **603d64d**, Motor **0.1.5 / 2a47462**. Gesperrter Restore ausschließlich im exportierten Quellbaum, Build/Publish erfolgreich, **0 Warnungen/Fehler**, **793/793 Tests**. Setup und Portable sowie vier passende Quellen-/Relink-Archive und Prüfsummen erstellt. Alle **249 Portable-Dateien**, App-Version 0.2.1.16, RC3-Assemblymetadaten, Motorversion/MP3-Fähigkeit und Artefakthashes geprüft. Getestete Motor-EXE erhalten; lokale und exportierte Lockdateien sowie Quellmanifest unverändert, Zähler bleibt 16. [Paketprüfbericht](RELEASE-BUILD16-RC3-RESULT.md). Noch keine Installation, persönliche Paketabnahme oder Veröffentlichung; nächster Schritt 4: Installations-/Portable- und Schnittprüfungen mit tatsächlichen Paketkomponenten.
+
 ## 12.10.2026 – Quellstand Build 16 RC3 gesichert
 
 Schritt 2 abgeschlossen: CAN-Quellcommit **603d64d**, Motor-Quellcommit **2a47462** lokal gesichert. Feste CAN-/Motorquellenarchive ohne Arbeitsbaumüberlagerung und ein vollständiges 0.1.5-Motorpaket mit Quellen, Lizenzbeständen und Provenienz vorbereitet. Exportierter Motor offline gebaut, **44/44 Tests**, Archive/Manifeste vollständig geprüft; echter Motorblock des eingefrorenen CAN-Paketskripts akzeptiert das Paket. Getestete EXE erhalten; Kontrollbuild nicht bytegleich, keine bytegenaue Reproduzierbarkeit behauptet. Alle acht lokalen CAN-Lockdateien unverändert; vier vorbestehende Produktionsänderungen bleiben offen. CAN-Prüfstand weiterhin Build 16, 793/793 Tests. [Quellen-/Prüfbericht](QUELLSTAND-BUILD16-RC3-20261012.md). Kein Setup/Portable, Push, Tag oder Release. Nächster Schritt: Paketbau aus genau diesen Quellen.
