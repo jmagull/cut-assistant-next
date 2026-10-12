@@ -103,15 +103,34 @@ public sealed class OtrCanToolCheckerTests : IDisposable
         Assert.True(results[3].IsAvailable);
     }
 
+    [Fact]
+    public async Task Mp3CapabilityIsRequiredOnlyForMp3Jobs()
+    {
+        var (settings, ffmpeg) = Setup();
+        var probe = new FakeProbe();
+        var checker = new OtrCanToolChecker(probe, new ToolPathResolver(_root));
+        Assert.All(await checker.CheckAsync(settings, ffmpeg), r => Assert.True(r.IsAvailable));
+        Assert.DoesNotContain(probe.Calls, call => call.Arguments.Contains("capabilities"));
+        probe.Calls.Clear();
+        var unsupported = await checker.CheckAsync(settings, ffmpeg, requireMp3: true);
+        Assert.False(unsupported[^1].IsAvailable);
+        Assert.Contains("0.1.5", unsupported[^1].Message);
+        probe.SupportsMp3 = true;
+        Assert.All(await checker.CheckAsync(settings, ffmpeg, requireMp3: true), r => Assert.True(r.IsAvailable));
+    }
+
     private sealed class FakeProbe : IToolProbeRunner
     {
         public List<(string Path, string[] Arguments)> Calls { get; } = [];
+        public bool SupportsMp3 { get; set; }
         public ToolProbeResult? Override { get; set; }
         public Exception? Fail { get; init; }
         public Task<ToolProbeResult> RunAsync(string path, IReadOnlyList<string> arguments, CancellationToken cancellationToken = default)
         {
             Calls.Add((path, arguments.ToArray()));
             if (Fail is not null) return Task.FromException<ToolProbeResult>(Fail);
+            if (arguments.SequenceEqual(["capabilities"]))
+                return Task.FromResult(new ToolProbeResult(SupportsMp3 ? 0 : 2, SupportsMp3 ? "mp3-aac-v1" : "", ""));
             var output = Path.GetFileName(path) switch
             {
                 "otr_can.exe" => "--input --output --index --temp-dir --cutlist --ffmpeg --ffprobe",

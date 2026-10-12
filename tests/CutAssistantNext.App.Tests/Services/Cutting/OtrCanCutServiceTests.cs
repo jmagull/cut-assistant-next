@@ -34,7 +34,7 @@ public sealed class OtrCanCutServiceTests : IDisposable
     [Fact]
     public async Task IndexesExactlyOnceUsesOriginalAndExplicitToolsPublishesAndCleans()
     {
-        var request = Request().WithSourceFilePath(Path.Combine(_root, "unused-working.mp4"));
+        var request = Request();
         var runner = new FakeRunner();
         await Service(runner).RunAsync(request);
         Assert.Equal(2, runner.Calls.Count);
@@ -141,7 +141,7 @@ public sealed class OtrCanCutServiceTests : IDisposable
     }
 
     [Fact]
-    public void NativeSelectionBypassesMp4PreparationAndUsesSnapshot()
+    public void NativeSelectionPreparesAviAndUsesSnapshot()
     {
         var native = new OtrCanSettings();
         var engine = Service(new());
@@ -149,9 +149,90 @@ public sealed class OtrCanCutServiceTests : IDisposable
             () => throw new InvalidOperationException("MP4 settings should not be read"), (_, _) => throw new InvalidOperationException()),
             settings => { Assert.Same(native, settings); return engine; });
         Assert.Same(engine, factory.Create(CutEngineKind.OtrCan, native));
-        Assert.False(ConfiguredCutEngineFactory.RequiresPreparation(CutEngineKind.OtrCan, Analysis(format: "avi")));
+        Assert.True(ConfiguredCutEngineFactory.RequiresPreparation(CutEngineKind.OtrCan, Analysis(format: "avi")));
         Assert.True(ConfiguredCutEngineFactory.RequiresPreparation(CutEngineKind.Mp4Box, Analysis(format: "avi")));
         Assert.False(ConfiguredCutEngineFactory.RequiresPreparation(CutEngineKind.Mp4Box, Analysis()));
+    }
+
+    [Fact]
+    public async Task PreparedSourceIsAnalyzedIndexedOnceAndPassedWithoutChangingOriginalOrCuts()
+    {
+        var working = Path.Combine(_root, "working.mp4");
+        File.WriteAllText(working, "copied streams");
+        var request = Request().WithSourceFilePath(working);
+        var analyzed = new List<string>();
+        var runner = new FakeRunner();
+        var service = Service(runner, (path, _) =>
+        {
+            analyzed.Add(path);
+            return Task.FromResult(Analysis(format: path == request.OriginalFilePath ? "avi" : "mp4"));
+        });
+        await service.RunAsync(request);
+        Assert.Equal(["-c", "-k", working], runner.Calls[0].Args.Take(3));
+        Assert.Equal(working, Value(runner.Calls[1].Args, "--input"));
+        Assert.Equal(OtrCanCutService.BuildCutlist(request), Value(runner.Calls[1].Args, "--cutlist"));
+        Assert.Equal(request.OriginalFilePath, analyzed[0]);
+        Assert.Equal(working, analyzed[1]);
+        Assert.Equal("original", File.ReadAllText(request.OriginalFilePath));
+        Assert.Equal("copied streams", File.ReadAllText(working));
+        Assert.Empty(Directory.GetDirectories(_root));
+    }
+
+    [Fact]
+    public async Task MissingPreparedSourceNeverIndexes()
+    {
+        var request = Request().WithSourceFilePath(Path.Combine(_root, "missing.mp4"));
+        var runner = new FakeRunner();
+        await Assert.ThrowsAsync<FileNotFoundException>(() => Service(runner).RunAsync(request));
+        Assert.Empty(runner.Calls);
+    }
+
+    [Fact]
+    public async Task Mp3CapabilityFailureStopsBeforeIndexing()
+    {
+        var request = Request();
+        var runner = new FakeRunner();
+        var mp3 = Analysis() with { AudioStreams = [new(1, "mp3", null, 48000, 2, "stereo")] };
+        var service = new OtrCanCutService(_tools, runner, (_, _) => Task.FromResult(mp3),
+            (requireMp3, _) => { Assert.True(requireMp3); throw new InvalidOperationException("Upgrade motor"); });
+        await Assert.ThrowsAsync<InvalidOperationException>(() => service.RunAsync(request));
+        Assert.Empty(runner.Calls);
+        Assert.Empty(Directory.GetDirectories(_root));
+    }
+
+    [Fact]
+    public void Mp3OutputRequiresAacButPreparedSourceMustStillContainMp3()
+    {
+        var mp3 = Analysis() with { AudioStreams = [new(1, "mp3", null, 48000, 2, "stereo")] };
+        var aac = mp3 with { AudioStreams = [mp3.AudioStreams[0] with { CodecName = "aac" }] };
+        OtrCanCutService.ValidateOutput(mp3, aac);
+        Assert.Throws<InvalidOperationException>(() => OtrCanCutService.ValidateOutput(mp3, aac, allowMp3Conversion: false));
+        Assert.Throws<InvalidOperationException>(() => OtrCanCutService.ValidateOutput(mp3, mp3));
+        Assert.Throws<InvalidOperationException>(() => OtrCanCutService.ValidateOutput(aac,
+            aac with { AudioStreams = [aac.AudioStreams[0] with { ChannelLayout = "mono" }] }));
+    }
+
+    [Fact]
+    public void PreparationIsLimitedToAviH264WithVideoAtZeroForNativeMotor()
+    {
+        Assert.False(ConfiguredCutEngineFactory.RequiresPreparation(CutEngineKind.OtrCan, Analysis()));
+        Assert.False(ConfiguredCutEngineFactory.RequiresPreparation(CutEngineKind.OtrCan, Analysis(format: "matroska")));
+        Assert.False(ConfiguredCutEngineFactory.RequiresPreparation(CutEngineKind.OtrCan,
+            Analysis(format: "avi") with { VideoStreams = [new(0, "mpeg4", null, 320, 180, null, null, 25, null)] }));
+        Assert.False(ConfiguredCutEngineFactory.RequiresPreparation(CutEngineKind.OtrCan,
+            Analysis(format: "avi") with { VideoStreams = [new(1, "h264", null, 320, 180, null, null, 25, null)] }));
+    }
+
+    [Fact]
+    public void ConfirmationExplainsSingleLossyEncodeWithoutChangingMp4BoxCopyPromise()
+    {
+        var mp3 = Analysis(format: "avi") with { AudioStreams = [new(1, "mp3", null, 48000, 2, "stereo")] };
+        var message = VideoPreparation.ConfirmationText(CutEngineKind.OtrCan, mp3);
+        Assert.Contains("ohne Neukodierung", message);
+        Assert.Contains("einmal nach AAC-LC", message);
+        Assert.Contains("verlustbehaftet", message);
+        Assert.DoesNotContain("AAC", VideoPreparation.ConfirmationText(CutEngineKind.Mp4Box, mp3));
+        Assert.False(VideoPreparation.ConvertsMp3(CutEngineKind.Mp4Box, mp3));
     }
 
     internal static string Value(string[] args, string flag) => args[Array.IndexOf(args, flag) + 1];

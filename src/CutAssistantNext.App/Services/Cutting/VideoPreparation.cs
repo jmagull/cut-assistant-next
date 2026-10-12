@@ -11,6 +11,31 @@ internal static class VideoPreparation
     public static bool IsMp4(MediaAnalysisResult analysis) =>
         analysis.FormatName?.Split(',').Any(x => x.Trim().Equals("mp4", StringComparison.OrdinalIgnoreCase)) == true;
 
+    internal static bool ConvertsMp3(CutEngineKind kind, MediaAnalysisResult analysis) =>
+        kind == CutEngineKind.OtrCan && analysis.AudioStreams.Any(s => s.CodecName == "mp3");
+
+    internal static string ConfirmationText(CutEngineKind kind, MediaAnalysisResult analysis)
+    {
+        if (kind == CutEngineKind.Mp4Box)
+            return "CAN kann derzeit Videos im MP4-Container schneiden. " +
+                $"Deine Datei wurde als {ContainerName(analysis)} erkannt.\n\n" +
+                "Soll CAN versuchen, das Video mit FFmpeg verlustfrei in eine temporäre MP4-Datei " +
+                "umzupacken und anschließend zu schneiden?\n\n" +
+                "Die Originaldatei bleibt unverändert.\n\n" +
+                "Dieses Feature ist experimentell. Es wurde an einigen Beispielvideodateien getestet.";
+
+        var preparation = ConfiguredCutEngineFactory.RequiresPreparation(kind, analysis)
+            ? $"Die {ContainerName(analysis)}-Datei wird mit FFmpeg ohne Neukodierung in eine temporäre MP4-Datei umgepackt.\n\n"
+            : "";
+        var audio = ConvertsMp3(kind, analysis)
+            ? "MP3-Ton wird erst nach dem Schnitt einmal nach AAC-LC kodiert (Stereo: 192 kbit/s, Mono: 96 kbit/s). " +
+                "Das ist verlustbehaftet; eine zusätzliche AAC-Kodierung bei der Vorbereitung entfällt. Andere AAC-/AC3-Tonspuren behalten ihren bisherigen Ablauf.\n\n"
+            : "";
+        return "Experimentelle otr-can-Verarbeitung\n\n" + preparation + audio +
+            "Die Originaldatei und die festgelegten Schnittpunkte bleiben unverändert. " +
+            "Bitte anschließend alle Übergänge und die Tonsynchronität jeder Tonspur kontrollieren.\n\nFortfahren?";
+    }
+
     public static string ContainerName(MediaAnalysisResult analysis) =>
         analysis.FormatName?.Split(',')[0].Trim().ToLowerInvariant() switch
         {

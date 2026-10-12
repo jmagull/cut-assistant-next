@@ -1,5 +1,29 @@
 # Entwicklungstagebuch
 
+## 12.10.2026 – Paketbau für otr-can 0.1.5 vorbereitet, Schritt 1
+
+- Nutzer gibt ausdrücklich Schritt 1 frei. Paketskript auf zentrale Sollversion 0.1.5 mit passendem Quellenarchiv und Snapshot-/Provenienzvergleich umgestellt. Zusätzlich die tatsächliche kopierte Motor-EXE auf die MP3-Fähigkeit geprüft; bestehende Prüfsummen- und Pfadschutzprüfungen erhalten, Motor weiterhin optional.
+- Installationshinweise nennen 0.1.5, Pfadprüfung nach Überinstallation, experimentelle AVI-Verarbeitung und einmalige verlustbehaftete Tonkodierung. Neue gezielte PowerShell-Prüfung verwendet den tatsächlichen Motorblock ohne Restore/Publish/Inno-Setup-Aufruf.
+- Je 10 Fälle unter PowerShell 7 und Windows PowerShell 5.1 bestanden. Erster Syntaxfehler im Prüfhelfer vor den Testläufen korrigiert. CAN-Release-Rebuild **Build 16**, 0 Warnungen/Fehler, **793/793 Tests**; Anwendungscode und Rust-Motor unverändert, keine Medienprüfung wiederholt. Alle acht CAN-Lockdateien per SHA-256 unverändert; vier vorbestehende Produktionsänderungen erhalten.
+- [Detailbericht](PAKETBAU-OTR-CAN-015-20261012.md). Kein Commit, Quellen-Snapshot, Setup-/Portable-Paket oder Release erstellt. Nächster Schritt: Quellstand gezielt sichern und passende Motor-/CAN-Quellen vorbereiten.
+
+## 12.10.2026 – AVI/MP3-Testfilm persönlich abgenommen
+
+- Nutzer bestätigt die neue Teufelsbrigade-Ausgabe mit otr-can 0.1.5: **„anfang ende, alle schnitte, ton und bild prima :-)“**. Anfang, Ende, alle fünf Bereichsübergänge und Bild/Ton persönlich positiv geprüft.
+- Ergebnispositionen zur Kontrolle zuvor aus dem tatsächlichen Schnittprotokoll berechnet: 00:24:48,200; 00:45:38,840; 01:05:41,600; 01:25:17,720; 01:50:13,080. Nominales Ende 02:01:42,960. Keine neuen Messwerte oder zusätzliche GUI-/Paketabnahme aus der Rückmeldung abgeleitet.
+- Persönliche Filmabnahme im [Prüfbericht](AVI-OTR-CAN-MP3-20261012.md), README, Status, Nutzeranleitung und Motor-Dokumentation abgeschlossen. Die separat bestätigte vorbestehende Video-PTS-Auffälligkeit bleibt offen; kein grüner strenger Videodekodiernachweis daraus abgeleitet.
+- Nur Dokumentation aktualisiert und Diff/Lockdateihashes geprüft. Code, EXEs, Einstellungen, Originale/Cutlist und Buildnummer 15 unverändert; keine erneuten Builds/Tests, kein Commit oder Release. Letzter automatisierter Stand 793 CAN-/44 Rust-Tests.
+
+## 12.10.2026 – AVI/MP3 mit einmaliger Audiokodierung umgesetzt
+
+- Nutzer beauftragt alle fünf Schritte der Bestandsaufnahme. Separater Motor 0.1.5: MP3-Eingang, AAC-LC-Ziel, feste Mono-/Stereobitraten und gezielte Fähigkeitserkennung. Bestehende AAC-/AC3-Verarbeitung erhalten; keine neuen Produktionsabhängigkeiten oder Änderungen am Video-Schnittalgorithmus.
+- CAN verwendet die vorhandene Stream-Copy-Vorbereitung für geeignete H.264-AVI-Aufträge und übergibt die Arbeitsquelle für Analyse, einmalige Indexierung und Schnitt. Originalidentität, Keep-Snapshot, Namensmaske und Ausgabe erhalten. Benutzerhinweise erklären Experiment, einmalige Tonkodierung und Übergangs-/Synchronitätskontrolle.
+- Release-Build 15 ohne Warnungen/Fehler; 793/793 CAN- und 44/44 Rust-Tests. Vier synthetische CAN-Aufträge mit sechs bytegenau geprüften PCM-Auswahlen und exakten nummerierten Videobildern. AAC-/AC3-Ausgabe bytegleich zur 0.1.4-Referenz; echte MP4Box-MP4-/AVI-Aufträge erfolgreich. Verzögerter MP3-Ton korrekt abgelehnt und bereinigt.
+- Teufelsbrigade mit sechs unveränderten Cutlist-Bereichen über CAN-Dienste in 235,18 s geschnitten; eine Indexierung, 182.574 Videopakete und 350.542.080 Samples/48 kHz. PCM vor AAC-Kodierung unabhängig bytegenau zur Originalauswahl. Original und Cutlist unverändert, Arbeitsdaten bereinigt; persönliche Abnahme noch offen.
+- Vertiefte Videodekodierung meldet ungeordnete PTS/DTS, erste Abweichung Frame 192. Dieselbe Folge bereits in der zuvor positiv geprüften AAC-Testausgabe; vollständiger komprimierter Videostream bytegleich. Befund offen dokumentiert, kein grüner Voll-Videonachweis behauptet und keine Schutzprüfung abgeschwächt. Synthetische AVI-/UDTA-Warnfälle und Korrekturen am Prüfhelfer ebenfalls eingeordnet.
+- Lokalen Motorpfad über CANs eigene Einstellungsverwaltung auf 0.1.5 gestellt. Vorherige Einstellung unter .build/avi-mp3-20261012 gesichert; Indexer erhalten und alte installierte Motor-EXE per SHA-256 unverändert. Installierte öffentliche CAN-Ausgabe bleibt Build 13; neue AVI-Anbindung benötigt den lokalen Build 15.
+- [Prüfbericht](AVI-OTR-CAN-MP3-20261012.md), README und Anleitung ergänzt. Alle acht CAN-Lockdateien per Ausgangshash unverändert; vier vorbestehende Produktionsänderungen erhalten. Kein Commit, Release oder Setup-Paket. Belege ausschließlich im ignorierten .build/avi-mp3-20261012.
+
 ## 11.10.2026 – Build 13 RC3 öffentlich als Vorabversion veröffentlicht
 
 - Nutzer klärt „ok lets go“ ausdrücklich als **„Build 13 RC3 jetzt veröffentlichen“**. Veröffentlichung freigegeben; keine neue persönliche Build-13-Installations-/Portable-Abnahme daraus abgeleitet.

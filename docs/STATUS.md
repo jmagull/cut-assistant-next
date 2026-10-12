@@ -1,5 +1,17 @@
 # Projektstatus
 
+## 12.10.2026 – Paketbau-Vorbereitung für otr-can 0.1.5
+
+Schritt 1 abgeschlossen: Paketskript erwartet 0.1.5 samt passendem Snapshot/Quellenarchiv und prüft zusätzlich die MP3-Fähigkeit der kopierten EXE. Installationshinweise aktualisiert. Je 10 PowerShell-Prüffälle unter PowerShell 7 und Windows PowerShell 5.1 bestanden. Validierungsbuild **0.2.1 · Build 16 · RC3**, ohne Warnungen/Fehler, **793/793 CAN-Tests**. Anwendungscode/Motor unverändert; Filmabnahme betrifft den zuvor geprüften Build-15-Ablauf. Kein neuer Paketsatz erstellt. [Prüfbericht](PAKETBAU-OTR-CAN-015-20261012.md). Nächster Schritt: Quellstand sichern und passende feste Quellen vorbereiten; lokale Lockdateiänderungen erhalten.
+
+## 12.10.2026 – Experimentelle AVI-/MP3-Unterstützung für otr-can
+
+Lokaler Stand **CAN 0.2.1 · Build 15 · RC3 / otr-can 0.1.5**. Vorhandenes verlustfreies Umpacken wiederverwendet, Arbeitsquelle statt Original indexiert/geschnitten, MP3 erst nach PCM-Schnitt einmal nach AAC-LC kodiert. 793/793 CAN- und 44/44 Rust-Tests; vier synthetische Aufträge mit sechs bytegenau geprüften PCM-Tonspuren sowie bytegleicher AAC-/AC3-Regressionsausgabe bestanden. MP4Box-AVI und MP4-Multispurablauf weiterhin erfolgreich.
+
+Teufelsbrigade: sechs unveränderte Keep-Bereiche, 182.574 Videopakete, 350.542.080 Audio-Samples; unabhängiges PCM vor Kodierung bytegleich zur Originalauswahl. Persönliche Filmabnahme am 12.10.2026 bestätigt: Anfang, Ende, alle Schnittübergänge, Ton und Bild einwandfrei. Strenger zusätzlicher Videodekodierlauf zeigt vorbestehende PTS-Auffälligkeit; Videostream neuer und früherer Ausgabe bytegleich. Keine allgemeine AVI-Freigabe oder Video-Reparatur daraus abgeleitet. [Prüfbericht](AVI-OTR-CAN-MP3-20261012.md). Vier vorbestehende src-Lockänderungen erhalten; kein Commit oder Release. Lokaler Motorpfad auf die separat geprüfte 0.1.5-EXE gestellt; frühere Einstellung gesichert, Indexer und alte EXE unverändert.
+
+Die folgenden Angaben dokumentieren den vorherigen, veröffentlichten Build-13-Stand.
+
 Stand: 11.10.2026. Dieser Überblick beschreibt den aktuellen Feature-Stand; ältere Projektdefinitionen und Architekturentscheidungen dokumentieren teilweise frühere Entwicklungsphasen.
 
 Lokaler Entwicklungsstand nach Credits-Ergänzung und Dokumentationsabgleich: **0.2.1 · Build 13 · RC3**, Release-Build ohne Warnungen/Fehler und **785/785 CAN-Tests**. Der KI-Absatz wurde im echten WPF-Dialog bei normaler und kleiner Ansicht geprüft. Der persönlich abgenommene Paketsatz bleibt **Build 12 RC3**; dessen eingefrorene Quellen-/Binärpakete enthalten diese Ergänzung noch nicht. Der aktualisierte Build-13-Paketsatz ist erstellt und technisch geprüft; persönliche Paketbestätigung noch offen. Motor otr-can 0.1.4 unverändert, letzter nativer Prüfstand 40 Tests.

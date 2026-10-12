@@ -18,7 +18,7 @@ internal sealed class OtrCanToolChecker
     }
 
     internal async Task<IReadOnlyList<OtrCanToolCheckResult>> CheckAsync(
-        OtrCanSettings settings, FfmpegSettings ffmpeg, CancellationToken cancellationToken = default)
+        OtrCanSettings settings, FfmpegSettings ffmpeg, CancellationToken cancellationToken = default, bool requireMp3 = false)
     {
         ArgumentNullException.ThrowIfNull(settings);
         ArgumentNullException.ThrowIfNull(ffmpeg);
@@ -37,6 +37,16 @@ internal sealed class OtrCanToolChecker
         results.Add(await CheckOneAsync("ffprobe", ResolveFfmpeg(BundledToolKind.Ffprobe, ffmpeg.FfprobeExecutablePath), ["-version"],
             output => output.Contains("ffprobe version", StringComparison.OrdinalIgnoreCase),
             "Programm erreichbar.", cancellationToken));
+        if (requireMp3 && results[0].IsAvailable)
+        {
+            var capability = await CheckOneAsync("OTR-CAN MP3", normalized.ExecutablePath, ["capabilities"],
+                output => output.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Contains("mp3-aac-v1"),
+                "MP3 wird nach dem Schnitt einmal nach AAC kodiert.", cancellationToken);
+            results.Add(capability.IsAvailable ? capability : capability with
+            {
+                Message = "Dieser Auftrag benötigt otr-can mit MP3-Unterstützung (ab 0.1.5). Bitte unter OTR-CAN-Werkzeuge den passenden Motor auswählen."
+            });
+        }
         return results.AsReadOnly();
     }
 

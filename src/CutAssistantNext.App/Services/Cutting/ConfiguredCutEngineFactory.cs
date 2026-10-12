@@ -29,7 +29,11 @@ internal sealed class ConfiguredCutEngineFactory
         };
 
     internal static bool RequiresPreparation(CutEngineKind kind, Core.Media.MediaAnalysisResult analysis) =>
-        kind == CutEngineKind.Mp4Box && !VideoPreparation.IsMp4(analysis);
+        kind == CutEngineKind.Mp4Box && !VideoPreparation.IsMp4(analysis) ||
+        kind == CutEngineKind.OtrCan &&
+        analysis.FormatName?.Split(',').Any(x => x.Trim().Equals("avi", StringComparison.OrdinalIgnoreCase)) == true &&
+        analysis.VideoStreams.Count == 1 && analysis.VideoStreams[0].Index == 0 &&
+        analysis.VideoStreams[0].CodecName == "h264";
 
     private static ICutEngine CreateOtrCan(OtrCanSettings native)
     {
@@ -38,9 +42,9 @@ internal sealed class ConfiguredCutEngineFactory
         var paths = new OtrCanToolPaths(native.ExecutablePath, native.FfmsIndexExecutablePath,
             resolver.Resolve(BundledToolKind.Ffmpeg, ffmpeg.FfmpegExecutablePath),
             resolver.Resolve(BundledToolKind.Ffprobe, ffmpeg.FfprobeExecutablePath));
-        return new OtrCanCutService(paths, checkTools: async token =>
+        return new OtrCanCutService(paths, checkTools: async (requireMp3, token) =>
         {
-            var results = await new OtrCanToolChecker().CheckAsync(native, ffmpeg, token).ConfigureAwait(false);
+            var results = await new OtrCanToolChecker().CheckAsync(native, ffmpeg, token, requireMp3).ConfigureAwait(false);
             if (results.Any(r => !r.IsAvailable))
                 throw new InvalidOperationException(string.Join(Environment.NewLine,
                     results.Where(r => !r.IsAvailable).Select(r => $"{r.Name}: {r.Message}")));

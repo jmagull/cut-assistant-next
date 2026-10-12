@@ -69,6 +69,7 @@ public sealed class OtrCanProgressReporterTests
     [InlineData("INFO: Stage 2/3: continuous CPU audio encoding", "OTR-CAN: Tonspuren vorbereiten und neu kodieren")]
     [InlineData("INFO: Decoding original audio once and assembling exact kept PCM samples", "OTR-CAN: Originalton lesen und Behaltebereiche vorbereiten")]
     [InlineData("INFO: Encoding each complete audio track once with original codec/layout/rate/target bitrate", "OTR-CAN: Alle Tonspuren auf CPU neu kodieren")]
+    [InlineData("INFO: Encoding each complete audio track once; MP3 becomes AAC-LC, existing AAC/AC-3 settings are preserved", "OTR-CAN: Alle Tonspuren auf CPU neu kodieren")]
     [InlineData("INFO: Stage 3/3: assembling final MP4 and verifying unchanged stream packets", "OTR-CAN: Bild und Ton zusammenführen und prüfen")]
     [InlineData("INFO: Final MP4 verified: video and all audio packets, PTS/DTS, padding and decoder configurations preserved", "OTR-CAN: Bild, Ton und Zeitstempel geprüft")]
     public void CombinedEnginePhasesAreTranslatedAndRawOutputIsPreserved(string line, string expected)

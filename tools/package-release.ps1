@@ -91,8 +91,11 @@ Copy-Item -LiteralPath (Join-Path $repo 'docs\NUTZERANLEITUNG.md') -Destination 
 Copy-Item -LiteralPath (Join-Path $repo 'installer\HINWEIS-DOTNET-UND-WERKZEUGE.txt') -Destination (Join-Path $publish 'VORAUSSETZUNGEN.txt')
 $engineProvenance = $null
 if ($OtrCanPackageDirectory) {
+    $expectedEngineVersion = '0.1.5'
+    $engineSourceArchive = "sources\otr-can-$expectedEngineVersion-source.zip"
+    if ($snapshot.OtrCanVersion -ne $expectedEngineVersion) { throw 'CAN source snapshot declares a different motor version.' }
     $enginePackage = (Resolve-Path -LiteralPath $OtrCanPackageDirectory).Path
-    foreach ($name in @('otr_can.exe', 'LICENSE', 'THIRD-PARTY-NOTICES.md', 'ENGINE-PROVENANCE.json', 'ENGINE-FILES.sha256', 'sources\otr-can-0.1.4-source.zip')) {
+    foreach ($name in @('otr_can.exe', 'LICENSE', 'THIRD-PARTY-NOTICES.md', 'ENGINE-PROVENANCE.json', 'ENGINE-FILES.sha256', $engineSourceArchive)) {
         if (-not (Test-Path -LiteralPath (Join-Path $enginePackage $name) -PathType Leaf)) { throw "Missing motor package file: $name" }
     }
     foreach ($line in (Get-Content -LiteralPath (Join-Path $enginePackage 'ENGINE-FILES.sha256') -Encoding UTF8)) {
@@ -103,9 +106,9 @@ if ($OtrCanPackageDirectory) {
         if ((Get-FileHash -LiteralPath $engineFile -Algorithm SHA256).Hash -ne $expected) { throw "Motor package changed: $engineFile" }
     }
     $engineProvenance = Get-Content -LiteralPath (Join-Path $enginePackage 'ENGINE-PROVENANCE.json') -Encoding UTF8 -Raw | ConvertFrom-Json
-    if ($engineProvenance.Version -ne '0.1.4') { throw 'Unexpected motor package version.' }
+    if ($engineProvenance.Version -ne $expectedEngineVersion) { throw 'Unexpected motor package version.' }
     if ((Get-FileHash -LiteralPath (Join-Path $enginePackage 'otr_can.exe') -Algorithm SHA256).Hash -ne $engineProvenance.ExecutableSha256) { throw 'Motor EXE differs from provenance.' }
-    if ((Get-FileHash -LiteralPath (Join-Path $enginePackage 'sources\otr-can-0.1.4-source.zip') -Algorithm SHA256).Hash -ne $engineProvenance.SourceArchiveSha256) { throw 'Motor sources differ from provenance.' }
+    if ((Get-FileHash -LiteralPath (Join-Path $enginePackage $engineSourceArchive) -Algorithm SHA256).Hash -ne $engineProvenance.SourceArchiveSha256) { throw 'Motor sources differ from provenance.' }
     $bundledEngine = Join-Path $publish 'tools\otr-can'
     [System.IO.Directory]::CreateDirectory($bundledEngine) | Out-Null
     foreach ($file in (Get-ChildItem -LiteralPath $enginePackage -File -Recurse)) {
@@ -116,7 +119,10 @@ if ($OtrCanPackageDirectory) {
         if ((Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash) { throw "Motor copy differs: $relative" }
     }
     Invoke-Step 'motor-version' (Join-Path $bundledEngine 'otr_can.exe') @('--version')
-    if ((Get-Content -LiteralPath (Join-Path $logs 'motor-version.log') -Raw).Trim() -ne 'otr_can 0.1.4') { throw 'Bundled motor version check failed.' }
+    if ((Get-Content -LiteralPath (Join-Path $logs 'motor-version.log') -Raw).Trim() -ne "otr_can $expectedEngineVersion") { throw 'Bundled motor version check failed.' }
+    Invoke-Step 'motor-capabilities' (Join-Path $bundledEngine 'otr_can.exe') @('capabilities')
+    $capabilities = (Get-Content -LiteralPath (Join-Path $logs 'motor-capabilities.log') -Raw) -split '\s+'
+    if ($capabilities -notcontains 'mp3-aac-v1') { throw 'Bundled motor does not report the required MP3-to-AAC capability.' }
 }
 $sourceHash = (Get-FileHash -LiteralPath $sourceArchive -Algorithm SHA256).Hash
 $provenance = [ordered]@{

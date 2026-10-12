@@ -1179,15 +1179,10 @@ public partial class MainWindow : Window
         finally { _cutOutputOpening = false; }
         if (_shutdownStarted || !ReferenceEquals(analysis, _viewModel.AnalysisResult)) return;
         var requiresPreparation = ConfiguredCutEngineFactory.RequiresPreparation(engineKind, analysis);
-        if (requiresPreparation && MessageBox.Show(
+        if ((requiresPreparation || VideoPreparation.ConvertsMp3(engineKind, analysis)) && MessageBox.Show(
                 this,
-                "CAN kann derzeit Videos im MP4-Container schneiden. " +
-                $"Deine Datei wurde als {VideoPreparation.ContainerName(analysis)} erkannt.\n\n" +
-                "Soll CAN versuchen, das Video mit FFmpeg verlustfrei in eine temporäre MP4-Datei " +
-                "umzupacken und anschließend zu schneiden?\n\n" +
-                "Die Originaldatei bleibt unverändert.\n\n" +
-                "Dieses Feature ist experimentell. Es wurde an einigen Beispielvideodateien getestet.",
-                "Experimentelle Video-Vorbereitung", MessageBoxButton.YesNo,
+                VideoPreparation.ConfirmationText(engineKind, analysis),
+                engineKind == CutEngineKind.OtrCan ? "Experimentelle otr-can-Verarbeitung" : "Experimentelle Video-Vorbereitung", MessageBoxButton.YesNo,
                 MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
         {
             return;

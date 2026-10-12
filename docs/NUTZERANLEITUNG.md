@@ -1,5 +1,15 @@
 # Nutzeranleitung – Cut Assistant Next
 
+## Lokale Erweiterung vom 12.10.2026: AVI/MP3 mit otr-can
+
+Diese Ergänzung benötigt **CAN Build 15 und den separaten Motor otr-can 0.1.5**; die installierte öffentliche Build-13-Ausgabe enthält sie noch nicht. Unter **OTR-CAN-Werkzeuge …** wird die neue Motor-EXE ausgewählt. FFmpeg/ffprobe und FFMS2 bleiben separat eingerichtet, MP4Box bleibt Standard.
+
+Bei geeigneten H.264-AVI-Dateien bietet **Schneiden otr-can** eine ausdrücklich experimentelle Vorbereitung an. CAN kopiert Video und Ton ohne Neukodierung in eine temporäre MP4-Datei. Anschließend wird MP3 erst nach dem Schnitt einmal nach AAC-LC kodiert (Stereo 192 kbit/s, Mono 96 kbit/s). Diese Tonkodierung ist verlustbehaftet, eine zusätzliche AAC-Vorkodierung entfällt. Bereits vorhandene AAC-/AC3-Spuren behalten ihren bisherigen Schnittablauf. Original, Schnittpunkte und Namensbildung bleiben erhalten; temporäre Arbeitsdateien werden aufgeräumt.
+
+Ein alter Motor wird für MP3-Aufträge mit einem Upgrade-Hinweis abgelehnt. Ungeeignete Zeitstrukturen und fehlende Samples werden nicht automatisch repariert. Bitte jede Tonspur und alle Übergänge kontrollieren. Die neue Teufelsbrigade-Datei wurde am 12.10.2026 persönlich positiv abgenommen: Anfang, Ende, alle Schnittübergänge sowie Ton und Bild. Eine bereits im vorherigen Ergebnis vorhandene Video-Zeitstempelauffälligkeit bleibt offen. [Prüfstand und Grenzen](AVI-OTR-CAN-MP3-20261012.md).
+
+Die folgenden Kapitel beschreiben weiterhin die veröffentlichte Build-13-Ausgabe.
+
 Stand: 11.10.2026. Diese Anleitung beschreibt die öffentliche Vorabversion **0.2.1 Build 13 RC3** für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
 Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.2.1 · Build 13 · RC3**. Die vollständige persönliche Paketabnahme betrifft den vorherigen Build 12 RC3. Bitte die tatsächlich angezeigten Angaben bei Fehlermeldungen mit angeben.

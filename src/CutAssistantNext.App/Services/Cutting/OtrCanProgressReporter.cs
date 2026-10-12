@@ -29,7 +29,7 @@ internal sealed class OtrCanProgressReporter(IProgress<CutProgressUpdate>? targe
                 var match = IndexPercentage.Match(line);
                 if (match.Success && int.TryParse(match.Groups[1].Value, out var value) && value <= 100)
                 {
-                    status = "FFMS2: Originaldatei indexieren";
+                    status = "FFMS2: Schnittquelle indexieren";
                     percentage = value;
                 }
                 else if (line == "Writing timecodes... done.") status = "FFMS2: Zeitstempel gespeichert";
@@ -60,7 +60,7 @@ internal sealed class OtrCanProgressReporter(IProgress<CutProgressUpdate>? targe
                     else if (line == "INFO: Stage 1/3: corrected video cutting") status = "OTR-CAN: Video framegenau schneiden";
                     else if (line == "INFO: Stage 2/3: continuous CPU audio encoding") status = "OTR-CAN: Tonspuren vorbereiten und neu kodieren";
                     else if (line == "INFO: Decoding original audio once and assembling exact kept PCM samples") status = "OTR-CAN: Originalton lesen und Behaltebereiche vorbereiten";
-                    else if (line == "INFO: Encoding each complete audio track once with original codec/layout/rate/target bitrate") status = "OTR-CAN: Alle Tonspuren auf CPU neu kodieren";
+                    else if ((line == "INFO: Encoding each complete audio track once with original codec/layout/rate/target bitrate" || line == "INFO: Encoding each complete audio track once; MP3 becomes AAC-LC, existing AAC/AC-3 settings are preserved")) status = "OTR-CAN: Alle Tonspuren auf CPU neu kodieren";
                     else if (line == "INFO: Stage 3/3: assembling final MP4 and verifying unchanged stream packets") status = "OTR-CAN: Bild und Ton zusammenführen und prüfen";
                     else if (line == "INFO: Final MP4 verified: video and all audio packets, PTS/DTS, padding and decoder configurations preserved") status = "OTR-CAN: Bild, Ton und Zeitstempel geprüft";
                     else if (line.StartsWith("INFO: CAN cut completed:", StringComparison.Ordinal)) status = "OTR-CAN: Schnittergebnis erstellt";
