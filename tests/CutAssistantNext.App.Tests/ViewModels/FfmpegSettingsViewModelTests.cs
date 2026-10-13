@@ -6,6 +6,83 @@ namespace CutAssistantNext.App.Tests.ViewModels;
 public sealed class FfmpegSettingsViewModelTests
 {
     [Fact]
+    public async Task CheckReportsRecommendationsAndPathChangeClearsStaleResult()
+    {
+        using var vm = new FfmpegSettingsViewModel(new(), (_, _) => Task.FromResult<IReadOnlyList<FfmpegToolCheckResult>>(
+            [new("FFmpeg", true, "Version 8.1.3 unterstützt; empfohlen ab 9.0.2."), new("ffprobe", false, "Version 5.1 ist zu alt.")]));
+        var changes = new List<string?>();
+        vm.PropertyChanged += (_, e) => changes.Add(e.PropertyName);
+        await vm.CheckAsync();
+        Assert.Contains("FFmpeg: OK", vm.StatusMessage);
+        Assert.Contains("9.0.2", vm.StatusMessage);
+        Assert.Contains("ffprobe: Version 5.1 ist zu alt", vm.StatusMessage);
+        Assert.True(vm.CanEdit);
+        Assert.Contains(nameof(vm.IsBusy), changes);
+        vm.FfmpegExecutablePath = "new-path.exe";
+        Assert.Empty(vm.StatusMessage);
+    }
+
+    [Fact]
+    public async Task CheckRunsOffCallerThreadAndPreventsConcurrentEditsAndChecks()
+    {
+        int callerThread = Environment.CurrentManagedThreadId;
+        int workerThread = callerThread;
+        using var started = new ManualResetEventSlim();
+        var finish = new TaskCompletionSource<IReadOnlyList<FfmpegToolCheckResult>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        int calls = 0;
+        using var vm = new FfmpegSettingsViewModel(new() { FfmpegExecutablePath = "original.exe" }, (_, _) =>
+        {
+            workerThread = Environment.CurrentManagedThreadId;
+            Interlocked.Increment(ref calls);
+            started.Set();
+            return finish.Task;
+        });
+        var checking = vm.CheckAsync();
+        Assert.True(started.Wait(TimeSpan.FromSeconds(5)));
+        Assert.NotEqual(callerThread, workerThread);
+        Assert.True(vm.IsBusy);
+        Assert.False(vm.CanEdit);
+        vm.FfmpegExecutablePath = "changed.exe";
+        await vm.CheckAsync();
+        Assert.Equal("original.exe", vm.FfmpegExecutablePath);
+        Assert.Equal(1, calls);
+        finish.SetResult([new("FFmpeg", true, "Version 9.0.2")]);
+        await checking;
+        Assert.False(vm.IsBusy);
+        Assert.True(vm.CanEdit);
+    }
+
+    [Fact]
+    public async Task ClosingCancelsCheckAndDoesNotPublishLateResults()
+    {
+        var started = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        using var vm = new FfmpegSettingsViewModel(new(), async (_, token) =>
+        {
+            started.SetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, token);
+            return [];
+        });
+        var checking = vm.CheckAsync();
+        await started.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        vm.Dispose();
+        await checking;
+        Assert.False(vm.IsBusy);
+        Assert.False(vm.CanEdit);
+        Assert.Equal("Versionen werden geprüft …", vm.StatusMessage);
+        await vm.CheckAsync();
+    }
+
+    [Fact]
+    public async Task FailedCheckRestoresEditStateWithReadableMessage()
+    {
+        using var vm = new FfmpegSettingsViewModel(new(), (_, _) =>
+            Task.FromException<IReadOnlyList<FfmpegToolCheckResult>>(new InvalidOperationException("fixture failure")));
+        await vm.CheckAsync();
+        Assert.True(vm.CanEdit);
+        Assert.Contains("fixture failure", vm.StatusMessage);
+    }
+
+    [Fact]
     public void Constructor_UsesSettingsValues()
     {
         var settings = new FfmpegSettings

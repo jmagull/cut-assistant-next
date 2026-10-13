@@ -1,16 +1,16 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
-using System.Windows.Controls.Primitives;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using CutAssistantNext.App.Controls;
 using CutAssistantNext.App.Dialogs;
 using CutAssistantNext.App.Naming;
+using CutAssistantNext.App.Services;
 using CutAssistantNext.App.Services.Analysis;
 using CutAssistantNext.App.Services.Cutting;
-using CutAssistantNext.App.Services;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.State;
 using CutAssistantNext.App.ViewModels;
@@ -920,7 +920,7 @@ public partial class MainWindow : Window
             var settings = new FrameLoupeSettingsStore().Load();
             var viewModel = new FrameLoupeViewModel(path, analysis.VideoStreams[0].Index,
                 _cutPlanViewModel.MediaDuration!.Value, position, side,
-                (decimal)(analysis.StartTimeSeconds ?? 0), settings.InitialSearchFrames, frameAnalysis, preview);
+                (decimal)(analysis.StartTimeSeconds ?? 0), settings.InitialSearchFrames, frameAnalysis, preview, analysis.FormatName);
             var dialog = new FrameLoupeDialog(viewModel, selection =>
             {
                 if (_isClosed || _mediaLoadInProgress || path != _viewModel.FilePath)
@@ -930,7 +930,8 @@ public partial class MainWindow : Window
 
                 _cutPlanViewModel.ApplyFrameEdge(segment!, side, selection.Position);
                 _logger.Information($"Frame-Lupe: {side}-Kante von {position:c} auf {selection.Position:c} übernommen; " +
-                    $"Stream {selection.StreamIndex}, Original-PTS {selection.Pts}, " +
+                    $"Stream {selection.StreamIndex}, " +
+                    $"{(selection.UsesReconstructedTimestamp ? "rekonstruierter AVI-Zeitstempel" : "Original-PTS")} {selection.Pts}, " +
                     $"Zeitbasis {selection.TimeBase.Numerator}/{selection.TimeBase.Denominator}.");
             })
             { Owner = this };
@@ -1978,7 +1979,8 @@ public partial class MainWindow : Window
                     settings,
                     fileName,
                     analysis,
-                    _cutNamingState);
+                    _cutNamingState,
+                    namingSettings);
 
         cutlistViewModel.ApplyTemplateAuthor(
             _loadedCutlistAuthor);

@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="FFmpeg-Werkzeuge"
         Width="720"
-        Height="440"
+        Height="560"
         MinWidth="600"
-        MinHeight="360"
+        MinHeight="420"
         WindowStartupLocation="CenterOwner"
         Background="#F4F6F8">
 
@@ -36,6 +36,7 @@
                 BorderThickness="1"
                 CornerRadius="8">
 
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
                 <TextBlock Margin="0,0,0,5"
                            FontWeight="SemiBold"
@@ -49,12 +50,12 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0"
+                    <TextBox Grid.Column="0" IsEnabled="{Binding CanEdit}"
                              Height="32"
                              Padding="8,4"
                              Text="{Binding FfprobeExecutablePath, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <Button Grid.Column="2"
+                    <Button Grid.Column="2" IsEnabled="{Binding CanEdit}"
                             MinWidth="110"
                             Height="32"
                             Padding="12,0"
@@ -74,12 +75,12 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0"
+                    <TextBox Grid.Column="0" IsEnabled="{Binding CanEdit}"
                              Height="32"
                              Padding="8,4"
                              Text="{Binding FfmpegExecutablePath, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <Button Grid.Column="2"
+                    <Button Grid.Column="2" IsEnabled="{Binding CanEdit}"
                             MinWidth="110"
                             Height="32"
                             Padding="12,0"
@@ -92,7 +93,12 @@
                            Foreground="#6B7280"
                            TextWrapping="Wrap"
                            Text="Beide Programmpfade sind frei wählbar. Die Werkzeuge müssen nicht im selben Ordner installiert sein." />
+                <TextBlock Margin="0,14,0,0" FontSize="12" Foreground="#4B5563" TextWrapping="Wrap"
+                           Text="Erforderlich: FFmpeg und ffprobe größer als 5.1. Empfohlen: ab 9.0.2." />
+                <TextBlock Margin="0,14,0,0" Foreground="#1F2937" TextWrapping="Wrap"
+                           Text="{Binding StatusMessage}" />
             </StackPanel>
+            </ScrollViewer>
         </Border>
 
         <StackPanel Grid.Row="2"
@@ -100,7 +106,10 @@
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
 
-            <Button MinWidth="130"
+            <Button MinWidth="100" Height="36" Margin="0,0,10,0" Padding="14,0"
+                    IsEnabled="{Binding CanEdit}" Click="CheckButton_Click" Content="Prüfen" />
+
+            <Button MinWidth="130" IsEnabled="{Binding CanEdit}"
                     Height="36"
                     Margin="0,0,10,0"
                     Padding="14,0"

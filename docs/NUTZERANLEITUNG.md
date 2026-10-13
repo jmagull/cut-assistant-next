@@ -121,6 +121,8 @@ Für Wiedergabe und Schnitt werden die benötigten Programme so eingerichtet:
    nicht gelingt, unter **Einstellungen → Schnittanwendung …** die
    `MP4Box.exe` selbst auswählen.
 
+Ab **0.3.0 · Build 27 · RC3** führt **Prüfen** im Dialog **FFmpeg-Werkzeuge** eine Versionskontrolle für beide Programme aus: **größer als 5.1** erforderlich (5.1/5.1.0 abgewiesen, 5.1.1 zulässig), **ab 9.0.2** empfohlen. Unterstützte ältere Releases erhalten einen Empfehlungshinweis. Unbekannte Versionen werden nicht als erfolgreich geprüft gemeldet. Git-Entwicklungsbuilds mit nachweislich neuerem Bibliotheksstand werden als solche gekennzeichnet; eine konkrete Releaseversion ab 9.0.2 wird nicht behauptet. Die Prüfung speichert keine Einstellungen, bleibt im Hintergrund und wird beim Schließen abgebrochen. Dieselbe Versionsregel gilt in der OTR-CAN-Werkzeugkontrolle.
+
 Die Einstellungen werden weiterhin im Benutzerprofil gespeichert.
 „Portable“ bezeichnet hier die entpackbare Programmausgabe, nicht eine
 vom Benutzerprofil unabhängige Speicherung aller Einstellungen.
@@ -202,8 +204,8 @@ Klicke in der Schnitttabelle auf die **Startzeit oder Endzeit** und drücke **Sh
 
 - **Links/Rechts** und die Buttons **−1/+1**: ein tatsächlich analysierter Frame.
 - **−10/+10**: zehn Frames; mit Strg zwanzig. **Strg+Links/Rechts**: zwanzig Frames.
-- **Umschalt+Links/Rechts** oder die beiden Suchbuttons: zusätzliche halbierte Suche. Standardfolge: 2000 → 1000 → 500 → 250 → 125 → 62 → 31 → 15 → 7 → 3 → 1.
-- **Suche neu starten** setzt die Suchweite zurück. Normale Bildschritte verändern diese Suchweite nicht.
+- **Umschalt+Links/Rechts** oder die beiden Suchbuttons: richtungsabhängige Suche ab **Build 27**. Der erste Sprung verwendet den eingestellten Startwert, standardmäßig 2000 Frames. Gleiche Richtung behält den Wert; erst ein Richtungswechsel halbiert ihn, bereits für den Sprung in die Gegenrichtung. Beispiel: **+2000 → +2000 → −1000 → −1000 → +500**. Minimum 1 Frame; die beiden Buttons zeigen ihre jeweilige nächste Sprungweite an.
+- **Suche neu starten** setzt Suchweite und gemerkte Suchrichtung zurück. Normale Bildschritte verändern beides nicht. Fehlgeschlagene, abgebrochene oder an der Dateigrenze bewegungslose Suchsprünge verbrauchen keine Halbierung.
 - Unter **Einstellungen → Frame-Lupe** lässt sich der Startwert ändern; er gilt beim nächsten Öffnen.
 - **Frame-Details** zeigt Zeitstempel, Keyframe und Bildtyp. Die Detailtabelle bietet elf sichtbare Framezeilen; bei ±10-Schritten wird der gewählte Frame weiterhin automatisch in den sichtbaren Tabellenbereich gescrollt. Ein Klick auf einen Frame in der Detailtabelle lädt dessen Vorschau. Bei kleinen Fenstern bleibt der Detailbereich scrollbar.
 - Ab **Build 11** zeigt **Neue Schnittkante** die Zeit des gewählten Frames. **Schnittkante übernehmen** trägt diese Zeit in den Schnittplan ein und schließt die Lupe. Der Button ist erst mit bestätigter Bildvorschau innerhalb der Datei aktiv.
@@ -214,7 +216,7 @@ Beim Laden eines größeren Abschnitts kann die Analyse etwas dauern. **Schließ
 
 Die Übernahme in den Schnittplan speichert noch keine Datei. Prüfe anschließend die übrigen Kanten und verwende **Cutlist erzeugen**, um die korrigierte Fassung im eingerichteten Cutlist-Ordner zu speichern. Der Dateiname bleibt an die Originalaufnahme gebunden. Bei einer vorhandenen Fassung kannst du das Ersetzen ablehnen; wenn du beide Fassungen behalten möchtest, sichere die alte Datei zuvor als Kopie. Beim Export werden die korrigierten Entfernbereiche wie bisher in zu behaltende Abschnitte umgerechnet.
 
-Die Übernahme verwendet Original-PTS und Zeitbasis und zieht den bekannten Containerstart ab. Sie verwendet weder die geschätzte Framenummer des Hauptplayers noch eine Rechnung aus Bildrate und lokaler Lupennummer. Die interne Zeitauflösung beträgt 100 Nanosekunden; die Anzeige mit Millisekunden verringert die interne Genauigkeit nicht. Die Framenummer zählt nur im geladenen Abschnitt; ein absoluter Datei-Frameindex und der unabhängige Abgleich zum sichtbaren Hauptplayerbild folgen. Dateien mit mehreren Videostreams benötigen zuvor die noch ausstehende Zuordnung zur aktiven Player-Videospur.
+Die Übernahme verwendet Original-PTS und Zeitbasis und zieht den bekannten Containerstart ab. Ab **0.3.0 · Build 26 · RC3** kann die Lupe bei tatsächlich erkanntem AVI ohne Original-PTS den von FFmpeg rekonstruierten Bildzeitstempel verwenden. Status und Frame-Details kennzeichnen diesen Weg ausdrücklich. Eine Übernahme ist weiterhin nur mit bestätigter Bildvorschau und passender Zeitbasis möglich; fehlen auch rekonstruierte Zeitstempel oder ist die Zuordnung mehrdeutig, bleibt sie gesperrt. Sie verwendet weder die geschätzte Framenummer des Hauptplayers noch eine Rechnung aus Bildrate und lokaler Lupennummer. Die interne Zeitauflösung beträgt 100 Nanosekunden; die Anzeige mit Millisekunden verringert die interne Genauigkeit nicht. Die Framenummer zählt nur im geladenen Abschnitt; ein absoluter Datei-Frameindex und der unabhängige Abgleich zum sichtbaren Hauptplayerbild folgen. Dateien mit mehreren Videostreams benötigen zuvor die noch ausstehende Zuordnung zur aktiven Player-Videospur.
 
 Die Wahl einer genauen Schnittzeit garantiert nicht, dass jeder Schnittmotor sie identisch ausführt. CANs MP4Box-Verfahren bleibt unverändert. Für den vorgesehenen Vergleich mit CutlistDude lade die korrigierte Liste dort und kontrolliere Filmstart, Übergänge, Filmende und Ton-Synchronität im Ergebnis.
 
@@ -234,7 +236,7 @@ Das klassische Cutlist-Format beschreibt die zu behaltenden Abschnitte. CAN rech
 
 Cut Assistant Next ermöglicht es, vorhandene Schnittpunkte schnell zu kontrollieren und bei Bedarf framegenau nach den eigenen Vorstellungen nachzuarbeiten.
 
-Wenn du aus einer fremden Cutlist eine eigene Fassung erzeugst, bleibt deren vorgeschlagener Filmname zunächst in der Namensvorschau erhalten. Änderungen an den Namensfeldern überschreiben diesen Vorschlag nicht automatisch. Erst mit **Aus obigen Eingaben neu erzeugen** wechselst du bewusst zur eigenen Namensmaske. Anschließend berücksichtigt die Vorschau die aktuellen Eingaben.
+Wenn du aus einer fremden Cutlist eine eigene Fassung erzeugst, bleibt deren vorgeschlagener Filmname zunächst in der Namensvorschau erhalten. Änderungen an den Namensfeldern überschreiben diesen Vorschlag nicht automatisch. Erst mit **Aus obigen Eingaben neu erzeugen** wechselst du bewusst zur eigenen Namensmaske. Anschließend berücksichtigt die Vorschau die aktuellen Eingaben. Ab **Build 29** wird dabei die beim Öffnen des Dialogs aktuell gespeicherte Standardmaske verwendet, auch wenn die Datei und deren Namenszustand schon vor dem Maskenwechsel geladen waren. Ein Neustart oder erneutes Videoladen ist nicht erforderlich. Bereits übernommene Namen bleiben bis zum bewussten Neuerzeugen erhalten.
 
 Die Namensvorschau lässt sich markieren und mit **Strg+C** kopieren.
 

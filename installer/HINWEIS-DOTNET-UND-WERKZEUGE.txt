@@ -10,6 +10,9 @@ https://dotnet.microsoft.com/en-us/download/dotnet/10.0
 FFmpeg einschließlich ffprobe (nicht im CAN-Paket enthalten):
 https://ffmpeg.org/download.html
 Auf dieser Seite sind Links zu fertigen Windows-Versionen angegeben.
+FFmpeg und ffprobe: Version größer als 5.1 erforderlich, ab 9.0.2 empfohlen.
+Unter Einstellungen > FFmpeg-Werkzeuge mit "Prüfen" kontrollieren.
+Git-Entwicklungsbuilds werden anhand ihres Bibliotheksstands gesondert bewertet.
 
 GPAC einschließlich MP4Box (nicht im CAN-Paket enthalten):
 https://gpac.io/downloads/gpac-nightly-builds/

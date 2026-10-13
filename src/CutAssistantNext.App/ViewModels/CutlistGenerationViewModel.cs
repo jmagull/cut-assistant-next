@@ -2,10 +2,10 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.State;
-using CutAssistantNext.Core.Naming;
-using CutAssistantNext.Core.Metadata;
 using CutAssistantNext.Core.Editing;
 using CutAssistantNext.Core.Media;
+using CutAssistantNext.Core.Metadata;
+using CutAssistantNext.Core.Naming;
 using CutAssistantNext.Cutlists.Editing;
 using CutAssistantNext.Cutlists.Metadata;
 using CutAssistantNext.Cutlists.Model;
@@ -16,6 +16,7 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
 {
     private NameTemplateContext _nameContext;
     private string _nameTemplate;
+    private string _defaultNameTemplate;
     private string _suggestedMovieName;
     private string _author;
     private string _userComment =
@@ -50,6 +51,7 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
 
         _nameTemplate =
             namingSettings.DefaultNameTemplate;
+        _defaultNameTemplate = _nameTemplate;
 
         _author =
             settings.DefaultAuthor;
@@ -70,7 +72,8 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
     internal CutlistGenerationViewModel(
         CutlistSettings settings,
         CutNamingState namingState,
-        IReadOnlyCollection<TechnicalNotice>? technicalNotices = null)
+        IReadOnlyCollection<TechnicalNotice>? technicalNotices = null,
+        string? defaultNameTemplate = null)
     {
         ArgumentNullException.ThrowIfNull(
             settings);
@@ -83,6 +86,8 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
 
         _nameTemplate =
             namingState.NameTemplate;
+        _defaultNameTemplate = defaultNameTemplate ?? _nameTemplate;
+        ArgumentException.ThrowIfNullOrWhiteSpace(_defaultNameTemplate);
 
         _author =
             settings.DefaultAuthor;
@@ -123,6 +128,7 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
                         _nameContext);
 
             _nameTemplate = value;
+            _defaultNameTemplate = value;
             _suggestedMovieName = suggestedMovieName;
 
             OnPropertyChanged();
@@ -467,16 +473,13 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
 
     public void GenerateSuggestedMovieName()
     {
-        var suggestedMovieName =
-            NameTemplateRenderer.Render(
-                _nameTemplate,
-                _nameContext);
-
-        _suggestedMovieName =
-            suggestedMovieName;
-
+        var suggestedMovieName = NameTemplateRenderer.Render(_defaultNameTemplate, _nameContext);
+        bool templateChanged = _nameTemplate != _defaultNameTemplate;
+        _nameTemplate = _defaultNameTemplate;
+        _suggestedMovieName = suggestedMovieName;
         _preserveSuggestedMovieName = false;
 
+        if (templateChanged) OnPropertyChanged(nameof(NameTemplate));
         OnPropertyChanged(nameof(SuggestedMovieName));
     }
 

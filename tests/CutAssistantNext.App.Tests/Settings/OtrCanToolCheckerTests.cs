@@ -135,8 +135,8 @@ public sealed class OtrCanToolCheckerTests : IDisposable
             {
                 "otr_can.exe" => "--input --output --index --temp-dir --cutlist --ffmpeg --ffprobe",
                 "ffmsindex.exe" => "Usage: ffmsindex -c -k inputfile outputfile",
-                "ffmpeg.exe" => "ffmpeg version fixture",
-                _ => "ffprobe version fixture"
+                "ffmpeg.exe" => "ffmpeg version 9.0.2",
+                _ => "ffprobe version 9.0.2"
             };
             return Task.FromResult(Override ?? new ToolProbeResult(0, output, ""));
         }

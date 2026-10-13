@@ -14,8 +14,8 @@ public partial class FfmpegSettingsDialog : Window
 
         InitializeComponent();
 
-        DataContext =
-            viewModel;
+        DataContext = viewModel;
+        Closed += (_, _) => viewModel.Dispose();
     }
 
     private void BrowseFfprobeButton_Click(
@@ -78,11 +78,22 @@ public partial class FfmpegSettingsDialog : Window
             dialog.FileName;
     }
 
+    private async void CheckButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is FfmpegSettingsViewModel viewModel)
+        {
+            await viewModel.CheckAsync();
+        }
+    }
+
     private void SaveButton_Click(
         object sender,
         RoutedEventArgs e)
     {
-        DialogResult = true;
+        if (DataContext is FfmpegSettingsViewModel { CanEdit: true })
+        {
+            DialogResult = true;
+        }
     }
 
     private void CancelButton_Click(

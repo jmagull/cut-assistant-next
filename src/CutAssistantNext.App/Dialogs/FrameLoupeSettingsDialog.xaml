@@ -13,7 +13,7 @@
             <TextBlock Text="Frames beim ersten Suchsprung (Standard: 2000)" Margin="0,0,0,6" />
             <TextBox x:Name="InitialFramesBox" Height="30" VerticalContentAlignment="Center" />
         </StackPanel>
-        <TextBlock Grid.Row="2" Text="Nach jedem erfolgreichen Suchsprung wird die Weite halbiert, bis auf 1 Frame. Die normale Navigation bleibt erhalten."
+        <TextBlock Grid.Row="2" Text="Gleiche Suchrichtung behält die Weite. Erst beim Richtungswechsel wird sie halbiert, bis auf 1 Frame. Die normale Navigation bleibt erhalten."
                    TextWrapping="Wrap" Margin="0,14,0,14" Foreground="#4B5563" />
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Speichern" Width="100" Height="32" IsDefault="True" Click="Save_Click" />

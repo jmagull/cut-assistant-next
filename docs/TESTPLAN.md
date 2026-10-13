@@ -44,6 +44,26 @@ Neuer Build-13-Paketsatz am 11.10.2026 technisch geprüft: gesperrter Restore un
 | 16 | Bereich löschen | ausgewählter Bereich wird entfernt |
 | 17 | Fenster neu öffnen | Größe bzw. Maximierung wird wiederhergestellt |
 
+## Namensmaskenwechsel ohne Neustart – 13.10.2026, Build 29 RC3
+
+- Video/Cutlist laden, Namensmaske von S/E auf x ändern und speichern; ohne Neustart **Cutlist erzeugen → Aus obigen Eingaben neu erzeugen**. Erwartet aktuelle gespeicherte Maske, führende Null in Folge 07 und bearbeiteter Folgentitel erhalten. Wechsel zurück und wieder zu x ebenfalls prüfen.
+- Bereits übernommener fremder/eigener Namensvorschlag bleibt beim Öffnen, Eingabeänderung und Speichern ohne Neuerzeugen erhalten. Bewusstes Neuerzeugen darf ihn ersetzen; manueller Filmname bleibt sonst unabhängig. Nach Filmnamens-Neuerzeugung muss der folgende Cutlist-Dialog dieselbe Maske verwenden.
+- Cutlist speichern/wieder laden: Vorschlag, Originalzuordnung und Schnittbereiche unverändert. Bestätigt: **1076/1076 Tests**, **sechs WPF-/Speicherprüfungen**, Release ohne Warnungen/Fehler, keine Bindungsfehler und persönliche Einstellungen erhalten. [Prüfbericht](NAMENSMASKE-OHNE-NEUSTART-20261013.md). Persönliche Wiederholungsprüfung am 13.10.2026 bestanden: S13E07 → 13x07 → S13xxE07 bei gespeichertem Maskenwechsel ohne Neustart; alter Vorschlag bis zum bewussten Neuerzeugen erhalten.
+
+## Richtungsabhängige Lupensuche / FFmpeg-Versionen – 13.10.2026, Build 27 RC3
+
+- Suchfolge bei Startwert 2000: **+2000/+2000/−1000/−1000/+500**. Tatsächliche Bild-/Frameanzahl prüfen, Gegenrichtung verwendet bereits die Hälfte. Normale ±1/±10/±20 verändern Weite/Richtung nicht; Neustart setzt beides zurück. Keine Halbierung nach Fehler, Abbruch oder bewegungslosem Dateigrenzensprung. Beide Buttonwerte zeigen die jeweilige nächste Weite.
+- **FFmpeg-Werkzeuge → Prüfen**: FFmpeg und ffprobe getrennt kontrollieren; 5.1/5.1.0 abweisen, 5.1.1 zulassen, 8.1.3 mit Empfehlung, 9.0.2/9.0.10/10.0 empfohlen. Unbekannte Versionsangaben, falsche Programme, fehlende Dateien/ungültige Pfade, Startfehler, Timeout und Abbruch prüfen. Git-Kennung mit passendem neuerem Build-/Laufzeit-Bibliotheksstand gesondert erkennen; keine exakte Releaseversion behaupten.
+- Prüfung im Hintergrund, Pfade/Speichern/Prüfen währenddessen deaktiviert, Schließen bricht Prüfung ab; keine Einstellungen speichern. Pfadänderung löscht altes Ergebnis. Dialog bei 720×560/600×420: Status scrollbar, Buttons erreichbar. OTR-CAN-Werkzeugkontrolle verwendet dieselbe Regel.
+- Bestätigt: **1069/1069 CAN-Tests**, keine übersprungen, **57 integrierte AVI-/Werkzeug-/WPF-Prüfungen** gegen Build 27, Release ohne Warnungen/Fehler, keine Bindungsfehler, Lockdateien und persönliche Einstellungen erhalten. [Prüfbericht](LUPEN-SUCHRICHTUNG-FFMPEG-20261013.md). FFmpeg-Versioncheck und Richtungswechsel-Halbsprung am 13.10.2026 persönlich positiv bestätigt; Essentials-Git-Build vom 12.10.2026 verwendet.
+
+## AVI-Frame-Lupe – 13.10.2026, Build 26 RC3
+
+- Tatsächlich erkanntes AVI ohne Original-PTS: vorhandenen rekonstruierten Bildzeitstempel prüfen, Bild laden, Status/Details müssen die Herkunft kennzeichnen; Übernahme nur mit passender Zeit-/Bildzuordnung innerhalb der Datei. AVI mit abweichender Endung verwendet denselben Weg; MP4 erhält keinen AVI-Fallback.
+- ±1/±10, halbierte Suche mit Abschnittserweiterung, Dateianfang und bekannte Kanten prüfen. Übernahme ändert ausschließlich die gewählte Start-/Endkante, Containerstart weiterhin abziehen; Original-PTS behalten Vorrang. Abbrechen verändert keinen Schnittbereich.
+- Fehlende rekonstruierte, doppelte/nicht aufsteigende Zeiten, falsches Bild/Zeitbasis, fehlgeschlagene/leere Vorschau, Bildanzeigefehler und Abbruch müssen Bild/Übernahme sperren. Paket-DTS und Bildrate/Framenummer liefern keinen Ersatzzeitpunkt.
+- Automatisch bestätigt: **1018/1018 CAN-Tests**, darunter 19 neue Lupenfälle; **32 echte ffprobe-/FFmpeg-/WPF-Integrationsfälle** mit nummerierten AVI-/MP4-Quellen und Original-Teufelsbrigade, Bild, Navigation, Normal-/Mindestgröße und tatsächlichem Übernahmeklick, ohne Bindungsfehler. [Nachweise und Prüfgrenzen](AVI-FRAME-LUPE-20261013.md).
+- Persönliche Bedienabnahme am 13.10.2026 positiv bestätigt: AVI-Lupe funktioniert, Teufelsbrigade-Schnitt mit MP4Box und otr-can jeweils ohne Blitzer. Suchsprung ausschließlich bei Richtungswechsel halbieren bleibt separat vorgemerkt. Rekonstruierte Zeiten bleiben Schätzwerte; keine allgemeine AVI-Reparatur oder vollständiger unabhängiger Bildabgleich zu mpv/Schnittmotoren behauptet. Die als untauglich bestätigte alte Aufnahme weiterhin ausgeschlossen.
 ## AVI-Originalhinweis – Stand 11.10.2026
 
 - Tatsächlichen AVI-Container mit `.avi`, `.AVI`, `.avi.mp4` und ohne Endung laden: gelber Hinweis direkt unter dem Dateinamen; abweichende Endungen werden erklärt. Analyse bleibt erfolgreich, Wiedergabe und Cutlist-Bearbeitung bleiben verfügbar.

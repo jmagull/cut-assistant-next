@@ -155,6 +155,12 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
                 _defaultNameTemplate,
                 _nameContext);
 
+        if (_nameTemplate != _defaultNameTemplate)
+        {
+            _nameTemplate = _defaultNameTemplate;
+            OnPropertyChanged(nameof(NameTemplate));
+        }
+
         if (_suggestedMovieName != suggestedMovieName)
         {
             _suggestedMovieName = suggestedMovieName;

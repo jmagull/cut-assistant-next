@@ -1,6 +1,6 @@
 using System.IO;
-using CutAssistantNext.App.State;
 using CutAssistantNext.App.Settings;
+using CutAssistantNext.App.State;
 using CutAssistantNext.Core.Media;
 using CutAssistantNext.Core.Metadata;
 using CutAssistantNext.Core.Naming;
@@ -52,7 +52,8 @@ internal static class CutlistGenerationViewModelFactory
         CutlistSettings settings,
         string fileName,
         MediaAnalysisResult analysis,
-        CutNamingState namingState)
+        CutNamingState namingState,
+        NamingSettings? namingSettings = null)
     {
         ArgumentNullException.ThrowIfNull(
             settings);
@@ -78,6 +79,7 @@ internal static class CutlistGenerationViewModelFactory
         return new CutlistGenerationViewModel(
             settings,
             namingState,
-            technicalNotices);
+            technicalNotices,
+            defaultNameTemplate: namingSettings?.DefaultNameTemplate);
     }
 }

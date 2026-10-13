@@ -164,7 +164,7 @@
                     <TextBlock Margin="0,18,0,5"
                                FontWeight="SemiBold"
                                Foreground="#4B5563"
-                               Text="Vorschau" />
+                               Text="Vorschau (Beispiel: Staffel 1, Episode 1 – von Hand eingetragen)" />
 
                     <Border Padding="10"
                             Background="#F4F6F8"

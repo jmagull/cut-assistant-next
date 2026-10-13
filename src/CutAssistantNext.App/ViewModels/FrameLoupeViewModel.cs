@@ -7,7 +7,9 @@ using CutAssistantNext.Media.Analysis;
 
 namespace CutAssistantNext.App.ViewModels;
 
-internal sealed record FrameLoupeSelection(TimeSpan Position, long Pts, VideoTimeBase TimeBase, int StreamIndex);
+internal sealed record FrameLoupeSelection(
+    TimeSpan Position, long Pts, VideoTimeBase TimeBase, int StreamIndex,
+    bool UsesReconstructedTimestamp = false);
 
 internal sealed class FrameLoupeRow(VideoFrameInfo frame, VideoTimeBase timeBase)
 {
@@ -21,6 +23,7 @@ internal sealed class FrameLoupeRow(VideoFrameInfo frame, VideoTimeBase timeBase
 
 internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
 {
+    private readonly bool _isAvi;
     private readonly IFrameAnalysisRunner _analysis;
     private readonly IFramePreviewRunner _preview;
     private readonly string _mediaFilePath;
@@ -39,7 +42,8 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
     internal FrameLoupeViewModel(
         string mediaFilePath, int streamIndex, TimeSpan mediaDuration,
         TimeSpan cutPosition, CutEdgeSide side, decimal sourceStart,
-        int initialSearchFrames, IFrameAnalysisRunner analysis, IFramePreviewRunner preview)
+        int initialSearchFrames, IFrameAnalysisRunner analysis, IFramePreviewRunner preview,
+        string? formatName = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(mediaFilePath);
         ArgumentNullException.ThrowIfNull(analysis);
@@ -52,6 +56,9 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
 
         _mediaFilePath = mediaFilePath;
         _streamIndex = streamIndex;
+        _isAvi = (formatName ?? string.Empty).Split(
+            ',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Contains("avi", StringComparer.OrdinalIgnoreCase);
         _analysis = analysis;
         _preview = preview;
         _sourceStart = sourceStart;
@@ -73,11 +80,15 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
     public bool IsBusy { get; private set; }
     public bool CanNavigate => !IsBusy && SelectedFrame is not null;
     public bool CanApply => !IsBusy && PreviewPngBytes is { Length: > 0 } && SelectedCutPosition.HasValue;
+    private long? SelectedTimestamp => SelectedFrame?.Frame.Pts ??
+        (_isAvi ? SelectedFrame?.Frame.BestEffortTimestamp : null);
+    private bool UsesReconstructedTimestamp =>
+        _isAvi && SelectedFrame?.Frame.Pts is null && SelectedTimestamp.HasValue;
     public TimeSpan? SelectedCutPosition
     {
         get
         {
-            if (SelectedFrame?.Frame.Pts is not long pts || _window is null)
+            if (SelectedTimestamp is not long pts || _window is null)
             {
                 return null;
             }
@@ -100,8 +111,8 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
     public string Status { get; private set; } = "Frameanalyse wird vorbereitet …";
     public string PreviewPlaceholderText => IsBusy ? "Vorschau wird geladen …" : "Keine Bildvorschau verfügbar";
     public int NextSearchStep => _search.NextStep;
-    public string SearchLeftText => $"← {_search.NextStep:N0} Frames";
-    public string SearchRightText => $"{_search.NextStep:N0} Frames →";
+    public string SearchLeftText => $"← {_search.GetStep(-1):N0} Frames";
+    public string SearchRightText => $"{_search.GetStep(1):N0} Frames →";
     public string FrameText => SelectedFrame is null ? "Kein Frame gewählt"
         : $"Frame {SelectedFrame.Number:N0} / {Frames.Count:N0} im Analyseabschnitt";
     public string DetailsText => FrameDetailsText +
@@ -114,6 +125,9 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
           $"Zeitbasis: {_window.TimeBase.Numerator}/{_window.TimeBase.Denominator}\n" +
           $"Quellzeit: {SelectedFrame.TimeText} s · Keyframe: {SelectedFrame.KeyframeText} · Bildtyp: {SelectedFrame.Frame.PictureType ?? "–"}\n" +
           $"Abstand zur Ausgangskante: {(SelectedFrame.RawSeconds - _initialTarget)?.ToString("+0.000000;-0.000000;0.000000", CultureInfo.InvariantCulture) ?? "–"} s\n" +
+          (UsesReconstructedTimestamp
+              ? "Bildzuordnung: rekonstruierter AVI-Zeitstempel, keine Original-PTS.\n"
+              : "Bildzuordnung: Original-PTS erforderlich.\n") +
           "Ein absoluter Datei-Frameindex liegt noch nicht vor.";
 
     public Task InitializeAsync(CancellationToken cancellationToken = default) => RunAsync(async () =>
@@ -131,7 +145,8 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
             throw new InvalidOperationException("Bitte zuerst einen Frame mit bestätigtem Vorschaubild innerhalb der Datei auswählen.");
         }
 
-        return new FrameLoupeSelection(position, SelectedFrame!.Frame.Pts!.Value, _window!.TimeBase, _streamIndex);
+        return new FrameLoupeSelection(position, SelectedTimestamp!.Value, _window!.TimeBase, _streamIndex,
+            UsesReconstructedTimestamp);
     }
 
     public Task SelectFrameAsync(FrameLoupeRow row, CancellationToken cancellationToken = default)
@@ -158,7 +173,7 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
             throw new ArgumentOutOfRangeException(nameof(direction));
         }
 
-        return MoveAsync(direction * _search.NextStep, true, cancellationToken);
+        return MoveAsync(direction * _search.GetStep(direction), true, cancellationToken);
     }
 
     public void ResetSearch()
@@ -226,12 +241,15 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
             var previewSucceeded = await RefreshPreviewAsync(cancellationToken);
             if (search && previewSucceeded)
             {
-                _search.Advance();
+                _search.CompleteJump(Math.Sign(count));
             }
 
             if (targetIndex - index != count && previewSucceeded)
             {
-                Status = $"Dateigrenze erreicht: {Math.Abs(targetIndex - index):N0} Frames gesprungen. Bild und PTS stimmen überein.";
+                Status = $"Dateigrenze erreicht: {Math.Abs(targetIndex - index):N0} Frames gesprungen. " +
+                    (UsesReconstructedTimestamp
+                        ? "AVI-Bild und rekonstruierter Zeitstempel stimmen überein."
+                        : "Bild und PTS stimmen überein.");
             }
         }, cancellationToken);
     }
@@ -299,9 +317,11 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
 
     private async Task<bool> RefreshPreviewAsync(CancellationToken cancellationToken)
     {
-        if (SelectedFrame?.Frame.Pts is not long pts || _window is null)
+        if (SelectedTimestamp is not long pts || _window is null)
         {
-            Status = "Original-PTS fehlt. Für diesen Frame gibt es keine bestätigte Bildvorschau.";
+            Status = _isAvi
+                ? "Kein verwendbarer Bildzeitstempel. Für diesen AVI-Frame gibt es keine bestätigte Bildvorschau."
+                : "Original-PTS fehlt. Für diesen Frame gibt es keine bestätigte Bildvorschau.";
             return false;
         }
 
@@ -318,7 +338,9 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
             throw new InvalidOperationException("Für den gewählten Frame wurde kein Vorschaubild geliefert.");
         }
 
-        Status = "Bild und PTS stimmen überein. Mit „Schnittkante übernehmen“ wird die gewählte Zeit in den Schnittplan eingetragen.";
+        Status = UsesReconstructedTimestamp
+            ? "AVI: Bild und rekonstruierter Zeitstempel stimmen überein. Die gewählte Zeit kann als Schnittkante übernommen werden."
+            : "Bild und PTS stimmen überein. Mit „Schnittkante übernehmen“ wird die gewählte Zeit in den Schnittplan eingetragen.";
         return true;
     }
 

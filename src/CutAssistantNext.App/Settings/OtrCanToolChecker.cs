@@ -31,12 +31,9 @@ internal sealed class OtrCanToolChecker
             output => output.Contains("ffmsindex", StringComparison.OrdinalIgnoreCase) &&
                 output.Contains("-c", StringComparison.Ordinal) && output.Contains("-k", StringComparison.Ordinal),
             "Indexer erreichbar.", cancellationToken));
-        results.Add(await CheckOneAsync("FFmpeg", ResolveFfmpeg(BundledToolKind.Ffmpeg, ffmpeg.FfmpegExecutablePath), ["-version"],
-            output => output.Contains("ffmpeg version", StringComparison.OrdinalIgnoreCase),
-            "Programm erreichbar.", cancellationToken));
-        results.Add(await CheckOneAsync("ffprobe", ResolveFfmpeg(BundledToolKind.Ffprobe, ffmpeg.FfprobeExecutablePath), ["-version"],
-            output => output.Contains("ffprobe version", StringComparison.OrdinalIgnoreCase),
-            "Programm erreichbar.", cancellationToken));
+        var ffmpegResults = await new FfmpegToolChecker(_probe, _resolver).CheckAsync(ffmpeg, cancellationToken);
+        results.AddRange(ffmpegResults.Select(result =>
+            new OtrCanToolCheckResult(result.Name, result.IsAvailable, result.Message)));
         if (requireMp3 && results[0].IsAvailable)
         {
             var capability = await CheckOneAsync("OTR-CAN MP3", normalized.ExecutablePath, ["capabilities"],
@@ -58,9 +55,6 @@ internal sealed class OtrCanToolChecker
             throw new ArgumentException("Bitte einen vollständigen Pfad zu einer EXE-Datei auswählen oder das Feld leeren.");
         }
     }
-
-    private string ResolveFfmpeg(BundledToolKind kind, string? configuredPath) =>
-        _resolver.TryResolve(kind, configuredPath) ?? string.Empty;
 
     private async Task<OtrCanToolCheckResult> CheckOneAsync(string name, string path, IReadOnlyList<string> arguments,
         Func<string, bool> compatible, string successMessage, CancellationToken cancellationToken)

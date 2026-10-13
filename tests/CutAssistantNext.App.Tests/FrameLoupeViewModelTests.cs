@@ -18,13 +18,13 @@ public sealed class FrameLoupeViewModelTests
         await viewModel.SearchAsync(-1);
 
         Assert.Equal(initialPts - 2000 * 40, viewModel.SelectedFrame!.Frame.Pts);
-        Assert.Equal(1000, viewModel.NextSearchStep);
+        Assert.Equal(2000, viewModel.NextSearchStep);
         Assert.True(analysis.Requests.Count > 1);
         Assert.NotNull(viewModel.PreviewPngBytes);
 
         await viewModel.SearchAsync(1);
         Assert.Equal(initialPts - 1000 * 40, viewModel.SelectedFrame!.Frame.Pts);
-        Assert.Equal(500, viewModel.NextSearchStep);
+        Assert.Equal(1000, viewModel.NextSearchStep);
     }
 
     [Fact]
@@ -46,6 +46,7 @@ public sealed class FrameLoupeViewModelTests
         var viewModel = Create(new FakeAnalysis(), new FakePreview(), start: 125);
         await viewModel.InitializeAsync();
         await viewModel.SearchAsync(1);
+        await viewModel.SearchAsync(-1);
         Assert.Equal(62, viewModel.NextSearchStep);
         var selected = viewModel.SelectedFrame;
         viewModel.ResetSearch();
@@ -74,9 +75,9 @@ public sealed class FrameLoupeViewModelTests
         await viewModel.InitializeAsync();
         await viewModel.SearchAsync(1);
         Assert.Equal(3999 * 40, viewModel.SelectedFrame!.Frame.Pts);
-        Assert.Equal(1000, viewModel.NextSearchStep);
+        Assert.Equal(2000, viewModel.NextSearchStep);
         await viewModel.SearchAsync(1);
-        Assert.Equal(1000, viewModel.NextSearchStep);
+        Assert.Equal(2000, viewModel.NextSearchStep);
         Assert.Contains("Dateigrenze", viewModel.Status);
     }
 
@@ -90,7 +91,7 @@ public sealed class FrameLoupeViewModelTests
         var sourceIndex = analysis.AllFrames.FindIndex(frame => frame.Pts == before);
         await viewModel.SearchAsync(-1);
         Assert.Equal(analysis.AllFrames[sourceIndex - 125].Pts, viewModel.SelectedFrame!.Frame.Pts);
-        Assert.Equal(62, viewModel.NextSearchStep);
+        Assert.Equal(125, viewModel.NextSearchStep);
     }
 
     [Fact]
@@ -223,9 +224,210 @@ public sealed class FrameLoupeViewModelTests
         Assert.Equal(TimeSpan.FromSeconds(100.04), viewModel.CreateSelection().Position);
     }
 
-    private static FrameLoupeViewModel Create(FakeAnalysis analysis, FakePreview preview, int start = 2000, decimal origin = 0) =>
+    [Theory]
+    [InlineData("avi", 0)]
+    [InlineData("AVI", 2)]
+    [InlineData(" avi ", -2)]
+    [InlineData("other,avi", 0)]
+    public async Task AviReconstructedTimestampRequiresVerifiedPreviewAndRetainsProvenance(string format, int origin)
+    {
+        var preview = new FakePreview();
+        var viewModel = Create(new FakeAnalysis { MissingPts = true, Origin = origin * 1000 },
+            preview, origin: origin, formatName: format);
+        await viewModel.InitializeAsync();
+        await viewModel.StepAsync(1);
+        var selection = viewModel.CreateSelection();
+
+        Assert.True(viewModel.CanApply);
+        Assert.Null(viewModel.SelectedFrame!.Frame.Pts);
+        Assert.Equal(100040 + origin * 1000, preview.Requests[^1]);
+        Assert.Equal(preview.Requests[^1], selection.Pts);
+        Assert.Equal(TimeSpan.FromSeconds(100.04), selection.Position);
+        Assert.True(selection.UsesReconstructedTimestamp);
+        Assert.Contains("rekonstruierter Zeitstempel", viewModel.Status);
+        Assert.Contains("keine Original-PTS", viewModel.DetailsText);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("mov,mp4,m4a,3gp,3g2,mj2")]
+    [InlineData("matroska,webm")]
+    [InlineData("avi.mp4")]
+    public async Task MissingPtsOutsideRecognizedAviStillRejectsBestEffort(string? format)
+    {
+        var preview = new FakePreview();
+        var viewModel = Create(new FakeAnalysis { MissingPts = true }, preview, formatName: format);
+        await viewModel.InitializeAsync();
+        Assert.Empty(preview.Requests);
+        Assert.False(viewModel.CanApply);
+        Assert.Null(viewModel.PreviewPngBytes);
+        Assert.Throws<InvalidOperationException>(() => viewModel.CreateSelection());
+    }
+
+    [Fact]
+    public async Task AviOriginalPtsKeepsPriorityOverDifferentBestEffortTimestamp()
+    {
+        var preview = new FakePreview();
+        var viewModel = Create(new FakeAnalysis { OriginalPtsOffset = 7 }, preview, formatName: "avi");
+        await viewModel.InitializeAsync();
+        var selection = viewModel.CreateSelection();
+        Assert.Equal(viewModel.SelectedFrame!.Frame.Pts, preview.Requests.Single());
+        Assert.NotEqual(viewModel.SelectedFrame.Frame.BestEffortTimestamp, preview.Requests.Single());
+        Assert.False(selection.UsesReconstructedTimestamp);
+        Assert.Equal(TimeSpan.FromMilliseconds(selection.Pts), selection.Position);
+    }
+
+    [Fact]
+    public async Task AviVariableReconstructedTimesNavigateByActualFramesAcrossExpandedWindow()
+    {
+        var analysis = new FakeAnalysis { MissingPts = true, VariableTimes = true };
+        var viewModel = Create(analysis, new FakePreview(), start: 125, formatName: "avi");
+        await viewModel.InitializeAsync();
+        long before = viewModel.SelectedFrame!.Frame.BestEffortTimestamp!.Value;
+        int sourceIndex = analysis.AllFrames.FindIndex(frame => frame.BestEffortTimestamp == before);
+        await viewModel.SearchAsync(-1);
+        Assert.Equal(analysis.AllFrames[sourceIndex - 125].BestEffortTimestamp, viewModel.CreateSelection().Pts);
+        Assert.Equal(125, viewModel.NextSearchStep);
+        Assert.True(analysis.Requests.Count > 1);
+        Assert.True(viewModel.CreateSelection().UsesReconstructedTimestamp);
+    }
+
+    [Theory]
+    [InlineData("duplicate")]
+    [InlineData("decreasing")]
+    [InlineData("missing")]
+    public async Task AviAmbiguousOrMissingTimesNeverUseDtsAsPresentationTime(string reason)
+    {
+        var preview = new FakePreview();
+        var analysis = new FakeAnalysis
+        {
+            MissingPts = true,
+            DuplicateTimes = reason == "duplicate",
+            DecreasingTimes = reason == "decreasing",
+            MissingTimes = reason == "missing"
+        };
+        var viewModel = Create(analysis, preview, formatName: "avi");
+        await viewModel.InitializeAsync();
+        Assert.Empty(preview.Requests);
+        Assert.False(viewModel.CanApply);
+        Assert.Null(viewModel.PreviewPngBytes);
+        Assert.Throws<InvalidOperationException>(() => viewModel.CreateSelection());
+    }
+
+    [Theory]
+    [InlineData("failed")]
+    [InlineData("wrong")]
+    [InlineData("timebase")]
+    [InlineData("empty")]
+    [InlineData("image-error")]
+    public async Task AviUnconfirmedPreviewCannotBeAppliedOrConsumeSearch(string reason)
+    {
+        var preview = new FakePreview();
+        var viewModel = Create(new FakeAnalysis { MissingPts = true }, preview, start: 10, formatName: "avi");
+        await viewModel.InitializeAsync();
+        Assert.True(viewModel.CanApply);
+        preview.Fail = reason == "failed";
+        preview.WrongPts = reason == "wrong";
+        preview.WrongTimeBase = reason == "timebase";
+        preview.Empty = reason == "empty";
+        await viewModel.SearchAsync(1);
+        if (reason == "image-error") viewModel.ReportImageError(new InvalidOperationException("invalid image"));
+        Assert.False(viewModel.CanApply);
+        Assert.Null(viewModel.PreviewPngBytes);
+        Assert.Throws<InvalidOperationException>(() => viewModel.CreateSelection());
+        if (reason != "image-error") Assert.Equal(10, viewModel.NextSearchStep);
+    }
+
+    [Fact]
+    public async Task AviCancelledPreviewClearsPreviousImageAndReleasesBusyState()
+    {
+        var preview = new FakePreview();
+        var viewModel = Create(new FakeAnalysis { MissingPts = true }, preview, formatName: "avi");
+        await viewModel.InitializeAsync();
+        using var cancellation = new CancellationTokenSource();
+        preview.Pending = new TaskCompletionSource<FramePreview>();
+        var move = viewModel.StepAsync(1, cancellation.Token);
+        Assert.True(viewModel.IsBusy);
+        Assert.False(viewModel.CanApply);
+        cancellation.Cancel();
+        preview.Pending.SetCanceled(cancellation.Token);
+        await move;
+        Assert.False(viewModel.IsBusy);
+        Assert.False(viewModel.CanApply);
+        Assert.Null(viewModel.PreviewPngBytes);
+        Assert.Equal("Vorgang abgebrochen.", viewModel.Status);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("avi")]
+    public async Task SameDirectionKeepsStepAndTurnHalvesTheActualJump(string? format)
+    {
+        var viewModel = Create(new FakeAnalysis { MissingPts = format == "avi" }, new FakePreview(), start: 10, formatName: format);
+        await viewModel.InitializeAsync();
+        long timestamp = viewModel.CreateSelection().Pts;
+        foreach (var (direction, step) in new[] { (1, 10), (1, 10), (-1, 5), (-1, 5), (1, 2) })
+        {
+            await viewModel.SearchAsync(direction);
+            timestamp += direction * step * 40;
+            Assert.Equal(timestamp, viewModel.CreateSelection().Pts);
+            Assert.Equal(step, viewModel.NextSearchStep);
+            Assert.Equal($"← {(direction == -1 ? step : Math.Max(1, step / 2)):N0} Frames", viewModel.SearchLeftText);
+            Assert.Equal($"{(direction == 1 ? step : Math.Max(1, step / 2)):N0} Frames →", viewModel.SearchRightText);
+        }
+    }
+
+    [Fact]
+    public async Task NormalNavigationDoesNotChangeRememberedSearchDirection()
+    {
+        var viewModel = Create(new FakeAnalysis(), new FakePreview(), start: 10);
+        await viewModel.InitializeAsync();
+        await viewModel.SearchAsync(1);
+        await viewModel.StepAsync(-10);
+        long before = viewModel.CreateSelection().Pts;
+        await viewModel.SearchAsync(1);
+        Assert.Equal(before + 400, viewModel.CreateSelection().Pts);
+        Assert.Equal(10, viewModel.NextSearchStep);
+        viewModel.ResetSearch();
+        before = viewModel.CreateSelection().Pts;
+        await viewModel.SearchAsync(-1);
+        Assert.Equal(before - 400, viewModel.CreateSelection().Pts);
+        Assert.Equal(10, viewModel.NextSearchStep);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task FailedOrCancelledTurnDoesNotConsumeHalfStepOrDirection(bool cancel)
+    {
+        var preview = new FakePreview();
+        var viewModel = Create(new FakeAnalysis(), preview, start: 10);
+        await viewModel.InitializeAsync();
+        await viewModel.SearchAsync(1);
+        using var cancellation = new CancellationTokenSource();
+        if (cancel) preview.Pending = new TaskCompletionSource<FramePreview>();
+        else preview.Fail = true;
+        var move = viewModel.SearchAsync(-1, cancellation.Token);
+        if (cancel)
+        {
+            cancellation.Cancel();
+            preview.Pending!.SetCanceled(cancellation.Token);
+        }
+        await move;
+        Assert.Equal(10, viewModel.NextSearchStep);
+        Assert.Equal($"← {5:N0} Frames", viewModel.SearchLeftText);
+        Assert.Equal($"{10:N0} Frames →", viewModel.SearchRightText);
+        Assert.False(viewModel.CanApply);
+        preview.Pending = null;
+        preview.Fail = false;
+        await viewModel.SearchAsync(-1);
+        Assert.Equal(5, viewModel.NextSearchStep);
+        Assert.True(viewModel.CanApply);
+    }
+
+    private static FrameLoupeViewModel Create(FakeAnalysis analysis, FakePreview preview, int start = 2000, decimal origin = 0, string? formatName = null) =>
         new("video.mp4", 1, TimeSpan.FromSeconds(160), TimeSpan.FromSeconds(100),
-            CutEdgeSide.End, origin, start, analysis, preview);
+            CutEdgeSide.End, origin, start, analysis, preview, formatName);
 
     private sealed class FakeAnalysis : IFrameAnalysisRunner
     {
@@ -233,6 +435,9 @@ public sealed class FrameLoupeViewModelTests
         internal bool VariableTimes { get; init; }
         internal bool DuplicateTimes { get; init; }
         internal bool MissingPts { get; init; }
+        internal bool MissingTimes { get; init; }
+        internal bool DecreasingTimes { get; init; }
+        internal long OriginalPtsOffset { get; init; }
         internal long Origin { get; init; }
         internal List<VideoFrameInfo> AllFrames => Enumerable.Range(0, 4000)
             .Select(index => MakeFrame(index, Origin + index * 40L + (VariableTimes ? index / 3 * 20L : 0))).ToList();
@@ -250,19 +455,29 @@ public sealed class FrameLoupeViewModelTests
                 frames[1] = frames[0] with { LocalIndex = 1 };
             }
 
+            if (DecreasingTimes && frames.Count > 1)
+            {
+                frames[1] = frames[1] with { BestEffortTimestamp = frames[0].BestEffortTimestamp - 1 };
+            }
+            if (MissingTimes)
+            {
+                frames = frames.Select(frame => frame with { Pts = null, BestEffortTimestamp = null, PacketDts = 123 }).ToList();
+            }
+
             return Task.FromResult(new VideoFrameWindow(streamIndex, new VideoTimeBase(1, 1000),
                 Origin / 1000m, Origin / 1000m, frames));
         }
 
         private VideoFrameInfo MakeFrame(int index, long timestamp) => new(index,
-            MissingPts ? null : timestamp, timestamp, null, 40, index % 25 == 0, index % 25 == 0 ? "I" : "B");
+            MissingPts ? null : timestamp + OriginalPtsOffset, timestamp, null, 40, index % 25 == 0, index % 25 == 0 ? "I" : "B");
     }
 
     private sealed class FakePreview : IFramePreviewRunner
     {
         internal bool Fail { get; set; }
-        internal bool WrongPts { get; init; }
-        internal bool Empty { get; init; }
+        internal bool WrongPts { get; set; }
+        internal bool Empty { get; set; }
+        internal bool WrongTimeBase { get; set; }
         internal TaskCompletionSource<FramePreview>? Pending { get; set; }
         internal List<long> Requests { get; } = [];
 
@@ -276,7 +491,7 @@ public sealed class FrameLoupeViewModelTests
                 throw new InvalidOperationException("preview failed");
             }
 
-            return Pending?.Task ?? Task.FromResult(new FramePreview(Empty ? [] : [137, 80, 78, 71], WrongPts ? pts + 1 : pts, timeBase));
+            return Pending?.Task ?? Task.FromResult(new FramePreview(Empty ? [] : [137, 80, 78, 71], WrongPts ? pts + 1 : pts, WrongTimeBase ? new VideoTimeBase(1, 90000) : timeBase));
         }
     }
 }

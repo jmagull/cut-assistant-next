@@ -4,6 +4,11 @@ Stand: 11.10.2026. Die ursprüngliche Planung vom September ist mit dem aktuelle
 
 Aktuelle Nachweise: [Projektstatus](STATUS.md), [Build-13-Prüfung](RELEASE-BUILD13-RC3-RESULT.md), [RC3-Veröffentlichung](RELEASE-PUBLICATION-BUILD13-RC3.md), [persönliche Build-12-Abnahme](RELEASE-BUILD12-RC3-RESULT.md).
 
+## Offener Bedienwunsch – Frame-Lupe, 13.10.2026
+
+- [x] **Suchsprung nur bei Richtungswechsel halbieren.** In Build 27 umgesetzt und technisch geprüft; am 13.10.2026 vom Nutzer als „Halb frame sprung check“ persönlich bestätigt. Erster Suchsprung mit dem eingestellten Startwert. Weitere Suchsprünge in derselben Richtung behalten diesen Wert. Erst beim Wechsel nach links/rechts halbiert sich der Wert; der Sprung in die neue Richtung verwendet bereits den halbierten Wert. Beispiel bei Startwert 2000: **+2000 → +2000 → −1000 → −1000 → +500**. Mindestwert 1 Frame beibehalten; **Suche neu starten** setzt Startwert und gemerkte Suchrichtung zurück. Normale ±1/±10-/±20-Schritte bleiben erhalten.
+- [x] **AVI-Lupe und Schnitt mit beiden Verfahren:** Nutzer bestätigt am 13.10.2026 die funktionierende AVI-Lupe und Teufelsbrigade-Schnitte mit MP4Box sowie otr-can, jeweils ohne Blitzer. [Abnahmenachweis](AVI-FRAME-LUPE-20261013.md#persönliche-abnahme--13102026). AVI-Abnahme für **0.3.0 · Build 26 · RC3**; Richtungswechsel-Regel und FFmpeg-Versionsprüfung anschließend in **Build 27** umgesetzt. [Prüfnachweis](LUPEN-SUCHRICHTUNG-FFMPEG-20261013.md).
+
 ## Bedienung – Ergänzung vom 11.10.2026
 
 - [x] Timeline-Klick und Reglerziehen: am 05.10.2026 umgesetzt, technisch geprüft und persönlich bestätigt; Nachweis im [Tagebuch](TAGEBUCH.md#05102026--timeline-per-mausklick-positionieren).
