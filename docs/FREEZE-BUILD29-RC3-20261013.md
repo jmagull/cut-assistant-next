@@ -24,3 +24,7 @@ Entwicklungsbuild 29: **0 Warnungen/0 Fehler**, **1076/1076 CAN-Tests**, keine �
 5. Paket-Prüfergebnisse dokumentieren und sichern. Danach persönliche Setup-/Portable-Prüfung; eine GitHub-Release-Veröffentlichung ist ein gesonderter Schritt.
 
 Die öffentliche **0.2.1 · Build 16 · RC3**-Ausgabe bleibt unverändert. Der bekannte AVI-Zeitstempelbefund, gesperrte Frames ohne bestätigbare Zeitstempel und die dokumentierten MP4Box-Bild-/Zwei-AAC-Befunde bleiben erhalten. Beim Motor-Kontrollbuild wurde zuvor keine Byteidentität zur getesteten EXE nachgewiesen; bestehende Provenienz nicht als streng reproduzierbarer Binärbuild ausgeben.
+
+## Abschluss
+
+Quellcommit **ce4bc15b118d8080a78d7db5396db3ccf830ca89** auf origin/main gesichert. Setup, Portable, vier passende Quellen-/Relink-Archive und Prüfsummen erstellt; **1076/1076 Pakettests**, **249 Portable-Dateien** und **509 Quellen-ZIP-Dateien** geprüft. Versionsanzeige und sechs Masken-/Cutlist-Prüfungen mit entpacktem Paketcode erfolgreich. Vier lokale Produktions-Lockänderungen und Altartefakte erhalten. Der feste Quell-/Binärsatz bleibt unverändert; [abschließender Paketprüfbericht](RELEASE-BUILD29-RC3-RESULT.md). Persönliche neue Installations-/Portable-Paketabnahme folgt.

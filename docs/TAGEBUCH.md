@@ -1,5 +1,13 @@
 # Entwicklungstagebuch
 
+## 13.10.2026 – Commit/Push und eingefrorener Build-29-Paketsatz abgeschlossen
+
+- Autorisierten Quellcommit **ce4bc15b118d8080a78d7db5396db3ccf830ca89** erstellt und auf `origin/main` gepusht; Remote-Hash geprüft. 35 Dateien, vier vorbestehende Produktions-Lockänderungen ausgeschlossen und unverändert erhalten. Quellarchiv direkt aus diesem Commit, keine Arbeitsbaumüberlagerung; Buildnummer 29 und RC3 für den gesamten Paketsatz festgehalten.
+- Im exportierten Baum gesperrter win-x64-Restore, Release, Tests, framework-dependent Publish und Inno-Setup erfolgreich. **0 Warnungen/0 Fehler**, **1076/1076 CAN-Tests**, keine übersprungen. Unverändertes Motorpaket 0.1.5 samt Quellen/Lizenzbestand und geprüfter libmpv-Stack mit Quellen-/Relink-Archiven wiederverwendet; kein Rust-/Motorumbau.
+- **Sechs Binär-/Quellenartefakte** plus SHA256SUMS erstellt. **249 Portable-Dateien** nach Entpacken bytegenau mit Publishmanifest geprüft; **509 Quellen-ZIP-Dateien** gegen festen Snapshot geprüft. Apphost/alle vier Produktionsassemblies und RC3-Metadaten, tatsächlicher WPF-Titel/Hauptüberschrift sowie sechs echte Masken-/Cutlist-Prüfungen mit bytegleichen Kopien der entpackten Assemblies bestanden. Keine persönlichen Einstellungen geschrieben. Motor `--version`/MP3-Fähigkeit, Quellenhashes und native DLLs geprüft. Kleine TRX-Auswertung wegen Wildcardklammern im Dateinamen auf LiteralPath korrigiert; alle Testresultate erhalten und vollständig erfolgreich ausgewertet.
+- Alle acht Lockdateien, persönliche Einstellungen, alte Build-16-Artefakte und lokaler Zähler 29 unverändert. Neue sechs Archive und SHA256SUMS schreibgeschützt; Ergebnisbericht und Release-Hinweise nach Paketbau geschrieben und außerhalb des festen Quellarchivs separat dokumentiert. [Nachweis](RELEASE-BUILD29-RC3-RESULT.md), lokale Belege `.build/freeze-build29-20261013`.
+- Quell-/Binärstand eingefroren. Neue persönliche Setup-/Portable-Installationsabnahme folgt, keine neue öffentliche GitHub-Ausgabe erstellt. Bisherige persönliche AVI-/Masken-/Bedienabnahmen sowie dokumentierte MP4Box- und Zeitstempelgrenzen erhalten. Abschließende Ergebnisdokumentation wird mit eigenem Commit/Push gesichert; Pakete und Quellpin bleiben unverändert.
+
 ## 13.10.2026 – Sicherung und Einfrieren von 0.3.0 Build 29 RC3 beauftragt
 
 - Nutzer beauftragt **„commit, push und setup und zip usw. dann frieren wir den jetzigen Stand ein“**. Aktuellen Stand, Projektvorgaben, Paketbau-/Quellberichte, Installer und Motor-Provenienz gelesen; Branch `main`, `origin/main` vorab identisch. Alle Lock-/Einstellungsdateien und bisherigen Build-16-Artefakte gesichert.

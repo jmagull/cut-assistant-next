@@ -4,6 +4,12 @@ Stand: 11.10.2026. Die ursprüngliche Planung vom September ist mit dem aktuelle
 
 Aktuelle Nachweise: [Projektstatus](STATUS.md), [Build-13-Prüfung](RELEASE-BUILD13-RC3-RESULT.md), [RC3-Veröffentlichung](RELEASE-PUBLICATION-BUILD13-RC3.md), [persönliche Build-12-Abnahme](RELEASE-BUILD12-RC3-RESULT.md).
 
+## Eingefrorener Paketsatz – 13.10.2026
+
+- [x] **0.3.0 · Build 29 · RC3** aus festem, gepushtem Quellcommit gebaut; Setup, Portable-ZIP, CAN-/Motorquellen und libmpv-Quellen-/Relink-Pakete samt Prüfsummen erstellt. **1076/1076 Tests**, 249 Portable-Dateien und vollständiger Quellsnapshot geprüft. [Paketnachweis](RELEASE-BUILD29-RC3-RESULT.md).
+- [x] Vier lokale Produktions-Lockänderungen und Altartefakte erhalten; Quell-/Binärsatz und Prüfsummen eingefroren.
+- [ ] **Neue Setup-/Portable-Paketabnahme:** Installation/Überinstallation nach Bedarf, Versionsanzeige, Werkzeugpfade, beide Motoren, Bild/Ton/Übergänge und Deinstallation persönlich prüfen. Vorherige Build-16-Abnahmen gelten nicht automatisch als Abnahme der neuen Pakete.
+
 ## Offener Bedienwunsch – Frame-Lupe, 13.10.2026
 
 - [x] **Suchsprung nur bei Richtungswechsel halbieren.** In Build 27 umgesetzt und technisch geprüft; am 13.10.2026 vom Nutzer als „Halb frame sprung check“ persönlich bestätigt. Erster Suchsprung mit dem eingestellten Startwert. Weitere Suchsprünge in derselben Richtung behalten diesen Wert. Erst beim Wechsel nach links/rechts halbiert sich der Wert; der Sprung in die neue Richtung verwendet bereits den halbierten Wert. Beispiel bei Startwert 2000: **+2000 → +2000 → −1000 → −1000 → +500**. Mindestwert 1 Frame beibehalten; **Suche neu starten** setzt Startwert und gemerkte Suchrichtung zurück. Normale ±1/±10-/±20-Schritte bleiben erhalten.

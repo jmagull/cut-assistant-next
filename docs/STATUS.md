@@ -1,5 +1,13 @@
 # Projektstatus
 
+## 13.10.2026 – Build 29 RC3 gesichert und als Paketsatz eingefroren
+
+CAN-Quellcommit **ce4bc15b118d8080a78d7db5396db3ccf830ca89** auf `origin/main` gesichert. Aus genau diesem Commit ohne Arbeitsbaumüberlagerung gebaut: **0.3.0 · Build 29 · RC3**, unveränderter **otr-can 0.1.5**. Setup, Portable-ZIP, CAN-/Motorquellen, libmpv-Quellen-/Relink-Archive und Prüfsummen fertig. Sechs Archive plus Prüfsummen schreibgeschützt; Quellcommit und Artefakte bleiben fest, Ergebnisdokumentation wird separat gesichert.
+
+Gesperrter Windows-x64-Restore, Release/Publish und Inno-Kompilierung erfolgreich, **0 Warnungen/0 Fehler**, **1076/1076 Tests** aus eingefrorenen Quellen, keine übersprungen. **249 Portable-Dateien**, **509 Quellen-ZIP-Dateien**, alle Artefakthashes, App-/Kandidaten-/Motorversionen und Herkunft geprüft. Tatsächliche WPF-Versionsanzeige und sechs Masken-/Cutlist-Prüfungen mit entpacktem Paketcode erfolgreich. Alle acht lokalen Lockdateien, persönliche Einstellungen und bisherige Build-16-Artefakte erhalten; vier vorbestehende Produktions-Lockänderungen weiterhin außerhalb des Commits. [Paketprüfbericht](RELEASE-BUILD29-RC3-RESULT.md).
+
+Neue persönliche Setup-/VM-/Portable-Paketabnahme noch offen; bisherige Entwicklungsabnahmen und bekannte AVI-/MP4Box-Grenzen gelten weiter. Kein neues GitHub-Release, öffentliche Build-16-Ausgabe unverändert. Nächster Schritt: die fertigen Pakete persönlich installieren/entpacken und prüfen.
+
 ## 13.10.2026 – Build 29 RC3 zum Einfrieren und Paketbau freigegeben
 
 Nutzer beauftragt **Commit, Push, Setup, ZIP und zugehörige Artefakte**, danach aktuellen Stand einfrieren. CAN **0.3.0 · Build 29 · RC3** mit unverändertem **otr-can 0.1.5** festhalten; Quellen aus festem Commit exportieren, vollständiger Paketbau im exportierten Baum. Vier lokale Produktions-Lockänderungen erhalten und vom Commit/Snapshot ausschließen. Gesperrten Restore mit Version 0.3.0 und Original-Lockdateien vorab erfolgreich geprüft. Paketvoraussetzungen um vorhandene FFmpeg-Versionsregel ergänzt; kein Funktionsumbau. [Freeze-Auftrag und Prüfplan](FREEZE-BUILD29-RC3-20261013.md).
