@@ -1,6 +1,6 @@
 # CAN 0.3.0 · Build 29 · RC3 – eingefrorener Paketsatz
 
-Stand: 13.10.2026. Auf Nutzerauftrag Commit/Push durchgeführt und Setup, Portable-ZIP sowie passende Quellen-/Prüfsummenartefakte erstellt. **Quellstand fest eingefroren; automatische Paketprüfungen erfolgreich. Produktivinstallation und Schnittprüfung am 13.10.2026 vom Nutzer positiv bestätigt. Separate VM-/Portable-Prüfungen und Deinstallation dieser neuen Ausgabe noch offen.** Kein neues GitHub-Release erstellt; öffentlicher Build 16 unverändert.
+Stand: 13.10.2026. Auf Nutzerauftrag Commit/Push durchgeführt und Setup, Portable-ZIP sowie passende Quellen-/Prüfsummenartefakte erstellt. **Quellstand fest eingefroren; automatische Paketprüfungen erfolgreich. Produktivinstallation und Schnittprüfung am 13.10.2026 vom Nutzer positiv bestätigt. Setup-Installation, beide Schnittmotoren und Deinstallation in der VM sowie Portable-Start, Pfadeinrichtung und AVI-Schnitt mit beiden Motoren am 13.10.2026 positiv bestätigt.** Kein neues GitHub-Release erstellt; öffentlicher Build 16 unverändert.
 
 ## Fester Quellstand
 
@@ -53,12 +53,38 @@ Das bereitgestellte Bild der eigenen Cutlist-Uploads dokumentiert:
 
 Kein neues natives Schnittprotokoll, keine Sample-/Paket-/Laufzeitwerte und keine gesonderte Tonspur-/Synchronitätsabnahme für die beiden Torchwood-Dateien in dieser Nachricht. Keine neuen Messungen aus dem Screenshot abgeleitet. Bild lokal unter `.build/freeze-build29-20261013/user-acceptance/productive-install-and-torchwood.png` gesichert. Keine Serveraktion ausgeführt.
 
-Produktiv-Setup-/Schnittabnahme damit ergänzt. **Offen:** separate Portable-/VM-Prüfungen, Installationsart/Überinstallation nach Bedarf, Deinstallation in geeigneter Testumgebung und ggf. frisches Benutzerprofil. Eingefrorene Quellen-/Binärarchive und Prüfsummen unverändert.
+Produktiv-Setup-/Schnittabnahme damit ergänzt. Die anschließend bestätigte VM-/Portable- und Deinstallationsprüfung steht im nächsten Abschnitt. Eingefrorene Quellen-/Binärarchive und Prüfsummen unverändert.
+
+## Persönliche VM-Abnahme: Setup und Portable – 13.10.2026
+
+Der Nutzer bestätigt anschließend ausdrücklich folgende Prüfungen in der VM:
+
+| Paket / Quelle | Prüfung | Rückmeldung |
+|---|---|---|
+| Setup | Installation | check |
+| Setup / Grey’s Anatomy – Durchs Feuer | Schnitt mit MP4Box | check |
+| Setup / Grey’s Anatomy – Durchs Feuer | Schnitt mit otr-can | check |
+| Setup | Deinstallation | check |
+| Portable-ZIP | Appstart | check |
+| Portable-ZIP | Werkzeugpfade einstellen | check |
+| Portable / Die Teufelsbrigade (AVI) | Schnitt mit MP4Box | check |
+| Portable / Die Teufelsbrigade (AVI) | Schnitt mit otr-can | check |
+
+Genannte Quellen:
+
+- `Greys_Anatomy_-_Die_jungen_Aerzte__Durchs_Feuer_26.09.30_20-15_sixx_55_TVOON_DE.HQ.mp4`
+- `Die_Teufelsbrigade_21.01.21_20-15_tele5_160_TVOON_DE.mpg.HQ.avi`
+
+Damit ist die gemeldete praktische **Setup-/VM-/Portable-Paketabnahme des eingefrorenen Build-29-Satzes positiv abgeschlossen**. Die frühere Produktivinstallation bleibt zusätzlich bestätigt. Beide Motoren sind im Setup mit der genannten MP4 und im Portable mit der genannten AVI erfolgreich geprüft; die Setup-Deinstallation ist ausdrücklich bestätigt.
+
+Es wurden in dieser Rückmeldung keine neuen Prozessprotokolle, Datei-/Sample-/Paket-/Laufzeitwerte oder gesonderten Bild-/Ton-/Synchronitäts- beziehungsweise Einzeltonspurbeobachtungen übermittelt. Keine unabhängigen Messdaten daraus abgeleitet. Installationstyp (frisch/Überinstallation) und frisches Portable-Benutzerprofil nicht ausdrücklich unterschieden. Dies sind Prüfgrenzen der Rückmeldung, keine noch offene Abnahme der ausdrücklich bestätigten acht Schritte.
+
+Eingefrorener Quellcommit **ce4bc15b118d8080a78d7db5396db3ccf830ca89**, sechs Binär-/Quellenarchive und Prüfsummen unverändert; nur Abnahmedokumentation ergänzt.
 
 ## Grenzen und nächste Prüfung
 
 Die Entwicklungsabnahmen gelten weiter: AVI-Lupe, Richtungswechsel-Halbsprung, Versionskontrolle, Benennung und gespeicherter Maskenwechsel ohne Neustart persönlich bestätigt. Chicago Fire mit otr-can bild-/ton-/übergangsgeprüft blitzerfrei; MP4Box-Blitzer am Anfang auch nach Lupenkorrektur dokumentiert. Künstlicher Zwei-AAC-MP4Box-Befund und AVI-Zeitstempelgrenzen bleiben separat erhalten.
 
-Produktivinstallation und beide Schnittverfahren sind oben persönlich bestätigt. Nächster Schritt: separate Portable-/VM-Paketprüfung und ggf. Überinstallation/Deinstallation in geeigneter Testumgebung; dabei Versionsanzeige, Pfade, Motoren und Ergebnis kontrollieren. Keine Aussage über frisches Benutzerprofil oder VM dieser Ausgabe bisher bestätigt. GitHub-Veröffentlichung bleibt ein gesonderter Auftrag.
+Produktivinstallation sowie die gemeldete VM-Setup-/Portable-Abnahme mit beiden Motoren und Setup-Deinstallation sind positiv abgeschlossen. Frisches Benutzerprofil, Installationstyp und zusätzliche quantitative beziehungsweise getrennte Bild-/Tonspurprüfungen wurden nicht gesondert bestätigt. Bekannte AVI-/MP4Box-Grenzen bleiben dokumentiert. GitHub-Veröffentlichung bleibt ein gesonderter Auftrag; eingefrorenen Paketsatz dafür unverändert verwenden.
 
 Lokale Nachweise: `.build/freeze-build29-20261013` mit Commit-/Remote-Nachweis, Paket-/Quellen-/Erhaltungsprüfungen und WPF-Belegen; Build-/Restore-/Publish-/Installer-Logs und TRX-Ergebnisse unter `artifacts/release-build29-RC3`.

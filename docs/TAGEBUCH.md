@@ -1,5 +1,11 @@
 # Entwicklungstagebuch
 
+## 13.10.2026 – Acht VM-Setup-/Portable-Prüfschritte positiv abgenommen
+
+- Nutzer bestätigt **Setup in der VM:** Installation, Schnitt mit MP4Box und otr-can für `Greys_Anatomy_-_Die_jungen_Aerzte__Durchs_Feuer_26.09.30_20-15_sixx_55_TVOON_DE.HQ.mp4`, anschließend Deinstallation – alle „check“.
+- Nutzer bestätigt **Portable-ZIP in der VM:** Appstart, Werkzeugpfade einstellen, Schnitt mit MP4Box und otr-can für `Die_Teufelsbrigade_21.01.21_20-15_tele5_160_TVOON_DE.mpg.HQ.avi` – alle „check“. Positive persönliche Paketabnahme des eingefrorenen **0.3.0 · Build 29 · RC3**-Satzes abgeschlossen; Produktivinstallation zusätzlich schon bestätigt.
+- Keine neuen Protokolle, Hash-/Sample-/Laufzeitwerte oder ausdrücklich getrennte Ton-/Bild-/Synchronitätsbeobachtungen in dieser Rückmeldung. Installationstyp und frisches Portable-Profil nicht gesondert unterschieden. [Abnahme und Prüfgrenzen](RELEASE-BUILD29-RC3-RESULT.md) ergänzt, README/Status/Tagebuch/Merkliste/Freezebericht und lokale Release-Hinweise aktualisiert. Pakete und Quellpin unverändert, Diff-/Prüfsummenkontrolle bestanden, kein neuer Build/Testlauf oder Motorumbau. Letzter technischer Stand **1076/1076 Tests**.
+
 ## 13.10.2026 – Produktiv-Setup und reale Torchwood-Schnitte abgenommen
 
 - Nutzer bestätigt **„1) Installation Produktiv klappt check / 2) Schnitt check siehe Bild :-)“** für den eingefrorenen **0.3.0 · Build 29 · RC3**-Paketsatz. Persönliche erfolgreiche Produktivinstallation und Schnittprüfung festgehalten; keine eigenständige Datei-/Versions-/Installationsartprüfung daraus abgeleitet.

@@ -1,5 +1,11 @@
 # Projektstatus
 
+## 13.10.2026 – VM-Setup und Portable mit beiden Motoren bestätigt
+
+Nutzer bestätigt für **0.3.0 · Build 29 · RC3** in der VM: **Setup-Installation**, **Grey’s Anatomy / Durchs Feuer (MP4)** mit MP4Box und otr-can sowie **Deinstallation** jeweils „check“. Anschließend **Portable-Appstart**, **Pfade einstellen** und **Die Teufelsbrigade (AVI)** mit MP4Box und otr-can ebenfalls „check“. Gemeldete praktische Setup-/VM-/Portable-Paketabnahme damit positiv abgeschlossen; Produktivabnahme zusätzlich erhalten. [Paketprüfbericht](RELEASE-BUILD29-RC3-RESULT.md).
+
+Keine zusätzlichen nativen Messwerte oder ausdrücklich getrennten Bild-/Ton-/Tonspurkontrollen in dieser Nachricht. Installationstyp und frisches Profil nicht gesondert unterschieden. Eingefrorener Quell-/Binärsatz, Prüfsummen und Build 29 unverändert; vier lokale Lockänderungen erhalten. Nur Abnahmedokumentation, kein neuer Build, Paket oder GitHub-Release.
+
 ## 13.10.2026 – Produktivinstallation und Schnittprüfung bestätigt
 
 Nutzer bestätigt **Produktivinstallation des Build-29-Paketsatzes** und anschließenden **Schnitt** als „check“. Cutlist-Bild: **Torchwood / Sünden der Vergangenheit / S4E7** mit MP4Box/GPAC 26.07, Werbung vollständig entfernt; **Torchwood / Befreiungsaktion / S4E6** mit otr-can 0.1.5 erfolgreich nach genauer Lupenbestimmung des Übergangs. MP4Box-Doppelszene bei **15:05** im S4E6-Fall separat dokumentiert. [Paketabnahme](RELEASE-BUILD29-RC3-RESULT.md).
