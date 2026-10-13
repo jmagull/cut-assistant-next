@@ -1,6 +1,6 @@
 # CAN 0.3.0 · Build 29 · RC3 – eingefrorener Paketsatz
 
-Stand: 13.10.2026. Auf Nutzerauftrag Commit/Push durchgeführt und Setup, Portable-ZIP sowie passende Quellen-/Prüfsummenartefakte erstellt. **Quellstand fest eingefroren; automatische Paketprüfungen erfolgreich. Produktivinstallation und Schnittprüfung am 13.10.2026 vom Nutzer positiv bestätigt. Setup-Installation, beide Schnittmotoren und Deinstallation in der VM sowie Portable-Start, Pfadeinrichtung und AVI-Schnitt mit beiden Motoren am 13.10.2026 positiv bestätigt.** Kein neues GitHub-Release erstellt; öffentlicher Build 16 unverändert.
+Stand: 13.10.2026. Auf Nutzerauftrag Commit/Push durchgeführt und Setup, Portable-ZIP sowie passende Quellen-/Prüfsummenartefakte erstellt. **Quellstand fest eingefroren; automatische Paketprüfungen erfolgreich. Produktivinstallation und Schnittprüfung am 13.10.2026 vom Nutzer positiv bestätigt. Setup-Installation, beide Schnittmotoren und Deinstallation in der VM sowie Portable-Start, Pfadeinrichtung und AVI-Schnitt mit beiden Motoren am 13.10.2026 positiv bestätigt.** Auf gesonderten Nutzerauftrag am 13.10.2026 als öffentliche Vorabversion veröffentlicht; [Nachweis](RELEASE-PUBLICATION-BUILD29-RC3.md). Öffentlicher Build 16 unverändert.
 
 ## Fester Quellstand
 
@@ -85,6 +85,6 @@ Eingefrorener Quellcommit **ce4bc15b118d8080a78d7db5396db3ccf830ca89**, sechs Bi
 
 Die Entwicklungsabnahmen gelten weiter: AVI-Lupe, Richtungswechsel-Halbsprung, Versionskontrolle, Benennung und gespeicherter Maskenwechsel ohne Neustart persönlich bestätigt. Chicago Fire mit otr-can bild-/ton-/übergangsgeprüft blitzerfrei; MP4Box-Blitzer am Anfang auch nach Lupenkorrektur dokumentiert. Künstlicher Zwei-AAC-MP4Box-Befund und AVI-Zeitstempelgrenzen bleiben separat erhalten.
 
-Produktivinstallation sowie die gemeldete VM-Setup-/Portable-Abnahme mit beiden Motoren und Setup-Deinstallation sind positiv abgeschlossen. Frisches Benutzerprofil, Installationstyp und zusätzliche quantitative beziehungsweise getrennte Bild-/Tonspurprüfungen wurden nicht gesondert bestätigt. Bekannte AVI-/MP4Box-Grenzen bleiben dokumentiert. GitHub-Veröffentlichung bleibt ein gesonderter Auftrag; eingefrorenen Paketsatz dafür unverändert verwenden.
+Produktivinstallation sowie die gemeldete VM-Setup-/Portable-Abnahme mit beiden Motoren und Setup-Deinstallation sind positiv abgeschlossen. Frisches Benutzerprofil, Installationstyp und zusätzliche quantitative beziehungsweise getrennte Bild-/Tonspurprüfungen wurden nicht gesondert bestätigt. Bekannte AVI-/MP4Box-Grenzen bleiben dokumentiert. GitHub-Veröffentlichung am 13.10.2026 auf gesonderten Nutzerauftrag abgeschlossen; eingefrorener Paketsatz dabei unverändert verwendet. [Nachweis](RELEASE-PUBLICATION-BUILD29-RC3.md).
 
 Lokale Nachweise: `.build/freeze-build29-20261013` mit Commit-/Remote-Nachweis, Paket-/Quellen-/Erhaltungsprüfungen und WPF-Belegen; Build-/Restore-/Publish-/Installer-Logs und TRX-Ergebnisse unter `artifacts/release-build29-RC3`.

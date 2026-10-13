@@ -28,3 +28,5 @@ Die öffentliche **0.2.1 · Build 16 · RC3**-Ausgabe bleibt unverändert. Der b
 ## Abschluss
 
 Quellcommit **ce4bc15b118d8080a78d7db5396db3ccf830ca89** auf origin/main gesichert. Setup, Portable, vier passende Quellen-/Relink-Archive und Prüfsummen erstellt; **1076/1076 Pakettests**, **249 Portable-Dateien** und **509 Quellen-ZIP-Dateien** geprüft. Versionsanzeige und sechs Masken-/Cutlist-Prüfungen mit entpacktem Paketcode erfolgreich. Vier lokale Produktions-Lockänderungen und Altartefakte erhalten. Der feste Quell-/Binärsatz bleibt unverändert; [abschließender Paketprüfbericht](RELEASE-BUILD29-RC3-RESULT.md). Persönliche Produktivinstallation sowie VM-Setup mit beiden Motoren/Deinstallation und Portable-Start/Pfade/AVI-Schnitt mit beiden Motoren am 13.10.2026 positiv bestätigt; gemeldete Paketabnahme abgeschlossen.
+
+Am 13.10.2026 auf gesonderten Nutzerauftrag unverändert als öffentliche **0.3.0 · Build 29 · RC3**-Vorabversion veröffentlicht. Quelltag und alle sieben Uploads vor/nach Freigabe geprüft; [Nachweis](RELEASE-PUBLICATION-BUILD29-RC3.md). Build 16 und lokale Lockänderungen erhalten.

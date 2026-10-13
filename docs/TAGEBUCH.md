@@ -1,5 +1,11 @@
 # Entwicklungstagebuch
 
+## 13.10.2026 – 0.3.0 Build 29 RC3 öffentlich veröffentlicht
+
+Nach positiver Produktiv-/VM-/Portable-Abnahme auf Nutzerauftrag als [öffentliche Vorabversion](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build29-rc3) freigegeben. Annotierter Tag am gebauten Quellcommit **ce4bc15b118d8080a78d7db5396db3ccf830ca89**, unveränderter **otr-can 0.1.5**. Setup, Portable, CAN-/Motorquellen, libmpv-Prüf-/Relink-Pakete und SHA256SUMS: **sieben unveränderte Uploads** im Entwurf und nach Freigabe anhand von GitHub-Größen/SHA-256-Digests geprüft. Release-Text und Remote-Quelltag stimmen. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD29-RC3.md).
+
+Alte Build-16-Veröffentlichung, alle acht lokalen Lockdateien und sieben eingefrorenen Dateien per Vergleich/Hash erhalten. Vier Produktions-Lockänderungen bleiben uncommittet. Buildzähler 29, RC3 und bekannte AVI-/MP4Box-Grenzen unverändert. Veröffentlichung und Dokumentation ohne neuen Build/Testlauf oder Funktionsänderung; letzter Paketprüfstand **1076/1076 CAN-Tests**, Release ohne Warnungen/Fehler. Abschlussdokumentation separat auf origin/main gesichert; Quelltag bleibt fest.
+
 ## 13.10.2026 – Acht VM-Setup-/Portable-Prüfschritte positiv abgenommen
 
 - Nutzer bestätigt **Setup in der VM:** Installation, Schnitt mit MP4Box und otr-can für `Greys_Anatomy_-_Die_jungen_Aerzte__Durchs_Feuer_26.09.30_20-15_sixx_55_TVOON_DE.HQ.mp4`, anschließend Deinstallation – alle „check“.

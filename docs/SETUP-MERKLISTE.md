@@ -6,6 +6,8 @@ Aktuelle Nachweise: [Projektstatus](STATUS.md), [Build-13-Prüfung](RELEASE-BUIL
 
 ## Eingefrorener Paketsatz – 13.10.2026
 
+- [x] **Öffentliche Veröffentlichung Build 29 RC3:** auf Nutzerauftrag freigegeben, sieben unveränderte Downloads über GitHub-Größen und SHA-256-Digests geprüft. [Nachweis](RELEASE-PUBLICATION-BUILD29-RC3.md). Ältere Build-16-Ausgabe erhalten.
+
 - [x] **0.3.0 · Build 29 · RC3** aus festem, gepushtem Quellcommit gebaut; Setup, Portable-ZIP, CAN-/Motorquellen und libmpv-Quellen-/Relink-Pakete samt Prüfsummen erstellt. **1076/1076 Tests**, 249 Portable-Dateien und vollständiger Quellsnapshot geprüft. [Paketnachweis](RELEASE-BUILD29-RC3-RESULT.md).
 - [x] Vier lokale Produktions-Lockänderungen und Altartefakte erhalten; Quell-/Binärsatz und Prüfsummen eingefroren.
 - [x] **Produktivinstallation und Schnittprüfung Build 29:** vom Nutzer am 13.10.2026 positiv bestätigt; Torchwood S4E7 mit MP4Box und S4E6 mit otr-can nach Lupenkontrolle. MP4Box-Doppelszene bei 15:05 für S4E6 separat dokumentiert.
