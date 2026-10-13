@@ -1,5 +1,11 @@
 # Projektstatus
 
+## 13.10.2026 – Produktivinstallation und Schnittprüfung bestätigt
+
+Nutzer bestätigt **Produktivinstallation des Build-29-Paketsatzes** und anschließenden **Schnitt** als „check“. Cutlist-Bild: **Torchwood / Sünden der Vergangenheit / S4E7** mit MP4Box/GPAC 26.07, Werbung vollständig entfernt; **Torchwood / Befreiungsaktion / S4E6** mit otr-can 0.1.5 erfolgreich nach genauer Lupenbestimmung des Übergangs. MP4Box-Doppelszene bei **15:05** im S4E6-Fall separat dokumentiert. [Paketabnahme](RELEASE-BUILD29-RC3-RESULT.md).
+
+Keine frische Installation/Überinstallation eigens unterschieden und keine neuen nativen Messwerte oder getrennte Torchwood-Tonspurprüfung behauptet. Separate Portable-/VM-/Deinstallationsprüfung noch offen. Nur Abnahmedokumentation ergänzt; **0.3.0 · Build 29 · RC3**, feste Quellen/Pakete/Prüfsummen und vier lokale Lockänderungen erhalten. Letzter technischer Stand 1076/1076 Tests, kein neuer Build oder Motorumbau.
+
 ## 13.10.2026 – Build 29 RC3 gesichert und als Paketsatz eingefroren
 
 CAN-Quellcommit **ce4bc15b118d8080a78d7db5396db3ccf830ca89** auf `origin/main` gesichert. Aus genau diesem Commit ohne Arbeitsbaumüberlagerung gebaut: **0.3.0 · Build 29 · RC3**, unveränderter **otr-can 0.1.5**. Setup, Portable-ZIP, CAN-/Motorquellen, libmpv-Quellen-/Relink-Archive und Prüfsummen fertig. Sechs Archive plus Prüfsummen schreibgeschützt; Quellcommit und Artefakte bleiben fest, Ergebnisdokumentation wird separat gesichert.

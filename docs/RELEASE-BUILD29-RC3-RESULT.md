@@ -1,6 +1,6 @@
 # CAN 0.3.0 · Build 29 · RC3 – eingefrorener Paketsatz
 
-Stand: 13.10.2026. Auf Nutzerauftrag Commit/Push durchgeführt und Setup, Portable-ZIP sowie passende Quellen-/Prüfsummenartefakte erstellt. **Quellstand fest eingefroren; automatische Paketprüfungen erfolgreich. Persönliche Installation-/VM-/Portable-Paketabnahme dieser neuen Ausgabe noch offen.** Kein neues GitHub-Release erstellt; öffentlicher Build 16 unverändert.
+Stand: 13.10.2026. Auf Nutzerauftrag Commit/Push durchgeführt und Setup, Portable-ZIP sowie passende Quellen-/Prüfsummenartefakte erstellt. **Quellstand fest eingefroren; automatische Paketprüfungen erfolgreich. Produktivinstallation und Schnittprüfung am 13.10.2026 vom Nutzer positiv bestätigt. Separate VM-/Portable-Prüfungen und Deinstallation dieser neuen Ausgabe noch offen.** Kein neues GitHub-Release erstellt; öffentlicher Build 16 unverändert.
 
 ## Fester Quellstand
 
@@ -41,10 +41,24 @@ Ablage: **artifacts/release-build29-RC3**. Zusammengehörige Downloads:
 
 `SHA256SUMS.txt` erfasst diese sechs Artefakte. `PUBLISH-FILES.sha256` und die im Portable enthaltene `RELEASE-PROVENANCE.json` dokumentieren die vollständige Payload und Quellenzuordnung. `RELEASE-NOTES.md` ist eine nachträgliche Beschreibung; sie gehört nicht zum eingefrorenen Quellenarchiv und verändert keine Paketdatei.
 
+## Persönliche Produktivinstallation und Schnittprüfung – 13.10.2026
+
+Nutzer bestätigt **„1) Installation Produktiv klappt check / 2) Schnitt check siehe Bild :-)“** für den aktuellen Build-29-Paketsatz. Installation in der produktiv genutzten Umgebung und anschließende Schnittprüfung damit persönlich positiv bestätigt. Frische Installation oder Überinstallation nicht eigens unterschieden; keine zusätzliche unabhängige Installation-Datei-/Versionsprüfung behauptet.
+
+Das bereitgestellte Bild der eigenen Cutlist-Uploads dokumentiert:
+
+- **Torchwood / Sünden der Vergangenheit / S4E7:** mit CAN geschnitten, Werbung vollständig entfernt, **MP4Box aus GPAC 26.07** verwendet. Vorgeschlagener Dateiname **Torchwood S04E07 Sünden der Vergangenheit [12.10.2026]**. Erfolgreicher MP4Box-Praxisschnitt laut Nutzer und Cutlist-Vermerk; kein sichtbarer zusätzlicher Fehlerhinweis für diesen Eintrag.
+- **Torchwood / Befreiungsaktion / S4E6:** **doppelte Szene bei 15:05 mit MP4Box** berichtet. Übergang mit der **Frame-Lupe framegenau bestimmt**, mit **otr-can 0.1.5 gelingt der Schnitt**. Vorgeschlagener Dateiname **Torchwood S04E06 Befreiungsaktion [12.10.2026]**. Positive otr-can-/Lupenprüfung; MP4Box-Bildbefund separat erhalten.
+- Der bereits dokumentierte **Chicago-Fire-/Unantastbar**-Vergleich bleibt sichtbar: MP4Box-Werbeblitzer am Anfang auch nach Lupenkorrektur, otr-can blitzerfrei, Bild/Ton/alle Übergänge geprüft. Diese Werte bleiben dem bisherigen Fall zugeordnet.
+
+Kein neues natives Schnittprotokoll, keine Sample-/Paket-/Laufzeitwerte und keine gesonderte Tonspur-/Synchronitätsabnahme für die beiden Torchwood-Dateien in dieser Nachricht. Keine neuen Messungen aus dem Screenshot abgeleitet. Bild lokal unter `.build/freeze-build29-20261013/user-acceptance/productive-install-and-torchwood.png` gesichert. Keine Serveraktion ausgeführt.
+
+Produktiv-Setup-/Schnittabnahme damit ergänzt. **Offen:** separate Portable-/VM-Prüfungen, Installationsart/Überinstallation nach Bedarf, Deinstallation in geeigneter Testumgebung und ggf. frisches Benutzerprofil. Eingefrorene Quellen-/Binärarchive und Prüfsummen unverändert.
+
 ## Grenzen und nächste Prüfung
 
 Die Entwicklungsabnahmen gelten weiter: AVI-Lupe, Richtungswechsel-Halbsprung, Versionskontrolle, Benennung und gespeicherter Maskenwechsel ohne Neustart persönlich bestätigt. Chicago Fire mit otr-can bild-/ton-/übergangsgeprüft blitzerfrei; MP4Box-Blitzer am Anfang auch nach Lupenkorrektur dokumentiert. Künstlicher Zwei-AAC-MP4Box-Befund und AVI-Zeitstempelgrenzen bleiben separat erhalten.
 
-Nächster Schritt: neue Setup-Ausgabe (Installation/ggf. Überinstallation/Deinstallation) und Portable-Ausgabe persönlich prüfen, einschließlich Versionsanzeige, Pfade, beide Motoren sowie Bild/Ton/Übergänge. Keine Aussage über frisches Benutzerprofil oder VM dieser Ausgabe bisher bestätigt. GitHub-Veröffentlichung bleibt ein gesonderter Auftrag.
+Produktivinstallation und beide Schnittverfahren sind oben persönlich bestätigt. Nächster Schritt: separate Portable-/VM-Paketprüfung und ggf. Überinstallation/Deinstallation in geeigneter Testumgebung; dabei Versionsanzeige, Pfade, Motoren und Ergebnis kontrollieren. Keine Aussage über frisches Benutzerprofil oder VM dieser Ausgabe bisher bestätigt. GitHub-Veröffentlichung bleibt ein gesonderter Auftrag.
 
 Lokale Nachweise: `.build/freeze-build29-20261013` mit Commit-/Remote-Nachweis, Paket-/Quellen-/Erhaltungsprüfungen und WPF-Belegen; Build-/Restore-/Publish-/Installer-Logs und TRX-Ergebnisse unter `artifacts/release-build29-RC3`.

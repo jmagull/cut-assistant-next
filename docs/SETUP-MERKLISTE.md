@@ -8,7 +8,8 @@ Aktuelle Nachweise: [Projektstatus](STATUS.md), [Build-13-Prüfung](RELEASE-BUIL
 
 - [x] **0.3.0 · Build 29 · RC3** aus festem, gepushtem Quellcommit gebaut; Setup, Portable-ZIP, CAN-/Motorquellen und libmpv-Quellen-/Relink-Pakete samt Prüfsummen erstellt. **1076/1076 Tests**, 249 Portable-Dateien und vollständiger Quellsnapshot geprüft. [Paketnachweis](RELEASE-BUILD29-RC3-RESULT.md).
 - [x] Vier lokale Produktions-Lockänderungen und Altartefakte erhalten; Quell-/Binärsatz und Prüfsummen eingefroren.
-- [ ] **Neue Setup-/Portable-Paketabnahme:** Installation/Überinstallation nach Bedarf, Versionsanzeige, Werkzeugpfade, beide Motoren, Bild/Ton/Übergänge und Deinstallation persönlich prüfen. Vorherige Build-16-Abnahmen gelten nicht automatisch als Abnahme der neuen Pakete.
+- [x] **Produktivinstallation und Schnittprüfung Build 29:** vom Nutzer am 13.10.2026 positiv bestätigt; Torchwood S4E7 mit MP4Box und S4E6 mit otr-can nach Lupenkontrolle. MP4Box-Doppelszene bei 15:05 für S4E6 separat dokumentiert.
+- [ ] **Separate Portable-/VM-Paketabnahme:** Portable, Installation/Überinstallation nach Bedarf und Deinstallation in geeigneter Testumgebung prüfen, inklusive Versionsanzeige, Pfaden, Motoren und Ergebnis. Vorherige Build-16-Abnahmen gelten nicht automatisch als Abnahme der neuen Pakete.
 
 ## Offener Bedienwunsch – Frame-Lupe, 13.10.2026
 

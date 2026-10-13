@@ -1,5 +1,11 @@
 # Entwicklungstagebuch
 
+## 13.10.2026 – Produktiv-Setup und reale Torchwood-Schnitte abgenommen
+
+- Nutzer bestätigt **„1) Installation Produktiv klappt check / 2) Schnitt check siehe Bild :-)“** für den eingefrorenen **0.3.0 · Build 29 · RC3**-Paketsatz. Persönliche erfolgreiche Produktivinstallation und Schnittprüfung festgehalten; keine eigenständige Datei-/Versions-/Installationsartprüfung daraus abgeleitet.
+- Cutlist-Bild zeigt **Torchwood / Sünden der Vergangenheit / S4E7**, mit MP4Box/GPAC 26.07 geschnitten und Werbung vollständig entfernt. **Torchwood / Befreiungsaktion / S4E6:** MP4Box-Doppelszene bei **15:05**, Übergang mit Lupe genau bestimmt, otr-can **0.1.5**-Schnitt gelingt. Bekannter Chicago-Fire-Befund im selben Bild bleibt seinem bisherigen Lauf zugeordnet. Kein neues natives Protokoll oder gesonderte Torchwood-Ton-/Synchronitätsabnahme übermittelt.
+- README, Status, Tagebuch, Merkliste und Paketprüfbericht aktualisiert; Bild lokal unter `.build/freeze-build29-20261013/user-acceptance` gesichert. Separate Portable-/VM-/Deinstallationsprüfungen noch offen. Nur Dokumentation und Hashkontrolle, Diffprüfung bestanden; eingefrorene Pakete und Quellen unverändert, kein neuer Build/Testlauf, kein Serverzugriff oder neuer Motorcode. Letzter Prüfstand **1076/1076 Tests**.
+
 ## 13.10.2026 – Commit/Push und eingefrorener Build-29-Paketsatz abgeschlossen
 
 - Autorisierten Quellcommit **ce4bc15b118d8080a78d7db5396db3ccf830ca89** erstellt und auf `origin/main` gepusht; Remote-Hash geprüft. 35 Dateien, vier vorbestehende Produktions-Lockänderungen ausgeschlossen und unverändert erhalten. Quellarchiv direkt aus diesem Commit, keine Arbeitsbaumüberlagerung; Buildnummer 29 und RC3 für den gesamten Paketsatz festgehalten.
