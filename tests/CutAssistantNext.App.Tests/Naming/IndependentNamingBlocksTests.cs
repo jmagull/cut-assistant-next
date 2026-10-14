@@ -37,7 +37,7 @@ public sealed class IndependentNamingBlocksTests
     public void DefaultFilmMaskWithoutSeriesDataHasNoSE()
     {
         var context = new NameTemplateContext(Name: "Die Teufelsbrigade", Year: "2021", Month: "01", Day: "21");
-        Assert.Equal("Die Teufelsbrigade [21.01.2021]", NameTemplateRenderer.Render(NewDefault, context));
+        Assert.Equal("Die Teufelsbrigade", NameTemplateRenderer.Render(NewDefault, context));
     }
 
     [Fact]

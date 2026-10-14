@@ -75,9 +75,14 @@ public sealed class PlaybackViewModel
     public long? EstimatedFrameCount =>
         _mediaPlayerService.EstimatedFrameCount;
 
+    public string CurrentFrameText =>
+        $"Frame {FormatFrameNumber(FrameNumber)}";
+
+    public string TotalFrameText =>
+        $" / ca. {FormatFrameNumber(EstimatedFrameCount)}";
+
     public string FrameText =>
-        $"Frame {FormatFrameNumber(FrameNumber)} / " +
-        $"ca. {FormatFrameNumber(EstimatedFrameCount)}";
+        CurrentFrameText + TotalFrameText;
 
     public double Volume =>
         _mediaPlayerService.Volume;
@@ -379,6 +384,8 @@ public sealed class PlaybackViewModel
         PublishPropertyChanges(
             nameof(FrameNumber),
             nameof(EstimatedFrameCount),
+            nameof(CurrentFrameText),
+            nameof(TotalFrameText),
             nameof(FrameText));
     }
 

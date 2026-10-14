@@ -19,7 +19,7 @@ public sealed class CutOutputViewModelTests
                 nameContext);
 
         Assert.Equal(
-            "Sliders Perfekte Piloten [13.08.2026]",
+            "Sliders Perfekte Piloten",
             viewModel.SuggestedMovieName);
     }
 
@@ -40,7 +40,7 @@ public sealed class CutOutputViewModelTests
         viewModel.EpisodeTitle = "Der Test";
 
         Assert.Equal(
-            "Sliders Perfekte Piloten [13.08.2026]",
+            "Sliders Perfekte Piloten",
             viewModel.SuggestedMovieName);
     }
 

@@ -11,7 +11,8 @@ public sealed class NameTemplateRendererTests
             Name: "Tatort",
             Year: "2026",
             Month: "08",
-            Day: "13");
+            Day: "13",
+            Season: "1");
 
         var result = NameTemplateRenderer.Render(
             "%Name% [%Tag%.%Monat%.%YYYY%]",
@@ -206,7 +207,7 @@ public sealed class NameTemplateRendererTests
             context);
 
         Assert.Equal(
-            "Der Pate [13.08.2026]",
+            "Der Pate",
             result);
     }
 

@@ -32,7 +32,7 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
     private readonly decimal _sourceEnd;
     private readonly decimal _initialTarget;
     private readonly TimeSpan _mediaDuration;
-    private readonly CutEdgeSide _side;
+    private readonly CutEdgeSide? _side;
     private readonly HalvingFrameSearch _search;
     private VideoFrameWindow? _window;
     private decimal _probeStart;
@@ -41,7 +41,7 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
 
     internal FrameLoupeViewModel(
         string mediaFilePath, int streamIndex, TimeSpan mediaDuration,
-        TimeSpan cutPosition, CutEdgeSide side, decimal sourceStart,
+        TimeSpan cutPosition, CutEdgeSide? side, decimal sourceStart,
         int initialSearchFrames, IFrameAnalysisRunner analysis, IFramePreviewRunner preview,
         string? formatName = null)
     {
@@ -49,7 +49,7 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
         ArgumentNullException.ThrowIfNull(analysis);
         ArgumentNullException.ThrowIfNull(preview);
         if (streamIndex < 0 || mediaDuration <= TimeSpan.Zero ||
-            cutPosition < TimeSpan.Zero || cutPosition > mediaDuration || !Enum.IsDefined(side))
+            cutPosition < TimeSpan.Zero || cutPosition > mediaDuration || (side.HasValue && !Enum.IsDefined(side.Value)))
         {
             throw new ArgumentException("Die Ausgangsdaten für die Frame-Lupe sind ungültig.");
         }
@@ -67,8 +67,9 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
         _sourceEnd = sourceStart + (decimal)mediaDuration.Ticks / TimeSpan.TicksPerSecond;
         _initialTarget = sourceStart + (decimal)cutPosition.Ticks / TimeSpan.TicksPerSecond;
         _search = new HalvingFrameSearch(initialSearchFrames);
-        Title = $"Frame-Lupe · {(side == CutEdgeSide.Start ? "Startkante" : "Endkante")}";
-        CutPositionText = $"Schnittkante: {cutPosition:hh\\:mm\\:ss\\.fff} · {System.IO.Path.GetFileName(mediaFilePath)}";
+        Title = IsInspectionMode ? "Frame-Lupe · Untersuchungsmodus"
+            : $"Frame-Lupe · {(side == CutEdgeSide.Start ? "Startkante" : "Endkante")}";
+        CutPositionText = $"{(IsInspectionMode ? "Playerposition" : "Schnittkante")}: {cutPosition:hh\\:mm\\:ss\\.fff} · {System.IO.Path.GetFileName(mediaFilePath)}";
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -79,7 +80,9 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
     public byte[]? PreviewPngBytes { get; private set; }
     public bool IsBusy { get; private set; }
     public bool CanNavigate => !IsBusy && SelectedFrame is not null;
-    public bool CanApply => !IsBusy && PreviewPngBytes is { Length: > 0 } && SelectedCutPosition.HasValue;
+    public bool IsInspectionMode => !_side.HasValue;
+    public bool CanApply => !IsInspectionMode && HasConfirmedFrame;
+    private bool HasConfirmedFrame => !IsBusy && PreviewPngBytes is { Length: > 0 } && SelectedCutPosition.HasValue;
     private long? SelectedTimestamp => SelectedFrame?.Frame.Pts ??
         (_isAvi ? SelectedFrame?.Frame.BestEffortTimestamp : null);
     private bool UsesReconstructedTimestamp =>
@@ -102,10 +105,16 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
             return ToTimeSpan(seconds);
         }
     }
-    public string SelectedCutPositionText => CanApply && SelectedCutPosition is TimeSpan position
+    public string SelectedCutPositionText => IsInspectionMode
+        ? HasConfirmedFrame && SelectedCutPosition is TimeSpan inspectedPosition
+            ? $"Untersuchter Frame: {inspectedPosition:hh\\:mm\\:ss\\.fff}"
+            : "Untersuchungsmodus: keine bestätigte Bildposition."
+        : CanApply && SelectedCutPosition is TimeSpan position
         ? $"Neue Schnittkante: {position:hh\\:mm\\:ss\\.fff}"
         : "Übernahme erst mit bestätigtem Bild innerhalb der Datei möglich.";
-    public string EdgeMeaningText => _side == CutEdgeSide.Start
+    public string EdgeMeaningText => IsInspectionMode
+        ? "Untersuchungsmodus: Die Schnittliste bleibt unverändert. Eine Kantenübernahme ist nicht möglich."
+        : _side == CutEdgeSide.Start
         ? "Dieses Bild ist das erste Bild des zu entfernenden Bereichs."
         : "Dieses Bild bleibt erhalten; der entfernte Bereich endet davor.";
     public string Status { get; private set; } = "Frameanalyse wird vorbereitet …";
@@ -124,7 +133,7 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
           $"Paket-DTS: {SelectedFrame.Frame.PacketDts?.ToString(CultureInfo.InvariantCulture) ?? "–"}\n" +
           $"Zeitbasis: {_window.TimeBase.Numerator}/{_window.TimeBase.Denominator}\n" +
           $"Quellzeit: {SelectedFrame.TimeText} s · Keyframe: {SelectedFrame.KeyframeText} · Bildtyp: {SelectedFrame.Frame.PictureType ?? "–"}\n" +
-          $"Abstand zur Ausgangskante: {(SelectedFrame.RawSeconds - _initialTarget)?.ToString("+0.000000;-0.000000;0.000000", CultureInfo.InvariantCulture) ?? "–"} s\n" +
+          $"{(IsInspectionMode ? "Abstand zur Playerposition" : "Abstand zur Ausgangskante")}: {(SelectedFrame.RawSeconds - _initialTarget)?.ToString("+0.000000;-0.000000;0.000000", CultureInfo.InvariantCulture) ?? "–"} s\n" +
           (UsesReconstructedTimestamp
               ? "Bildzuordnung: rekonstruierter AVI-Zeitstempel, keine Original-PTS.\n"
               : "Bildzuordnung: Original-PTS erforderlich.\n") +
@@ -338,7 +347,11 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
             throw new InvalidOperationException("Für den gewählten Frame wurde kein Vorschaubild geliefert.");
         }
 
-        Status = UsesReconstructedTimestamp
+        Status = IsInspectionMode
+            ? UsesReconstructedTimestamp
+                ? "Untersuchungsmodus · AVI: Bild und rekonstruierter Zeitstempel stimmen überein. Keine Kantenübernahme."
+                : "Untersuchungsmodus: Bild und PTS stimmen überein. Keine Kantenübernahme."
+            : UsesReconstructedTimestamp
             ? "AVI: Bild und rekonstruierter Zeitstempel stimmen überein. Die gewählte Zeit kann als Schnittkante übernommen werden."
             : "Bild und PTS stimmen überein. Mit „Schnittkante übernehmen“ wird die gewählte Zeit in den Schnittplan eingetragen.";
         return true;

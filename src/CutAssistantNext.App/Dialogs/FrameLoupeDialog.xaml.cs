@@ -12,14 +12,17 @@ namespace CutAssistantNext.App.Dialogs;
 internal partial class FrameLoupeDialog : Window
 {
     private readonly FrameLoupeViewModel _viewModel;
-    private readonly Action<FrameLoupeSelection> _applySelection;
+    private readonly Action<FrameLoupeSelection>? _applySelection;
     private readonly CancellationTokenSource _lifetime = new();
     private bool _closed;
 
-    internal FrameLoupeDialog(FrameLoupeViewModel viewModel, Action<FrameLoupeSelection> applySelection)
+    internal FrameLoupeDialog(FrameLoupeViewModel viewModel, Action<FrameLoupeSelection>? applySelection = null)
     {
         ArgumentNullException.ThrowIfNull(viewModel);
-        ArgumentNullException.ThrowIfNull(applySelection);
+        if (viewModel.IsInspectionMode ? applySelection is not null : applySelection is null)
+        {
+            throw new ArgumentException("Eine Kantenübernahme ist ausschließlich im Schnittkantenmodus erforderlich.", nameof(applySelection));
+        }
         _viewModel = viewModel;
         _applySelection = applySelection;
         InitializeComponent();
@@ -164,6 +167,11 @@ internal partial class FrameLoupeDialog : Window
 
     private void Apply_Click(object sender, RoutedEventArgs e)
     {
+        if (_closed || !_viewModel.CanApply || _applySelection is null)
+        {
+            return;
+        }
+
         try
         {
             _applySelection(_viewModel.CreateSelection());

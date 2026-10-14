@@ -36,6 +36,7 @@ public partial class MainWindow : Window
     private readonly MainWindowViewModel _viewModel;
     private readonly IMediaPlayerService _mediaPlayerService;
     private readonly PlaybackViewModel _playbackViewModel;
+    private readonly KeyframeNavigationViewModel _keyframeNavigation;
     private readonly CutPlanViewModel _cutPlanViewModel;
     private readonly CutReviewController _cutReviewController;
     private CutNamingState? _cutNamingState;
@@ -78,6 +79,8 @@ public partial class MainWindow : Window
         _playbackViewModel =
             new PlaybackViewModel(_mediaPlayerService);
 
+        _keyframeNavigation = new KeyframeNavigationViewModel(_playbackViewModel);
+
         _cutPlanViewModel =
             new CutPlanViewModel();
 
@@ -94,6 +97,8 @@ public partial class MainWindow : Window
 
         DataContext = _viewModel;
         PlaybackControls.DataContext = _playbackViewModel;
+        KeyframeButtons.DataContext = _keyframeNavigation;
+        KeyframeIndicator.DataContext = _keyframeNavigation;
         CutPlanSection.DataContext = _cutPlanViewModel;
         CutTimelineTrack.DataContext = _cutPlanViewModel;
 
@@ -194,6 +199,7 @@ public partial class MainWindow : Window
         PreviewKeyUp -= MainWindow_PreviewKeyUp;
 
         await _cutReviewController.CloseAsync();
+        _keyframeNavigation.Dispose();
         _playbackViewModel.Dispose();
 
         try
@@ -873,6 +879,31 @@ public partial class MainWindow : Window
         }
     }
 
+    private async void PreviousKeyframe_Click(object sender, RoutedEventArgs e) =>
+        await _keyframeNavigation.JumpAsync(-1);
+
+    private async void NextKeyframe_Click(object sender, RoutedEventArgs e) =>
+        await _keyframeNavigation.JumpAsync(1);
+
+    private async Task LoadKeyframesAsync(string path)
+    {
+        try
+        {
+            if (_isClosed || _viewModel.AnalysisResult is not { } analysis) return;
+            var settings = new FfmpegSettingsStore().Load() ?? FfmpegSettings.CreateDefault();
+            var executable = new ToolPathResolver().Resolve(BundledToolKind.Ffprobe, settings.FfprobeExecutablePath);
+            await _keyframeNavigation.LoadAsync(path, analysis, new FfprobeFrameRunner(executable));
+        }
+        catch (Exception exception)
+        {
+            _logger.Warning($"Keyframe-Analyse konnte nicht gestartet werden: {exception.Message}");
+        }
+    }
+    private async void FrameLoupeButton_Click(object sender, RoutedEventArgs e)
+    {
+        await OpenFrameLoupeAsync();
+    }
+
     private async Task OpenFrameLoupeAsync()
     {
         if (_frameLoupeOpening || _mediaLoadInProgress || _isClosed)
@@ -880,10 +911,10 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!_cutPlanViewModel.CanInspectSelectedEdge || !_playbackViewModel.CanSeek ||
+        if (!_playbackViewModel.CanSeek ||
             _viewModel.AnalysisResult is not { VideoStreams.Count: > 0 } analysis)
         {
-            MessageBox.Show(this, "Bitte zuerst die Start- oder Endzeit einer Schnittkante in der Tabelle anklicken.",
+            MessageBox.Show(this, "Bitte zuerst eine analysierte Videodatei im Player laden.",
                 "Frame-Lupe", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
@@ -896,8 +927,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        var side = _cutPlanViewModel.SelectedEdgeSide!.Value;
-        var position = _cutPlanViewModel.SelectedEdgePosition!.Value;
+        var side = _cutPlanViewModel.SelectedEdgeSide;
         var path = _viewModel.FilePath;
         _frameLoupeOpening = true;
         try
@@ -907,34 +937,42 @@ public partial class MainWindow : Window
                 await _playbackViewModel.PauseAsync();
             }
 
-            if (_isClosed || !ReferenceEquals(segment, _cutPlanViewModel.SelectedRemoveSegment) ||
+            if (_isClosed || _mediaLoadInProgress || !_playbackViewModel.CanSeek ||
+                !ReferenceEquals(analysis, _viewModel.AnalysisResult) ||
+                !ReferenceEquals(segment, _cutPlanViewModel.SelectedRemoveSegment) ||
                 side != _cutPlanViewModel.SelectedEdgeSide || path != _viewModel.FilePath)
             {
                 return;
             }
 
+            var target = FrameLoupeTarget.Capture(_cutPlanViewModel, _playbackViewModel);
             var tools = new FfmpegSettingsStore().Load() ?? FfmpegSettings.CreateDefault();
             var resolver = new ToolPathResolver();
             var frameAnalysis = new FfprobeFrameRunner(resolver.Resolve(BundledToolKind.Ffprobe, tools.FfprobeExecutablePath));
             var preview = new FfmpegFramePreviewRunner(resolver.Resolve(BundledToolKind.Ffmpeg, tools.FfmpegExecutablePath));
             var settings = new FrameLoupeSettingsStore().Load();
             var viewModel = new FrameLoupeViewModel(path, analysis.VideoStreams[0].Index,
-                _cutPlanViewModel.MediaDuration!.Value, position, side,
+                target.MediaDuration, target.Position, target.Side,
                 (decimal)(analysis.StartTimeSeconds ?? 0), settings.InitialSearchFrames, frameAnalysis, preview, analysis.FormatName);
-            var dialog = new FrameLoupeDialog(viewModel, selection =>
+            Action<FrameLoupeSelection>? applySelection = null;
+            if (target.Side is CutEdgeSide edgeSide && target.Segment is { } edgeSegment)
             {
-                if (_isClosed || _mediaLoadInProgress || path != _viewModel.FilePath)
+                applySelection = selection =>
                 {
-                    throw new InvalidOperationException("Die Mediendatei hat sich inzwischen geändert. Bitte die Frame-Lupe erneut öffnen.");
-                }
+                    if (_isClosed || _mediaLoadInProgress || path != _viewModel.FilePath)
+                    {
+                        throw new InvalidOperationException("Die Mediendatei hat sich inzwischen geändert. Bitte die Frame-Lupe erneut öffnen.");
+                    }
 
-                _cutPlanViewModel.ApplyFrameEdge(segment!, side, selection.Position);
-                _logger.Information($"Frame-Lupe: {side}-Kante von {position:c} auf {selection.Position:c} übernommen; " +
-                    $"Stream {selection.StreamIndex}, " +
-                    $"{(selection.UsesReconstructedTimestamp ? "rekonstruierter AVI-Zeitstempel" : "Original-PTS")} {selection.Pts}, " +
-                    $"Zeitbasis {selection.TimeBase.Numerator}/{selection.TimeBase.Denominator}.");
-            })
-            { Owner = this };
+                    _cutPlanViewModel.ApplyFrameEdge(edgeSegment, edgeSide, selection.Position);
+                    _logger.Information($"Frame-Lupe: {edgeSide}-Kante von {target.Position:c} auf {selection.Position:c} übernommen; " +
+                        $"Stream {selection.StreamIndex}, " +
+                        $"{(selection.UsesReconstructedTimestamp ? "rekonstruierter AVI-Zeitstempel" : "Original-PTS")} {selection.Pts}, " +
+                        $"Zeitbasis {selection.TimeBase.Numerator}/{selection.TimeBase.Denominator}.");
+                };
+            }
+
+            var dialog = new FrameLoupeDialog(viewModel, applySelection) { Owner = this };
             dialog.ShowDialog();
         }
         catch (Exception exception)
@@ -2363,6 +2401,7 @@ public partial class MainWindow : Window
         _logger.Information(
             $"Mediendatei wurde ausgewählt: {dialog.FileName}");
 
+        _keyframeNavigation.Reset();
         _cutPlanViewModel.Reset();
 
         _cutNamingState = null;
@@ -2384,6 +2423,8 @@ public partial class MainWindow : Window
 
             await _mediaPlayerService.LoadAsync(
                 dialog.FileName);
+
+            _ = LoadKeyframesAsync(dialog.FileName);
 
             await SearchCutlistsForCurrentMediaAsync(
                 skipIfNotConfigured: true);

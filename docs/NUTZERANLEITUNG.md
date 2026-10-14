@@ -8,15 +8,15 @@ Bei geeigneten H.264-AVI-Dateien bietet **Schneiden otr-can** eine ausdrücklich
 
 Ein alter Motor wird für MP3-Aufträge mit einem Upgrade-Hinweis abgelehnt. Ungeeignete Zeitstrukturen und fehlende Samples werden nicht automatisch repariert. Bitte jede Tonspur und alle Übergänge kontrollieren. Die neue Teufelsbrigade-Datei wurde am 12.10.2026 persönlich positiv abgenommen: Anfang, Ende, alle Schnittübergänge sowie Ton und Bild. Eine bereits im vorherigen Ergebnis vorhandene Video-Zeitstempelauffälligkeit bleibt offen. [Prüfstand und Grenzen](AVI-OTR-CAN-MP3-20261012.md).
 
-Die folgenden Kapitel beschreiben die öffentliche **0.3.0 · Build 29 · RC3**-Ausgabe mit Kontrollplayer, AVI-Frame-Lupe, Suchsprunghalbierung bei Richtungswechsel, FFmpeg-Versionskontrolle und gespeichertem Maskenwechsel ohne Neustart. Die ältere Build-16-Ausgabe bleibt unverändert verfügbar. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD29-RC3.md).
+Die folgenden Kapitel beschreiben die **0.3.0 · Build 30 · RC3**-Ausgabe mit Kontrollplayer, AVI-Frame-Lupe, Suchsprunghalbierung bei Richtungswechsel, FFmpeg-Versionskontrolle und gespeichertem Maskenwechsel ohne Neustart. Die ältere Build-16-Ausgabe bleibt unverändert verfügbar. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD29-RC3.md).
 
-Stand: 13.10.2026. Diese Anleitung beschreibt **0.3.0 · Build 29 · RC3** für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand: 14.10.2026. Diese Anleitung beschreibt **0.3.0 · Build 30 · RC3** für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
-Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.3.0 · Build 29 · RC3**. Produktivinstallation sowie VM-Setup/Portable mit beiden Motoren und Setup-Deinstallation sind persönlich bestätigt. Bitte die tatsächlich angezeigten Angaben bei Fehlermeldungen mit angeben.
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.3.0 · Build 30 · RC3**. Die persönliche Produktiv-/VM-/Portable-/Deinstallationsabnahme gilt für die Vorgängerausgabe Build 29; eine erneute Installationsabnahme für Build 30 wird nicht behauptet. Bitte die tatsächlich angezeigten Angaben bei Fehlermeldungen mit angeben.
 
 ## 1. Einmalig einrichten
 
-Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE allein. Die [öffentliche Build-29-RC3-Ausgabe](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build29-rc3) bietet Setup und Portable-ZIP mit libmpv und optionalem otr-can 0.1.5. Sie benötigt die separat installierte [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). FFmpeg/ffprobe, GPAC/MP4Box und bei Bedarf FFMS2 werden separat eingerichtet. Build 29 wurde technisch sowie durch Produktivinstallation, VM-Setup/Portable mit beiden Motoren und Setup-Deinstallation geprüft und auf Nutzerauftrag veröffentlicht. Installationstyp und frisches Portable-Profil nicht gesondert unterschieden. [Nachweis](RELEASE-PUBLICATION-BUILD29-RC3.md).
+Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE allein. Die [Build-30-RC3-Ausgabe](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build30-rc3) bietet Setup und Portable-ZIP mit libmpv und optionalem otr-can 0.1.5. Sie benötigt die separat installierte [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). FFmpeg/ffprobe, GPAC/MP4Box und bei Bedarf FFMS2 werden separat eingerichtet. Build 29 wurde technisch sowie durch Produktivinstallation, VM-Setup/Portable mit beiden Motoren und Setup-Deinstallation geprüft und auf Nutzerauftrag veröffentlicht. Installationstyp und frisches Portable-Profil nicht gesondert unterschieden. [Nachweis](RELEASE-PUBLICATION-BUILD29-RC3.md).
 
 Öffne die Einstellungen und hinterlege die benötigten Werkzeuge:
 
@@ -78,7 +78,13 @@ Unter **Einstellungen → Namensmaske …** legst du fest, wie CAN vorgeschlagen
 
 Ab Build 20 stehen **S**, **Staffel**, **E**, **Folge** und **x** als einzelne Bausteine zur Verfügung. Damit lassen sich beispielsweise **S01E01**, **4x01**, **04x01** oder mit einem Bindestrich **02-13** zusammensetzen. Eine Eingabe **1** bleibt **1**, **01** bleibt **01**; CAN ergänzt keine führenden Nullen.
 
-**S** und **E** erscheinen nur bei vorhandenem zugehörigem Wert. **x** erscheint nur, wenn Staffel und Folge vorhanden sind. Die neue CAN-Standardmaske erzeugt **Ghostbusters S01E01 Hexenprobleme [19.09.2026]**. Ein Film ohne Serienangaben ergibt beispielsweise **Die Teufelsbrigade [21.01.2021]**. Bewusst gesetzte freie Texte und Trennzeichen bleiben erhalten.
+**S** und **E** erscheinen nur bei vorhandenem zugehörigem Wert. **x** erscheint nur, wenn Staffel und Folge vorhanden sind. Die neue CAN-Standardmaske erzeugt **Ghostbusters S01E01 Hexenprobleme [19.09.2026]**. In der lokalen Prüffassung vom 14.10.2026 ergibt ein Film ohne Serienangaben ausschließlich **Die Teufelsbrigade**. Bei vorhandenen Serienangaben bleibt die vollständige Maske mit Zusatzfeldern aktiv.
+
+Die lokale Prüffassung vom **14.10.2026** beendet den automatisch erzeugten Namensvorschlag nach dem **Name**-Baustein, wenn **Staffel, Folge und Folgentitel alle leer** sind. Hinter dem Filmnamen entfällt dann alles: Serienbausteine, Trennzeichen, Datum, Sender und weitere Zusätze. So entsteht **Die Hart 2** statt **Die Hart 2- [12.10.2026]**. Der Text im Namen selbst bleibt erhalten.
+
+Sobald mindestens ein Serienfeld ausgefüllt ist, verwendet CAN weiterhin die vollständige Maske. Die gespeicherte Maske und Datums-/Serienmetadaten werden durch die Filmregel nicht verändert. Ein Präfix, das die Maske ausdrücklich vor dem Namen vorsieht, bleibt erhalten.
+
+Die Regel gilt für neu erzeugte Namensvorschläge in Cutlists und beim Schneiden mit beiden Motoren. Ein manuell bearbeiteter Ausgabename oder geschützter übernommener Cutlist-Vorschlag bleibt erhalten. Einen bestehenden Vorschlag ersetzt du bei Bedarf bewusst mit **Aus obigen Eingaben neu erzeugen**.
 
 Das Editorbeispiel verwendet **Ghostbusters__Hexenprobleme_26.09.19_10-50_pro7maxx_25_TVOON_DE.HQ.mp4**. Das OTR-Datum **26.09.19** steht für **19.09.2026**; Name, Folgentitel und die Serienwerte **01/01** sind ergänzte Beispieldaten. Der Ausgabedateiname erhält beim Schneiden zusätzlich **.mp4**.
 
@@ -198,9 +204,19 @@ Dauerzelle und Texteingaben erhalten keine neue Rechtsklick-Navigation. Zur gena
 
 Rechtsklick auf Anfang: 3 Sekunden zurück. Rechtsklick auf Ende: 3 Sekunden vorwärts. So lassen sich die Filmszenen unmittelbar vor und nach einem Schnittbereich kontrollieren.
 
+### Keyframes im Hauptfenster – lokale Prüffassung vom 14.10.2026
+
+Nach dem Laden einer MP4 analysiert CAN Keyframes im Hintergrund. Bei langen Aufnahmen kann das einige Zeit dauern; die normale Wiedergabe bleibt verfügbar. **◀ K** und **K ▶** neben den Bildschritten sind bis zum Abschluss deaktiviert; ihr Tooltip zeigt den Zustand. Anschließend springen sie zum vorherigen/nächsten analysierten Keyframe und pausieren die Wiedergabe. Die blauen Bereiche am oberen Rand der Schnitt-Timeline markieren diese Positionen; die roten Entfernbereiche bleiben erhalten. Mehrere Keyframes können bei langen Filmen in derselben Bildspalte liegen.
+
+**(K)** neben der Framenummer erscheint nur auf einem zugeordneten Keyframe im pausierten Zustand. Nach einem Bildschritt oder während eines Sprungs verschwindet es. Die Navigation verändert keine Schnittmarken. Fehlende oder unsichere Zeitinformationen geben keine Keyframe-Navigation frei.
+
+**Bei AVI werden diese Keyframe-Elemente ausgeblendet und es findet keine zusätzliche Keyframe-Analyse statt.** Der vorhandene AVI-Infoblock erklärt dies. Die Frame-Lupe einschließlich Untersuchungsmodus und Kantenbearbeitung bleibt für AVI nutzbar. [Prüfbericht und separate Fassung](KEYFRAME-NAVIGATION-20261014.md).
+
 ### Frame-Lupe im Entwicklungsbuild ab Build 10
 
 Klicke in der Schnitttabelle auf die **Startzeit oder Endzeit** und drücke **Shift+F**. Die Frame-Lupe öffnet diese Kante in einem eigenen Fenster. FFprobe und FFmpeg müssen unter **Einstellungen → FFmpeg-Werkzeuge** verfügbar sein.
+
+**Lokale Erweiterung vom 14.10.2026 (Priorität 3):** Mit **Frame-Lupe** in der Schnittliste oder **Shift+F** kannst du auch ohne ausgewählte Kante untersuchen. Navigiere im Hauptplayer zur gewünschten Stelle. Die Lupe öffnet im **Untersuchungsmodus** an der vom Player gemeldeten erreichten Position; der Sliderwert allein ist nicht maßgeblich. Vorschau, Bildschritte, Suche und Frame-Details bleiben verfügbar. **Schnittkante übernehmen** ist deaktiviert; die Schnittliste und ein vorgemerkter Anfang bleiben unverändert. Das gilt auch bei vorhandenen, aber abgewählten Bereichen oder einer ausgewählten Zeile ohne Start-/Endkante. Mit ausgewählter Kante öffnet weiterhin die bisherige Kantenbearbeitung. [Prüfbericht und separate Prüffassung](FRAME-LUPE-UNTERSUCHUNGSMODUS-20261014.md).
 
 - **Links/Rechts** und die Buttons **−1/+1**: ein tatsächlich analysierter Frame.
 - **−10/+10**: zehn Frames; mit Strg zwanzig. **Strg+Links/Rechts**: zwanzig Frames.

@@ -405,7 +405,7 @@ public sealed class NamingSettingsViewModelTests
                 block => block.Value));
 
         Assert.Equal(
-            "Sliders [28.08.2026]",
+            "Sliders",
             viewModel.Preview);
     }
 }

@@ -284,6 +284,7 @@
                                                    SeekRequested="CutTimelineTrack_SeekRequested"
                                                    MediaDuration="{Binding MediaDuration}"
                                                    RemoveSegments="{Binding RemoveSegments}"
+                                                   KeyframePositions="{Binding DataContext.Positions, ElementName=KeyframeButtons}"
                                                    SelectedRemoveSegment="{Binding SelectedRemoveSegment, Mode=TwoWay}" />
                     </StackPanel>
 
@@ -303,6 +304,7 @@
                                 Margin="0,0,10,8"
                                 Padding="14,0"
                                 IsEnabled="{Binding CanStepFrame}"
+                                ToolTip="−20 Bilder (Strg+Klick)"
                                 Click="StepBackwardFramesButton_Click"
                                 Content="−10 Bilder" />
 
@@ -330,9 +332,21 @@
                                 Margin="0,0,10,8"
                                 Padding="14,0"
                                 IsEnabled="{Binding CanStepFrame}"
+                                ToolTip="+20 Bilder (Strg+Klick)"
                                 Click="StepForwardFramesButton_Click"
                                 Content="+10 Bilder" />
 
+                        <StackPanel x:Name="KeyframeButtons" Orientation="Horizontal" Margin="0,0,8,8"
+                                    Visibility="{Binding IsSupported, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Button Content="◀ K" Width="48" Height="36" Margin="0,0,4,0"
+                                    IsEnabled="{Binding CanPrevious}" Click="PreviousKeyframe_Click"
+                                    ToolTip="{Binding Status, StringFormat=Vorheriger Keyframe. {0}}"
+                                    ToolTipService.ShowOnDisabled="True" />
+                            <Button Content="K ▶" Width="48" Height="36"
+                                    IsEnabled="{Binding CanNext}" Click="NextKeyframe_Click"
+                                    ToolTip="{Binding Status, StringFormat=Nächster Keyframe. {0}}"
+                                    ToolTipService.ShowOnDisabled="True" />
+                        </StackPanel>
                         <StackPanel
                                     Margin="0,0,20,8"
                                     HorizontalAlignment="Right"
@@ -405,12 +419,13 @@
                                                ElementName=CutTimelineTrack}" />
                             </StackPanel>
 
-                            <TextBlock Margin="0,3,0,0"
-                                       HorizontalAlignment="Right"
-                                       FontFamily="Consolas"
-                                       FontSize="13"
-                                       Foreground="#6B7280"
-                                       Text="{Binding FrameText}" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,3,0,0"
+                                        ToolTip="{Binding DataContext.Status, ElementName=KeyframeButtons}">
+                                <TextBlock FontFamily="Consolas" FontSize="13" Foreground="#6B7280" Text="{Binding CurrentFrameText}" />
+                                <TextBlock x:Name="KeyframeIndicator" FontFamily="Consolas" FontSize="13"
+                                           FontWeight="SemiBold" Foreground="#2563EB" Text="{Binding Indicator}" />
+                                <TextBlock FontFamily="Consolas" FontSize="13" Foreground="#6B7280" Text="{Binding TotalFrameText}" />
+                            </StackPanel>
                         </StackPanel>
                     </WrapPanel>
                 </Grid>
@@ -472,16 +487,28 @@
                             Click="SetCutEndAtMediaEndButton_Click"
                             Content="Videoende" />
 
-                    <TextBlock Margin="22,0,8,0"
-                               VerticalAlignment="Center"
-                               FontWeight="SemiBold"
-                               Foreground="#4B5563"
-                               Text="Vorgemerkter Anfang:" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="22,0,8,0"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold"
+                                   Foreground="#4B5563"
+                                   Text="Vorgemerkter Anfang:" />
 
-                    <TextBlock VerticalAlignment="Center"
-                               FontFamily="Consolas"
-                               FontWeight="SemiBold"
-                               Text="{Binding PendingStartText}" />
+                        <!-- Reserve space even for nine-digit total hours; keep the button stationary. -->
+                        <TextBlock Width="150"
+                                   VerticalAlignment="Center"
+                                   FontFamily="Consolas"
+                                   FontWeight="SemiBold"
+                                   Text="{Binding PendingStartText}" />
+
+                        <Button x:Name="FrameLoupeButton"
+                                Height="36"
+                                Margin="10,0,0,0"
+                                Padding="12,0"
+                                ToolTip="Frame-Lupe öffnen (Shift+F)"
+                                Click="FrameLoupeButton_Click"
+                                Content="🔍 Frame-Lupe" />
+                    </StackPanel>
                 </WrapPanel>
 
                 <DataGrid Grid.Row="2"

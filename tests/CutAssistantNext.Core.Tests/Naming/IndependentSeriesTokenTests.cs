@@ -27,9 +27,9 @@ public sealed class IndependentSeriesTokenTests
     }
 
     [Theory]
-    [InlineData(null, null, "Film [21.01.2021]")]
-    [InlineData("", "", "Film [21.01.2021]")]
-    [InlineData(" ", "\t", "Film [21.01.2021]")]
+    [InlineData(null, null, "Film")]
+    [InlineData("", "", "Film")]
+    [InlineData(" ", "\t", "Film")]
     [InlineData("01", null, "Film S01 [21.01.2021]")]
     [InlineData(null, "02", "Film E02 [21.01.2021]")]
     [InlineData(" ", "02", "Film E02 [21.01.2021]")]
@@ -55,10 +55,12 @@ public sealed class IndependentSeriesTokenTests
     }
 
     [Fact]
-    public void DoesNotRemoveDeliberateLiteralSeparatorsOrLiteralSE()
+    public void MoviesKeepLiteralPrefixesButOmitAllTextAfterTheTitle()
     {
-        Assert.Equal("Film - | S E x", NameTemplateRenderer.Render(
+        Assert.Equal("Film", NameTemplateRenderer.Render(
             "%Name% %S%%Staffel% - %E%%Folge% | S E x", new NameTemplateContext(Name: "Film")));
+        Assert.Equal("Vorspann - Film", NameTemplateRenderer.Render(
+            "Vorspann - %Name% - | S E x", new NameTemplateContext(Name: "Film")));
         Assert.Equal("02-13", NameTemplateRenderer.Render("%Staffel%-%Folge%",
             new NameTemplateContext(Season: "02", Episode: "13")));
     }

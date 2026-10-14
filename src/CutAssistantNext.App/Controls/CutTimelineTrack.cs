@@ -63,6 +63,15 @@ public sealed class CutTimelineTrack : FrameworkElement
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+    public static readonly DependencyProperty KeyframePositionsProperty = DependencyProperty.Register(
+        nameof(KeyframePositions), typeof(IReadOnlyList<TimeSpan>), typeof(CutTimelineTrack),
+        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+
+    public IReadOnlyList<TimeSpan>? KeyframePositions
+    {
+        get => (IReadOnlyList<TimeSpan>?)GetValue(KeyframePositionsProperty);
+        set => SetValue(KeyframePositionsProperty, value);
+    }
     public event EventHandler<TimelineSeekRequestedEventArgs>? SeekRequested;
 
     public TimeSpan? MediaDuration
@@ -124,13 +133,12 @@ public sealed class CutTimelineTrack : FrameworkElement
             3);
 
         if (!MediaDuration.HasValue ||
-            MediaDuration.Value <= TimeSpan.Zero ||
-            RemoveSegments is null)
+            MediaDuration.Value <= TimeSpan.Zero)
         {
             return;
         }
 
-        foreach (var segment in RemoveSegments)
+        foreach (var segment in RemoveSegments ?? [])
         {
             var rectangle =
                 GetSegmentRectangle(
@@ -153,6 +161,17 @@ public sealed class CutTimelineTrack : FrameworkElement
                 brush,
                 null,
                 rectangle);
+        }
+        // Merge markers in the same display column; drawing cost stays bounded by track width.
+        var columns = new HashSet<int>();
+        var pen = new Pen(Brushes.RoyalBlue, 1);
+        foreach (var position in KeyframePositions ?? [])
+        {
+            if (position < TimeSpan.Zero || position >= MediaDuration.Value) continue;
+            int column = Math.Clamp((int)Math.Floor(position.TotalSeconds / MediaDuration.Value.TotalSeconds * ActualWidth),
+                0, Math.Max(0, (int)ActualWidth - 1));
+            if (columns.Add(column)) drawingContext.DrawLine(pen, new Point(column + 0.5, 0),
+                new Point(column + 0.5, Math.Min(4, ActualHeight)));
         }
     }
 

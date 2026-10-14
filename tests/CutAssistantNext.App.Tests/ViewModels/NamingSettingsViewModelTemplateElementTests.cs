@@ -19,6 +19,7 @@ public sealed class NamingSettingsViewModelTemplateElementTests
         var context =
             new NameTemplateContext(
                 Name: "Sliders",
+                Season: "01",
                 ShortYear: "26",
                 OriginalName:
                     "Sliders_original.mp4");
@@ -59,6 +60,7 @@ public sealed class NamingSettingsViewModelTemplateElementTests
         var context =
             new NameTemplateContext(
                 Name: "Sliders",
+                Season: "01",
                 ShortYear: "26",
                 OriginalName:
                     "Sliders_original.mp4");

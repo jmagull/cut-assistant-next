@@ -1,5 +1,96 @@
 # Projektstatus
 
+## 14.10.2026 – Build 30 RC3 zum Einfrieren und Veröffentlichen freigegeben
+
+Der Nutzer gibt den aktuellen Stand ausdrücklich für Setup, Portable-ZIP, Quellen, Prüfsummen, Dokumentation, Commit, Push und Veröffentlichung frei. Neuer Paketsatz **0.3.0 · Build 30 · RC3**, Tag **v0.3.0-build30-rc3**; bisherige Releases einschließlich Build 29 bleiben unverändert. **otr-can 0.1.5** und der geprüfte Vier-DLL-libmpv-Satz werden unverändert wiederverwendet.
+
+Enthalten sind Prioritäten 1–4 mit Filmregel, Untersuchungsmodus und ausdrücklich ausgenommener AVI-Keyframe-Navigation, außerdem K vor dem Schrägstrich und **„Blaue Bereiche: Keyframes“**. Die persönliche Abschlussrückmeldung bestätigt den Gesamtstand; keine frische Setup-/VM-Abnahme oder erneuten realen Schnittauftrag daraus abgeleitet. Letzter Entwicklungsnachweis: **1215/1215 Tests**, 0 Warnungen/Fehler. Paketprüfung folgt aus festem Quellcommit in isoliertem Export. Vier vorbestehende Produktions-Lockänderungen bleiben bytegleich und aus dem Commit ausgeschlossen. [Paketprüfbericht](RELEASE-BUILD30-RC3-RESULT.md).
+## 14.10.2026 – Hinweistext „Blaue Bereiche: Keyframes“
+
+Auf Nutzerwunsch im Keyframe-Status/Tooltip **„Blaue Striche: Keyframes“** durch **„Blaue Bereiche: Keyframes“** ersetzt. Anleitung und aktueller Prüfbericht angepasst. Zeichenlogik, K-Position vor dem Schrägstrich, Navigation und AVI-Ausschluss unverändert.
+
+Separater vollständiger Release-Rebuild **0 Warnungen/0 Fehler**, **1215/1215 Tests**, keine übersprungen. Neue Prüffassung unter `.build/keyframe-label-20261014/compiled/bin/CutAssistantNext.App/release`; [Startpfad](KEYFRAME-NAVIGATION-20261014.md). Kein Restore, Version/Zähler 0.3.0/29/RC3 und vier vorbestehende Lockänderungen erhalten. Keine Commits, Pushes oder Veröffentlichung.
+
+## 14.10.2026 – K-Kennzeichen direkt hinter aktueller Framenummer
+
+Auf Nutzerwunsch steht das blaue **(K)** jetzt vor dem Schrägstrich: **Frame 36.206 (K) / ca. 210.000**. Aktuelle Framenummer und Gesamtzahl werden getrennt angezeigt und bei Frameänderungen gemeinsam aktualisiert. Keyframe-Erkennung, Navigation und AVI-Ausschluss unverändert.
+
+Separater vollständiger Release-Rebuild **0 Warnungen/0 Fehler**, **1215/1215 Tests**, keine übersprungen. Kompilierte WPF-Anzeige mit K, ohne K und unbekannten Framezahlen geprüft; tatsächliche Text-/Geometriereihenfolge korrekt, AVI weiterhin ohne K, keine Bindungsfehler. [Nachtrag und neuer Startpfad](KEYFRAME-NAVIGATION-20261014.md). Persönliche Prüfung offen. Weiterhin **0.3.0 · Build 29 · RC3**, vier vorbestehende Lockänderungen erhalten; kein Restore, Commit, Push oder Release.
+
+## 14.10.2026 – Keyframe-Navigation zur Prüfung, AVI ausdrücklich ausgenommen
+
+Priorität 4 mit kompakten **◀ K / K ▶**, blauen Strichen oben im bestehenden Schnittstreifen und pausierter **(K)**-Anzeige umgesetzt. Rote Entfernbereiche und Klickverhalten erhalten. Hintergrundindex aus ausdrücklich gekennzeichneten Keyframes mit Original-PTS; bei langen Aufnahmen bis zum Abschluss deaktivierte Sprungbuttons mit Status im Tooltip. Keine zusätzliche feste Bedienzeile.
+
+**Anschließende ausdrückliche Nutzerentscheidung:** Bei AVI keine Keyframe-Analyse, -Buttons, -Marker oder `(K)`. Erklärung im bestehenden gelben AVI-Infoblock, bisherige AVI-Frame-Lupe erhalten. Experimentelle AVI-Player-/Ursprungsanpassungen vollständig entfernt; produktiver Playback-Service unverändert.
+
+Separater Release-Rebuild **0 Warnungen/0 Fehler**, **1215/1215 Tests**, keine übersprungen (47 zusätzliche Fälle). **18 Integrationsprüfungen** mit tatsächlichen mpv-Bildern/K-Buttons, AVI-Ausschluss und intakter AVI-Lupe, drei Fenstergrößen, roten/blauen Pixeln und Abbruch; keine Bindungsfehler. Lange HD-MP4 zusätzlich vollständig analysiert: **3448 Keyframes in 26,6 s**. [Prüfbericht, Grenzen und Startpfad](KEYFRAME-NAVIGATION-20261014.md).
+
+Persönliche Prüfung offen. Kein Restore, weiter **0.3.0 · Build 29 · RC3**, vier vorbestehende Produktions-Lockänderungen erhalten, Prioritäten 1–3 enthalten. Keine Motor-/Namensmasken-/Releaseänderung, Commits oder Pushes.
+
+## 14.10.2026 – Untersuchungsmodus der Frame-Lupe persönlich abgenommen
+
+Nutzer bestätigt die Priorität-3-Prüffassung mit **„check funktioniert einwandfrei :-)“**. Die gemeldete persönliche Funktionsabnahme der Frame-Lupe ohne Schnittkante ist damit positiv abgeschlossen. Keine gesonderte Bestätigung jedes vorgeschlagenen Einzeltests oder aller Medienformate daraus abgeleitet. [Prüfbericht und Abnahme](FRAME-LUPE-UNTERSUCHUNGSMODUS-20261014.md).
+
+Nur Dokumentation aktualisiert, kein erneuter Build/Testlauf. Letzter technischer Stand **1168/1168 Tests**, **46 Integrationsprüfungen**, Release-Rebuild ohne Warnungen/Fehler. Code, Lockdateien, Version und öffentliche Veröffentlichung unverändert; keine Commits oder Pushes. Priorität 4 bleibt zurückgestellt.
+
+## 14.10.2026 – Frame-Lupe ohne Schnittkante zur persönlichen Prüfung
+
+Priorität 3 ausdrücklich freigegeben und umgesetzt: **Frame-Lupe** und **Shift+F** öffnen ohne ausgewählte Kante den **Untersuchungsmodus** an der vom Hauptplayer gemeldeten Position nach dem Pausieren. Leere Liste, abgewählte Bereiche, reine Zeilenauswahl und vorgemerkter Anfang werden unterstützt. Bestehende Analyse/Vorschau/Navigation gemeinsam verwendet; keine künstliche Kante. **Schnittkante übernehmen** dauerhaft gesperrt und zusätzlich im Dialog abgesichert. Mit ausgewählter Kante bleibt die bisherige Bearbeitung erhalten.
+
+Kein Restore, separater vollständiger Release-Rebuild **0 Warnungen/0 Fehler**, **1168/1168 Tests**, keine übersprungen (34 zusätzliche Fälle). **46 Integrationsprüfungen** mit echten nummerierten MP4-/AVI-Bildern, kompilierten Dialogen in Normal-/Kleinansicht, wirkungslosem Untersuchungs-Übernahmeklick, erfolgreicher Kantenübernahme und Hauptfenster-Öffnungen bei simuliertem erreichtem Playerstand/abweichendem Sliderziel. Keine Bindungsfehler. [Prüfbericht, Grenzen und Startpfad](FRAME-LUPE-UNTERSUCHUNGSMODUS-20261014.md).
+
+Persönliche Prüfung offen. Lokale Fassung weiter **0.3.0 · Build 29 · RC3**, vier Produktions-Lockänderungen bytegleich, Prioritäten 1–2 erhalten. Keine Motor-/Namensmasken-/Releaseänderung, Commits oder Pushes. Priorität 4 bleibt zurückgestellt.
+
+## 14.10.2026 – Reiner Filmname in allen drei Namensdialogen bestätigt
+
+Nutzer bestätigt mit **„cutlist erzeugen check“** und Screenshot auch die Vorschau im Dialog **Cutlist erzeugen**: Staffel, Folge und Folgentitel leer, Vorschau ausschließlich **Die Hart 2**. Zusammen mit den vorigen MP4Box-/otr-can-Rückmeldungen ist die Filmnamenanzeige in allen drei Dialogen persönlich positiv geprüft. Weitere persönliche Prüfungen und Gesamtabschluss bleiben offen; das Bild zeigt noch keinen Speichervorgang.
+
+Nur Dokumentation aktualisiert, Diffprüfung erfolgreich; letzter technischer Stand **1134/1134 Tests**, Release-Rebuild ohne Warnungen/Fehler. Kein neuer Build/Testlauf. Code, Lockdateien, Version und öffentliche Release-Dateien unverändert.
+
+## 14.10.2026 – Reiner Filmname auch im otr-can-Dialog bestätigt
+
+Nutzer bestätigt per Screenshot und **„otr-can check, teste weiter“**: Im Dialog **Schneiden – otr-can** sind die drei Serienfelder leer; der Ausgabedateiname lautet ausschließlich **Die Hart 2**. Damit ist die persönliche Namensprüfung in beiden Schneidedialogen positiv dokumentiert. Weitere persönliche Tests laufen; der Gesamtabschluss bleibt offen.
+
+Nur Dokumentation geändert, Diffprüfung erfolgreich; letzter technischer Stand **1134/1134 Tests**, Release-Rebuild ohne Warnungen/Fehler. Kein neuer Build/Testlauf und keine Code-, Lockdatei-, Versions- oder Releaseänderung.
+
+## 14.10.2026 – Filmname nach Neuerzeugen im MP4Box-Dialog bestätigt
+
+Nutzer bestätigt per Screenshot: Im Dialog **Schneiden – MP4Box** sind Staffel, Folge und Folgentitel leer; nach **Aus obigen Eingaben neu erzeugen** steht als Ausgabedateiname ausschließlich **Die Hart 2**. Erfolgreiche persönliche Teilprüfung der korrigierten Filmregel. Weitere persönliche Tests laufen; die Gesamtprüfung bleibt offen. Daraus wird kein bereits ausgeführter Schnitt oder geprüfter Dateiname auf dem Datenträger abgeleitet.
+
+Nur Dokumentation aktualisiert, kein neuer Build/Testlauf. Letzter technischer Stand: **1134/1134 Tests**, Release-Rebuild ohne Warnungen/Fehler. Prioritäten 3–4 bleiben zurückgestellt.
+
+## 14.10.2026 – Filmregel präzisiert und Screenshot-Fall korrigiert
+
+Nutzer meldet **Die Hart 2- [12.10.2026]** trotz leerer Serienfelder und stellt ausdrücklich klar: **Alles hinter dem Filmnamen muss weg**, wenn Staffel, Folge und Folgentitel leer sind. Damit ersetzt die Klarstellung die vorherige Annahme, Zusatzfelder wie Datum bei Filmen beizubehalten. Der zentrale Renderer beendet die automatische Filmmaske nun am Ende des `%Name%`-Bausteins; bei Serienangaben bleibt die vollständige Maske aktiv. Gespeicherte Masken, manuelle Ausgabenamen und geschützte Vorschläge bleiben erhalten; bewusste Neuerzeugung verwendet die neue Regel.
+
+Bildfall vorab exakt als Fehler reproduziert, dann korrigiert. Vollständiger separater Release-Rebuild **0 Warnungen/0 Fehler**, **1134/1134 Tests**, keine übersprungen. Gespeicherte Bildmaske, Cutlist-Datei und beide Schnittdienste mit simulierten Werkzeugen geprüft. **Echter WPF-Cutlist-Dialog** bei 720×720 und 600×400: tatsächlicher Neuerzeugen-Klick → **Die Hart 2**, Serienvorschau weiterhin vollständig, zurückgeleerte Serienfelder wieder nur Titel; keine Bindungsfehler. [Aktuelle Regel, Prüfbild und Startpfad](NAMENSMASKEN-LEERE-SERIENFELDER-20261014.md). Persönliche Wiederholungsprüfung noch offen.
+
+Lokale Prüffassung weiterhin **0.3.0 · Build 29 · RC3**. Vier Produktions-Lockänderungen bytegleich, öffentliche Pakete/Tags/Prüfsummen und Motoren unverändert. Keine neue Abhängigkeit, Commits, Pushes oder Veröffentlichungen. Prioritäten 3–4 bleiben zurückgestellt.
+
+## 14.10.2026 – Filmnamen ohne leere Serientrennzeichen zur persönlichen Prüfung
+
+Priorität 2 ausdrücklich freigegeben und zentral im Core-`NameTemplateRenderer` umgesetzt: Sind **Staffel, Folge und Folgentitel sämtlich leer** (auch Whitespace), entfallen leere Serienbausteine nach dem Name-Baustein samt ihren Trennzeichen. **Ghostbusters - - → Ghostbusters**, vollständige Serie weiterhin **Kimi - S01E03 - Der Besuch**. Zusätzliche Datums-, Sender-, Originalnamensfelder und sinnvoller Literaltext bleiben erhalten; gespeicherte Masken, manuelle Ausgabenamen und geschützte Cutlist-Vorschläge werden nicht umgeschrieben. Teilweise ausgefüllte Serienfelder behalten das bisherige Verhalten.
+
+Separater vollständiger Release-Rebuild **0 Warnungen/0 Fehler**, **1127/1127 Tests**, keine übersprungen (51 zusätzliche Fälle). Cutlist-Dateien tatsächlich gespeichert/wieder gelesen und beide Schnittdienste mit simulierten Werkzeugen ausgeführt, einschließlich exakter Dateiendung und manueller Namen. Kein erneuter echter Videoschnitt behauptet. [Regel, Prüfungen und Startpfad](NAMENSMASKEN-LEERE-SERIENFELDER-20261014.md). Persönliche Abnahme noch offen.
+
+Weiterhin lokale Prüffassung **0.3.0 · Build 29 · RC3**, vier Produktions-Lockänderungen bytegleich erhalten; öffentliche Pakete, MP4Box und otr-can 0.1.5 unverändert. Keine neue Abhängigkeit, Versionserhöhung, Commits, Pushes oder Veröffentlichungen. Abgenommener Lupenbutton und Strg-Klick-Tooltips enthalten; Prioritäten 3–4 bleiben zurückgestellt.
+
+## 14.10.2026 – Lupenbutton persönlich bestätigt, Strg-Klick-Hinweise ergänzt
+
+Nutzer bestätigt Darstellung und Funktion des neuen Lupenbuttons als sehr gut, einschließlich Hinweis ohne angeklickte Schnittkante und Tooltip mit Shift+F. Persönliche Abnahme des Lupenbuttons damit positiv festgehalten; keine zusätzliche getrennte Skalierungs- oder Tastaturprüfung daraus abgeleitet.
+
+Auf ausdrücklichen Folgeauftrag in `MainWindow.xaml` zwei Tooltips ergänzt: **−20 Bilder (Strg+Klick)** bei **−10 Bilder**, **+20 Bilder (Strg+Klick)** bei **+10 Bilder**. Vorhandene Strg-Klick-Funktion und dynamische Buttonbeschriftung unverändert. XAML und Click-Zuordnungen geprüft, Formatierung/Diffprüfung erfolgreich; separater Release-Rebuild **0 Warnungen/0 Fehler**, **1076/1076 Tests**, keine übersprungen. Persönliche Tooltip-Abnahme am 14.10.2026 mit „funktioniert tip top :-)“ bestätigt; [Startpfad und Nachtrag](FRAME-LUPENBUTTON-20261014.md).
+
+Weiterhin **0.3.0 · Build 29 · RC3**, vier Produktions-Lockänderungen bytegleich erhalten, öffentliche Release-Pakete und Motoren unverändert. Keine Commits, Pushes oder Veröffentlichungen; Prioritäten 2–4 warten weiterhin auf gesonderte Freigabe.
+
+## 14.10.2026 – Sichtbarer Frame-Lupenbutton zur persönlichen Prüfung
+
+Ausschließlich Priorität 1 der Shoutbox-Rückmeldungen umgesetzt: **🔍 Frame-Lupe** in der Schnittliste unmittelbar nach dem vollständigen Anzeigebereich **Vorgemerkter Anfang**, mit Tooltip **Frame-Lupe öffnen (Shift+F)**. Fester Zeitbereich von 150 WPF-Einheiten für Gesamtstunden bis zur `TimeSpan`-Grenze; Button und Anzeige bleiben zusammen. Die vier Schnittbuttons und das vorhandene Umbruchverhalten bleiben erhalten, keine zusätzliche feste Layoutzeile. Button und unverändertes Shift+F verwenden dieselbe Öffnungsroutine samt Kanten-/Medien-/Ladeschutz.
+
+Lokale Prüffassung **0.3.0 · Build 29 · RC3** in separatem Ausgabeordner: Release-Rebuild **0 Warnungen/0 Fehler**, **1076/1076 Tests**, keine übersprungen. **72 WPF-Layoutfälle** bei drei Zeilenbreiten und 100/125/150/200 Prozent Skalierung; Zeit bis zu neunstelligen Gesamtstunden vollständig, Button-/Schnittbuttonpositionen beim Wertwechsel stabil. Öffnungsprüfung ohne Kante und mit simulierter gültiger Kante für Button und Shift+F-Zielroutine erfolgreich, Ladesperre und unveränderte Schnittwerte bestätigt, keine Bindungsfehler. [Prüfbericht und Startpfad](FRAME-LUPENBUTTON-20261014.md).
+
+Persönliche Prüfung mit echter Aufnahme noch offen. Die vier vorbestehenden Produktions-Lockänderungen bytegleich erhalten; Version, Zähler 29, eingefrorene öffentliche Pakete und Motoren unverändert. Keine Commits, Pushes oder Veröffentlichungen. Prioritäten 2–4 warten auf gesonderte Freigabe.
+
 ## 13.10.2026 – 0.3.0 Build 29 RC3 öffentlich veröffentlicht
 
 Nach positiver Produktiv-/VM-/Portable-Abnahme auf Nutzerauftrag als [öffentliche Vorabversion](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build29-rc3) freigegeben. Annotierter Tag am gebauten Quellcommit **ce4bc15b118d8080a78d7db5396db3ccf830ca89**, unveränderter **otr-can 0.1.5**. Setup, Portable, CAN-/Motorquellen, libmpv-Prüf-/Relink-Pakete und SHA256SUMS: **sieben unveränderte Uploads** im Entwurf und nach Freigabe anhand von GitHub-Größen/SHA-256-Digests geprüft. Release-Text und Remote-Quelltag stimmen. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD29-RC3.md).

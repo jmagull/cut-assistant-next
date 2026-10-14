@@ -89,6 +89,9 @@ public sealed class PlaybackViewModelTests
             new PlaybackViewModel(service);
 
         Assert.Equal(expected, viewModel.FrameText);
+        var parts = expected.Split(" / ", StringSplitOptions.None);
+        Assert.Equal(parts[0], viewModel.CurrentFrameText);
+        Assert.Equal(" / " + parts[1], viewModel.TotalFrameText);
     }
 
     [Theory]
@@ -181,9 +184,9 @@ public sealed class PlaybackViewModelTests
             nameof(PlaybackViewModel.EstimatedFrameCount),
             changedProperties);
 
-        Assert.Contains(
-            nameof(PlaybackViewModel.FrameText),
-            changedProperties);
+        Assert.Contains(nameof(PlaybackViewModel.CurrentFrameText), changedProperties);
+        Assert.Contains(nameof(PlaybackViewModel.TotalFrameText), changedProperties);
+        Assert.Contains(nameof(PlaybackViewModel.FrameText), changedProperties);
 
         Assert.Contains(
             nameof(PlaybackViewModel.Volume),
@@ -711,7 +714,7 @@ public sealed class PlaybackViewModelTests
         Assert.Equal(0, propertyChangedCount);
     }
 
-    private sealed class StubMediaPlayerService
+    internal sealed class StubMediaPlayerService
         : IMediaPlayerService
     {
         public MediaPlayerState State { get; set; } =

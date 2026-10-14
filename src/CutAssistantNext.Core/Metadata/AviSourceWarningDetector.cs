@@ -27,6 +27,8 @@ public static class AviSourceWarningDetector
         return containerNotice +
             "Bei älteren AVI-Aufnahmen können Bildfehler, ungenaue Bildsprünge oder Tonversatz " +
             "bereits im Original auftreten. Bitte prüfe die Originalwiedergabe und das " +
-            "Schnittergebnis. Die Bearbeitung bleibt möglich.";
+            "Schnittergebnis. Die Bearbeitung bleibt möglich. " +
+            "Die Keyframe-Anzeige und Keyframe-Navigation im Hauptfenster sind für AVI nicht verfügbar. " +
+            "Die Frame-Lupe bleibt nutzbar.";
     }
 }

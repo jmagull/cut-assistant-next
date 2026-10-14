@@ -42,8 +42,12 @@ public sealed class CutlistGenerationViewModelFactoryTests
                 analysis);
 
         Assert.Equal(
-            "Sliders Perfekte Piloten [13.08.2026]",
+            "Sliders Perfekte Piloten",
             viewModel.SuggestedMovieName);
+
+        Assert.Equal("2026", viewModel.CreateNamingState().NameContext.Year);
+        Assert.Equal("08", viewModel.CreateNamingState().NameContext.Month);
+        Assert.Equal("13", viewModel.CreateNamingState().NameContext.Day);
 
         var notice =
             Assert.Single(
@@ -95,8 +99,7 @@ public sealed class CutlistGenerationViewModelFactoryTests
                 analysis);
 
         Assert.Equal(
-            "Greys Anatomy S22E09 Ploetzlich Onkel [05.08.2026] | " +
-            "Greys Anatomy S22E09 Ploetzlich Onkel [05.08.2026].mp4",
+            "Greys Anatomy S22E09 Ploetzlich Onkel [05.08.2026]",
             viewModel.SuggestedMovieName);
 
         Assert.Empty(

@@ -11,6 +11,32 @@ public static class NameTemplateRenderer
         ArgumentException.ThrowIfNullOrWhiteSpace(template);
         ArgumentNullException.ThrowIfNull(context);
 
+        if (string.IsNullOrWhiteSpace(context.Season) &&
+            string.IsNullOrWhiteSpace(context.Episode) &&
+            string.IsNullOrWhiteSpace(context.EpisodeTitle))
+        {
+            context = context with { Season = null, Episode = null, EpisodeTitle = null };
+            template = RemoveMovieSuffix(template, context);
+        }
+
+        return RenderTokens(template, context);
+    }
+
+    private static string RemoveMovieSuffix(string template, NameTemplateContext context)
+    {
+        var title = Regex.Match(template, "%Name(?::[^%]*)?%");
+        if (!title.Success)
+        {
+            return template;
+        }
+
+        // Validate the complete mask even when the movie rule omits its suffix.
+        _ = RenderTokens(template, context);
+        return template[..(title.Index + title.Length)];
+    }
+
+    private static string RenderTokens(string template, NameTemplateContext context)
+    {
         var result = ReplacePrefixedTokens(
             template,
             context);
@@ -80,9 +106,14 @@ public static class NameTemplateRenderer
     {
         return Regex.Replace(
             template,
-            "%(?<name>[^:%]+):(?<prefix>[^%]*)%",
+            "%(?<name>[^:%]+)(?::(?<prefix>[^%]*))?%",
             match =>
             {
+                if (!match.Groups["prefix"].Success)
+                {
+                    return match.Value;
+                }
+
                 var tokenName =
                     match.Groups["name"].Value;
 

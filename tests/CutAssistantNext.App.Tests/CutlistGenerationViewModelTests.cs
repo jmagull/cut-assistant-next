@@ -71,7 +71,8 @@ public sealed class CutlistGenerationViewModelTests
             Name: "Tatort",
             Year: "2026",
             Month: "08",
-            Day: "13");
+            Day: "13",
+            Season: "01");
 
         var viewModel =
             CreateViewModel(

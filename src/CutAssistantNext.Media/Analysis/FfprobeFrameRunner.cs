@@ -4,7 +4,7 @@ using CutAssistantNext.Core.Media;
 
 namespace CutAssistantNext.Media.Analysis;
 
-public sealed class FfprobeFrameRunner : IFrameAnalysisRunner
+public sealed class FfprobeFrameRunner : IFrameAnalysisRunner, IKeyframeAnalysisRunner
 {
     private readonly string _ffprobePath;
 
@@ -56,9 +56,28 @@ public sealed class FfprobeFrameRunner : IFrameAnalysisRunner
         TimeSpan intervalEnd,
         CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested();
         var arguments = BuildArguments(mediaFilePath, videoStreamIndex, intervalStart, intervalEnd);
+        return await RunCoreAsync(mediaFilePath, videoStreamIndex, arguments, false, cancellationToken).ConfigureAwait(false);
+    }
 
+    public Task<VideoFrameWindow> RunKeyframesAsync(string mediaFilePath, int videoStreamIndex,
+        CancellationToken cancellationToken = default) =>
+        RunCoreAsync(mediaFilePath, videoStreamIndex, BuildKeyframeArguments(mediaFilePath, videoStreamIndex), true, cancellationToken);
+
+    internal static IReadOnlyList<string> BuildKeyframeArguments(string path, int streamIndex)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
+        ArgumentOutOfRangeException.ThrowIfNegative(streamIndex);
+        return ["-v", "error", "-select_streams", streamIndex.ToString(CultureInfo.InvariantCulture),
+            "-skip_frame", "nokey", "-skip_idct", "all", "-show_frames",
+            "-show_entries", "frame=media_type,stream_index,pts,best_effort_timestamp,key_frame:" +
+            "stream=index,codec_type,time_base,start_time:format=start_time", "-of", "json", path];
+    }
+
+    private async Task<VideoFrameWindow> RunCoreAsync(string mediaFilePath, int videoStreamIndex,
+        IReadOnlyList<string> arguments, bool rejectDecoderErrors, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
         if (!File.Exists(_ffprobePath))
         {
             throw new FileNotFoundException("ffprobe.exe wurde nicht gefunden.", _ffprobePath);
@@ -117,7 +136,7 @@ public sealed class FfprobeFrameRunner : IFrameAnalysisRunner
         var errorOutput = await errorTask.ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (process.ExitCode != 0)
+        if (process.ExitCode != 0 || (rejectDecoderErrors && !string.IsNullOrWhiteSpace(errorOutput)))
         {
             throw new InvalidOperationException(
                 $"Frameanalyse: ffprobe wurde mit Exit-Code {process.ExitCode} beendet." +
