@@ -1,0 +1,89 @@
+Cut Assistant Next – Übergabe nach Veröffentlichung Build 30 RC3
+Stand: 14.10.2026
+
+Projekt: C:\Users\joerg\Documents\GitHub\cut-assistant-next
+Branch: main
+Öffentliche Vorabversion: CAN 0.3.0 · Build 30 · RC3 mit otr-can 0.1.5
+Release: https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build30-rc3
+Release-Tag: v0.3.0-build30-rc3
+Gebauter CAN-Quellcommit: 57878bd90b3e044218f8f157b6922552a170f1d4
+Motorquellcommit: 2a474629836d52023bf37cbbdb309ccd1c23acf3
+App-Dateiversion: 0.3.0.30; lokaler Buildzähler: 30
+Veröffentlicht: 14.10.2026 22:57:30 Europe/Berlin
+
+GESICHERTER STAND
+
+Der Nutzer hat nach den positiven Rückmeldungen ausdrücklich das Einfrieren, Setup/ZIP, Dokumentation, Commit, Push und Veröffentlichung beauftragt. Alles abgeschlossen. Release ist öffentlich, als Vorabversion gekennzeichnet, kein Entwurf und keine stabile Latest-Ausgabe. Annotierter Tag zeigt auf genau den gebauten Quellcommit. Spätere Dokumentationscommits auf main ändern die Release-Pakete nicht.
+
+Sieben geprüfte Downloads:
+- CutAssistantNext-0.3.0-Build30-win-x64-Setup-RC3.exe
+- CutAssistantNext-0.3.0-Build30-win-x64-RC3.zip
+- CutAssistantNext-0.3.0-Build30-source-RC3.zip
+- otr-can-0.1.5-source.zip
+- CAN-libmpv-v0.41.0-pruefpaket-2026-09-26.zip
+- CAN-libmpv-v0.41.0-relink-2026-09-26.zip
+- SHA256SUMS.txt
+
+Lokaler Paketsatz: artifacts/release-build30-RC3
+Sechs Archive und Prüfsummendatei sind unverändert und schreibgeschützt. Alle sieben GitHub-Uploads vor und nach öffentlicher Freigabe anhand Name, Uploadstatus, Größe und SHA-256-Digest geprüft. Release-Text ebenfalls geprüft.
+
+ENTHALTENE VERBESSERUNGEN AUS DEN SHOUTBOX-RÜCKMELDUNGEN
+
+1. Sichtbarer Frame-Lupe-Button in der Schnittliste unmittelbar rechts vom festen Anzeigebereich „Vorgemerkter Anfang“. Shift+F erhalten. Tooltip erläutert Öffnen/Shortcut. ±10-Bilder-Buttons erläutern Strg+Klick für ±20 Bilder.
+
+2. Reine Filmnamen: Sind Staffel, Folge und Folgentitel leer/Whitespace, endet die automatisch angewendete Maske nach dem Name-Baustein. Alles hinter dem Filmtitel entfällt, auch Datum/Sender/Trennzeichen. Der Titel selbst bleibt unverändert. Bei irgendeiner Serienangabe bleibt die ganze Maske aktiv. Geschützte/manuelle Namensvorschläge nur durch bewusstes „Aus obigen Eingaben neu erzeugen“ ersetzen. Anzeige persönlich bestätigt für MP4Box, otr-can und Cutlist erzeugen.
+
+3. Untersuchungsmodus der Frame-Lupe: Ohne ausgewählte Kante an der tatsächlich gemeldeten Playerposition nach Pause öffnen. Kein künstlicher Schnittpunkt, keine Übernahme; Schnittliste und vorgemerkter Anfang bleiben erhalten. Mit ausgewählter Kante bisheriger Bearbeitungsmodus. Nutzer bestätigt einwandfreie Funktion.
+
+4. MP4-Keyframes im Hauptfenster: Blaue Bereiche im vorhandenen Schnittstreifen, kompakte ◀ K / K ▶-Buttons, blaues (K) direkt hinter aktueller Framenummer, also vor dem Schrägstrich: Frame 36.206 (K) / ca. 210.000. Hinweistext exakt „Blaue Bereiche: Keyframes“. Dichte Marker können optisch zu blauen Bereichen verschmelzen; helle Zwischenräume sind keine Keyframe-Marker. Hintergrundanalyse mit Abbruch bei Medienwechsel/Schließen, keine Änderung der Schnittwerte.
+
+AVI wurde auf ausdrücklichen Nutzerwunsch von der Hauptfenster-Keyframe-Analyse, den Buttons, Markern und K ausgenommen. Der bestehende gelbe AVI-Infoblock erklärt dies. Die bisherige AVI-Frame-Lupe bleibt erhalten. Keine experimentellen AVI-Playeranpassungen übernommen.
+
+PRÜFSTAND
+
+- Isolierter Quell-Snapshot mit committed Lockdateien, Locked Restore.
+- Release-Build: 0 Warnungen, 0 Fehler.
+- 1215/1215 CAN-Tests bestanden, keine übersprungen: Core 196, Cutlists 72, App 794, Media 153.
+- 249 Dateien aus dem fertigen Portable-ZIP vollständig gegen das Publish-Manifest geprüft.
+- 527 Dateien im CAN-Quellen-ZIP; Quellenmanifest/Herkunft geprüft.
+- Setup erfolgreich mit Inno Setup 7 aus genau dem Publish-Ordner gebaut.
+- 18 native Integrationsprüfungen gegen die entpackte Portable-Ausgabe erfolgreich, einschließlich tatsächlicher MP4-Bildnummern, AVI-Ausschluss und erhaltener AVI-Lupe, drei Fenstergrößen, Timeline und Abbruch. Keine WPF-Bindungsfehler.
+- Zusätzlich drei kompilierte K-Textzustände/Geometrie und aktuelle Legende geprüft, ebenfalls keine Bindungsfehler.
+- Frühere Untersuchungsmodus-Prüfung: 46 Integrationsfälle. Lange HD-MP4 zuvor: 3448 Keyframes in 26,6 s. Kein neuer vollständiger Langlauf dafür erforderlich.
+- otr-can 0.1.5 unverändert: Version und mp3-aac-v1 geprüft; kein neuer Rust-Build behauptet.
+- Keine erneute Build-30-Installation/Deinstallation in VM oder neue reale Schnitt-/Tonspurabnahme durchgeführt. Persönliche Build-29-Installations-/Motorabnahmen nicht als neue Build-30-Prüfung ausgeben.
+
+VERBINDLICHE ERHALTUNG
+
+Build 30 ist jetzt eingefroren. Keine Release-Dateien, Prüfsummen oder Tags nachträglich ändern. Build 29 und Build 16 sind ebenfalls unverändert geblieben; Metadaten und Asset-Hashes vor/nach Veröffentlichung verglichen. Neue Änderungen erst auf gesonderten Auftrag; keine eigenmächtigen Versionswechsel, Commits, Pushes oder Veröffentlichungen aus dieser Übergabe ableiten.
+
+Vier vorbestehende lokale Änderungen an packages.lock.json unbedingt erhalten, nicht zurücksetzen, überschreiben, bereinigen oder ungefragt committen. Diese Änderungen sind nicht Teil des Quell-Snapshots. Alle acht lokalen Lockdateien waren nach Paketierung/Veröffentlichung bytegleich mit ihrem Ausgangsstand. Erwarteter lokaler Git-Status: ausschließlich diese vier modifizierten Produktions-Lockdateien:
+
+src/CutAssistantNext.App/packages.lock.json
+SHA-256: 9A6ABFEEE31807A5953A4B4E482E968DAFA5E424C84885049C734775F07F8769
+src/CutAssistantNext.Core/packages.lock.json
+SHA-256: A4364D81A6DE2707D66FBCED18FBBC926C882AB96E1D1AEBBB17E871285B9D75
+src/CutAssistantNext.Cutlists/packages.lock.json
+SHA-256: 4A3A0B358C765B0BF3ADDD43B9699A8BBBFAAAA55BB30DA1C09556E1F7E82470
+src/CutAssistantNext.Media/packages.lock.json
+SHA-256: A8124678BFA1394B4918E0E9E20647EEDF48FFF3854BCF9AC7F2D6D278A68651
+
+VOR NEUER ARBEIT LESEN
+
+AGENTS.md, README.md, docs/STATUS.md, docs/TAGEBUCH.md, danach Git-Status prüfen. Maßgebliche Nachweise:
+- docs/RELEASE-BUILD30-RC3-RESULT.md
+- docs/RELEASE-PUBLICATION-BUILD30-RC3.md
+- docs/NUTZERANLEITUNG.md
+- docs/FRAME-LUPENBUTTON-20261014.md
+- docs/NAMENSMASKEN-LEERE-SERIENFELDER-20261014.md
+- docs/FRAME-LUPE-UNTERSUCHUNGSMODUS-20261014.md
+- docs/KEYFRAME-NAVIGATION-20261014.md
+
+Lokale technische Belege: .build/freeze-build30-20261014
+Gebauter Quell-Snapshot: artifacts/source-build30-RC3/CutAssistantNext-0.3.0-Build30-source-RC3
+
+BEKANNTE GRENZEN / NÄCHSTER SCHRITT
+
+AVI bleibt experimentell; bekannte Zeitstempelauffälligkeiten und der dokumentierte MP4Box-Befund bei zwei gleichartigen AAC-Spuren bleiben offen. Ein unabhängiger absoluter Hauptplayer-/Lupen-Frameabgleich und sonstige ältere offene Aufgaben sind durch diese Veröffentlichung nicht zusätzlich gelöst. Keyframe-Analyse langer Dateien kann einige Zeit dauern. .NET 10 Desktop Runtime x64, für otr-can VC++ v14 x64 und externe Werkzeuge bleiben separat erforderlich.
+
+Der aktuelle Auftrag ist abgeschlossen. Kein weiterer Funktionsauftrag offen; vor neuen Änderungen auf den nächsten Nutzerauftrag warten. Eine spätere persönliche Setup-/Portable-Prüfung der neuen Ausgabe kann zusätzlich dokumentiert werden. Bestehende Freigaben und Prüfgrenzen dabei korrekt auseinanderhalten.

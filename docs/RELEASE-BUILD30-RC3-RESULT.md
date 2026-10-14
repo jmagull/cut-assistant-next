@@ -17,4 +17,26 @@ Vor Paketierung: **1215/1215 CAN-Tests**, 0 übersprungen, Release-Rebuild ohne 
 
 Unverändert: otr-can 0.1.5, libmpv 0.41.0 und externe Werkzeuge. Keine neue Produktionsabhängigkeit. Bekannte AVI-Zeitstempelgrenzen und der dokumentierte MP4Box-Befund mit zwei gleichartigen AAC-Spuren bleiben bestehen. .NET 10 Desktop Runtime x64 und externe FFmpeg-/MP4Box-/FFMS2-Werkzeuge bleiben separat einzurichten.
 
-Paket- und Veröffentlichungsnachweise werden nach erfolgreicher Prüfung mit konkreten Hashes, Quellcommit und öffentlichen Links ergänzt. Es werden keine ungeprüften Installationen oder Schnittergebnisse behauptet.
+Die Paketprüfung ist erfolgreich abgeschlossen; die [öffentliche Vorabversion](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build30-rc3) wurde am 14.10.2026 um **22:57:30 Europe/Berlin** freigegeben. [Veröffentlichungsnachweis mit sämtlichen SHA-256-Werten](RELEASE-PUBLICATION-BUILD30-RC3.md).
+
+## Tatsächlich gebaut und geprüft
+
+- CAN-Quellcommit **57878bd90b3e044218f8f157b6922552a170f1d4**, annotierter Tag **v0.3.0-build30-rc3**. Remote-Tag auf diesen Quellcommit geprüft. Spätere reine Dokumentationscommits ändern die Pakete nicht.
+- Isolierter Git-Export, **526 Quellen-Manifesteinträge**, **527 Dateien im Quellen-ZIP** einschließlich des Manifests. Vier Produktions-Lockdateien per Git-Blob-ID identisch mit dem Quellcommit; lokale Änderungen nicht übernommen.
+- Locked Restore, Release-Build **0 Warnungen/0 Fehler**, anschließend **1215/1215 Tests**, 0 Fehler/übersprungen: Core 196, Cutlists 72, App 794, Media 153. Tests erst nach erfolgreich beendetem Build.
+- Framework-dependent win-x64-Publish, App-Dateiversion **0.3.0.30**, RC3 im tatsächlichen Hauptfenster. Separat benötigte .NET-Laufzeit sowie externe FFmpeg-/ffprobe-/MP4Box-/FFMS2-Werkzeuge nicht versehentlich eingebettet. Lizenz-/Drittanbieterhinweise vorhanden; vier libmpv-DLLs identisch mit dem geprüften Satz.
+- **249 Portable-Dateien** aus dem fertigen ZIP extrahiert und jede SHA-256 mit dem Publish-Manifest verglichen; keine zusätzlichen Dateien. Setup mit **Inno Setup 7** aus genau diesem Publish-Ordner erfolgreich kompiliert.
+- Gegen die entpackten Programmdateien erneut **18 native MP4-/AVI-Ausschluss-/Layout-Prüfungen**: acht Keyframe-Sprünge mit unabhängig ausgelesener sichtbarer Bildnummer, Wegschritt entfernt K, unveränderte Schnittpläne; drei AVI-Varianten ohne Hauptfenster-Keyframes bei weiterhin nutzbarer Lupe; drei Fenstergrößen, rote/blaue Pixel, kontrollierter Analyseabbruch. Keine WPF-Bindungsfehler. Prüfbilder gesichtet.
+- Ergänzende kompilierte Prüfung der drei tatsächlichen Textzustände **Frame 36.206 (K) / ca. 210.000**, ohne K und unbekannte Zahlen. K-Geometrie vor dem Schrägstrich korrekt, AVI ausgenommen und Status enthält exakt **„Blaue Bereiche: Keyframes“**. Keine Bindungsfehler.
+- Unveränderte Motor-EXE **otr-can 0.1.5**, SHA-256 **FC6ED6568880A995F3D141A9378AA2CE28ADE8DC0E257E93DC972799BB1324A6**, Version und Fähigkeit `mp3-aac-v1` erfolgreich abgefragt. Motorquelle **2a474629836d52023bf37cbbdb309ccd1c23acf3**; kein neuer Rust-Build/Testlauf nötig oder behauptet.
+- Sechs Archive und `SHA256SUMS.txt` eingefroren und schreibgeschützt. Alle sieben GitHub-Dateien im Entwurf und nach öffentlicher Freigabe auf eindeutigen Namen, Uploadstatus, Größe und SHA-256-Digest geprüft; Release-Text identisch mit Freigabehinweisen.
+- Öffentliche Build-29- und Build-16-Releases einschließlich Metadaten/Asset-IDs/Hashes unverändert. Lokale Build-29-Archive unverändert. Alle acht lokalen Lockdateien bytegleich; nur die vier vorbestehenden Produktionsänderungen bleiben im Arbeitsverzeichnis. Lokaler Buildzähler nach erfolgreichem Build/Pakettest ausdrücklich auf **30** fortgeschrieben.
+
+## Lokale Belege
+
+- `artifacts/release-build30-RC3`: Setup, Portable, CAN-/Motor-/libmpv-Quellen, sechs Archivprüfsummen, Publish-Manifest, Herkunft und Paketlogs/TRX.
+- `artifacts/source-build30-RC3/CutAssistantNext-0.3.0-Build30-source-RC3`: tatsächlich gebauter Quell-Snapshot.
+- `artifacts/portable-build30-proof`: unverändert entpacktes Portable-ZIP für die kompilierten Prüfungen.
+- `.build/freeze-build30-20261014`: Quell-/Paketnachweise, Upload-Erwartungen, REST-Nachweise vor/nach Freigabe, UI-Prüfhelfer/-Bilder und Erhaltungsnachweise.
+
+Keine frische Installation/Deinstallation in der VM, keine neue persönliche Build-30-Schnittabnahme und keine zusätzlichen realen Ausgabe-/Tonspurprüfungen durchgeführt. Die dokumentierten bisherigen Abnahmen bleiben gültig für ihren jeweiligen Stand. Die nach Veröffentlichung aktualisierte Repository-Dokumentation steht separat vom unveränderten Quell-Snapshot.

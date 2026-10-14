@@ -8,7 +8,7 @@ Bei geeigneten H.264-AVI-Dateien bietet **Schneiden otr-can** eine ausdrücklich
 
 Ein alter Motor wird für MP3-Aufträge mit einem Upgrade-Hinweis abgelehnt. Ungeeignete Zeitstrukturen und fehlende Samples werden nicht automatisch repariert. Bitte jede Tonspur und alle Übergänge kontrollieren. Die neue Teufelsbrigade-Datei wurde am 12.10.2026 persönlich positiv abgenommen: Anfang, Ende, alle Schnittübergänge sowie Ton und Bild. Eine bereits im vorherigen Ergebnis vorhandene Video-Zeitstempelauffälligkeit bleibt offen. [Prüfstand und Grenzen](AVI-OTR-CAN-MP3-20261012.md).
 
-Die folgenden Kapitel beschreiben die **0.3.0 · Build 30 · RC3**-Ausgabe mit Kontrollplayer, AVI-Frame-Lupe, Suchsprunghalbierung bei Richtungswechsel, FFmpeg-Versionskontrolle und gespeichertem Maskenwechsel ohne Neustart. Die ältere Build-16-Ausgabe bleibt unverändert verfügbar. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD29-RC3.md).
+Die folgenden Kapitel beschreiben die **0.3.0 · Build 30 · RC3**-Ausgabe mit Kontrollplayer, AVI-Frame-Lupe, Suchsprunghalbierung bei Richtungswechsel, FFmpeg-Versionskontrolle und gespeichertem Maskenwechsel ohne Neustart. Build 30 ergänzt die sichtbare Frame-Lupe, den Untersuchungsmodus, reine Filmnamen und die MP4-Keyframe-Navigation. Ältere Ausgaben bleiben unverändert verfügbar. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD30-RC3.md).
 
 Stand: 14.10.2026. Diese Anleitung beschreibt **0.3.0 · Build 30 · RC3** für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
@@ -78,9 +78,9 @@ Unter **Einstellungen → Namensmaske …** legst du fest, wie CAN vorgeschlagen
 
 Ab Build 20 stehen **S**, **Staffel**, **E**, **Folge** und **x** als einzelne Bausteine zur Verfügung. Damit lassen sich beispielsweise **S01E01**, **4x01**, **04x01** oder mit einem Bindestrich **02-13** zusammensetzen. Eine Eingabe **1** bleibt **1**, **01** bleibt **01**; CAN ergänzt keine führenden Nullen.
 
-**S** und **E** erscheinen nur bei vorhandenem zugehörigem Wert. **x** erscheint nur, wenn Staffel und Folge vorhanden sind. Die neue CAN-Standardmaske erzeugt **Ghostbusters S01E01 Hexenprobleme [19.09.2026]**. In der lokalen Prüffassung vom 14.10.2026 ergibt ein Film ohne Serienangaben ausschließlich **Die Teufelsbrigade**. Bei vorhandenen Serienangaben bleibt die vollständige Maske mit Zusatzfeldern aktiv.
+**S** und **E** erscheinen nur bei vorhandenem zugehörigem Wert. **x** erscheint nur, wenn Staffel und Folge vorhanden sind. Die neue CAN-Standardmaske erzeugt **Ghostbusters S01E01 Hexenprobleme [19.09.2026]**. Ab Build 30 RC3 ergibt ein Film ohne Serienangaben ausschließlich **Die Teufelsbrigade**. Bei vorhandenen Serienangaben bleibt die vollständige Maske mit Zusatzfeldern aktiv.
 
-Die lokale Prüffassung vom **14.10.2026** beendet den automatisch erzeugten Namensvorschlag nach dem **Name**-Baustein, wenn **Staffel, Folge und Folgentitel alle leer** sind. Hinter dem Filmnamen entfällt dann alles: Serienbausteine, Trennzeichen, Datum, Sender und weitere Zusätze. So entsteht **Die Hart 2** statt **Die Hart 2- [12.10.2026]**. Der Text im Namen selbst bleibt erhalten.
+**Build 30 RC3** beendet den automatisch erzeugten Namensvorschlag nach dem **Name**-Baustein, wenn **Staffel, Folge und Folgentitel alle leer** sind. Hinter dem Filmnamen entfällt dann alles: Serienbausteine, Trennzeichen, Datum, Sender und weitere Zusätze. So entsteht **Die Hart 2** statt **Die Hart 2- [12.10.2026]**. Der Text im Namen selbst bleibt erhalten.
 
 Sobald mindestens ein Serienfeld ausgefüllt ist, verwendet CAN weiterhin die vollständige Maske. Die gespeicherte Maske und Datums-/Serienmetadaten werden durch die Filmregel nicht verändert. Ein Präfix, das die Maske ausdrücklich vor dem Namen vorsieht, bleibt erhalten.
 
@@ -204,7 +204,7 @@ Dauerzelle und Texteingaben erhalten keine neue Rechtsklick-Navigation. Zur gena
 
 Rechtsklick auf Anfang: 3 Sekunden zurück. Rechtsklick auf Ende: 3 Sekunden vorwärts. So lassen sich die Filmszenen unmittelbar vor und nach einem Schnittbereich kontrollieren.
 
-### Keyframes im Hauptfenster – lokale Prüffassung vom 14.10.2026
+### Keyframes im Hauptfenster – ab Build 30 RC3
 
 Nach dem Laden einer MP4 analysiert CAN Keyframes im Hintergrund. Bei langen Aufnahmen kann das einige Zeit dauern; die normale Wiedergabe bleibt verfügbar. **◀ K** und **K ▶** neben den Bildschritten sind bis zum Abschluss deaktiviert; ihr Tooltip zeigt den Zustand. Anschließend springen sie zum vorherigen/nächsten analysierten Keyframe und pausieren die Wiedergabe. Die blauen Bereiche am oberen Rand der Schnitt-Timeline markieren diese Positionen; die roten Entfernbereiche bleiben erhalten. Mehrere Keyframes können bei langen Filmen in derselben Bildspalte liegen.
 
@@ -216,7 +216,7 @@ Nach dem Laden einer MP4 analysiert CAN Keyframes im Hintergrund. Bei langen Auf
 
 Klicke in der Schnitttabelle auf die **Startzeit oder Endzeit** und drücke **Shift+F**. Die Frame-Lupe öffnet diese Kante in einem eigenen Fenster. FFprobe und FFmpeg müssen unter **Einstellungen → FFmpeg-Werkzeuge** verfügbar sein.
 
-**Lokale Erweiterung vom 14.10.2026 (Priorität 3):** Mit **Frame-Lupe** in der Schnittliste oder **Shift+F** kannst du auch ohne ausgewählte Kante untersuchen. Navigiere im Hauptplayer zur gewünschten Stelle. Die Lupe öffnet im **Untersuchungsmodus** an der vom Player gemeldeten erreichten Position; der Sliderwert allein ist nicht maßgeblich. Vorschau, Bildschritte, Suche und Frame-Details bleiben verfügbar. **Schnittkante übernehmen** ist deaktiviert; die Schnittliste und ein vorgemerkter Anfang bleiben unverändert. Das gilt auch bei vorhandenen, aber abgewählten Bereichen oder einer ausgewählten Zeile ohne Start-/Endkante. Mit ausgewählter Kante öffnet weiterhin die bisherige Kantenbearbeitung. [Prüfbericht und separate Prüffassung](FRAME-LUPE-UNTERSUCHUNGSMODUS-20261014.md).
+**Ab Build 30 RC3:** Mit **Frame-Lupe** in der Schnittliste oder **Shift+F** kannst du auch ohne ausgewählte Kante untersuchen. Navigiere im Hauptplayer zur gewünschten Stelle. Die Lupe öffnet im **Untersuchungsmodus** an der vom Player gemeldeten erreichten Position; der Sliderwert allein ist nicht maßgeblich. Vorschau, Bildschritte, Suche und Frame-Details bleiben verfügbar. **Schnittkante übernehmen** ist deaktiviert; die Schnittliste und ein vorgemerkter Anfang bleiben unverändert. Das gilt auch bei vorhandenen, aber abgewählten Bereichen oder einer ausgewählten Zeile ohne Start-/Endkante. Mit ausgewählter Kante öffnet weiterhin die bisherige Kantenbearbeitung. [Entwicklungsprüfung](FRAME-LUPE-UNTERSUCHUNGSMODUS-20261014.md), [veröffentlichte Pakete](RELEASE-PUBLICATION-BUILD30-RC3.md).
 
 - **Links/Rechts** und die Buttons **−1/+1**: ein tatsächlich analysierter Frame.
 - **−10/+10**: zehn Frames; mit Strg zwanzig. **Strg+Links/Rechts**: zwanzig Frames.

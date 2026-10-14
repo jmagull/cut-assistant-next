@@ -1,5 +1,10 @@
 # Projektstatus
 
+## 14.10.2026 – Build 30 RC3 öffentlich eingefroren
+
+**0.3.0 · Build 30 · RC3** mit unverändertem **otr-can 0.1.5** auf Nutzerauftrag gebaut und [veröffentlicht](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build30-rc3). Quellcommit **57878bd90b3e044218f8f157b6922552a170f1d4**, annotierter Tag **v0.3.0-build30-rc3** auf genau diesem Stand. Setup, Portable, CAN-/Motor-/libmpv-Quellen/Relink und Prüfsummen: sieben Dateien vor/nach Freigabe mit GitHub-Digests geprüft, lokal eingefroren/schreibgeschützt.
+
+Isolierter Locked Restore, Release-Build **0 Warnungen/0 Fehler**, **1215/1215 Tests**, 0 übersprungen. **249 Portable-Dateien**, **527 Quellen-ZIP-Dateien**, 18 native Integrationsprüfungen gegen das entpackte Paket sowie K-Anzeige/Legende erfolgreich. Neue Setup-/VM-Abnahme nicht behauptet. Versionszähler nach erfolgreicher Paketprüfung von 29 auf **30** gesetzt; öffentliche Build-29-/Build-16-Ausgaben und lokale Build-29-Pakete unverändert. Alle acht Lockdateien bytegleich, vier vorbestehende Produktionsänderungen nicht committet. Keine Motor-/Abhängigkeitsänderung. [Paketprüfbericht](RELEASE-BUILD30-RC3-RESULT.md), [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD30-RC3.md), [Übergabetext](UEBERGABE-BUILD30-RC3-20261014.txt). Keine weitere Funktionsänderung für diesen eingefrorenen Stand.
 ## 14.10.2026 – Build 30 RC3 zum Einfrieren und Veröffentlichen freigegeben
 
 Der Nutzer gibt den aktuellen Stand ausdrücklich für Setup, Portable-ZIP, Quellen, Prüfsummen, Dokumentation, Commit, Push und Veröffentlichung frei. Neuer Paketsatz **0.3.0 · Build 30 · RC3**, Tag **v0.3.0-build30-rc3**; bisherige Releases einschließlich Build 29 bleiben unverändert. **otr-can 0.1.5** und der geprüfte Vier-DLL-libmpv-Satz werden unverändert wiederverwendet.
