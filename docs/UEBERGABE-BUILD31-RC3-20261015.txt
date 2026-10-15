@@ -1,9 +1,15 @@
-Cut Assistant Next – Übergabe nach Freeze Build 31 RC3
+Cut Assistant Next – Übergabe nach Veröffentlichung Build 31 RC3
 Stand: 15.10.2026
 
 AKTUELLER AUFTRAG
 
-Der Nutzer hat den persönlich geprüften Stand ausdrücklich zum Einfrieren, Erstellen von Setup, ZIP und weiteren Artefakten sowie Commit/Push freigegeben. Der Quellstand und die Pakete sind fertig. Eine GitHub-Release-Veröffentlichung ist kein Teil dieses ausgeführten Freeze-Schrittes; die zuletzt veröffentlichte Vorabversion bleibt Build 30.
+Der Nutzer hat den persönlich geprüften Stand ausdrücklich zum Einfrieren, Erstellen von Setup, ZIP und weiteren Artefakten sowie Commit/Push freigegeben. Der Quellstand und die Pakete sind fertig. Nach erfolgreicher persönlicher Paketabnahme hat der Nutzer die Veröffentlichung ausdrücklich beauftragt. Build 31 ist jetzt öffentlich als Vorabversion veröffentlicht; alle sieben Uploads vor/nach Freigabe geprüft.
+
+ÖFFENTLICHE VERÖFFENTLICHUNG
+
+Release: https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build31-rc3
+Release-ID: 414191680
+Vorabversion, kein Entwurf, keine stabile Latest-Ausgabe. Alle sieben Dateien nach Name, Status, Bytes und GitHub-SHA-256-Digest im Entwurf und nach Freigabe geprüft. Release-Text geprüft. Build 30/29/16 samt Metadaten und Asset-Digests unverändert. Veröffentlichung ohne neuen Build oder Paketänderung. Nachweis: docs/RELEASE-PUBLICATION-BUILD31-RC3.md.
 
 FESTER QUELL-/BINÄRSTAND
 
@@ -54,4 +60,4 @@ Vor Änderungen AGENTS.md, README.md, docs/STATUS.md, docs/TAGEBUCH.md und relev
 
 Eingefrorene Build-31-Archive, Prüfsummen und Quelltag nicht nachträglich verändern. Build 30 und ältere Pakete erhalten. Kein neuer Motorbuild oder bitidentischer Reproduzierbarkeitsnachweis behauptet. .NET 10 Desktop Runtime x64, Medienwerkzeuge und für otr-can VC++ v14 x64 bleiben extern erforderlich.
 
-Die persönliche Setup-/VM-/Deinstallations- und Portable-Abnahme dieses Pakets ist inzwischen bestätigt. Keine allgemeine AVI-Reparatur oder Freigabe sämtlicher Codec-/Audio-/Decoderfälle; bekannter MP4Box-Zwei-AAC-Befund bleibt bestehen. AVI experimentell. Die gemeldete Paketabnahme ist abgeschlossen; eine öffentliche GitHub-Release-Veröffentlichung bleibt ein gesonderter entsprechender Nutzerauftrag.
+Die persönliche Setup-/VM-/Deinstallations- und Portable-Abnahme dieses Pakets ist inzwischen bestätigt. Keine allgemeine AVI-Reparatur oder Freigabe sämtlicher Codec-/Audio-/Decoderfälle; bekannter MP4Box-Zwei-AAC-Befund bleibt bestehen. AVI experimentell. Persönliche Paketabnahme und ausdrücklich beauftragte öffentliche Veröffentlichung sind abgeschlossen. Pakete, Prüfsummen und Quelltag bleiben unverändert; weitere Änderungen nur auf neuen Nutzerauftrag.

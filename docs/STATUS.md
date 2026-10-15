@@ -1,5 +1,11 @@
 # Projektstatus
 
+## 15.10.2026 – Build 31 RC3 öffentlich veröffentlicht
+
+Nach persönlicher VM-/Setup-/Portable-/Deinstallations- und Schnittabnahme beauftragt der Nutzer ausdrücklich die Veröffentlichung. **0.3.0 · Build 31 · RC3** unverändert als [öffentliche Vorabversion](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build31-rc3) freigegeben, kein Entwurf und keine stabile Latest-Ausgabe. Quelltag **v0.3.0-build31-rc3** auf **de8ec0d598b095d85e4559e7fd83012534959637**. Alle sieben Uploads vor/nach Freigabe mit eindeutigen Namen, Status, Größe und SHA-256-Digest geprüft, Release-Text identisch.
+
+Build 30/29/16 samt Assets unverändert, lokale eingefrorene Dateien und alle acht Lockdateien erhalten, Buildzähler weiter 31. Kein neuer Build, Testlauf oder Motorwechsel; technischer Nachweis weiterhin **1308/1308 Tests**. [Veröffentlichung und Download-Prüfsummen](RELEASE-PUBLICATION-BUILD31-RC3.md), [Paketbericht und Grenzen](RELEASE-BUILD31-RC3-RESULT.md).
+
 ## 15.10.2026 – Build 31 persönlich in der VM und mit beiden Motoren abgenommen
 
 Nach Paketierung bestätigt der Nutzer **Setup in der VM, Deinstallation und Portable-ZIP in der VM erfolgreich**, außerdem **Videoschnitt mit MP4Box und otr-can**. Die zuvor offenen persönlichen Paketprüfungen sind damit gemeldet. Keine zusätzliche vollständige Film-/Tonspurprüfung aller Ausgaben oder getrennte Setup-/Portable-Zuordnung jedes Motorlaufs daraus abgeleitet. [Abnahme und Grenzen](RELEASE-BUILD31-RC3-RESULT.md).
