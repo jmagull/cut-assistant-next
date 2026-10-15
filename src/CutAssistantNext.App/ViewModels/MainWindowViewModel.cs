@@ -17,6 +17,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     private readonly IAppLogger _logger;
 
     private bool _isAnalyzing;
+    private MediaAnalysisResult? _analysisResult;
     private string _statusMessage = "Bereit.";
     private string _errorMessage = string.Empty;
     private string _sourceWarningMessage = string.Empty;
@@ -57,6 +58,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             if (SetProperty(ref _isAnalyzing, value))
             {
                 OnPropertyChanged(nameof(CanAnalyze));
+                OnPropertyChanged(nameof(CanOpenFrameLoupe));
             }
         }
     }
@@ -133,7 +135,28 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         private set => SetProperty(ref _mediaDuration, value);
     }
 
-    public MediaAnalysisResult? AnalysisResult { get; private set; }
+    public MediaAnalysisResult? AnalysisResult
+    {
+        get => _analysisResult;
+        private set
+        {
+            if (SetProperty(ref _analysisResult, value))
+            {
+                OnPropertyChanged(nameof(CanOpenFrameLoupe));
+                OnPropertyChanged(nameof(FrameLoupeToolTip));
+                OnPropertyChanged(nameof(IsPlayerFrameSearchVisible));
+            }
+        }
+    }
+
+    public bool IsPlayerFrameSearchVisible => AnalysisResult is not { } analysis || !AviSourceWarningDetector.IsAvi(analysis);
+
+    public bool CanOpenFrameLoupe => !IsAnalyzing &&
+        AnalysisResult is { VideoStreams.Count: > 0 } analysis && !AviSourceWarningDetector.IsAvi(analysis);
+
+    public string FrameLoupeToolTip => AnalysisResult is { } analysis && AviSourceWarningDetector.IsAvi(analysis)
+        ? AviSourceWarningDetector.FrameLoupeUnavailableMessage
+        : "Frame-Lupe öffnen (Shift+F)";
 
     public string VideoCodec
     {

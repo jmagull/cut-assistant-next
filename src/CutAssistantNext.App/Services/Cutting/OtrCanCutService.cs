@@ -76,6 +76,29 @@ internal sealed class OtrCanCutService : ICutEngine
             foreach (var path in new[] { index, index + "_track00.tc.txt", index + "_track00.kf.txt" })
                 if (!File.Exists(path) || new FileInfo(path).Length == 0)
                     throw new InvalidOperationException("FFMS2 hat keinen vollständigen Videoindex erzeugt.");
+            Report(CutProgressKind.Status, "Bildzeiten werden vor dem OTR-CAN-Aufruf geprüft …");
+            try
+            {
+                using var timecodes = File.OpenText(index + "_track00.tc.txt");
+                var frames = await FfmsTimecodeValidator.ValidateForOtrCanAsync(timecodes, token).ConfigureAwait(false);
+                Report(CutProgressKind.Output, $"Bildzeiten geprüft: {frames:N0} Frames, eindeutig und aufsteigend; 25/50-fps-Zeitstruktur bestätigt.");
+            }
+            catch (InvalidDataException error)
+            {
+                Report(CutProgressKind.Output, "Zeitstempelprüfung: " + error.Message);
+                throw new InvalidOperationException(
+                    "OTR-CAN wurde nicht gestartet: Für diese Datei liegen keine verlässlich aufsteigenden Bildzeiten vor. " +
+                    "Bitte verwende gegebenenfalls MP4Box und prüfe anschließend Bild, Ton und Schnittübergänge.", error);
+            }
+            catch (NotSupportedException error)
+            {
+                Report(CutProgressKind.Output, "Zeitstrukturprüfung: " + error.Message);
+                throw new InvalidOperationException(
+                    "OTR-CAN wurde nicht gestartet: Diese Aufnahme hat keine vom Motor unterstützte Zeitstruktur. " +
+                    "Er benötigt konstante 25 oder 50 Bilder pro Sekunde ab Zeit null. " +
+                    "Bitte verwende gegebenenfalls MP4Box und prüfe anschließend Bild, Ton und Schnittübergänge.", error);
+            }
+            token.ThrowIfCancellationRequested();
             Report(CutProgressKind.Status, "OTR-CAN schneidet mit CPU-Encoding …");
             await _runner.RunAsync(_tools.Engine,
                 ["-vv", "cut-can", "--input", request.SourceFilePath, "--output", pending,

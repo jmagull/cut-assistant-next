@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using CutAssistantNext.Core.Media;
+using CutAssistantNext.Core.Metadata;
 using CutAssistantNext.Media.Analysis;
 using CutAssistantNext.Media.Playback;
 
@@ -53,10 +54,10 @@ internal sealed class KeyframeNavigationViewModel : INotifyPropertyChanged, IDis
         }
         var lifetime = _lifetime = new CancellationTokenSource();
         var token = lifetime.Token;
-        bool avi = (media.FormatName ?? "").Split(',', StringSplitOptions.TrimEntries).Contains("avi", StringComparer.OrdinalIgnoreCase);
+        bool avi = AviSourceWarningDetector.IsAvi(media);
         if (avi)
         {
-            Status = "Keyframe-Anzeige und Keyframe-Navigation sind für AVI nicht verfügbar. Die Frame-Lupe bleibt nutzbar.";
+            Status = "Keyframe-Anzeige und Keyframe-Navigation sind für AVI nicht verfügbar. " + AviSourceWarningDetector.FrameLoupeUnavailableMessage;
             Publish();
             return;
         }

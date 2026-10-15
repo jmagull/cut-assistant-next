@@ -220,7 +220,7 @@ public sealed class MovieSeriesNamingWorkflowTests : IDisposable
             var args = arguments.ToArray();
             if (args[0] == "-c")
                 foreach (var suffix in new[] { "", "_track00.tc.txt", "_track00.kf.txt" })
-                    File.WriteAllText(args[3] + suffix, "index");
+                    File.WriteAllText(args[3] + suffix, suffix == "_track00.tc.txt" ? "# timecode format v2\n0.00\n40.00\n80.00\n" : "index");
             else File.WriteAllText(args[Array.IndexOf(args, "--output") + 1], "complete");
             return Task.CompletedTask;
         }

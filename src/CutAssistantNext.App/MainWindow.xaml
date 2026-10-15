@@ -244,8 +244,10 @@
 
                 <Grid x:Name="PlaybackControls"
                       Grid.Row="2"
-                      Margin="0,14,0,0">
+                      Margin="0,14,0,0"
+                      IsEnabled="{Binding DataContext.CanInteract, ElementName=PlayerFrameSearchControls}">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
@@ -428,6 +430,17 @@
                             </StackPanel>
                         </StackPanel>
                     </WrapPanel>
+                    <WrapPanel x:Name="PlayerFrameSearchControls" Grid.Row="2" Grid.ColumnSpan="8" Margin="0,4,0,0"
+                               Visibility="{Binding DataContext.IsPlayerFrameSearchVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                               ToolTip="{Binding Status}" ToolTipService.ShowOnDisabled="True">
+                        <TextBlock Text="Halbierungssuche" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,4" />
+                        <Button Content="{Binding SearchLeftText}" IsEnabled="{Binding CanSearch}"
+                                Height="32" Padding="10,0" Margin="0,0,6,4" Click="SearchLeft_Click" />
+                        <Button Content="{Binding SearchRightText}" IsEnabled="{Binding CanSearch}"
+                                Height="32" Padding="10,0" Margin="0,0,6,4" Click="SearchRight_Click" />
+                        <Button Content="Zurücksetzen" IsEnabled="{Binding CanReset}"
+                                Height="32" Padding="10,0" Margin="0,0,0,4" Click="ResetPlayerSearch_Click" />
+                    </WrapPanel>
                 </Grid>
             </Grid>
         </Border>
@@ -505,7 +518,9 @@
                                 Height="36"
                                 Margin="10,0,0,0"
                                 Padding="12,0"
-                                ToolTip="Frame-Lupe öffnen (Shift+F)"
+                                IsEnabled="{Binding DataContext.CanOpenFrameLoupe, RelativeSource={RelativeSource AncestorType=Window}}"
+                                ToolTip="{Binding DataContext.FrameLoupeToolTip, RelativeSource={RelativeSource AncestorType=Window}}"
+                                ToolTipService.ShowOnDisabled="True"
                                 Click="FrameLoupeButton_Click"
                                 Content="🔍 Frame-Lupe" />
                     </StackPanel>

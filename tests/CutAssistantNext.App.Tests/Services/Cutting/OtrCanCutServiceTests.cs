@@ -235,10 +235,105 @@ public sealed class OtrCanCutServiceTests : IDisposable
         Assert.False(VideoPreparation.ConvertsMp3(CutEngineKind.Mp4Box, mp3));
     }
 
+    [Theory]
+    [InlineData("avi", "0\n40\n40\n")]
+    [InlineData("avi", "0\n80\n40\n")]
+    [InlineData("mp4", "0\n40\n40\n")]
+    [InlineData("mp4", "0\n80\n40\n")]
+    [InlineData("avi", "NaN\n")]
+    [InlineData("avi", "")]
+    public async Task InvalidTimesPreventEngineStartPreserveFilesAndCleanWork(string format, string body)
+    {
+        var working = Path.Combine(_root, "working.mp4");
+        File.WriteAllText(working, "prepared original");
+        var request = Request(overwrite: true).WithSourceFilePath(working);
+        File.WriteAllText(request.OutputFilePath, "existing");
+        var runner = new FakeRunner { Timecodes = "# timecode format v2\n" + body };
+        var updates = new List<CutProgressUpdate>();
+        var service = Service(runner, (path, _) => Task.FromResult(Analysis(format: path == request.OriginalFilePath ? format : "mp4")));
+
+        var error = await Assert.ThrowsAsync<InvalidOperationException>(() => service.RunAsync(request, new ImmediateProgress(updates)));
+
+        Assert.Contains("OTR-CAN wurde nicht gestartet", error.Message);
+        Assert.Contains("MP4Box", error.Message);
+        Assert.Contains("Bild, Ton und Schnittübergänge", error.Message);
+        Assert.IsType<InvalidDataException>(error.InnerException);
+        Assert.Single(runner.Calls);
+        Assert.Equal(_tools.Indexer, runner.Calls[0].Path);
+        Assert.Equal(working, runner.Calls[0].Args[2]);
+        Assert.Equal("original", File.ReadAllText(request.OriginalFilePath));
+        Assert.Equal("prepared original", File.ReadAllText(working));
+        Assert.Equal("existing", File.ReadAllText(request.OutputFilePath));
+        Assert.Empty(Directory.GetDirectories(_root));
+        Assert.Empty(Directory.GetFiles(_root, ".can-otr-*"));
+        Assert.DoesNotContain(updates, update => update.Message.Contains("OTR-CAN schneidet"));
+    }
+
+    [Theory]
+    [InlineData("0.00\n40.00\n80.00\n")]
+    [InlineData("0.00\n20.00\n40.00\n")]
+    public async Task ValidPreparedAviTimesStillAllowEngineStart(string body)
+    {
+        var working = Path.Combine(_root, "working.mp4");
+        File.WriteAllText(working, "prepared original");
+        var request = Request().WithSourceFilePath(working);
+        var runner = new FakeRunner { Timecodes = "# timecode format v2\n" + body };
+        var updates = new List<CutProgressUpdate>();
+        var service = Service(runner, (path, _) => Task.FromResult(Analysis(format: path == request.OriginalFilePath ? "avi" : "mp4")));
+
+        await service.RunAsync(request, new ImmediateProgress(updates));
+
+        Assert.Equal(2, runner.Calls.Count);
+        Assert.Equal(_tools.Engine, runner.Calls[1].Path);
+        Assert.Equal("complete", File.ReadAllText(request.OutputFilePath));
+        Assert.Contains(updates, update => update.Message.StartsWith("Bildzeiten geprüft:"));
+        Assert.Empty(Directory.GetDirectories(_root));
+    }
+
+    [Theory]
+    [InlineData("avi", "0\n840\n880\n920\n")]
+    [InlineData("mp4", "0\n840\n880\n920\n")]
+    [InlineData("avi", "0\n40\n80\n160\n")]
+    [InlineData("mp4", "0\n33.333\n66.666\n")]
+    [InlineData("avi", "20.00\n53.3667\n100.5\n")]
+    [InlineData("avi", "0\n")]
+    public async Task UnsupportedCfrPreventsMotorEvenWithNominal50FpsMetadata(string format, string body)
+    {
+        var working = Path.Combine(_root, "working.mp4");
+        File.WriteAllText(working, "prepared original");
+        var request = Request(overwrite: true).WithSourceFilePath(working);
+        File.WriteAllText(request.OutputFilePath, "existing");
+        var runner = new FakeRunner { Timecodes = "# timecode format v2\n" + body };
+        var updates = new List<CutProgressUpdate>();
+        var service = Service(runner, (path, _) => Task.FromResult(Analysis(format: path == request.OriginalFilePath ? format : "mp4") with
+        {
+            VideoStreams = [new(0, "h264", null, 320, 180, null, null, 50, "tt")]
+        }));
+
+        var error = await Assert.ThrowsAsync<InvalidOperationException>(() => service.RunAsync(request, new ImmediateProgress(updates)));
+
+        Assert.IsType<NotSupportedException>(error.InnerException);
+        Assert.Contains("OTR-CAN wurde nicht gestartet", error.Message);
+        Assert.Contains("konstante 25 oder 50", error.Message);
+        Assert.Contains("MP4Box", error.Message);
+        Assert.Single(runner.Calls);
+        Assert.Equal(_tools.Indexer, runner.Calls[0].Path);
+        Assert.Equal("existing", File.ReadAllText(request.OutputFilePath));
+        Assert.Equal("original", File.ReadAllText(request.OriginalFilePath));
+        Assert.Equal("prepared original", File.ReadAllText(working));
+        Assert.Empty(Directory.GetDirectories(_root));
+        Assert.Empty(Directory.GetFiles(_root, ".can-otr-*"));
+        Assert.DoesNotContain(updates, u => u.Message.Contains("OTR-CAN schneidet"));
+    }
+    private sealed class ImmediateProgress(List<CutProgressUpdate> updates) : IProgress<CutProgressUpdate>
+    {
+        public void Report(CutProgressUpdate value) => updates.Add(value);
+    }
     internal static string Value(string[] args, string flag) => args[Array.IndexOf(args, flag) + 1];
     private sealed class FakeRunner : ICutToolRunner
     {
         public List<(string Path, string[] Args)> Calls { get; } = [];
+        public string Timecodes { get; init; } = "# timecode format v2\n0.00\n40.00\n80.00\n";
         public bool FailIndex { get; init; }
         public bool IncompleteIndex { get; init; }
         public bool FailEngine { get; init; }
@@ -250,7 +345,7 @@ public sealed class OtrCanCutServiceTests : IDisposable
             Calls.Add((path, args));
             if (Calls.Count == 1)
             {
-                foreach (var suffix in new[] { "", "_track00.tc.txt", "_track00.kf.txt" }) File.WriteAllText(args[3] + suffix, "index");
+                foreach (var suffix in new[] { "", "_track00.tc.txt", "_track00.kf.txt" }) File.WriteAllText(args[3] + suffix, suffix == "_track00.tc.txt" ? Timecodes : "index");
                 if (IncompleteIndex) File.Delete(args[3] + "_track00.kf.txt");
                 if (FailIndex) throw new IOException("index failed");
             }

@@ -46,6 +46,8 @@ public sealed class PlaybackViewModel
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    internal event EventHandler? NavigationRequested;
+
     public MediaPlayerState State =>
         _mediaPlayerService.State;
 
@@ -140,6 +142,7 @@ public sealed class PlaybackViewModel
             return;
         }
 
+        NavigationRequested?.Invoke(this, EventArgs.Empty);
         _seekPositionSeconds = PositionSeconds;
         _isSeeking = true;
 
@@ -213,6 +216,7 @@ public sealed class PlaybackViewModel
     public Task PlayAsync(
         CancellationToken cancellationToken = default)
     {
+        NavigationRequested?.Invoke(this, EventArgs.Empty);
         return _mediaPlayerService.PlayAsync(
             cancellationToken);
     }
@@ -251,6 +255,7 @@ public sealed class PlaybackViewModel
     public Task StepForwardAsync(
         CancellationToken cancellationToken = default)
     {
+        NavigationRequested?.Invoke(this, EventArgs.Empty);
         return _mediaPlayerService.StepForwardAsync(
             cancellationToken);
     }
@@ -258,6 +263,7 @@ public sealed class PlaybackViewModel
     public Task StepBackwardAsync(
         CancellationToken cancellationToken = default)
     {
+        NavigationRequested?.Invoke(this, EventArgs.Empty);
         return _mediaPlayerService.StepBackwardAsync(
             cancellationToken);
     }
@@ -265,6 +271,7 @@ public sealed class PlaybackViewModel
     public Task StepBackwardTenFramesAsync(
         CancellationToken cancellationToken = default)
     {
+        NavigationRequested?.Invoke(this, EventArgs.Empty);
         return _mediaPlayerService.StepFramesAsync(
             -10,
             cancellationToken);
@@ -273,6 +280,7 @@ public sealed class PlaybackViewModel
     public Task StepForwardTenFramesAsync(
         CancellationToken cancellationToken = default)
     {
+        NavigationRequested?.Invoke(this, EventArgs.Empty);
         return _mediaPlayerService.StepFramesAsync(
             10,
             cancellationToken);
@@ -281,6 +289,7 @@ public sealed class PlaybackViewModel
     public Task StepBackwardTwentyFramesAsync(
         CancellationToken cancellationToken = default)
     {
+        NavigationRequested?.Invoke(this, EventArgs.Empty);
         return _mediaPlayerService.StepFramesAsync(
             -20,
             cancellationToken);
@@ -289,6 +298,7 @@ public sealed class PlaybackViewModel
     public Task StepForwardTwentyFramesAsync(
         CancellationToken cancellationToken = default)
     {
+        NavigationRequested?.Invoke(this, EventArgs.Empty);
         return _mediaPlayerService.StepFramesAsync(
             20,
             cancellationToken);

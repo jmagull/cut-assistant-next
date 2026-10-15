@@ -1,5 +1,11 @@
 # Nutzeranleitung – Cut Assistant Next
 
+## Build 31 RC3 – Hauptplayersuche und AVI-Schutz
+
+Stand: **15.10.2026 · 0.3.0 · Build 31 · RC3**, Motor **otr-can 0.1.5**. Die Halbierungssuche steht direkt im Hauptplayer zur Verfügung. Bei erkanntem AVI ist sie ausgeblendet, die Frame-Lupe deaktiviert; nach MP4-Wechsel wieder verfügbar. Vor dem otr-can-Schnitt werden eindeutige Bildzeiten sowie Nullstart und das vollständige 25-/50-fps-Zeitraster geprüft. Ungeeignete Aufnahmen werden mit verständlicher Meldung abgelehnt. MP4Box bleibt separat nutzbar. [Pakete und Prüfgrenzen](RELEASE-BUILD31-RC3-RESULT.md).
+
+Die folgenden älteren Einführungen beschreiben die Herkunft der Funktionen; für AVI gelten die Einschränkungen von Build 31.
+
 ## Neu in Build 16 RC3: AVI/MP3 mit otr-can
 
 Diese Ergänzung ist in **CAN Build 16 RC3 mit dem beigefügten Motor otr-can 0.1.5** enthalten. Unter **OTR-CAN-Werkzeuge …** wird die neue Motor-EXE ausgewählt. FFmpeg/ffprobe und FFMS2 bleiben separat eingerichtet, MP4Box bleibt Standard.
@@ -8,11 +14,11 @@ Bei geeigneten H.264-AVI-Dateien bietet **Schneiden otr-can** eine ausdrücklich
 
 Ein alter Motor wird für MP3-Aufträge mit einem Upgrade-Hinweis abgelehnt. Ungeeignete Zeitstrukturen und fehlende Samples werden nicht automatisch repariert. Bitte jede Tonspur und alle Übergänge kontrollieren. Die neue Teufelsbrigade-Datei wurde am 12.10.2026 persönlich positiv abgenommen: Anfang, Ende, alle Schnittübergänge sowie Ton und Bild. Eine bereits im vorherigen Ergebnis vorhandene Video-Zeitstempelauffälligkeit bleibt offen. [Prüfstand und Grenzen](AVI-OTR-CAN-MP3-20261012.md).
 
-Die folgenden Kapitel beschreiben die **0.3.0 · Build 30 · RC3**-Ausgabe mit Kontrollplayer, AVI-Frame-Lupe, Suchsprunghalbierung bei Richtungswechsel, FFmpeg-Versionskontrolle und gespeichertem Maskenwechsel ohne Neustart. Build 30 ergänzt die sichtbare Frame-Lupe, den Untersuchungsmodus, reine Filmnamen und die MP4-Keyframe-Navigation. Ältere Ausgaben bleiben unverändert verfügbar. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-BUILD30-RC3.md).
+Die folgenden Kapitel beschreiben **0.3.0 · Build 31 · RC3** mit Kontrollplayer, Halbierungssuche, MP4-Keyframes und Frame-Lupe. Für erkannte AVI-Container sind Keyframe-Navigation, Frame-Lupe und Hauptplayersuche eingeschränkt; der gelbe Hinweis erklärt dies. Ältere Ausgaben bleiben unverändert verfügbar. [Paketstand und Grenzen](RELEASE-BUILD31-RC3-RESULT.md).
 
-Stand: 14.10.2026. Diese Anleitung beschreibt **0.3.0 · Build 30 · RC3** für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand: 15.10.2026. Diese Anleitung beschreibt **0.3.0 · Build 31 · RC3** für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
 
-Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.3.0 · Build 30 · RC3**. Die persönliche Produktiv-/VM-/Portable-/Deinstallationsabnahme gilt für die Vorgängerausgabe Build 29; eine erneute Installationsabnahme für Build 30 wird nicht behauptet. Bitte die tatsächlich angezeigten Angaben bei Fehlermeldungen mit angeben.
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.3.0 · Build 31 · RC3**. Die persönliche Produktiv-/VM-/Portable-/Deinstallationsabnahme gilt für die Vorgängerausgabe Build 29; eine erneute Installationsabnahme für Build 30 wird nicht behauptet. Bitte die tatsächlich angezeigten Angaben bei Fehlermeldungen mit angeben.
 
 ## 1. Einmalig einrichten
 
@@ -210,7 +216,24 @@ Nach dem Laden einer MP4 analysiert CAN Keyframes im Hintergrund. Bei langen Auf
 
 **(K)** neben der Framenummer erscheint nur auf einem zugeordneten Keyframe im pausierten Zustand. Nach einem Bildschritt oder während eines Sprungs verschwindet es. Die Navigation verändert keine Schnittmarken. Fehlende oder unsichere Zeitinformationen geben keine Keyframe-Navigation frei.
 
-**Bei AVI werden diese Keyframe-Elemente ausgeblendet und es findet keine zusätzliche Keyframe-Analyse statt.** Der vorhandene AVI-Infoblock erklärt dies. Die Frame-Lupe einschließlich Untersuchungsmodus und Kantenbearbeitung bleibt für AVI nutzbar. [Prüfbericht und separate Fassung](KEYFRAME-NAVIGATION-20261014.md).
+**Bei AVI werden diese Keyframe-Elemente ausgeblendet und es findet keine zusätzliche Keyframe-Analyse statt.** Der vorhandene AVI-Infoblock erklärt dies. Ab Build 31 sind Frame-Lupe und Hauptplayer-Halbierungssuche für erkannte AVI-Container gesperrt; die Suchzeile wird ausgeblendet. [Prüfbericht und separate Fassung](KEYFRAME-NAVIGATION-20261014.md).
+
+### AVI-Frame-Lupe – lokale Einschränkung vom 15.10.2026
+
+In der aktuellen lokalen Prüffassung ist **Frame-Lupe** bei erkanntem AVI-Container deaktiviert. **Shift+F** öffnet sie ebenfalls nicht und unterbricht die Wiedergabe nicht. Der gelbe AVI-Hinweis und der Tooltip des deaktivierten Buttons erklären: **„Die Frame-Lupe steht für AVI-Container derzeit nicht zur Verfügung.“** Dies ersetzt für diese Prüffassung die oben beschriebene AVI-Verfügbarkeit im veröffentlichten Build 30.
+
+Maßgeblich ist der analysierte Container, nicht die Dateiendung: Auch eine AVI mit dem Namen `Film.avi.mp4` bleibt gesperrt. Nach dem Laden einer echten MP4 wird die Lupe wieder freigegeben; das ist keine Zusicherung fehlerfreier Bildzeiten für jede MP4. Normale Bearbeitung und beide Schnittverfahren bleiben unverändert. [Prüfbericht und Startpfad](AVI-FRAME-LUPE-SPERRE-20261015.md).
+### Halbierungssuche im Hauptfenster – lokale Prüffassung vom 15.10.2026
+
+Bei erkanntem AVI-Container ist die gesamte Halbierungssuche in der aktuellen lokalen Prüffassung ausgeblendet und gesperrt. Der gelbe AVI-Hinweis erklärt: **„Die Halbierungssuche steht für AVI-Container derzeit nicht zur Verfügung.“** Maßgeblich ist der Container, auch bei `.avi.mp4`. Nach dem Laden einer echten MP4 erscheint die Suchzeile wieder. Unter der bisherigen Playernavigation steht dann eine kompakte zweite Zeile **Halbierungssuche**: **← 2.000 Frames**, **2.000 Frames →**, **Zurücksetzen**. Sie beginnt an der tatsächlich erreichten Playerposition und benötigt keine Schnittliste. Gleiche Richtung behält die Suchweite, ein Richtungswechsel halbiert sie sofort; Minimum 1 Frame. Die Richtungsbuttons zeigen jeweils ihren nächsten Sprung an.
+
+**Zurücksetzen** stellt Startweite und Richtung zurück und lässt die Position stehen. Slider, Bildschritte, Keyframe-Sprünge und Wiedergabestart beginnen automatisch eine neue Suche. Der Startwert stammt aus **Einstellungen → Frame-Lupe** und wird für das Hauptfenster beim Laden des Videos gelesen. Hauptfenster und Frame-Lupe verwalten ihre Suchzustände unabhängig. Schnittpunkte und Schnittauswahl bleiben durch die Suche unverändert.
+
+FFprobe und FFmpeg müssen wie für die Lupe verfügbar sein. Während der Analyse sind konkurrierende Playeraktionen kurzzeitig gesperrt; große Suchweiten können etwas dauern. Die Suche zählt analysierte Bilder und rechnet nicht mit einer pauschalen Framerate. Die Anzeige folgt anschließend weiterhin dem tatsächlichen Playerstand.
+
+Fehlen eindeutige Original-Zeitstempel, wird der Hauptplayersprung vor der Positionsänderung abgewiesen. Das betrifft insbesondere AVI mit rekonstruierten Bildzeiten. In der aktuellen lokalen Prüffassung ist die AVI-Frame-Lupe vorsorglich gesperrt; der frühere Verweis auf diesen Bedienweg entfällt. [Prüfbericht und Startpfad](HALBIERUNGSSUCHE-HAUPTFENSTER-20261015.md). Die Ergänzung ist in Build 31 enthalten; ihre persönliche Funktionsabnahme wurde am 15.10.2026 positiv bestätigt.
+
+Bei **No Turning Back** wurden widersprüchliche AVI-Bildzeiten bestätigt. Auch der technisch erfolgreiche MP4Box-Schnitt beseitigt diese nicht automatisch. Die verweigerte Lupen-/otr-can-Zuordnung schützt hier vor einer unsicheren Frameauswahl. [Diagnose und Grenzen](AVI-ZEITSTEMPEL-NO-TURNING-BACK-20261015.md).
 
 ### Frame-Lupe im Entwicklungsbuild ab Build 10
 
@@ -295,6 +318,7 @@ Mit **Schneiden otr-can (framegenau, langsam)** werden geeignete MP4-Dateien dir
 
 Nach Erfolg, Fehler oder Abbruch entfernt CAN seine Arbeitsdateien im Ausgabeordner. Abbruch beendet auch laufende FFmpeg-Kindprozesse. Falls Aufräumen scheitert, zeigt das Protokoll den verbliebenen Pfad. Das Original wird nicht verschoben. Motor 0.1.5 unterstützt eine Videospur an Streamposition 0, H.264 mit 25/50 fps und Quellstart null sowie AAC-LC/AC-3 und geeignete MP3-Spuren; Schnittzeiten müssen unter 24 Stunden liegen. Andere Codecs oder Zeitstrukturen werden mit einer Meldung abgelehnt. Der gemeinsame Pines-Film wurde persönlich als synchron bestätigt; der reguläre CAN-Auftrag liefert denselben Dateiinhalt in rund 3:33 Minuten. Weitere reale Formate und getrennte Tonspurkontrollen bleiben vor Version 1.0 offen. Prüfe Anfang, Übergänge, Ende und jede Tonspur persönlich. Die Prüfgrenzen stehen im [0.1.3-Prüfbericht](OTR-CAN-0.1.3-PRUEFBERICHT.md).
 
+**Lokale Prüffassung vom 15.10.2026:** Nach der FFMS2-Indexierung prüft CAN zusätzlich die Bildzeiten, bevor der OTR-CAN-Schnitt startet. Bei doppelten, rückläufigen oder ungültigen Zeiten erscheint ein verständlicher Hinweis; der Schnittmotor wird für diesen Auftrag nicht gestartet. Zusätzlich muss die gesamte Folge bei null beginnen und zum festen 25-/50-fps-Zeitraster des Motors passen. Aufsteigende Zeiten oder eine nominelle 50-fps-Angabe allein genügen nicht. Bei nicht unterstützter Zeitstruktur erklärt eine eigene Meldung diese Einschränkung; es werden keine Bilder oder Bildraten angepasst. Die Prüfung verwendet bei AVI die tatsächlich vorbereitete MP4 und sperrt auch problematische MP4-Dateien. Gültige AVI wie die geprüfte Teufelsbrigade bleiben freigegeben. Du kannst MP4Box separat versuchen und musst anschließend Bild, Ton und Übergänge prüfen. Es erfolgt kein automatischer Wechsel. Die Entscheidung ist erst nach der Indexierung möglich; die fehlende AVI-Keyframe-Leiste genügt dafür nicht. [Prüfbericht und separater Startpfad](OTR-CAN-ZEITSTEMPEL-VORPRUEFUNG-20261015.md).
 ### Vorbereitung und Fortschritt
 
 Der Dialog **Video vorbereiten und schneiden** zeigt den aktuellen Schritt und darunter das standardmäßig geöffnete **Protokoll**. Dieses lässt sich einklappen und über **In Zwischenablage** kopieren.

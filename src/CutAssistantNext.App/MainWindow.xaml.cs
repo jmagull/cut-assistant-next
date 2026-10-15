@@ -37,6 +37,7 @@ public partial class MainWindow : Window
     private readonly IMediaPlayerService _mediaPlayerService;
     private readonly PlaybackViewModel _playbackViewModel;
     private readonly KeyframeNavigationViewModel _keyframeNavigation;
+    private readonly PlayerFrameSearchViewModel _playerFrameSearch;
     private readonly CutPlanViewModel _cutPlanViewModel;
     private readonly CutReviewController _cutReviewController;
     private CutNamingState? _cutNamingState;
@@ -80,6 +81,7 @@ public partial class MainWindow : Window
             new PlaybackViewModel(_mediaPlayerService);
 
         _keyframeNavigation = new KeyframeNavigationViewModel(_playbackViewModel);
+        _playerFrameSearch = new PlayerFrameSearchViewModel(_playbackViewModel);
 
         _cutPlanViewModel =
             new CutPlanViewModel();
@@ -97,6 +99,7 @@ public partial class MainWindow : Window
 
         DataContext = _viewModel;
         PlaybackControls.DataContext = _playbackViewModel;
+        PlayerFrameSearchControls.DataContext = _playerFrameSearch;
         KeyframeButtons.DataContext = _keyframeNavigation;
         KeyframeIndicator.DataContext = _keyframeNavigation;
         CutPlanSection.DataContext = _cutPlanViewModel;
@@ -199,6 +202,7 @@ public partial class MainWindow : Window
         PreviewKeyUp -= MainWindow_PreviewKeyUp;
 
         await _cutReviewController.CloseAsync();
+        _playerFrameSearch.Dispose();
         _keyframeNavigation.Dispose();
         _playbackViewModel.Dispose();
 
@@ -402,6 +406,8 @@ public partial class MainWindow : Window
         object sender,
         KeyEventArgs e)
     {
+        if (_playerFrameSearch.IsNavigating) return;
+
         var modifiers = Keyboard.Modifiers;
 
         UpdateFrameStepButtonLabels(
@@ -860,6 +866,7 @@ public partial class MainWindow : Window
     private async Task ExecutePlaybackActionAsync(
         Func<Task> action)
     {
+        if (_playerFrameSearch.IsNavigating) return;
         try
         {
             await action();
@@ -877,6 +884,40 @@ public partial class MainWindow : Window
                     MessageBoxImage.Error);
             }
         }
+    }
+
+    private async void SearchLeft_Click(object sender, RoutedEventArgs e) => await SearchPlayerFramesAsync(-1);
+
+    private async void SearchRight_Click(object sender, RoutedEventArgs e) => await SearchPlayerFramesAsync(1);
+
+    private void ResetPlayerSearch_Click(object sender, RoutedEventArgs e) => _playerFrameSearch.ResetSearch();
+
+    private async Task SearchPlayerFramesAsync(int direction)
+    {
+        if (_isClosed || _mediaLoadInProgress || _keyframeNavigation.IsNavigating || !_viewModel.IsPlayerFrameSearchVisible) return;
+        await _playerFrameSearch.SearchAsync(direction);
+        if (!_isClosed && _playerFrameSearch.IsSearchError)
+            MessageBox.Show(this, _playerFrameSearch.Status, "Halbierungssuche", MessageBoxButton.OK, MessageBoxImage.Warning);
+    }
+
+    private void ConfigurePlayerFrameSearch(string path)
+    {
+        var settings = new FrameLoupeSettingsStore().Load();
+        if (_viewModel.AnalysisResult is not { VideoStreams.Count: 1, Duration: TimeSpan duration } media ||
+            duration <= TimeSpan.Zero || !_viewModel.IsPlayerFrameSearchVisible)
+        {
+            _playerFrameSearch.SetMedia(null, settings.InitialSearchFrames);
+            return;
+        }
+        _playerFrameSearch.SetMedia(position =>
+        {
+            var tools = new FfmpegSettingsStore().Load() ?? FfmpegSettings.CreateDefault();
+            var resolver = new ToolPathResolver();
+            return new FrameLoupeViewModel(path, media.VideoStreams[0].Index, duration, position, null,
+                (decimal)(media.StartTimeSeconds ?? 0), settings.InitialSearchFrames,
+                new FfprobeFrameRunner(resolver.Resolve(BundledToolKind.Ffprobe, tools.FfprobeExecutablePath)),
+                new FfmpegFramePreviewRunner(resolver.Resolve(BundledToolKind.Ffmpeg, tools.FfmpegExecutablePath)), media.FormatName);
+        }, settings.InitialSearchFrames);
     }
 
     private async void PreviousKeyframe_Click(object sender, RoutedEventArgs e) =>
@@ -906,7 +947,7 @@ public partial class MainWindow : Window
 
     private async Task OpenFrameLoupeAsync()
     {
-        if (_frameLoupeOpening || _mediaLoadInProgress || _isClosed)
+        if (_frameLoupeOpening || _mediaLoadInProgress || _isClosed || _playerFrameSearch.IsNavigating || !_viewModel.CanOpenFrameLoupe)
         {
             return;
         }
@@ -2401,6 +2442,7 @@ public partial class MainWindow : Window
         _logger.Information(
             $"Mediendatei wurde ausgewählt: {dialog.FileName}");
 
+        _playerFrameSearch.SetMedia(null);
         _keyframeNavigation.Reset();
         _cutPlanViewModel.Reset();
 
@@ -2424,6 +2466,7 @@ public partial class MainWindow : Window
             await _mediaPlayerService.LoadAsync(
                 dialog.FileName);
 
+            ConfigurePlayerFrameSearch(dialog.FileName);
             _ = LoadKeyframesAsync(dialog.FileName);
 
             await SearchCutlistsForCurrentMediaAsync(

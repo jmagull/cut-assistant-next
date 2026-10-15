@@ -21,7 +21,8 @@ public sealed class AviSourceWarningDetectorTests
         Assert.Contains("Tonversatz", warning);
         Assert.Contains("Die Bearbeitung bleibt möglich.", warning);
         Assert.Contains("Keyframe-Anzeige und Keyframe-Navigation im Hauptfenster sind für AVI nicht verfügbar", warning);
-        Assert.Contains("Die Frame-Lupe bleibt nutzbar.", warning);
+        Assert.Contains("Die Frame-Lupe steht für AVI-Container derzeit nicht zur Verfügung.", warning);
+        Assert.Contains("Die Halbierungssuche steht für AVI-Container derzeit nicht zur Verfügung.", warning);
     }
 
     [Theory]

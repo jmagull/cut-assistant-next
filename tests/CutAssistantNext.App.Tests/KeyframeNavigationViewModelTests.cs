@@ -159,6 +159,7 @@ public sealed class KeyframeNavigationViewModelTests
             Assert.Empty(vm.Positions); Assert.Empty(vm.Indicator);
             Assert.False(vm.CanPrevious); Assert.False(vm.CanNext);
             Assert.Contains("für AVI nicht verfügbar", vm.Status);
+            Assert.Contains("Die Frame-Lupe steht für AVI-Container derzeit nicht zur Verfügung.", vm.Status);
         }
     }
     [Fact]
