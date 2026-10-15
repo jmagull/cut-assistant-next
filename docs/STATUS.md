@@ -1,5 +1,11 @@
 # Projektstatus
 
+## 15.10.2026 – Build 31 RC3 eingefroren, Pakete fertig und Quellstand gepusht
+
+**0.3.0 · Build 31 · RC3**, Quellcommit **de8ec0d598b095d85e4559e7fd83012534959637**, annotierter Remote-Tag **v0.3.0-build31-rc3**. Setup, Portable, CAN-/Motor-/libmpv-Quellen, Relink und Prüfsummen lokal unter `artifacts/release-build31-RC3`, sechs Archive plus SHA256SUMS schreibgeschützt. Herkunft aus festem Commit, Locked Restore, Release **0 Warnungen/0 Fehler**, **1308/1308 Pakettests**, keine übersprungen. **249 Portable-Dateien**, **539 Quellen-ZIP-Dateien**, vier native UI-Wechselfälle, sechs Indexvergleiche und drei Produktionsdienst-Fälle mit echtem FFMS2 geprüft; keine Bindungsfehler. Motor 0.1.5 unverändert.
+
+Alle acht lokalen Lockdateien bytegleich, vier vorbestehende Produktionsänderungen erhalten und nicht committet. Lokaler Buildzähler nach bestandenem Paketlauf auf **31**. Build-30-/Altartefakte erhalten. Keine frische Setup-/VM-/Deinstallations- oder vollständige Film-/Tonabnahme. Keine neue GitHub-Release-Veröffentlichung; diese bleibt gesondert. [Abschlussbericht und Prüfsummen](RELEASE-BUILD31-RC3-RESULT.md), [Übergabe](UEBERGABE-BUILD31-RC3-20261015.txt).
+
 ## 15.10.2026 – Build 31 RC3 zum Einfrieren und Paketieren freigegeben
 
 Der Nutzer beauftragt nach den erfolgreichen Praxistests das Einfrieren, Setup, ZIP und zugehörige Artefakte sowie Commit und Push. Neuer Paketsatz **0.3.0 · Build 31 · RC3**, unveränderter Motor **otr-can 0.1.5**. Enthalten: Hauptplayer-Halbierungssuche, AVI-Ausblendung/Lupensperre und zweistufige Zeitstrukturvorprüfung vor otr-can. AVI/MP4-Umschaltung und tatsächliche Schutzmeldungen für No Turning Back/Navy CIS zuletzt persönlich bestätigt. Öffentliche Build-30-/Altartefakte bleiben erhalten. [Freeze-Auftrag](FREEZE-BUILD31-RC3-20261015.md), [Paketprüfung](RELEASE-BUILD31-RC3-RESULT.md).

@@ -1,0 +1,53 @@
+Cut Assistant Next – Übergabe nach Freeze Build 31 RC3
+Stand: 15.10.2026
+
+AKTUELLER AUFTRAG
+
+Der Nutzer hat den persönlich geprüften Stand ausdrücklich zum Einfrieren, Erstellen von Setup, ZIP und weiteren Artefakten sowie Commit/Push freigegeben. Der Quellstand und die Pakete sind fertig. Eine GitHub-Release-Veröffentlichung ist kein Teil dieses ausgeführten Freeze-Schrittes; die zuletzt veröffentlichte Vorabversion bleibt Build 30.
+
+FESTER QUELL-/BINÄRSTAND
+
+CAN: 0.3.0 · Build 31 · RC3, App-Dateiversion 0.3.0.31
+Quellcommit: de8ec0d598b095d85e4559e7fd83012534959637
+Annotierter und gepushter Tag: v0.3.0-build31-rc3
+Motor: otr-can 0.1.5, unverändert
+Motorquellcommit: 2a474629836d52023bf37cbbdb309ccd1c23acf3
+Motor-EXE SHA-256: FC6ED6568880A995F3D141A9378AA2CE28ADE8DC0E257E93DC972799BB1324A6
+Buildzähler: 31
+Branch: main; spätere Dokumentationscommits ändern den gebauten Quellpin nicht.
+
+Lokaler Paketsatz: artifacts/release-build31-RC3
+- CutAssistantNext-0.3.0-Build31-win-x64-Setup-RC3.exe
+- CutAssistantNext-0.3.0-Build31-win-x64-RC3.zip
+- CutAssistantNext-0.3.0-Build31-source-RC3.zip
+- otr-can-0.1.5-source.zip
+- CAN-libmpv-v0.41.0-pruefpaket-2026-09-26.zip
+- CAN-libmpv-v0.41.0-relink-2026-09-26.zip
+- SHA256SUMS.txt
+
+Sechs Archive plus Prüfsummendatei sind schreibgeschützt eingefroren. Quellen aus festem Git-Commit ohne lokale Overlays, SOURCE-SNAPSHOT.json und SOURCE-FILES.sha256 enthalten. Tatsächlich gebauter Quellbaum: artifacts/source-build31-RC3/CutAssistantNext-0.3.0-Build31-source-RC3. Entpackte Paketprüfung: artifacts/portable-build31-proof. Build-/Test-/Paket-/UI-Nachweise: .build/freeze-build31-20261015.
+
+FUNKTIONSUMFANG
+
+1. Hauptplayer-Halbierungssuche unter der bisherigen Navigation; Standard 2000 Frames, gleiche Richtung gleiche Weite, Umkehr halbiert sofort, Reset und bewusste Navigation beginnen neu. Tatsächliche Frameanalyse und bestätigte Playerposition; keine Schnittmarkenänderung.
+2. Bei erkanntem AVI-Container Hauptplayersuche vollständig ausgeblendet und nicht konfiguriert, Aufruf zusätzlich gesperrt. Frame-Lupe für Button und Shift+F deaktiviert. Auch AVI unter .avi.mp4 zählt; echte MP4 wird nach Medienwechsel wieder freigegeben. Gelber Hinweis erklärt dies. Hauptfenster-Keyframes bei AVI weiterhin ausgenommen.
+3. Vor otr-can-Schnitt genau eine FFMS2-Indexierung der tatsächlichen Schnittquelle, dann Monotonie und motoridentisches Nullstart-/25-/50-fps-CFR-Raster prüfen. Ungeeignete Aufnahme vor cut-can mit verständlicher Meldung ablehnen; keine Zeit-/Bildratenreparatur und kein automatischer Motorwechsel. Generischer Validator bleibt für monotone VFR-/Offset-Zeiten verwendbar; diese genügen nicht zur Motorfreigabe.
+4. MP4Box, Vorbereitung, Motor, libmpv und Produktionsabhängigkeiten unverändert.
+
+PRÜFSTAND
+
+Locked Restore im exportierten Baum, Release ohne Warnungen/Fehler, 1308/1308 Tests (Core 196, Cutlists 72, Media 194, App 846), keine übersprungen. 249 Portable-Dateien und 539 Quellen-ZIP-Dateien vollständig mit Manifesten verglichen. Setup erfolgreich mit Inno Setup 7 kompiliert. Framework-dependent x64, Voraussetzungen und Lizenzen geprüft, Motorversion/Fähigkeit mp3-aac-v1 und Native-DLL-Hashes korrekt.
+
+Vier echte WPF/mpv-AVI-/MP4-Wechselfälle gegen entpackten Paketcode, reale MP4-Suche/Reset, gesperrte AVI-Aufrufwege ohne Pause/Dialog, ausgeblendete Zeile ohne Platzverbrauch, drei Breiten, keine Bindungsfehler. Tatsächliches Hauptfenster zeigt Build 31 RC3. Sechs reale Zeitcodevergleiche und drei Produktionsdienst-/FFMS2-Fälle bestanden; Motoraufruf im positiven Fall nur abgefangen, kein neuer kompletter Filmschnitt.
+
+Die No-Turning-Back- und Navy-Originale waren zum erneuten Pakettest nicht mehr unter den vorherigen Downloadpfaden verfügbar. Verwendet wurden die zuvor SHA-256-identische No-Turning-Back-AVI-Sicherung und die vorhandene Navy-Diagnose-MP4. Teufelsbrigade-Original weiterhin vorhanden und freigegeben. Einzelheiten und alle Dateihashes: docs/RELEASE-BUILD31-RC3-RESULT.md.
+
+Persönlich bestätigt: Hauptplayersuche in allen Richtungen; Teufelsbrigade-AVI-otr-can mit Ton/Bild/Übergängen einwandfrei; No Turning Back und Navy CIS im echten Ablauf vor Motorstart mit passenden Meldungen gestoppt; separater No-Turning-Back-MP4Box-Schnitt technisch erfolgreich, Prüfen/Vorschau bestätigt; AVI-Suchzeile weg und nach MP4-Wechsel wieder da (Screenshots).
+
+ERHALTUNG / GRENZEN
+
+Vor Änderungen AGENTS.md, README.md, docs/STATUS.md, docs/TAGEBUCH.md und relevante Prüfberichte lesen; Git-Status prüfen. Vier vorbestehende Produktions-Lockänderungen in App/Core/Cutlists/Media NICHT zurücksetzen oder ungefragt committen. Alle acht Lockdateien waren nach Paketierung unverändert. Sie sind aus Quellcommit/Quellenarchiv ausgeschlossen. Git-Status nach Abschluss soll nur diese vier Modifikationen zeigen.
+
+Eingefrorene Build-31-Archive, Prüfsummen und Quelltag nicht nachträglich verändern. Build 30 und ältere Pakete erhalten. Kein neuer Motorbuild oder bitidentischer Reproduzierbarkeitsnachweis behauptet. .NET 10 Desktop Runtime x64, Medienwerkzeuge und für otr-can VC++ v14 x64 bleiben extern erforderlich.
+
+Keine frische Setup-/VM-/Deinstallationsabnahme dieses Pakets durchgeführt. Keine allgemeine AVI-Reparatur oder Freigabe sämtlicher Codec-/Audio-/Decoderfälle; bekannter MP4Box-Zwei-AAC-Befund bleibt bestehen. AVI experimentell. Nächster sinnvoller Schritt ist persönliche Setup-/Portable-Prüfung; eine öffentliche GitHub-Release-Veröffentlichung nur im Rahmen eines weiteren entsprechenden Nutzerauftrags.
