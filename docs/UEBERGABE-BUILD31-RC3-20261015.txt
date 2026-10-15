@@ -44,10 +44,14 @@ Die No-Turning-Back- und Navy-Originale waren zum erneuten Pakettest nicht mehr 
 
 Persönlich bestätigt: Hauptplayersuche in allen Richtungen; Teufelsbrigade-AVI-otr-can mit Ton/Bild/Übergängen einwandfrei; No Turning Back und Navy CIS im echten Ablauf vor Motorstart mit passenden Meldungen gestoppt; separater No-Turning-Back-MP4Box-Schnitt technisch erfolgreich, Prüfen/Vorschau bestätigt; AVI-Suchzeile weg und nach MP4-Wechsel wieder da (Screenshots).
 
+NACHTRÄGLICHE PERSÖNLICHE PAKETABNAHME
+
+Am 15.10.2026 nach Paketierung bestätigt der Nutzer: Setup in der VM geprüft, Deinstallation geprüft, Portable-ZIP in der VM geprüft sowie Videos mit MP4Box und otr-can geschnitten. Damit sind die zuvor offenen persönlichen Paketprüfungen bestätigt. Keine getrennte Zuordnung jedes Schnittlaufs zu Setup/Portable oder jeder Tonspur gemeldet; keine zusätzliche vollständige Qualitätsprüfung aller Ausgaben ableiten. Nur Dokumentation aktualisiert und gesichert, eingefrorene Pakete/Prüfsummen und Quelltag unverändert. Technischer Nachweis bleibt 1308/1308 Tests; kein neuer Build für diese Dokumentation.
+
 ERHALTUNG / GRENZEN
 
 Vor Änderungen AGENTS.md, README.md, docs/STATUS.md, docs/TAGEBUCH.md und relevante Prüfberichte lesen; Git-Status prüfen. Vier vorbestehende Produktions-Lockänderungen in App/Core/Cutlists/Media NICHT zurücksetzen oder ungefragt committen. Alle acht Lockdateien waren nach Paketierung unverändert. Sie sind aus Quellcommit/Quellenarchiv ausgeschlossen. Git-Status nach Abschluss soll nur diese vier Modifikationen zeigen.
 
 Eingefrorene Build-31-Archive, Prüfsummen und Quelltag nicht nachträglich verändern. Build 30 und ältere Pakete erhalten. Kein neuer Motorbuild oder bitidentischer Reproduzierbarkeitsnachweis behauptet. .NET 10 Desktop Runtime x64, Medienwerkzeuge und für otr-can VC++ v14 x64 bleiben extern erforderlich.
 
-Keine frische Setup-/VM-/Deinstallationsabnahme dieses Pakets durchgeführt. Keine allgemeine AVI-Reparatur oder Freigabe sämtlicher Codec-/Audio-/Decoderfälle; bekannter MP4Box-Zwei-AAC-Befund bleibt bestehen. AVI experimentell. Nächster sinnvoller Schritt ist persönliche Setup-/Portable-Prüfung; eine öffentliche GitHub-Release-Veröffentlichung nur im Rahmen eines weiteren entsprechenden Nutzerauftrags.
+Die persönliche Setup-/VM-/Deinstallations- und Portable-Abnahme dieses Pakets ist inzwischen bestätigt. Keine allgemeine AVI-Reparatur oder Freigabe sämtlicher Codec-/Audio-/Decoderfälle; bekannter MP4Box-Zwei-AAC-Befund bleibt bestehen. AVI experimentell. Die gemeldete Paketabnahme ist abgeschlossen; eine öffentliche GitHub-Release-Veröffentlichung bleibt ein gesonderter entsprechender Nutzerauftrag.

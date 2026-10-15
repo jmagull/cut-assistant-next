@@ -12,8 +12,18 @@ Isolierter Git-Export mit committed Lockdateien: **538 Manifesteinträge**, **53
 
 Hauptplayer-Halbierungssuche mit unabhängiger Suchweite, Halbierung bei Richtungswechsel und Rücksetzung bei bewusster Navigation. Bei erkanntem AVI einschließlich `.avi.mp4` Suchzeile ausgeblendet und Aufruf gesperrt; Frame-Lupe für Button/Shift+F deaktiviert. Gelber Hinweis erklärt die Einschränkungen, MP4 nach Medienwechsel wieder verfügbar. Gezielte Vorprüfung nach FFMS2: eindeutige aufsteigende Zeiten sowie Nullstart und komplettes 25-/50-fps-Raster entsprechend Motor 0.1.5; ungeeignete Quellen werden vor `cut-can` verständlich abgelehnt. MP4Box, Vorbereitung und Motor unverändert.
 
-Persönlich bestätigt: Hauptplayersuche in allen Richtungen; AVI-Ausblendung und MP4-Wiedereinblendung per Screenshot; Teufelsbrigade-AVI mit otr-can einschließlich Ton/Bild/Übergängen einwandfrei. No Turning Back und Navy CIS zeigen die neue gezielte Sperre im realen Nutzerlauf. Separater No-Turning-Back-MP4Box-Schnitt technisch erfolgreich, Prüfen/Vorschau bestätigt. Kein pauschaler Qualitätsnachweis jeder Ausgabe und keine frische Setup-/VM-Abnahme daraus abgeleitet.
+Persönlich bestätigt: Hauptplayersuche in allen Richtungen; AVI-Ausblendung und MP4-Wiedereinblendung per Screenshot; Teufelsbrigade-AVI mit otr-can einschließlich Ton/Bild/Übergängen einwandfrei. No Turning Back und Navy CIS zeigen die neue gezielte Sperre im realen Nutzerlauf. Separater No-Turning-Back-MP4Box-Schnitt technisch erfolgreich, Prüfen/Vorschau bestätigt. Die nachträglich gemeldete persönliche Paketabnahme ist im folgenden Abschnitt getrennt dokumentiert; kein pauschaler Qualitätsnachweis jeder Ausgabe daraus abgeleitet.
 
+## Nachträgliche persönliche Paketabnahme
+
+Am **15.10.2026**, nach Erstellung der eingefrorenen Build-31-Pakete, bestätigt der Nutzer:
+
+- Setup in der VM erfolgreich geprüft.
+- Deinstallation erfolgreich geprüft.
+- Portable-ZIP in der VM erfolgreich geprüft.
+- Videos erfolgreich mit **MP4Box** und **otr-can** geschnitten.
+
+Damit ist die zuvor offene persönliche Setup-/VM-/Portable-/Deinstallationsabnahme gemeldet. Die Schnittprüfungen wurden nicht nach Setup/Portable, einzelnen Videodateien oder Tonspuren getrennt beschrieben; daraus wird keine zusätzliche vollständige Bild-/Ton-/Übergangsprüfung aller Ausgaben abgeleitet. Dies ergänzt die früheren konkreten Filmabnahmen. Nur Repository-Dokumentation ergänzt; eingefrorene Archive, Prüfsummen, Quellcommit und Tag bleiben unverändert. Kein erneuter Build oder Testlauf für diese reine Dokumentationsänderung; technischer Paketnachweis weiterhin 1308/1308 Tests.
 ## Tatsächlich geprüft
 
 - Im exportierten Baum: Locked Restore für win-x64, Release-Build **0 Warnungen/0 Fehler**, **1308/1308 Tests**, 0 übersprungen. Core 196, Cutlists 72, Media 194, App 846. Tests erst nach beendetem Build.
@@ -42,4 +52,4 @@ Persönlich bestätigt: Hauptplayersuche in allen Richtungen; AVI-Ausblendung un
 
 `artifacts/release-build31-RC3` enthält Publish-Manifest, Paketprovenienz, Build-/Installerlogs, TRX und eingefrorene Archive. `artifacts/source-build31-RC3` enthält den tatsächlich gebauten Quellbaum, `artifacts/portable-build31-proof` das entpackte ZIP. Nachweise unter `.build/freeze-build31-20261015`, insbesondere `PACKAGE-PROOF.json`, `SOURCE-ZIP-PROOF.json`, `proof/PROOF.json`, `proof/CFR-PROOF.json`, Helferlogs, Herkunft/Artefaktlisten und Erhaltungsnachweise.
 
-Keine neue Build-31-Installation/Deinstallation in VM, keine frische persönliche Paketabnahme und keine zusätzliche vollständige Film-/Tonspurabnahme behauptet. Externe .NET-10-Desktop-/VC++-Laufzeiten und Medienwerkzeuge erforderlich. AVI bleibt experimentell; weitere Codec-/Audio-/Decodergrenzen sowie der bekannte MP4Box-Zwei-AAC-Befund bleiben bestehen. Die Vorprüfung repariert keine Aufnahme und wechselt den Motor nicht automatisch. Nächster sinnvoller Schritt: persönliche Setup-/Portable-Prüfung dieses Paketsatzes.
+Build-31-Setup in der VM, Deinstallation, Portable-ZIP in der VM und Videoschnitt mit beiden Motoren sind inzwischen persönlich bestätigt. Keine zusätzliche vollständige Film-/Tonspurabnahme sämtlicher Ausgaben daraus abgeleitet. Externe .NET-10-Desktop-/VC++-Laufzeiten und Medienwerkzeuge erforderlich. AVI bleibt experimentell; weitere Codec-/Audio-/Decodergrenzen sowie der bekannte MP4Box-Zwei-AAC-Befund bleiben bestehen. Die Vorprüfung repariert keine Aufnahme und wechselt den Motor nicht automatisch. Die gemeldete persönliche Paketabnahme ist abgeschlossen; eine GitHub-Release-Veröffentlichung bleibt ein gesonderter Schritt.

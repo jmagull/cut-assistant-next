@@ -1,5 +1,11 @@
 # Projektstatus
 
+## 15.10.2026 – Build 31 persönlich in der VM und mit beiden Motoren abgenommen
+
+Nach Paketierung bestätigt der Nutzer **Setup in der VM, Deinstallation und Portable-ZIP in der VM erfolgreich**, außerdem **Videoschnitt mit MP4Box und otr-can**. Die zuvor offenen persönlichen Paketprüfungen sind damit gemeldet. Keine zusätzliche vollständige Film-/Tonspurprüfung aller Ausgaben oder getrennte Setup-/Portable-Zuordnung jedes Motorlaufs daraus abgeleitet. [Abnahme und Grenzen](RELEASE-BUILD31-RC3-RESULT.md).
+
+Nur Dokumentation ergänzt. Eingefrorene Pakete und Prüfsummen, Quellcommit **de8ec0d598b095d85e4559e7fd83012534959637**, Tag **v0.3.0-build31-rc3**, Buildzähler 31 und lokale Lockänderungen erhalten. Technischer Paketnachweis weiterhin **1308/1308 Tests**, kein neuer Build für diese Dokumentation; keine neue GitHub-Release-Veröffentlichung.
+
 ## 15.10.2026 – Build 31 RC3 eingefroren, Pakete fertig und Quellstand gepusht
 
 **0.3.0 · Build 31 · RC3**, Quellcommit **de8ec0d598b095d85e4559e7fd83012534959637**, annotierter Remote-Tag **v0.3.0-build31-rc3**. Setup, Portable, CAN-/Motor-/libmpv-Quellen, Relink und Prüfsummen lokal unter `artifacts/release-build31-RC3`, sechs Archive plus SHA256SUMS schreibgeschützt. Herkunft aus festem Commit, Locked Restore, Release **0 Warnungen/0 Fehler**, **1308/1308 Pakettests**, keine übersprungen. **249 Portable-Dateien**, **539 Quellen-ZIP-Dateien**, vier native UI-Wechselfälle, sechs Indexvergleiche und drei Produktionsdienst-Fälle mit echtem FFMS2 geprüft; keine Bindungsfehler. Motor 0.1.5 unverändert.
