@@ -1,6 +1,6 @@
 Cut Assistant Next – Einmalig benötigte Programme
 
-Für diese laufzeitabhängige CAN-Testausgabe wird die .NET 10 Desktop Runtime
+Für diese laufzeitabhängige CAN-Ausgabe wird die .NET 10 Desktop Runtime
 für Windows x64 separat benötigt. Bitte die Variante "Desktop Runtime"
 auswählen; die einfache ".NET Runtime" reicht für CANs Oberfläche nicht.
 

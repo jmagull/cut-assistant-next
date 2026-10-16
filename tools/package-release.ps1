@@ -90,6 +90,7 @@ foreach ($name in @('LICENSE', 'third-party\DOTNET-LICENSING.md', 'third-party\l
 $fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $publish 'CutAssistantNext.App.exe')).FileVersion
 if ($fileVersion -ne "$version.$BuildNumber") { throw "Unexpected file version: $fileVersion" }
 Copy-Item -LiteralPath (Join-Path $repo 'docs\NUTZERANLEITUNG.md') -Destination (Join-Path $publish 'NUTZERANLEITUNG.md')
+Copy-Item -LiteralPath (Join-Path $repo 'docs\RELEASE-NOTES-1.0.0.md') -Destination (Join-Path $publish 'RELEASE-NOTES.md')
 Copy-Item -LiteralPath (Join-Path $repo 'installer\HINWEIS-DOTNET-UND-WERKZEUGE.txt') -Destination (Join-Path $publish 'VORAUSSETZUNGEN.txt')
 $engineProvenance = $null
 if ($OtrCanPackageDirectory) {
