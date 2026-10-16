@@ -1,5 +1,55 @@
 # Projektstatus
 
+## 16.10.2026 – Funktions-Freeze und lokale Pakete für CAN 1.0.0 beauftragt
+
+Nach der persönlichen Funktionsabnahme erklärt der Nutzer den Stand für eingefroren und „1.0 Release ready“; anschließend Auftrag **Setup, ZIP und zugehörige Artefakte**. Ziel **1.0.0 · Build 32** ohne RC-Kennung, unverändertes otr-can 0.1.5. Keine weiteren größeren Funktionen ohne ausdrückliche Entscheidung. Versionsdatei, Paketbau und Setup für stabile Kennungen angepasst; README, Anleitung, Freeze-Umfang und Release Notes aktualisiert.
+
+Der bekannte Radical-Werbeblitzer bei MP4Box bleibt dokumentiert. Neue Pakete werden aus isolierten Quellen erstellt und mit vollständiger Testsuite, Inhalts-/Herkunftsprüfung und SHA-256 verifiziert. Persönliche Windows-11-VM-Abnahme der neuen Pakete steht anschließend aus. Der lokale Quellcommit wurde anschließend ausdrücklich freigegeben. Push, Tag und GitHub-Veröffentlichung bleiben gesondert freizugeben; bestehende RC-Archive und lokale Lockänderungen bleiben erhalten. [Freeze](FREEZE-1.0.0-20261016.md), [Release Notes](RELEASE-NOTES-1.0.0.md), [Paketprüfung](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 16.10.2026 – Persönliche Prüfung von Layout, Frame-Werkzeugen und beiden Schnittmotoren bestätigt
+
+Der Nutzer meldet für die aktuelle lokale Prüffassung:
+
+- **Frame-Lupe geprüft.**
+- **Frame-Liste geprüft.**
+- **MP4Box-Schnitt erfolgreich.**
+- **otr-can-Schnitt erfolgreich.**
+- **Power-User-Layout persönlich geprüft.**
+
+Kommandozeilenübergabe mit realer HD-Aufnahme und Drag & Drop waren bereits zuvor persönlich bestätigt. Damit sind die drei neuen Arbeitspakete im persönlichen Praxislauf positiv gemeldet. Die Formulierung „Frame-Liste“ wird entsprechend der Nutzerrückmeldung übernommen.
+
+Der erfolgreiche MP4Box-Schnitt bestätigt den Ablauf; er hebt den bereits nachgewiesenen **Radical-Werbeblitzer bei 57:27.314** nicht auf. Eine Behebung wurde nicht gemeldet. Die persönliche Radical-Prüfung mit otr-can 0.1.5 bleibt positiv. Echte DPI-/Mehrmonitorwechsel, weitere Release-Regressionen und die Paket-/Windows-11-VM-Prüfung dieses Arbeitsstands bleiben gesonderte Prüfpunkte; die frühere Build-31-Paketabnahme wird nicht übertragen.
+
+README, Benutzeranleitung und Layout-Prüfbericht auf diesen persönlichen Prüfstand gebracht; ausschließlich Dokumentation geändert. Kein endgültiger Freeze, Versions-/Buildnummerwechsel oder Veröffentlichungsauftrag daraus abgeleitet. [Aktueller Layout-Prüfbericht](POWER-USER-FEINSCHLIFF-20261016.md), [offener MP4Box-Befund](RADICAL-MP4BOX-WERBEBLITZER-20261016.md).
+
+Nach dem Dokumentationsnachtrag erneut geprüft: Release-Build **0 Warnungen/0 Fehler**, **1347/1347 Tests** erfolgreich, keine übersprungen. Alle übrigen Projektdateien einschließlich Quellcode und Lockdateien sowie der Buildzähler unverändert; Nachweise unter `.build/personal-acceptance-20261016`.
+
+## 16.10.2026 – Radical HD mit otr-can persönlich abgenommen; MP4Box-Blitzer eingegrenzt
+
+Nutzerprotokoll bestätigt erfolgreichen otr-can-0.1.5-Schnitt mit genau einer Indexierung, **464866** geprüften Quellframes, **350453** Ausgabebildern und **7009,060 s** Ergebnis. AAC-Stereo und AC-3 mit sechs Kanälen, je **336434880** geprüfte Samples bei 48 kHz; Muxprüfung erfolgreich. Nutzer meldet keine Werbeblitzer und bestätigt im Cutlist-Server-Screenshot **Bild, Ton und alle Schnittübergänge geprüft**. Cutlist online sichtbar; kein Upload durch diese Untersuchung und keine pauschale Format-/Tonspurfreigabe daraus abgeleitet.
+
+MP4Box läuft durch, aber Nutzerblitzer bei **57:27.314** bestätigt: Videopaket-/Bildvergleich ordnet das dort dekodierte Bild eindeutig Original **4814,400 s** zu, vor dem vorgesehenen zweiten Behaltebeginn **4814,560 s**. Der kopierte zweite Abschnitt beginnt bereits am Random Access Point **4813,940 s**, **0,620 s früher**; passt zum bestehenden `-splitx`-Verhalten. Aktuelle MP4Box-Videodauer 7009,697333 s. Die ältere gespeicherte Cutlist unterscheidet sich am ersten Beginn um ein Bild vom neuen OTR-Protokoll, weshalb kein vollständig identischer A/B-Plan behauptet wird; zweite Sollgrenze stimmt überein.
+
+Nur lesende Diagnose und Dokumentation; Originale/Ausgaben erhalten. Bekannte MP4Box-Präzisionsgrenze offen, keine Motor-/Layoutkorrektur oder allgemeine Release-Abnahme behauptet. Benutzeranleitung um konkreten Hinweis ergänzt. Anwendung, acht Lockdateien, Version/Buildzähler und eingefrorene Pakete unverändert. [Bildnachweis, technische Details und Grenzen](RADICAL-MP4BOX-WERBEBLITZER-20261016.md).
+
+## 16.10.2026 – Power-User-Werkzeuge gemäß Konzeptskizze geordnet
+
+Der Nutzer bestätigt **Video in Player ziehen erfolgreich** und bewertet die grundsätzliche Zweispaltenanordnung positiv. Auf ausdrücklichen Feinschliff-Auftrag rechts umgesetzt: kurzer Hinweis, vier gleich breite Schnittpunktbuttons, feste vollständige Zeit-/Lupenzeile, Tabelle mit eigenem Bildlauf und Löschen rechts darunter, danach **Film schneiden**, **Cutlists** und breite **Namensmaske**. Originale Ereignisse/Bindings weiterverwendet; Standardreihenfolge und -darstellung beim Rückwechsel wiederhergestellt. Nur rechte Werkzeuge werden umgeordnet, Player und Tabelle behalten ihre Elternstruktur. Anfangsbreite rechts 460 DIP, Minimum 430; Splitter und Rückfall für schmale Fenster erhalten.
+
+Release-Rebuild **0 Warnungen/0 Fehler**, **1347/1347 Tests**, keine übersprungen, einschließlich vier neuer tatsächlicher WPF-Tests. **Zwölf native Fallgruppen** mit echtem libmpv: bisherige Ansicht-/Drop-/AVI-/Navigationsregression sowie leere/40-zeilige Tabelle, feste Lupe bei neunstelligen Stunden, tatsächliche Schnitt-/Löschklicks und Dialogaufrufe. Motor-/Erzeugungs-/Namensmaskendialoge und Dateiauswahl abgebrochen; Upload-/Server-Schutz geprüft, kein Schnitt/Upload/Speichern ausgeführt. Keine Bindungsfehler; rechte Werkzeuge separat gerendert und visuell geprüft. Echte DPI-/Mehrmonitor- und persönliche Feinschliff-Abnahme offen.
+
+README, Anleitung, Status und Tagebuch aktualisiert. Acht Lockdateien, vier bestehende Produktions-Lockänderungen, Version.props und Buildzähler erhalten; **0.3.0/31/RC3**. Keine Änderungen an eingefrorenen Paketen, kein Commit/Push/Tag/Release. [Änderungen, Prüfgrenzen und neue lokale Prüffassung](POWER-USER-FEINSCHLIFF-20261016.md).
+
+## 15.10.2026 – Drei Arbeitspakete für Zielversion 1.0 technisch umgesetzt
+
+Optionaler einzelner Startpfad nach Fenster-/Playerbereitschaft; derselbe Medienladeweg wie Dateidialog und Drop. Absolute/relative/Unicode-/UNC-Pfade berücksichtigt, Existenzprüfung im Hintergrund. WPF- und natives OLE-Dropziel am bestehenden Video-HWND, ohne Overlay; einzelne unterstützte Dateiendung, keine Ordner/Mehrfachablage. Vor dem Verwerfen von Schnittbereichen, vorgemerktem Anfang oder geladener Cutlist gemeinsame Bestätigung; Abbruch erhält Film, Position und Schnittzustand.
+
+**Einstellungen → Darstellung** speichert Standard-/Power-User-Präferenz separat. Sofortiger Wechsel verändert ausschließlich Grid-Positionen/-Größen; kein Reparenting, neuer Player oder HWND. Großer Player links, gesamter Schnittbereich rechts mit Splitter und Bildlauf. Unter 1100 DIP Inhaltsbreite vorübergehend Standardanordnung mit Hinweis, Präferenz erhalten. Bei geringer Höhe größere scrollbare Arbeitsfläche, kein Abschneiden von Funktionen. In 1920×1080 Testfenster Videofläche von 348 auf ca. 615 DIP Höhe vergrößert.
+
+Vollständiger isolierter Release-Rebuild **0 Warnungen/0 Fehler**; **1343/1343 Tests**, keine übersprungen (Core 196, Cutlists 72, Media 194, App 881; 35 neue Fälle). Native Prüfungen bestätigen stabile HWND-/Playeridentität, Pausenposition/Schnittdaten, laufende Wiedergabe, Drop-Laden, Abbruch eines Dateiwechsels, AVI-/MP4-Wechsel, Keyframes, Halbierung und Lupenvorschau in beiden Ansichten. Zusätzlich **36 Kontrollplayer-Prüfungen** und drei synthetische AAC/AC3-Schnittläufe mit MP4Box/otr-can sowie Cutlist-Rundlauf, Namensbildung und vollständiger Stream-Dekodierung bestanden; keine Bindungsfehler.
+
+Alle acht Lockdateien bytegleich, insbesondere vier vorbestehende Produktionsänderungen erhalten. **0.3.0/31/RC3**, Version.props und Buildzähler unverändert. Keine Commits, Pushes, Tags, Paketierung oder Veröffentlichung. Reale Explorer-Gesten, HD-Film-/Tonabnahme, echte DPI-/Mehrmonitorwechsel und neue Windows-11-VM-/Installations-/Portable-Abnahme bleiben persönlich offen. Größere Funktionen für 1.0 damit technisch umgesetzt; vor endgültigem Freeze/Versionswechsel weiterhin persönliche Prüfung und gesonderte Nutzerfreigabe. [Konzept, Nachweise, Grenzen und Startpfad](ZWEI-ANSICHTEN-START-DROP-20261015.md).
+
 ## 15.10.2026 – Build 31 RC3 öffentlich veröffentlicht
 
 Nach persönlicher VM-/Setup-/Portable-/Deinstallations- und Schnittabnahme beauftragt der Nutzer ausdrücklich die Veröffentlichung. **0.3.0 · Build 31 · RC3** unverändert als [öffentliche Vorabversion](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build31-rc3) freigegeben, kein Entwurf und keine stabile Latest-Ausgabe. Quelltag **v0.3.0-build31-rc3** auf **de8ec0d598b095d85e4559e7fd83012534959637**. Alle sieben Uploads vor/nach Freigabe mit eindeutigen Namen, Status, Größe und SHA-256-Digest geprüft, Release-Text identisch.

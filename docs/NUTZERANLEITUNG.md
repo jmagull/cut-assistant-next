@@ -1,5 +1,9 @@
 # Nutzeranleitung – Cut Assistant Next
 
+## CAN 1.0.0 · Build 32 – eingefrorener Funktionsstand
+
+Stand **16.10.2026**: Kommandozeilenstart, Drag & Drop und umschaltbare Standard-/Power-User-Ansicht sind persönlich bestätigt. Frame-Lupe, Frame-Liste und beide Schnittmotoren wurden persönlich geprüft. Die stabile Fassung trägt keinen RC-Zusatz. Setup und Portable werden derzeit vorbereitet; ihre Windows-11-VM-Abnahme folgt. [Release Notes](RELEASE-NOTES-1.0.0.md), [Paketnachweis](RELEASE-1.0.0-BUILD32-RESULT.md), [Funktions-Freeze](FREEZE-1.0.0-20261016.md). Die folgenden älteren Einführungen erläutern die Herkunft der weiterhin enthaltenen Funktionen. AVI- und MP4Box-Grenzen gelten weiterhin.
+
 ## Build 31 RC3 – Hauptplayersuche und AVI-Schutz
 
 Stand: **15.10.2026 · 0.3.0 · Build 31 · RC3**, Motor **otr-can 0.1.5**. Die Halbierungssuche steht direkt im Hauptplayer zur Verfügung. Bei erkanntem AVI ist sie ausgeblendet, die Frame-Lupe deaktiviert; nach MP4-Wechsel wieder verfügbar. Vor dem otr-can-Schnitt werden eindeutige Bildzeiten sowie Nullstart und das vollständige 25-/50-fps-Zeitraster geprüft. Ungeeignete Aufnahmen werden mit verständlicher Meldung abgelehnt. MP4Box bleibt separat nutzbar. [Pakete und Prüfgrenzen](RELEASE-BUILD31-RC3-RESULT.md).
@@ -144,6 +148,102 @@ praktisch geprüft. Der VM-Test der neuen laufzeitabhängigen Ausgabe steht
 noch aus.
 
 ## 2. Video laden
+
+### Neu in der lokalen Prüffassung für CAN 1.0
+
+Die folgenden Ergänzungen sind in der lokalen Weiterentwicklung enthalten; das veröffentlichte Build-31-Paket bleibt unverändert. Die Versionsanzeige wurde noch nicht erhöht. [Prüfstand und separater Startpfad](ZWEI-ANSICHTEN-START-DROP-20261015.md).
+
+**Startparameter:** CAN öffnet eine als Startparameter übergebene Videodatei automatisch. Die optionale PATH-Einrichtung und die PowerShell-Aufrufe mit und ohne PATH erklärt der folgende Abschnitt.
+
+**Drag & Drop:** Eine Videodatei aus dem Explorer direkt in das Videobild ziehen. Eine gültige Ablage wird durch Kopiercursor und blauen Videorand angezeigt. Beim Loslassen läuft derselbe Lade-/Analyseablauf wie bei der Dateiauswahl, einschließlich AVI-Hinweisen und automatischer Cutlistsuche. Verzeichnisse, mehrere Dateien und unbekannte Endungen werden nicht angenommen; für andere Endungen bleibt „Alle Dateien“ im Dateidialog verfügbar. Solange CAN gerade eine Datei lädt oder ein Dialog offen ist, ist kein neuer Drop möglich.
+
+**Schnittarbeit erhalten:** Bei einem Dateiwechsel mit vorhandenen Schnittbereichen, vorgemerktem Anfang oder geladener Cutlist fragt CAN vor dem Verwerfen nach. **Nein** erhält Video und Schnittliste. Bei Bedarf zuerst die aktuelle Cutlist speichern.
+
+**Ansicht wählen:** Unter **Einstellungen → Darstellung … → Anordnung der Benutzeroberfläche** zwischen **Standardansicht** (Player oben) und **Power-User-Ansicht** (großer Player links, alle Schnittfunktionen rechts) wählen und **Übernehmen** klicken. Die Auswahl wirkt sofort und wird für den nächsten Start gespeichert. Wiedergabeposition, Schnittpunkte und Einstellungen bleiben erhalten. Den Trennstreifen zwischen Player und Schnittspalte verschieben, um die Breite anzupassen.
+
+Für Power User das Fenster möglichst maximieren. Unter 1100 DIP verfügbarer Inhaltsbreite verwendet CAN vorübergehend die Standardanordnung und zeigt einen Hinweis am Player. Beim Verbreitern kehrt die gewünschte Power-User-Ansicht zurück. Bei wenig Höhe lassen sich die Arbeitsfläche und der rechte Schnittbereich scrollen; die größere Videofläche bleibt nutzbar. Beide Ansichten bieten dieselben Funktionen und dieselben AVI-Sicherheitsregeln.
+
+### Optional: CAN über die Windows-Kommandozeile starten
+
+Die lokale Prüffassung zur Vorbereitung von CAN 1.0 unterstützt genau eine Videodatei als Startparameter. CAN startet, lädt die Datei automatisch und führt die normale Medienanalyse aus. Das veröffentlichte Build-31-Paket bleibt unverändert; diese Ergänzung gehört zum laufenden Entwicklungsstand.
+
+Ist CAN über den Windows-PATH erreichbar, genügt beispielsweise:
+
+```powershell
+CutAssistantNext.App.exe "D:\Filme\MeinFilm.mp4"
+```
+
+**Der PATH-Eintrag ist optional** und für die normale Nutzung von CAN nicht erforderlich. Ohne PATH-Eintrag kannst du jederzeit den vollständigen Programmpfad verwenden; in PowerShell steht vor einem in Anführungszeichen gesetzten Programmpfad der Aufrufoperator `&`:
+
+```powershell
+& "C:\Pfad\zu\CAN\CutAssistantNext.App.exe" "D:\Filme\MeinFilm.mp4"
+```
+
+Befindest du dich bereits im CAN-Ordner, verwende in PowerShell `.\` vor dem Programmnamen:
+
+```powershell
+.\CutAssistantNext.App.exe "D:\Filme\MeinFilm.mp4"
+```
+
+Dateipfade mit Leerzeichen in Anführungszeichen setzen. Relative Videopfade beziehen sich auf den Arbeitsordner beim Start, nicht auf das CAN-Installationsverzeichnis. Ohne Dateiparameter startet CAN wie bisher. Fehlende oder unzugängliche Dateien sowie mehrere Argumente werden verständlich gemeldet. Dateizuordnungen werden nicht automatisch geändert.
+
+#### Schritt 1 – CAN-Verzeichnis ermitteln
+
+Öffne im Windows-Explorer den Installations- oder entpackten Portable-Ordner, in dem sich `CutAssistantNext.App.exe` befindet, und kopiere den vollständigen Ordnerpfad aus der Adresszeile. Nur das Verzeichnis eintragen, nicht den vollständigen Pfad zur EXE-Datei.
+
+#### Schritt 2 – Benutzer-PATH unter Windows 11 ergänzen
+
+1. Suche im Startmenü nach **Umgebungsvariablen**.
+2. Öffne **Umgebungsvariablen für dieses Konto bearbeiten**.
+3. Wähle unter **Benutzervariablen** den Eintrag **Path**.
+4. Klicke auf **Bearbeiten** und anschließend auf **Neu**.
+5. Füge das zuvor ermittelte CAN-Verzeichnis ein.
+6. Bestätige alle Dialoge mit **OK**.
+
+Bestehende PATH-Einträge nicht löschen oder überschreiben. Für den eigenen Benutzer-PATH sind normalerweise keine Administratorrechte erforderlich.
+
+#### Schritt 3 – Einrichtung überprüfen
+
+Öffne ein neues PowerShell-Fenster. Bereits geöffnete Terminalfenster gegebenenfalls vollständig schließen und neu starten, damit sie den geänderten PATH übernehmen.
+
+```powershell
+Get-Command CutAssistantNext.App.exe
+```
+
+Die Ausgabe sollte den vollständigen Pfad zur gewünschten CAN-EXE anzeigen. Alternativ:
+
+```powershell
+where.exe CutAssistantNext.App.exe
+```
+
+Zeigt `where.exe` mehrere Fundstellen, prüfe deren Reihenfolge und ob die gewünschte CAN-Version zuerst gefunden wird. `Get-Command` zeigt, welchen Aufruf PowerShell tatsächlich verwendet.
+
+#### Schritt 4 – Videodatei übergeben
+
+Ersetze den Beispielpfad durch eine vorhandene Aufnahme:
+
+```powershell
+CutAssistantNext.App.exe "D:\Filme\MeinFilm.mp4"
+```
+
+Erwartung: CAN startet, lädt die Aufnahme, führt die Medienanalyse aus und zeigt das Video im Player. Anschließend kannst du die Schnittbearbeitung wie gewohnt verwenden.
+
+Setup und Portable-Version verändern den Windows-PATH nicht automatisch. Es gibt keine zusätzliche Installer-Option zur PATH-Verwaltung; die optionale Einrichtung erfolgt durch dich. Wenn du den Portable-Ordner später verschiebst, passe einen selbst angelegten PATH-Eintrag entsprechend an.
+
+### Rechte Werkzeuge in der Power-User-Ansicht
+
+Ab der lokalen Prüffassung vom **16.10.2026** sind die Werkzeuge gemäß abgestimmter Skizze angeordnet:
+
+- Oben **Videoanfang | Schnittanfang setzen**, darunter **Schnittende setzen | Videoende** in gleich breiten Feldern.
+- Danach **Vorgemerkter Anfang** mit vollständiger Zeit und feststehender **Frame-Lupe**. Der kurze Hinweis über den Buttons erläutert per Tooltip die Bereichserfassung.
+- Die Tabelle nutzt den verbleibenden Platz; lange Listen haben ihre eigene Bildlaufleiste. **Bereich löschen** steht direkt darunter rechts und ist nur bei ausgewähltem Bereich aktiv.
+- **Film schneiden** bietet **MP4Box (schnell)** und **otr-can (framegenau)** nebeneinander. Die ausführlichen bisherigen Motorbeschriftungen stehen in den Tooltips.
+- **Cutlists** bietet zuerst **Lokale Cutlist laden | Cutlist vom Server laden**, darunter **Cutlist erzeugen | Cutlist auf Server hochladen**.
+- **Namensmaske** steht unten über die gesamte Breite.
+
+Die Schnittspalte startet bei 460 WPF-Einheiten und lässt sich mit dem Trenner bis auf 430 verschmälern. Bei geringer Höhe bleibt sie scrollbar. Standardansicht, Funktionen, Dialoge, Shortcuts und AVI-Schutz bleiben erhalten. Kommandozeilenübergabe mit einer realen HD-Aufnahme, Drag & Drop und das Power-User-Layout sind persönlich bestätigt. Frame-Lupe und Frame-Liste wurden geprüft, Schnitte mit MP4Box und otr-can erfolgreich gemeldet. Der bekannte Radical-Werbeblitzer bei MP4Box bleibt offen (siehe Schnittmotor-Hinweise unten). Weitere Workflow-, echte DPI-/Mehrmonitor- und Paketprüfungen für diesen Arbeitsstand stehen noch aus. [Aktuelle Prüffassung und Nachweise](POWER-USER-FEINSCHLIFF-20261016.md).
+
+### Bisherige Dateiauswahl
 
 Klicke oben auf **Videodatei laden** und wähle das Originalvideo. Der Dateidialog bietet unter anderem MP4, AVI, MKV, MOV, TS, MPEG und WMV an. „Alle Dateien“ erlaubt die Auswahl weiterer Endungen. Die Auswahlmöglichkeit ist keine Zusage, dass jeder enthaltene Codec verarbeitet werden kann.
 
@@ -311,6 +411,12 @@ Im Schnittdialog prüfst du Name, gegebenenfalls Staffel, Folge und Folgentitel.
 Klicke auf **Schneiden …**. CAN verwendet unmittelbar den eingestellten Ordner **Geschnittene Videos** und ergänzt **.mp4** einmal. Ein weiterer Speicherdialog erscheint für beide Motoren nicht. Gib nur den Dateinamen ein, keinen Ordnerpfad. Ungültige Windows-Namen werden verständlich abgelehnt und nicht automatisch umbenannt.
 
 Ist der Ausgabeordner nicht eingerichtet oder nicht nutzbar, überprüfe ihn unter **Einstellungen → Standardordner …**. CAN verwendet keinen Ausweichordner. Bestehende Ausgaben werden nur nach ausdrücklichem **Ja** in der Überschreibfrage ersetzt; **Nein** ist vorausgewählt und führt zurück zur Namensbearbeitung. Das Original darf auch nach einer Bestätigung nicht ersetzt werden.
+
+### MP4Box: erfolgreichen Schnitt auf Werbeblitzer prüfen
+
+Ein erfolgreich abgeschlossener MP4Box-Lauf garantiert keine framegenauen Schnittgrenzen. Der aktuelle CAN-Aufruf verwendet `-splitx`; MP4Box kann den Beginn eines Behalteabschnitts zum nächstgelegenen Random Access Point verschieben. Liegt dieser vor dem gesetzten Beginn, können noch Bilder aus dem ausgeschlossenen Bereich erscheinen. Prüfe deshalb alle Übergänge im Kontrollplayer.
+
+Am 16.10.2026 wurde dies bei **Radical – Eine Klasse für sich (HD)** an **57:27.314** bestätigt: Das sichtbare Bild stammt aus dem Original vor dem gewünschten Behaltebeginn. Derselbe Film ist mit **otr-can 0.1.5** vom Nutzer nach Bild, Ton und allen Übergängen als blitzfrei bestätigt. Für diesen geprüften framegenauen Schnitt verwende die otr-can-Ausgabe. Das ist keine allgemeine Garantie für alle Medien. [Konkreter Bildnachweis und Vergleichsgrenzen](RADICAL-MP4BOX-WERBEBLITZER-20261016.md).
 
 ### Mit OTR-CAN schneiden
 

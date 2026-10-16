@@ -1,5 +1,11 @@
 # Cut Assistant Next
 
+**Funktions-Freeze für CAN 1.0.0 · Build 32 (16.10.2026):** Der persönlich geprüfte Stand ist für die stabile Erstveröffentlichung eingefroren. Setup, Portable-ZIP und zugehörige Quellen-/Lizenzpakete sind beauftragt; Paketprüfung und neue Windows-11-VM-Abnahme folgen. [Freeze-Umfang](docs/FREEZE-1.0.0-20261016.md), [Release Notes](docs/RELEASE-NOTES-1.0.0.md), [Paketergebnis](docs/RELEASE-1.0.0-BUILD32-RESULT.md). Die folgenden Entwicklungsberichte beschreiben die vorausgegangenen Prüffassungen. Öffentliche RC-Releases bleiben unverändert; die stabile Veröffentlichung benötigt eine gesonderte Freigabe.
+
+Power-User-Feinschliff vom **16.10.2026**: rechte Werkzeuge gemäß abgestimmter Skizze neu gruppiert – Schnittpunkte, Tabelle mit rechtsbündigem Löschen, **Film schneiden**, **Cutlists**, breite **Namensmaske**. Gleiche Buttons und Funktionen, Standardanordnung beim Rückwechsel erhalten. Kommandozeilenübergabe mit realer HD-Aufnahme, Drag & Drop und Power-User-Layout persönlich bestätigt; Frame-Lupe und Frame-Liste geprüft, Schnitte mit MP4Box und otr-can erfolgreich gemeldet. Der bekannte [MP4Box-Werbeblitzer bei Radical](docs/RADICAL-MP4BOX-WERBEBLITZER-20261016.md) bleibt dokumentiert; weitere Release-Prüfungen stehen aus. Release **0 Warnungen/0 Fehler**, **1347/1347 Tests** und native Dialog-/Layoutprüfung erfolgreich. [Aktuelle Prüffassung, Vorschau und Grenzen](docs/POWER-USER-FEINSCHLIFF-20261016.md). Kein Versions-/Buildnummerwechsel und keine Veröffentlichung.
+
+Lokale Prüffassung zur Vorbereitung von **CAN 1.0.0** (15.10.2026): optionaler Videopfad beim Start, Drag & Drop direkt in den Player und **Einstellungen → Darstellung → Standard-/Power-User-Ansicht**. Ein Player und ein Schnittzustand bleiben beim sofortigen Wechsel erhalten; vorhandene Schnittarbeit wird vor dem Dateiwechsel durch eine Rückfrage geschützt. **1343/1343 Tests**, Release-Rebuild **0 Warnungen/0 Fehler**, native Layout-/Navigations-/AVI-Prüfungen und beide Schnittmotoren synthetisch erfolgreich. [Umsetzung, separater Startpfad und offene persönliche Abnahme](docs/ZWEI-ANSICHTEN-START-DROP-20261015.md). Die Versionsanzeige bleibt bewusst **0.3.0 · Build 31 · RC3**; diese lokale Weiterentwicklung ist kein neues veröffentlichtes Build-31-Paket. Versionserhöhung, endgültiger Freeze, Commit, Push, Tag, Paketierung und stabiles Release bleiben gesondert freizugeben.
+
 Aktuelle öffentliche Vorabversion vom 15.10.2026: **0.3.0 · Build 31 · RC3** mit unverändertem Motor **otr-can 0.1.5**. [Setup, Portable-ZIP, Quellen und Prüfsummen](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build31-rc3) sind verfügbar. Alle sieben Uploads vor/nach Veröffentlichung anhand Größe und SHA-256-Digest geprüft; [Veröffentlichungsnachweis](docs/RELEASE-PUBLICATION-BUILD31-RC3.md). Persönlich bestätigt: Setup in der VM, Deinstallation, Portable-ZIP in der VM und Videoschnitt mit MP4Box/otr-can.
 Eingefrorener Paketsatz vom 15.10.2026: **0.3.0 · Build 31 · RC3** mit Hauptplayer-Halbierungssuche, gezielter AVI-Bedienungssperre und otr-can-Zeitstrukturvorprüfung. **1308/1308 Entwicklungstests**, persönlicher AVI-/MP4-Umschalttest und gezielte Motorablehnungen bestätigt. Setup, Portable, Quellen und Prüfsummen sind aus Quellcommit **de8ec0d598b095d85e4559e7fd83012534959637** erstellt und geprüft; **1308/1308 Pakettests**, 249 Portable-Dateien und 539 Quellen-ZIP-Dateien erfolgreich verifiziert. Quellstand und Tag **v0.3.0-build31-rc3** auf GitHub gesichert; Pakete lokal unter `artifacts/release-build31-RC3` und unverändert beim öffentlichen Build-31-Release; [Umfang und Grenzen](docs/FREEZE-BUILD31-RC3-20261015.md), [Paketprüfbericht](docs/RELEASE-BUILD31-RC3-RESULT.md). Unveränderter Motor **otr-can 0.1.5**. Nachträgliche persönliche Paketabnahme vom 15.10.2026: **Setup in der VM, Deinstallation und Portable-ZIP in der VM erfolgreich; Videos mit MP4Box und otr-can geschnitten.**
 Vorherige öffentliche Vorabversion vom 14.10.2026: **0.3.0 · Build 30 · RC3** mit unverändertem optionalem Motor **otr-can 0.1.5**. [Setup, Portable-ZIP, Quellen und Prüfsummen](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build30-rc3) sind verfügbar. Release-Build ohne Warnungen/Fehler, **1215/1215 CAN-Tests** bestanden; alle sieben Uploads vor und nach Freigabe anhand ihrer Größen und GitHub-SHA-256-Digests geprüft. [Veröffentlichungsnachweis](docs/RELEASE-PUBLICATION-BUILD30-RC3.md), [Paketprüfbericht](docs/RELEASE-BUILD30-RC3-RESULT.md).
@@ -99,6 +105,73 @@ Die Gesamtabnahme in Build 24 hat bei einer erzeugten Datei mit zwei gleichartig
 Vorgesehene Umgebung ist Windows 11 x64. Die öffentliche RC3-Vorabversion bietet Setup und Portable-ZIP sowie den optionalen Motor otr-can 0.1.5. Die .NET 10 Desktop Runtime muss separat installiert werden; die vier geprüften libmpv-DLLs sind enthalten. ffprobe, FFmpeg und MP4Box werden separat installiert und über die Einstellungen konfiguriert.
 
 Die [Nutzeranleitung](docs/NUTZERANLEITUNG.md) erklärt die Einrichtung ohne Entwicklungswerkzeuge.
+
+## Optional: CAN über die Windows-Kommandozeile starten
+
+Die lokale Prüffassung zur Vorbereitung von CAN 1.0 unterstützt genau eine Videodatei als Startparameter. CAN startet, lädt die Datei automatisch und führt die normale Medienanalyse aus. Das veröffentlichte Build-31-Paket bleibt unverändert; diese Ergänzung gehört zum laufenden Entwicklungsstand.
+
+Ist CAN über den Windows-PATH erreichbar, genügt beispielsweise:
+
+```powershell
+CutAssistantNext.App.exe "D:\Filme\MeinFilm.mp4"
+```
+
+**Der PATH-Eintrag ist optional** und für die normale Nutzung von CAN nicht erforderlich. Ohne PATH-Eintrag kannst du jederzeit den vollständigen Programmpfad verwenden; in PowerShell steht vor einem in Anführungszeichen gesetzten Programmpfad der Aufrufoperator `&`:
+
+```powershell
+& "C:\Pfad\zu\CAN\CutAssistantNext.App.exe" "D:\Filme\MeinFilm.mp4"
+```
+
+Befindest du dich bereits im CAN-Ordner, verwende in PowerShell `.\` vor dem Programmnamen:
+
+```powershell
+.\CutAssistantNext.App.exe "D:\Filme\MeinFilm.mp4"
+```
+
+Dateipfade mit Leerzeichen in Anführungszeichen setzen. Relative Videopfade beziehen sich auf den Arbeitsordner beim Start, nicht auf das CAN-Installationsverzeichnis. Ohne Dateiparameter startet CAN wie bisher. Fehlende oder unzugängliche Dateien sowie mehrere Argumente werden verständlich gemeldet. Dateizuordnungen werden nicht automatisch geändert.
+
+### Schritt 1 – CAN-Verzeichnis ermitteln
+
+Öffne im Windows-Explorer den Installations- oder entpackten Portable-Ordner, in dem sich `CutAssistantNext.App.exe` befindet, und kopiere den vollständigen Ordnerpfad aus der Adresszeile. Nur das Verzeichnis eintragen, nicht den vollständigen Pfad zur EXE-Datei.
+
+### Schritt 2 – Benutzer-PATH unter Windows 11 ergänzen
+
+1. Suche im Startmenü nach **Umgebungsvariablen**.
+2. Öffne **Umgebungsvariablen für dieses Konto bearbeiten**.
+3. Wähle unter **Benutzervariablen** den Eintrag **Path**.
+4. Klicke auf **Bearbeiten** und anschließend auf **Neu**.
+5. Füge das zuvor ermittelte CAN-Verzeichnis ein.
+6. Bestätige alle Dialoge mit **OK**.
+
+Bestehende PATH-Einträge nicht löschen oder überschreiben. Für den eigenen Benutzer-PATH sind normalerweise keine Administratorrechte erforderlich.
+
+### Schritt 3 – Einrichtung überprüfen
+
+Öffne ein neues PowerShell-Fenster. Bereits geöffnete Terminalfenster gegebenenfalls vollständig schließen und neu starten, damit sie den geänderten PATH übernehmen.
+
+```powershell
+Get-Command CutAssistantNext.App.exe
+```
+
+Die Ausgabe sollte den vollständigen Pfad zur gewünschten CAN-EXE anzeigen. Alternativ:
+
+```powershell
+where.exe CutAssistantNext.App.exe
+```
+
+Zeigt `where.exe` mehrere Fundstellen, prüfe deren Reihenfolge und ob die gewünschte CAN-Version zuerst gefunden wird. `Get-Command` zeigt, welchen Aufruf PowerShell tatsächlich verwendet.
+
+### Schritt 4 – Videodatei übergeben
+
+Ersetze den Beispielpfad durch eine vorhandene Aufnahme:
+
+```powershell
+CutAssistantNext.App.exe "D:\Filme\MeinFilm.mp4"
+```
+
+Erwartung: CAN startet, lädt die Aufnahme, führt die Medienanalyse aus und zeigt das Video im Player. Anschließend kannst du die Schnittbearbeitung wie gewohnt verwenden.
+
+Setup und Portable-Version verändern den Windows-PATH nicht automatisch. Es gibt keine zusätzliche Installer-Option zur PATH-Verwaltung; die optionale Einrichtung erfolgt durch dich. Wenn du den Portable-Ordner später verschiebst, passe einen selbst angelegten PATH-Eintrag entsprechend an.
 
 ## Aus dem Quellcode bauen
 

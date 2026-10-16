@@ -27,7 +27,7 @@ public partial class App : Application
             $"{ApplicationInfo.ProductName} wurde gestartet. " +
             $"Version: {version}.");
 
-        var mainWindow = new MainWindow(_logger);
+        var mainWindow = new MainWindow(_logger, e.Args, Environment.CurrentDirectory);
 
         MainWindow = mainWindow;
         mainWindow.Show();

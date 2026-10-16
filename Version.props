@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <Version>0.3.0</Version>
-    <CanCandidate Condition="'$(CanCandidate)' == ''">RC3</CanCandidate>
+    <Version>1.0.0</Version>
+    <!-- Stable by default; prerelease builds may explicitly set CanCandidate. -->
     <CanBuildNumber Condition="'$(CanBuildNumber)' == '' and Exists('$(MSBuildThisFileDirectory).build/build-number.txt')">$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory).build/build-number.txt').Trim())</CanBuildNumber>
     <CanBuildNumber Condition="'$(CanBuildNumber)' == ''">0</CanBuildNumber>
     <AssemblyVersion>$(Version).0</AssemblyVersion>

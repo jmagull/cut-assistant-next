@@ -84,6 +84,8 @@ public sealed class MpvVideoHost : HwndHost
 
     public event EventHandler? VideoWindowHandleCreated;
 
+    public event EventHandler? VideoWindowHandleDestroying;
+
     public event EventHandler? VideoWindowHandleDestroyed;
 
     public nint VideoWindowHandle =>
@@ -141,6 +143,7 @@ public sealed class MpvVideoHost : HwndHost
 
         if (windowHandle != 0)
         {
+            VideoWindowHandleDestroying?.Invoke(this, EventArgs.Empty);
             _ = DestroyWindow(windowHandle);
         }
 

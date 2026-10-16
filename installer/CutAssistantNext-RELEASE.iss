@@ -1,4 +1,4 @@
-; Local release candidate; compile from a verified publish directory.
+; Release packages; compile from a verified publish directory.
 #ifndef CanPublishDir
   #error CanPublishDir is required
 #endif
@@ -19,7 +19,11 @@
 AppId={{cdcdaf11-d631-4f81-b1d0-b50ea6ac606d}
 AppName=Cut Assistant Next
 AppVersion={#CanVersion}
+#if CanCandidate != ""
 AppVerName=Cut Assistant Next {#CanVersion} (Build {#CanBuildNumber}, {#CanCandidate})
+#else
+AppVerName=Cut Assistant Next {#CanVersion} (Build {#CanBuildNumber})
+#endif
 DefaultDirName={autopf}\Cut Assistant Next
 DefaultGroupName=Cut Assistant Next
 SetupArchitecture=x64
@@ -28,7 +32,11 @@ WizardStyle=modern dynamic
 WizardSizePercent=150,150
 SetupIconFile=..\assets\can.ico
 OutputDir={#CanOutputDir}
+#if CanCandidate != ""
 OutputBaseFilename=CutAssistantNext-{#CanVersion}-Build{#CanBuildNumber}-win-x64-Setup-{#CanCandidate}
+#else
+OutputBaseFilename=CutAssistantNext-{#CanVersion}-Build{#CanBuildNumber}-win-x64-Setup
+#endif
 InfoAfterFile={#CanPublishDir}\VORAUSSETZUNGEN.txt
 Compression=lzma2
 SolidCompression=yes

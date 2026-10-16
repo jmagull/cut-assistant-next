@@ -15,6 +15,10 @@
         <BooleanToVisibilityConverter
             x:Key="BooleanToVisibilityConverter" />
 
+        <DataTemplate x:Key="PowerToolButtonContentTemplate">
+            <TextBlock Text="{Binding}" TextWrapping="Wrap" TextAlignment="Center" />
+        </DataTemplate>
+
         <Style x:Key="SectionBorderStyle"
                TargetType="Border">
             <Setter Property="Margin"
@@ -54,6 +58,7 @@
         <Menu Grid.Row="0"
               Background="White">
             <MenuItem Header="Einstellungen">
+                <MenuItem Header="Darstellung …" Click="AppearanceSettingsMenuItem_Click" />
                 <MenuItem Header="Standardordner …"
                           Click="VideoFolderSettingsMenuItem_Click" />
 
@@ -104,7 +109,12 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
                       CanContentScroll="False">
-        <Grid MinHeight="{Binding ViewportHeight, ElementName=MainContentScrollViewer}">
+        <Grid x:Name="MainLayoutGrid" MinHeight="{Binding ViewportHeight, ElementName=MainContentScrollViewer}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="PlayerColumn" Width="*" />
+            <ColumnDefinition x:Name="SplitterColumn" Width="0" />
+            <ColumnDefinition x:Name="CutColumn" Width="0" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -113,7 +123,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0"
+        <Grid Grid.Row="0" Grid.ColumnSpan="3"
               Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -144,7 +154,7 @@
                     Content="Videodatei laden" />
         </Grid>
 
-        <Border Grid.Row="1"
+        <Border Grid.Row="1" Grid.ColumnSpan="3"
                 Margin="0,0,0,10"
                 Padding="10"
                 Background="#EAF2FF"
@@ -200,7 +210,7 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="2"
+        <Border Grid.Row="2" Grid.ColumnSpan="3"
                 Margin="0,0,0,14"
                 Padding="14"
                 Background="#FFF1F1"
@@ -221,21 +231,23 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="3"
+        <Border x:Name="PlayerSection" Grid.Row="3" Grid.ColumnSpan="3"
                 Padding="18,10"
                 Style="{StaticResource SectionBorderStyle}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="350" />
+                    <RowDefinition x:Name="VideoRow" Height="350" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Margin="0,0,0,8"
                            Style="{StaticResource SectionHeaderStyle}"
-                           Text="Player" />
+                           Text="{Binding ElementName=MainLayoutGrid, Path=Tag, TargetNullValue=Player}" TextWrapping="Wrap" />
 
-                <Border Grid.Row="1"
+                <Border x:Name="VideoDropBorder" Grid.Row="1" AllowDrop="True"
+                        PreviewDragEnter="VideoArea_DragOver" PreviewDragOver="VideoArea_DragOver"
+                        PreviewDragLeave="VideoArea_DragLeave" PreviewDrop="VideoArea_Drop"
                         Background="Black"
                         BorderBrush="#374151"
                         BorderThickness="1">
@@ -445,11 +457,16 @@
             </Grid>
         </Border>
 
+        <GridSplitter x:Name="LayoutSplitter" Grid.Row="3" Grid.RowSpan="2" Grid.Column="1"
+                      Width="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      ResizeDirection="Columns" ResizeBehavior="PreviousAndNext"
+                      ShowsPreview="False" Background="#D9DEE5" Visibility="Collapsed" />
         <Border x:Name="CutPlanSection"
-                Grid.Row="4"
+                Grid.Row="4" Grid.ColumnSpan="3"
                 Padding="18,10"
                 Style="{StaticResource SectionBorderStyle}">
-            <Grid>
+            <ScrollViewer x:Name="CutContentScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid x:Name="CutContentGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -457,7 +474,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0"
+                <TextBlock x:Name="StandardCutHeader" Grid.Row="0"
                            Margin="0,0,0,8"
                            Style="{StaticResource SectionHeaderStyle}"
                            TextWrapping="Wrap">
@@ -468,15 +485,15 @@
                          Text="(Rot markierte Bereiche werden entfernt. Mit ‚Schnittanfang setzen‘ und ‚Schnittende setzen‘ legst Du diese Bereiche fest.)" />
                 </TextBlock>
 
-                <WrapPanel Grid.Row="1">
-                    <Button MinWidth="110"
+                <WrapPanel x:Name="CutMarkersPanel" Grid.Row="1">
+                    <Button x:Name="VideoStartButton" MinWidth="110"
                             Height="36"
                             Padding="12,0"
                             IsEnabled="{Binding CanSetStart}"
                             Click="SetCutStartAtBeginningButton_Click"
                             Content="Videoanfang" />
 
-                    <Button MinWidth="170"
+                    <Button x:Name="CutStartButton" MinWidth="170"
                             Height="36"
                             Margin="6,0,0,0"
                             Padding="14,0"
@@ -484,7 +501,7 @@
                             Click="SetCutStartButton_Click"
                             Content="Schnittanfang setzen" />
 
-                    <Button MinWidth="170"
+                    <Button x:Name="CutEndButton" MinWidth="170"
                             Height="36"
                             Margin="10,0,0,0"
                             Padding="14,0"
@@ -492,7 +509,7 @@
                             Click="SetCutEndButton_Click"
                             Content="Schnittende setzen" />
 
-                    <Button MinWidth="110"
+                    <Button x:Name="VideoEndButton" MinWidth="110"
                             Height="36"
                             Margin="6,0,0,0"
                             Padding="12,0"
@@ -500,15 +517,15 @@
                             Click="SetCutEndAtMediaEndButton_Click"
                             Content="Videoende" />
 
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Margin="22,0,8,0"
+                    <WrapPanel x:Name="PendingStartPanel">
+                        <TextBlock x:Name="PendingStartLabel" Margin="0,0,8,0"
                                    VerticalAlignment="Center"
                                    FontWeight="SemiBold"
                                    Foreground="#4B5563"
                                    Text="Vorgemerkter Anfang:" />
 
                         <!-- Reserve space even for nine-digit total hours; keep the button stationary. -->
-                        <TextBlock Width="150"
+                        <TextBlock x:Name="PendingStartTime" Width="150"
                                    VerticalAlignment="Center"
                                    FontFamily="Consolas"
                                    FontWeight="SemiBold"
@@ -523,10 +540,31 @@
                                 ToolTipService.ShowOnDisabled="True"
                                 Click="FrameLoupeButton_Click"
                                 Content="🔍 Frame-Lupe" />
-                    </StackPanel>
+                    </WrapPanel>
                 </WrapPanel>
 
-                <DataGrid Grid.Row="2"
+                <StackPanel x:Name="PowerCutHeader" Grid.Row="0" Margin="0,0,0,12" Visibility="Collapsed">
+                    <TextBlock Text="Schnittliste" FontSize="18" FontWeight="SemiBold" Foreground="#1F2937" />
+                    <TextBlock Text="Rot markierte Bereiche werden entfernt." Margin="0,8,0,0"
+                               Foreground="#6B7280" TextWrapping="Wrap"
+                               ToolTip="Mit ‚Schnittanfang setzen‘ und ‚Schnittende setzen‘ legst Du die zu entfernenden Bereiche fest." />
+                </StackPanel>
+                <!-- Only the existing tools move into these grids; no duplicated commands or player. -->
+                <Grid x:Name="PowerCutMarkersGrid" Grid.Row="1" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" /><ColumnDefinition Width="8" /><ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" /><RowDefinition Height="8" />
+                        <RowDefinition Height="Auto" /><RowDefinition Height="12" /><RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid x:Name="PowerPendingGrid" Grid.Row="4" Grid.ColumnSpan="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" /><ColumnDefinition Width="150" /><ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </Grid>
+                <DataGrid x:Name="RemoveSegmentsGrid" Grid.Row="2"
                           Margin="0,14,0,0"
                           MinHeight="80"
                           Background="White"
@@ -572,7 +610,7 @@
                 </DataGrid>
 
                 <WrapPanel x:Name="CutActionsPanel" Grid.Row="3" Margin="0,12,0,0">
-                    <Button MinWidth="110"
+                    <Button x:Name="RemoveCutSegmentButton" MinWidth="110"
                             Height="36"
                             Margin="0,0,8,6"
                             Padding="10,0"
@@ -580,7 +618,7 @@
                             Click="RemoveCutSegmentButton_Click"
                             Content="Bereich löschen" />
 
-                    <Button MinWidth="130"
+                    <Button x:Name="LoadCutlistButton" MinWidth="130"
                             Height="36"
                             Margin="0,0,8,6"
                             Padding="10,0"
@@ -595,42 +633,66 @@
                             Click="LoadServerCutlistButton_Click"
                             Content="Cutlist vom Server laden" />
 
-                    <Button MinWidth="210"
+                    <Button x:Name="CutMp4BoxButton" MinWidth="210"
                             Height="36"
                             Margin="0,0,8,6"
                             Padding="10,0"
                             Click="CutMp4BoxButton_Click"
                             Content="Schneiden MP4Box (schnell)" />
 
-                    <Button MinWidth="270"
+                    <Button x:Name="CutOtrCanButton" MinWidth="270"
                             Height="36"
                             Margin="0,0,8,6"
                             Padding="10,0"
                             Click="CutOtrCanButton_Click"
                             Content="Schneiden otr-can (framegenau, langsam)" />
 
-                    <Button MinWidth="110"
+                    <Button x:Name="GenerateCutlistButton" MinWidth="110"
                             Height="36"
                             Margin="0,0,8,6"
                             Padding="10,0"
                             Click="GenerateCutlistButton_Click"
                             Content="Cutlist erzeugen" />
 
-                    <Button MinWidth="170"
+                    <Button x:Name="UploadCutlistButton" MinWidth="170"
                             Height="36"
                             Margin="0,0,8,6"
                             Padding="10,0"
                             Click="UploadCutlistButton_Click"
                             Content="Cutlist auf Server hochladen" />
 
-                    <Button MinWidth="110"
+                    <Button x:Name="NamingSettingsButton" MinWidth="110"
                             Height="36"
                             Margin="12,0,0,6"
                             Padding="10,0"
                             Click="NamingSettingsButton_Click"
                             Content="Namensmaske" />
                 </WrapPanel>
-            </Grid>
+                <Grid x:Name="PowerCutActionsGrid" Grid.Row="3" Margin="0,12,0,0" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="1" Height="1" Background="#E5E7EB" Margin="0,16,0,14" />
+                    <TextBlock Grid.Row="2" Text="Film schneiden" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8" />
+                    <Grid x:Name="PowerCutEnginesGrid" Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" /><ColumnDefinition Width="8" /><ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                    <TextBlock Grid.Row="4" Text="Cutlists" FontSize="14" FontWeight="SemiBold" Margin="0,12,0,8" />
+                    <Grid x:Name="PowerCutlistsGrid" Grid.Row="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" /><ColumnDefinition Width="8" /><ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" /><RowDefinition Height="8" /><RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                    </Grid>
+                    <Grid x:Name="PowerNamingGrid" Grid.Row="6" Margin="0,12,0,0" />
+                </Grid>            </Grid>
+            </ScrollViewer>
         </Border>
     </Grid>
         </ScrollViewer>

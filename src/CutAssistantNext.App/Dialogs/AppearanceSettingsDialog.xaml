@@ -1,0 +1,20 @@
+<Window x:Class="CutAssistantNext.App.Dialogs.AppearanceSettingsDialog" x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Darstellung" Width="520" Height="340" MinWidth="420" MinHeight="300"
+        WindowStartupLocation="CenterOwner" Background="#F4F6F8">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <TextBlock Text="Anordnung der Benutzeroberfläche" FontSize="20" FontWeight="SemiBold" TextWrapping="Wrap" />
+            <RadioButton x:Name="StandardOption" GroupName="Layout" Content="Standardansicht" Margin="0,20,0,4" />
+            <TextBlock Text="Player oben, Schnittliste darunter." Margin="20,0,0,0" TextWrapping="Wrap" />
+            <RadioButton x:Name="PowerOption" GroupName="Layout" Content="Power-User-Ansicht" Margin="0,16,0,4" />
+            <TextBlock Text="Großer Player links, Schnittliste und Schnittfunktionen rechts. Bei schmalen Fenstern wird vorübergehend die Standardanordnung verwendet."
+                       Margin="20,0,0,0" TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0">
+                <Button Content="Übernehmen" Width="110" Height="32" IsDefault="True" Click="Save_Click" />
+                <Button Content="Abbrechen" Width="100" Height="32" IsCancel="True" Margin="8,0,0,0" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

@@ -61,7 +61,7 @@ public partial class MainWindow : Window
     {
     }
 
-    internal MainWindow(IAppLogger logger)
+    internal MainWindow(IAppLogger logger, string[]? startupArguments = null, string? startupDirectory = null)
     {
         _logger = logger
             ?? throw new ArgumentNullException(nameof(logger));
@@ -112,6 +112,9 @@ public partial class MainWindow : Window
         PreviewKeyDown += MainWindow_PreviewKeyDown;
         PreviewKeyUp += MainWindow_PreviewKeyUp;
 
+        InitializeAppearance();
+        InitializeMediaInput(startupArguments ?? [], startupDirectory ?? Environment.CurrentDirectory);
+
         if (VideoHost.IsVideoWindowReady)
         {
             _ = EnsureMediaPlayerInitializedAsync();
@@ -122,6 +125,7 @@ public partial class MainWindow : Window
         object? sender,
         EventArgs e)
     {
+        RegisterVideoDropTarget();
         await EnsureMediaPlayerInitializedAsync();
     }
 
@@ -192,6 +196,8 @@ public partial class MainWindow : Window
         _shutdownStarted = true;
         _isClosed = true;
 
+        _mediaInputCancellation.Cancel();
+        _videoDropTarget?.Dispose();
         SaveWindowSettings();
 
         VideoHost.VideoWindowHandleCreated -=
@@ -223,6 +229,7 @@ public partial class MainWindow : Window
         }
         finally
         {
+            _mediaInputCancellation.Dispose();
             _allowClose = true;
 
             Closing -= MainWindow_Closing;
@@ -2401,10 +2408,7 @@ public partial class MainWindow : Window
         object sender,
         RoutedEventArgs e)
     {
-        if (_cutlistSearchInProgress || _mediaLoadInProgress)
-        {
-            return;
-        }
+        if (!CanOpenMedia) return;
 
         _mediaLoadInProgress = true;
 
@@ -2439,8 +2443,13 @@ public partial class MainWindow : Window
             return;
         }
 
-        _logger.Information(
-            $"Mediendatei wurde ausgewählt: {dialog.FileName}");
+        if (!ConfirmMediaReplacement()) return;
+        await LoadMediaFileCoreAsync(dialog.FileName);
+    }
+
+    private async Task LoadMediaFileCoreAsync(string mediaPath)
+    {
+        _logger.Information($"Mediendatei wurde ausgewählt: {mediaPath}");
 
         _playerFrameSearch.SetMedia(null);
         _keyframeNavigation.Reset();
@@ -2450,7 +2459,8 @@ public partial class MainWindow : Window
         _loadedCutlistAuthor = null;
         _lastSavedCutlistFilePath = null;
 
-        await _viewModel.AnalyzeAsync(dialog.FileName);
+        await _viewModel.AnalyzeAsync(mediaPath, _mediaInputCancellation.Token);
+        if (_isClosed || _mediaInputCancellation.IsCancellationRequested) return;
 
         if (_viewModel.MediaDuration.HasValue &&
             _viewModel.MediaDuration.Value > TimeSpan.Zero)
@@ -2463,11 +2473,12 @@ public partial class MainWindow : Window
         {
             await EnsureMediaPlayerInitializedAsync();
 
+            if (_isClosed) return;
             await _mediaPlayerService.LoadAsync(
-                dialog.FileName);
+                mediaPath, _mediaInputCancellation.Token);
 
-            ConfigurePlayerFrameSearch(dialog.FileName);
-            _ = LoadKeyframesAsync(dialog.FileName);
+            ConfigurePlayerFrameSearch(mediaPath);
+            _ = LoadKeyframesAsync(mediaPath);
 
             await SearchCutlistsForCurrentMediaAsync(
                 skipIfNotConfigured: true);

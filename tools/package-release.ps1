@@ -5,7 +5,7 @@ param(
     [Parameter(Mandatory = $true)][string]$SourceArchivePath,
     [Parameter(Mandatory = $true)][string]$OutputDirectory,
     [Parameter(Mandatory = $true)][string]$InnoCompilerPath,
-    [ValidatePattern('^[A-Za-z0-9][A-Za-z0-9.-]*$')][string]$Candidate = 'RC1',
+    [AllowEmptyString()][ValidatePattern('^$|^[A-Za-z0-9][A-Za-z0-9.-]*$')][string]$Candidate = '',
     [string]$OtrCanPackageDirectory
 )
 
@@ -23,6 +23,8 @@ if ($snapshot.BuildNumber -ne $BuildNumber) { throw 'Build number differs from t
 [xml]$versionXml = Get-Content -LiteralPath (Join-Path $repo 'Version.props') -Encoding UTF8 -Raw
 $version = [string]$versionXml.Project.PropertyGroup.Version
 if ($snapshot.Version -ne $version) { throw 'Version differs from the source snapshot.' }
+if ($snapshot.Candidate -ne $Candidate) { throw 'Candidate differs from the source snapshot.' }
+$candidateSuffix = if ($Candidate) { "-$Candidate" } else { '' }
 
 function Assert-SourceSnapshot {
     foreach ($line in (Get-Content -LiteralPath (Join-Path $repo 'SOURCE-FILES.sha256') -Encoding UTF8)) {
@@ -141,13 +143,13 @@ $fileLines = @(Get-ChildItem -LiteralPath $publish -File -Recurse | Sort-Object 
 })
 [System.IO.File]::WriteAllLines((Join-Path $output 'PUBLISH-FILES.sha256'), $fileLines, $utf8)
 $baseName = "CutAssistantNext-$version-Build$BuildNumber-win-x64"
-$zipPath = Join-Path $output "$baseName-$Candidate.zip"
+$zipPath = Join-Path $output "$baseName$candidateSuffix.zip"
 [System.IO.Compression.ZipFile]::CreateFromDirectory($publish, $zipPath, [System.IO.Compression.CompressionLevel]::Optimal, $false)
 Invoke-Step 'installer' $compiler @("--define=CanPublishDir=$publish", "--define=CanOutputDir=$output", "--define=CanVersion=$version", "--define=CanBuildNumber=$BuildNumber", "--define=CanCandidate=$Candidate", (Join-Path $repo 'installer\CutAssistantNext-RELEASE.iss'))
-$setupPath = Join-Path $output "$baseName-Setup-$Candidate.exe"
+$setupPath = Join-Path $output "$baseName-Setup$candidateSuffix.exe"
 if (-not (Test-Path -LiteralPath $setupPath)) { throw 'Installer output missing.' }
 Copy-Item -LiteralPath $sourceArchive -Destination (Join-Path $output ([System.IO.Path]::GetFileName($sourceArchive)))
 $artifactLines = @($sourceArchive, $zipPath, $setupPath) | ForEach-Object { '{0}  {1}' -f (Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash, [System.IO.Path]::GetFileName($_) }
 [System.IO.File]::WriteAllLines((Join-Path $output 'SHA256SUMS.txt'), [string[]]$artifactLines, $utf8)
 Assert-SourceSnapshot
-Write-Host "Release candidate ready: $output"
+Write-Host "Release packages ready: $output"
