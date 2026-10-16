@@ -1,5 +1,11 @@
 # Projektstatus
 
+## 16.10.2026 – CAN 1.0.0 Build 32: stabile Pakete lokal fertig und eingefroren
+
+**Setup, Portable-ZIP, CAN-/Motor-/libmpv-Quellen, Relink und SHA-256** aus lokalem Quellcommit **3e2ac03dfe4a701ecbc95c80cc06ff2527309b9f** erstellt. Anzeige **1.0.0 · Build 32** ohne RC; otr-can 0.1.5 unverändert. Endgültiger isolierter Locked Restore, Release **0 Warnungen/0 Fehler**, **1347/1347 Pakettests**, keine übersprungen. **250 Portable-Dateien**, **558 Quellen-ZIP-Dateien**, **13 native Fallgruppen**, keine Bindungsfehler; endgültige Helfer-DLLs bytegleich mit den Paketen. Persönliche Einstellungen erhalten.
+
+Sieben Auslieferungsdateien unter `artifacts/release-1.0.0-build32` schreibgeschützt eingefroren. Buildzähler 32; alle acht lokalen Lockdateien einschließlich der vier vorbestehenden Änderungen erhalten; 70 ältere Release-Dateien unverändert. Ergebnisdokumentation folgt dem gebauten Quellpin, ohne Archive nachträglich zu ändern. **Neue persönliche Windows-11-VM-/Setup-/Portable-/Deinstallationsabnahme steht aus. Kein Push, Tag oder GitHub-Release.** Bekannte AVI-/MP4Box-Grenzen bleiben dokumentiert. [Paketprüfung und SHA-256](RELEASE-1.0.0-BUILD32-RESULT.md), [VM-Übergabe](UEBERGABE-CAN-1.0.0-BUILD32-20261016.txt).
+
 ## 16.10.2026 – Funktions-Freeze und lokale Pakete für CAN 1.0.0 beauftragt
 
 Nach der persönlichen Funktionsabnahme erklärt der Nutzer den Stand für eingefroren und „1.0 Release ready“; anschließend Auftrag **Setup, ZIP und zugehörige Artefakte**. Ziel **1.0.0 · Build 32** ohne RC-Kennung, unverändertes otr-can 0.1.5. Keine weiteren größeren Funktionen ohne ausdrückliche Entscheidung. Versionsdatei, Paketbau und Setup für stabile Kennungen angepasst; README, Anleitung, Freeze-Umfang und Release Notes aktualisiert.

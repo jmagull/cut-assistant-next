@@ -2,7 +2,7 @@
 
 ## CAN 1.0.0 · Build 32 – eingefrorener Funktionsstand
 
-Stand **16.10.2026**: Kommandozeilenstart, Drag & Drop und umschaltbare Standard-/Power-User-Ansicht sind persönlich bestätigt. Frame-Lupe, Frame-Liste und beide Schnittmotoren wurden persönlich geprüft. Die stabile Fassung trägt keinen RC-Zusatz. Setup und Portable werden derzeit vorbereitet; ihre Windows-11-VM-Abnahme folgt. [Release Notes](RELEASE-NOTES-1.0.0.md), [Paketnachweis](RELEASE-1.0.0-BUILD32-RESULT.md), [Funktions-Freeze](FREEZE-1.0.0-20261016.md). Die folgenden älteren Einführungen erläutern die Herkunft der weiterhin enthaltenen Funktionen. AVI- und MP4Box-Grenzen gelten weiterhin.
+Stand **16.10.2026**: Kommandozeilenstart, Drag & Drop und umschaltbare Standard-/Power-User-Ansicht sind persönlich bestätigt. Frame-Lupe, Frame-Liste und beide Schnittmotoren wurden persönlich geprüft. Die stabile Fassung trägt keinen RC-Zusatz. Setup und Portable sind lokal erstellt, technisch geprüft und eingefroren; ihre persönliche Windows-11-VM-Abnahme folgt. [Release Notes](RELEASE-NOTES-1.0.0.md), [Paketnachweis](RELEASE-1.0.0-BUILD32-RESULT.md), [Funktions-Freeze](FREEZE-1.0.0-20261016.md). Die folgenden älteren Einführungen erläutern die Herkunft der weiterhin enthaltenen Funktionen. AVI- und MP4Box-Grenzen gelten weiterhin.
 
 ## Build 31 RC3 – Hauptplayersuche und AVI-Schutz
 

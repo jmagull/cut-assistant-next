@@ -1,0 +1,31 @@
+Cut Assistant Next 1.0.0 · Build 32 – Übergabe zur Windows-11-VM-Prüfung
+Stand: 16.10.2026
+
+Pakete relativ zum Repository:
+artifacts\release-1.0.0-build32
+
+Setup:
+CutAssistantNext-1.0.0-Build32-win-x64-Setup.exe
+
+Portable:
+CutAssistantNext-1.0.0-Build32-win-x64.zip
+
+Prüfsummen:
+SHA256SUMS.txt (alle sechs Archive; Quellen-/Lizenzpakete im selben Ordner)
+
+Persönliche Prüfung des neuen Pakets:
+1. Setup in der Windows-11-VM installieren; Start und Anzeige 1.0.0 · Build 32 ohne RC prüfen.
+2. Werkzeugpfade einschließlich des beiliegenden tools\otr-can\otr_can.exe kontrollieren.
+3. Video laden, Kommandozeilenübergabe und Drag & Drop verwenden; Standard-/Power-User-Wechsel mit erhaltenen Schnittpunkten und Position prüfen.
+4. Frame-Lupe, Navigation, Schnittliste sowie Schnitte mit MP4Box und otr-can im gewohnten Praxisablauf prüfen; Bild, Übergänge und Tonspuren kontrollieren.
+5. Setup deinstallieren und Deinstallation prüfen.
+6. Portable-ZIP vollständig in einen eigenen Ordner entpacken, CutAssistantNext.App.exe starten und denselben grundlegenden Ablauf prüfen.
+
+.NET 10 Desktop Runtime x64, die externen Medienwerkzeuge und gegebenenfalls VC++-/FFMS2-Voraussetzungen müssen in der VM vorhanden sein; Details stehen in VORAUSSETZUNGEN.txt und NUTZERANLEITUNG.md im Paket. RELEASE-NOTES.md ist ebenfalls beigefügt.
+
+Bekannte Grenzen bleiben dokumentiert: AVI experimentell und geschützt; MP4Box bei Radical mit Werbeblitzer 57:27.314, otr-can 0.1.5 persönlich blitzfrei geprüft. Keine allgemeine Formatgarantie.
+
+Quellcommit: 3e2ac03dfe4a701ecbc95c80cc06ff2527309b9f
+Technisch geprüft: 0 Warnungen/0 Fehler; 1347/1347 Pakettests; 13 native Fallgruppen; 250 Portable-Dateien; 558 Quellen-ZIP-Dateien.
+
+Pakete eingefroren; bisherige RC-Releases unverändert. Noch kein Push, Tag oder GitHub-Release. Nach persönlicher Paketabnahme erfolgt die gesondert freizugebende stabile Veröffentlichung.

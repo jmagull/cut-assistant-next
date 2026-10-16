@@ -24,7 +24,7 @@ Radical mit otr-can 0.1.5 ist vom Nutzer nach Bild, Ton und allen Übergängen a
 
 ## Pakete und Quellen
 
-Geplanter lokaler Paketsatz: `artifacts/release-1.0.0-build32`.
+Erstellter und technisch geprüfter lokaler Paketsatz: `artifacts/release-1.0.0-build32`.
 
 - Setup und Portable-ZIP, Windows x64, abhängig von der separat installierten .NET-10-Desktop-Laufzeit.
 - Vollständige passende CAN-Quellen mit Herkunft und Dateimanifest.
@@ -40,3 +40,7 @@ Quell- und Paketnachweise werden im [Ergebnisbericht](RELEASE-1.0.0-BUILD32-RESU
 Die Funktionsabnahme und der lokale Paketauftrag sind erteilt. **Eine GitHub-Veröffentlichung ist damit nicht beauftragt.** Der lokale Quellcommit wurde anschließend ausdrücklich freigegeben. Push und Tag bleiben gesondert freizugeben. Die neue Setup-/Deinstallations-/Portable-Abnahme in einer Windows-11-VM erfolgt an den fertigen 1.0-Paketen; ältere Build-31-Abnahmen werden nicht übertragen. Echte DPI-/Mehrmonitorwechsel sind noch nicht persönlich bestätigt.
 
 AVI bleibt experimentell. Ungeeignete Zeitstrukturen, Codec-/Audio-/Decodergrenzen und bekannte MP4Box-Grenzen bleiben transparent dokumentiert. Version 1.0 verspricht keine fehlerfreie Unterstützung sämtlicher Medien. Externe FFmpeg/ffprobe-, GPAC/MP4Box- und FFMS2-Werkzeuge sowie für otr-can die passende VC++-Laufzeit bleiben erforderlich. Keine neue bitidentische Reproduzierbarkeit der unveränderten Motor-EXE behauptet.
+
+## Paketabschluss
+
+Lokaler Quellcommit **3e2ac03dfe4a701ecbc95c80cc06ff2527309b9f**; Setup, Portable, passende Quellen-/Lizenzarchive und Prüfsummen erstellt und schreibgeschützt eingefroren. **1347/1347 Pakettests**, Release **0 Warnungen/0 Fehler**, 13 native Fallgruppen erfolgreich. Buildzähler nach bestandenem Paketlauf auf 32 übernommen. Persönliche VM-Paketabnahme und gesonderte Veröffentlichung bleiben die nächsten Schritte; [Ergebnis und Prüfsummen](RELEASE-1.0.0-BUILD32-RESULT.md).
