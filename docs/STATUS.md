@@ -1,5 +1,99 @@
 # Projektstatus
 
+## 17.10.2026 – Heutige Praxistestrunde beendet; Commit und Push freigegeben
+
+Der Nutzer beendet die heutige Testrunde und beauftragt ausdrücklich **Commit und Push**. Gesichert werden der vorbereitete 1.0-Quellstand sowie die persönlichen Abnahmen: Produktiv-Setup, Drag & Drop, beide Ansichten und problemloser Wechsel, Halbierungssuche, Frame-Lupe, Schutzdialog und die dokumentierten Filmtests. Der Doc-Zwischenstand mit unfertiger Cutlist ist aufgelöst; die fertige Cutlist läuft mit beiden Motoren persönlich problemlos. Bekannte Radical-/Toxic-Folge-1-MP4Box-Befunde bleiben dokumentiert.
+
+Paketquellpin bleibt **3e2ac03dfe4a701ecbc95c80cc06ff2527309b9f**, **1.0.0 · Build 32**, otr-can 0.1.5. Eingefrorene Archive/Prüfsummen, Buildzähler und acht lokale Lockdateien erhalten; vier vorbestehende Produktions-Lockänderungen ausdrücklich außerhalb des Commits. Abschließender Git-Ausführungsnachweis lokal unter `.build/commit-push-20261017`. Kein neuer Build/Testlauf für die reine Abnahmedokumentation; bestehender Paketnachweis **1347/1347 Tests**, Release ohne Warnungen/Fehler. **Neue VM-/Setup-/Deinstallations-/Portable-Abnahme sowie Tag und Veröffentlichung bleiben gesonderte Schritte.**
+
+## 17.10.2026 – Brilliant Minds mit drei Abschnitten und beiden Motoren persönlich erfolgreich
+
+**Brilliant Minds (HQ, Aufnahme 16.10.2026)**: MP4Box schneidet drei Abschnitte und fügt sie erfolgreich zusammen. Persönlich bestätigt **„ohne blitzer“**. Der anschließende otr-can-0.1.5-Lauf ist vollständig erfolgreich; Rückmeldung **„auc alle prima“** als positive Gesamtbewertung dokumentiert.
+
+OTR-Protokoll: eine Indexierung, **179998** gültige Quellframes, **60103** verifizierte Videopakete; eine Stereo-AAC-Spur, 48 kHz, **115397760** verifizierte dekodierte Samples. Abschließende MP4-Prüfung erfolgreich. Konsistente Sollausgabe **2404,120 s = 00:40:04.120**. OTR-Endzeiten jeweils 0,040 s später als die MP4Box-Anforderungen; kein vollständig identischer A/B-Plan behauptet.
+
+Nur Abnahmedokumentation ergänzt; eingefrorene Pakete, Code, Lockdateien und Buildzähler erhalten. Kein neuer CAN-Build/Testlauf; technischer Paketnachweis weiterhin 1347/1347 Tests. Keine weitere VM-/Portable-/Deinstallationsabnahme gemeldet. [Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 17.10.2026 – Doc S02E16 mit fertiger Cutlist: beide Motoren persönlich erfolgreich
+
+Der Nutzer stellt klar, dass die vorherige Cutlist noch nicht fertig war. Mit dem nun gesetzten Schluss-Schnitt enden die beiden Behaltebereiche für otr-can bei **2180.000 s** und **3737.160 s**, statt den zweiten Abschnitt bis ans Videoende laufen zu lassen. MP4Box-Protokoll mit `582.96:2179.96` und `2842.36:3737.12` samt Zusammenfügen erfolgreich. Der Nutzer bestätigt **„Beide ohne probleme“**.
+
+otr-can **0.1.5**: eine Indexierung, **157446** gültige Quellframes, zwei Behalteabschnitte, **62296** verifizierte Videopakete; Stereo-AAC, 48 kHz, **119608320** verifizierte dekodierte Samples. Abschließende MP4-/Zeitstempel-/Padding-/Decoderkonfigurationsprüfung erfolgreich. Konsistente Sollausgabe **2491,840 s = 00:41:31.840**. Die MP4Box-Endanforderungen liegen jeweils 0,040 s früher; kein identischer A/B-Plan behauptet.
+
+Die frühere Abbruchdiagnose betrifft die **unfertige Cutlist**, nicht den jetzt erfolgreichen finalen Filmtest. Merksatz: **Cutlist einschließlich Schlussbereich vollständig erstellen; alle behaltenen Bereiche müssen von den Originaltonspuren abgedeckt sein.** Bei dieser Aufnahme war der Schluss-Schnitt nötig; kein allgemeiner Zwang zu einem Schluss-Schnitt bei jeder Datei. Kein Programm-/Motorfehler im finalen Doc-Test nachgewiesen. Diagnosebericht, Anleitung, README und Abnahmestand entsprechend korrigiert.
+
+Nur Dokumentation geändert; eingefrorene Pakete, Code, acht Lockdateien und Buildzähler erhalten. Kein neuer CAN-Build/Testlauf, technischer Paketnachweis weiterhin 1347/1347 Tests. VM-/Portable-/Deinstallationsabnahme bleibt gesondert. [Finaler Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md), [historischer Zwischenstand und Auflösung](DOC-S02E16-AUDIOENDE-20261017.md).
+
+## 17.10.2026 – Historischer Doc-Zwischenstand: unfertige Cutlist bis zum Videoende
+
+Der nachgereichte otr-can-Lauf scheitert nach erfolgreicher Videoverifikation an **242520960 erwarteten / 242483328 vorhandenen PCM-Samples**. Das unveränderte Original hat **6297.840 s Video**, aber nur **6297.056 s Stereo-AAC-Ton bei 48 kHz**: **0,784 s = 37632 Samples fehlen am Schluss**. Unabhängige Dekodierung mit dem unveränderten Motorfilter reproduziert die Samplezahl exakt, ohne Warnungen. Die strenge PCM-Prüfung stoppt den Auftrag; kein erfolgreiches otr-can-Endergebnis für den ursprünglichen Plan.
+
+Rein diagnostisch geprüfte Variante: Behalte-Ende **01:44:57.040** liefert exakt die erwarteten **242482560** Samples. Dafür würden **20 Videobilder / 0,8 s Schluss** entfallen; keine Cutliständerung und kein vollständiger neuer Filmschnitt durchgeführt. Kein automatisches Auffüllen oder Lockern der Prüfung. MP4Box bleibt persönlich mit „Alles prima“ bestätigt.
+
+Nachträglich vom Nutzer als **unfertige Cutlist** eingeordnet; der anschließende finale Doc-Test mit Schluss-Schnitt ist mit beiden Motoren persönlich erfolgreich. Dieser Eintrag bewahrt ausschließlich den historischen Zwischenstand und seine technische Erklärung. Original, Anwendung/Motor, eingefrorene Pakete, acht Lockdateien und Buildzähler erhalten. Keine neue Release-/VM-Abnahme; technischer Paketnachweis weiterhin 1347/1347 Tests, kein neuer CAN-Build/Testlauf für die Dokumentation. [Ursache, Audioprüfungen und begrenzte Variante](DOC-S02E16-AUDIOENDE-20261017.md).
+
+## 17.10.2026 – Doc S02E16 mit MP4Box persönlich positiv geprüft
+
+**Doc S02E16 (HQ, Aufnahme 16.10.2026)**: Das bereitgestellte MP4Box-Protokoll zeigt zwei Behalteabschnitte **582.96–2179.96 s** und **2842.36–6297.8 s**, anschließendes Zusammenfügen und Abschluss **„Fertig.“**. Der Nutzer bestätigt anschließend ausdrücklich **„Alles prima“**. MP4Box damit für diesen Praxisfall persönlich positiv geprüft.
+
+Der Nutzer kündigt **„Jetzt kommt otr-cn“** an; der otr-can-Test dieses Falls steht zum Zeitpunkt dieses Eintrags noch aus. Nur Abnahmedokumentation ergänzt; eingefrorene Pakete, Programmcode, Lockdateien und Buildzähler erhalten. Kein neuer Build/Testlauf; technischer Paketnachweis weiterhin 1347/1347 Tests. [Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 17.10.2026 – Toxic Folge 3: MP4Box persönlich positiv, otr-can technisch erfolgreich
+
+**Toxic Folge 3 S1E3 (HQ, Aufnahme 16.10.2026)**: MP4Box beendet den einzelnen Behalteabschnitt **`-splitx 747.3:3222.76`** mit „Fertig.“; persönliche Rückmeldung **„MP4Box prima“**. Der otr-can-0.1.5-Lauf ist laut Protokoll ebenfalls erfolgreich abgeschlossen; eine zusätzliche persönliche Bewertung dieser otr-can-Ausgabe wurde in dieser Nachricht noch nicht ausdrücklich genannt.
+
+OTR-Protokoll: eine Indexierung, **239975** gültige Quellframes, Behalteabschnitt **747.300–3222.780 s**, **123774** verifizierte Videopakete; Stereo-AAC, 48 kHz, **118823040** geprüfte dekodierte Samples. Konsistente Sollausgabe aus Protokollwerten: **2475,480 s = 00:41:15.480**. OTR-Endzeit **0,020 s** später als im MP4Box-Aufruf; kein identischer A/B-Plan behauptet.
+
+Nur Abnahmedokumentation ergänzt; eingefrorene Pakete, Code, Lockdateien und Buildzähler erhalten. Kein neuer Build/Testlauf, technischer Paketnachweis weiterhin 1347/1347 Tests. Bekannte frühere MP4Box-Befunde und offene Paket-/VM-Prüfpunkte unverändert. [Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 17.10.2026 – Toxic Folge 2 mit beiden Motoren persönlich erfolgreich geprüft
+
+**Toxic Folge 2 S1E2 (HQ, Aufnahme 16.10.2026)**: MP4Box beendet den einzelnen Behalteabschnitt **`-splitx 511.84:2931.26`** mit „Fertig.“; der Nutzer bestätigt **„Keine Blitzer“**. Der anschließende otr-can-0.1.5-Lauf ist ebenfalls erfolgreich, persönliche Rückmeldung **„auch alles prima“**.
+
+OTR-Protokoll: eine Indexierung, **194968** gültige Quellframes, ein Behalteabschnitt **511.840–2931.280 s**, **120972** verifizierte Videopakete; Stereo-AAC, 48 kHz, **116133120** geprüfte dekodierte Samples. Konsistente Sollausgabe aus Protokollwerten: **2419,440 s = 00:40:19.440**. Die OTR-Endzeit liegt **0,020 s** nach dem MP4Box-Aufruf; kein vollständig identischer A/B-Plan behauptet. Der frühere Blitzer bei **Toxic Folge 1** ist ein anderer Testfall und bleibt dokumentiert.
+
+Nur Abnahmedokumentation ergänzt; eingefrorene Pakete, Programmcode, Lockdateien und Buildzähler erhalten. Kein neuer Build/Testlauf; technischer Paketnachweis weiterhin 1347/1347 Tests. Keine weitere VM-/Portable-/Deinstallationsabnahme gemeldet. [Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 17.10.2026 – Beide Ansichten und problemloser Wechsel persönlich bestätigt
+
+Der Nutzer bestätigt **„sieht beides gut aus, umschalten klappt ohne probleme“** mit zwei Screenshots aus **CAN 1.0.0 · Build 32**. Standard- und Power-User-Ansicht zeigen **Winter Spring Summer or Fall** mit Frame **47.524**, Position **00:31:40**, sechs identischen Schnittbereichen und angezeigter Schnittdauer **01:28:50.160**. Auch Lautstärke **74 %** und Halbierungssuchweite **1 Frame** stimmen sichtbar überein. Beide Darstellungen und der Ansichtswechsel sind damit persönlich positiv geprüft.
+
+Nur Abnahmedokumentation ergänzt; eingefrorene Pakete, Programmcode, Lockdateien und Buildzähler erhalten. Technischer Paketnachweis weiterhin 1347/1347 Tests und Release ohne Warnungen/Fehler; kein neuer Build/Testlauf für diesen Nachtrag. Die gesonderte Windows-11-VM-/Portable-/Deinstallationsabnahme bleibt offen. [Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 17.10.2026 – Halbierungssuche und Frame-Lupe persönlich bestätigt
+
+Der Nutzer meldet **„halbierungssuche check“** und **„Framelupe check“**. Damit sind **Halbierungssuche und Frame-Lupe** für den aktuellen CAN-1.0.0-Build-32-Praxislauf persönlich positiv geprüft.
+
+Nur Abnahmedokumentation ergänzt; Programmcode, eingefrorene Pakete, Prüfsummen, Lockdateien und Buildzähler erhalten. Technischer Paketnachweis weiterhin **1347/1347 Tests**, Release **0 Warnungen/0 Fehler**; kein neuer Build oder Testlauf für diesen Dokumentationsnachtrag. [Paket-/Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 17.10.2026 – Winter Spring Summer or Fall mit beiden Motoren persönlich positiv geprüft
+
+Weiterer realer HQ-Filmtest: **Winter Spring Summer or Fall**, Aufnahme vom 16.10.2026. MP4Box-Protokoll enthält fünf `-splitx`-Aufrufe und anschließendes Zusammenfügen bis **„Fertig.“**. Der Nutzer bestätigt **„Alles in Ordnung keine Blitzer“**, außerdem **„ort-can auch alles ok“** (otr-can).
+
+otr-can **0.1.5**: eine FFMS2-Indexierung, **194972** gültige Quellframes, fünf Behalteabschnitte, **133254** geprüfte Videopakete. Eine Stereo-AAC-Spur mit 48 kHz und **255847680** geprüften dekodierten Samples, abschließende MP4-Paket-/Zeitstempelprüfung erfolgreich. Aus Protokollwerten berechnet: **5330,160 s (01:28:50.160)** Sollausgabe. Die fünf OTR-Endzeiten liegen jeweils 0,040 s hinter den im MP4Box-Aufruf übergebenen Endzeiten; daher kein vollständig identischer A/B-Schnittplan behauptet.
+
+Persönlicher positiver Filmtest dokumentiert; keine zusätzliche vollständige Decoder-, Tonspur-Einzel- oder VM-/Portable-/Deinstallationsabnahme daraus abgeleitet. Bekannte Radical-/Toxic-MP4Box-Befunde bleiben bestehen. Nur Dokumentation geändert; eingefrorene Pakete, Code, Lockdateien und Buildzähler erhalten. Kein neuer Build oder Testlauf; technischer Paketnachweis weiterhin 1347/1347 Tests. Der Nutzer testet weiter. [Abnahmebericht und Abschnittsvergleich](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 17.10.2026 – Schutzdialog beim Videowechsel persönlich geprüft
+
+Der Nutzer bestätigt **„Prüfdialog check“** mit Screenshot des Dialogs **„Videodatei wechseln“** in CAN **1.0.0 · Build 32**. Sichtbar sind die Rückfrage zum Laden einer anderen Datei und Verwerfen der aktuellen Schnittarbeit, der Hinweis auf vorheriges Speichern der Cutlist sowie **Ja/Nein**. Damit ist die angezeigte Schutzrückfrage persönlich geprüft. Eine tatsächlich gewählte Antwort oder das nachfolgende Verhalten wurde in dieser Rückmeldung nicht getrennt bestätigt.
+
+Paketbericht, Status und Tagebuch ergänzt. Technischer Nachweis der Ja-/Nein-/Zustandserhaltung bleibt der vorhandene automatisierte/native Prüfstand; kein neuer Build oder Testlauf für diesen Dokumentationsnachtrag. Eingefrorene Pakete, Programmcode, Lockdateien und Buildzähler erhalten; VM-/Portable-/Deinstallationsabnahme weiterhin offen. [Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 17.10.2026 – Toxic in der Power-User-Ansicht geprüft; Drag & Drop erneut bestätigt
+
+Persönlicher Praxislauf mit **Toxic Folge 1 S1E1 (HQ, Aufnahme 16.10.2026)** in der Profi-/Power-User-Darstellung. MP4Box-Aufruf mit **`-splitx 746.3:3104.8`** beendet den einzigen Behalteabschnitt erfolgreich; der Nutzer meldet jedoch **einen Blitzer am Filmanfang**. Mit **otr-can 0.1.5 kein Blitzer am Anfang, alles prima**. Im vom Nutzer bereitgestellten Cutlist-Server-Screenshot sind die otr-can-Ausgabe als blitzfrei und **Bild, Ton und alle Schnittübergänge als geprüft** vermerkt. Einzelne Tonspuren sind nicht getrennt beschrieben; keine zusätzliche technische Bild-/Paketdiagnose durchgeführt.
+
+Zusätzlich ausdrücklich bestätigt: **„video in Player gezogen check :-)“**. Drag & Drop damit erneut im persönlichen Praxislauf positiv gemeldet. Die gemeldeten Prüfungen sind nicht als VM-/Portable-/Deinstallationsabnahme bezeichnet; diese Prüfpunkte bleiben offen. Der erfolgreiche MP4Box-Prozesslauf und seine Bildqualität bleiben getrennt bewertet, die bestehende Präzisionsgrenze ist um den konkreten Toxic-Fall ergänzt.
+
+Nur Dokumentation ergänzt; eingefrorene Pakete, Prüfsummen, Programmcode, Lockdateien und Buildzähler erhalten. Technischer Paketnachweis weiterhin **1347/1347 Tests**, Release **0 Warnungen/0 Fehler**; kein erneuter Build oder Testlauf für diesen Dokumentationsnachtrag. [Paket-/Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md), [Hinweise zu MP4Box](NUTZERANLEITUNG.md#mp4box-erfolgreichen-schnitt-auf-werbeblitzer-prüfen).
+
+## 16.10.2026 – CAN 1.0.0 Build 32: Setup auf dem Produktivrechner persönlich bestätigt
+
+Der Nutzer meldet ausdrücklich **„setup produktiv rechner check“**. Damit ist das Setup von **CAN 1.0.0 · Build 32** auf dem Produktivrechner persönlich erfolgreich geprüft. Die vorherigen Screenshots zeigen die stabile Versionsanzeige sowie Standard- und Power-User-Ansicht mit geladenem Film und gleicher Position/Schnittliste.
+
+Die persönliche Windows-11-VM-Abnahme des neuen Setup-Pakets, der Deinstallation und der Portable-Ausgabe steht weiterhin aus. Bekannte AVI-/MP4Box-Grenzen gelten weiter. Nur Abnahmedokumentation ergänzt; eingefrorene Pakete, Prüfsummen, gebauter Quellcommit, Programmcode, lokale Lockdateien und Buildzähler bleiben erhalten. Technischer Paketnachweis weiterhin **1347/1347 Tests**, Build **0 Warnungen/0 Fehler**; kein neuer Build oder Testlauf für diesen reinen Dokumentationsnachtrag. [Paketbericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
 ## 16.10.2026 – CAN 1.0.0 Build 32: stabile Pakete lokal fertig und eingefroren
 
 **Setup, Portable-ZIP, CAN-/Motor-/libmpv-Quellen, Relink und SHA-256** aus lokalem Quellcommit **3e2ac03dfe4a701ecbc95c80cc06ff2527309b9f** erstellt. Anzeige **1.0.0 · Build 32** ohne RC; otr-can 0.1.5 unverändert. Endgültiger isolierter Locked Restore, Release **0 Warnungen/0 Fehler**, **1347/1347 Pakettests**, keine übersprungen. **250 Portable-Dateien**, **558 Quellen-ZIP-Dateien**, **13 native Fallgruppen**, keine Bindungsfehler; endgültige Helfer-DLLs bytegleich mit den Paketen. Persönliche Einstellungen erhalten.
