@@ -1,5 +1,49 @@
 # Entwicklungstagebuch
 
+## 18.10.2026 – Stabile Veröffentlichung CAN 1.0.0 ausdrücklich freigegeben
+
+Nach persönlich abgeschlossener Setup-/Deinstallations-/Portable-Abnahme in der VM beauftragt der Nutzer ausdrücklich **Veröffentlichung**. Die seit dem letzten Push ergänzten persönlichen Prüfungen werden gesichert. Veröffentlichung unveränderter sieben Dateien aus `artifacts/release-1.0.0-build32` als **stabile Version 1.0.0 · Build 32**, keine Vorabversion, als Latest vorgesehen. Annotierter Tag **v1.0.0** muss auf den tatsächlich gebauten Quellcommit **3e2ac03dfe4a701ecbc95c80cc06ff2527309b9f** zeigen.
+
+Vor Freigabe im Entwurf vollständiger Abgleich aller GitHub-Assetnamen, Größen und SHA-256-Digests; anschließend erneut öffentlich prüfen. Bestehende RC-Releases/Tags/Archive bleiben erhalten. Vier vorbestehende Produktions-Lockänderungen bleiben außerhalb des Commits; kein Versions-/Buildwechsel, Neuverpacken oder neuer Motor. Technischer Paketnachweis unverändert 1347/1347 Tests, Release ohne Warnungen/Fehler; kein erneuter Build für den Veröffentlichungsschritt. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-1.0.0.md).
+
+## 18.10.2026 – Portable/ZIP in der VM persönlich erfolgreich; Paketabnahme abgeschlossen
+
+Nach erfolgreichem VM-Setup und Deinstallation bestätigt der Nutzer jetzt **Portable/ZIP**: **Umstellen auf einen anderen otr-can-Pfad check**; **MP4 mit MP4Box und otr-can check, Bild und Ton check, Halbierungssprung check**; **AVI mit MP4Box und otr-can check**. Damit sind die vorgesehenen persönlichen **Setup-/Deinstallations-/Portable-Praxistests in der VM** für **CAN 1.0.0 · Build 32** gemeldet.
+
+Die persönliche Bild-/Tonbestätigung steht im neuen Bericht unter MP4; keine zusätzliche getrennte AVI-Bild-/Ton- oder Schutzsperrenprüfung für Portable daraus abgeleitet. Die entsprechenden AVI-Prüfungen des Setup-Laufs bleiben separat dokumentiert. Bekannte AVI-/MP4Box-Grenzen bleiben transparent erhalten.
+
+Abnahmestand in README, Anleitung, Release-/Freeze-Unterlagen und Übergabe geschlossen. Nur Repository-Dokumentation geändert; eingefrorene Pakete samt beigelegten Dokumenten, Quellpin, Code, acht Lockdateien und Buildzähler erhalten. Kein neuer CAN-Build/Testlauf; Paketnachweis weiterhin **1347/1347 Tests**, Release ohne Warnungen/Fehler. **Tag und stabile Veröffentlichung bleiben gesondert freizugeben.** [Paket-/Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 18.10.2026 – VM-Setup und Deinstallation persönlich erfolgreich; Portable folgt
+
+Der Nutzer meldet die **VM-Setup-Prüfung** für **CAN 1.0.0 · Build 32**: **Darstellungswechsel check**; bei **AVI MP4Box und otr-can check, Bild und Ton check, Frame-Lupe geblockt check, Halbierungssprung geblockt check**. Bei **MP4 „Frame Lupe doppel check“**; erfolgreiche Schnittprotokolle mit beiden Motoren liegen vor. **Deinstallation: check. Jetzt kommt ZIP** – Portable ist angekündigt und noch nicht persönlich abgenommen.
+
+AVI-Fall **Die Teufelsbrigade**, sechs Behalteabschnitte: beide Motoren erfolgreich; otr-can 0.1.5 nach einmaliger Indexierung von 263694 Frames mit **182574** geprüften Videopaketen und **350542080** geprüften Audiosamples bei 48 kHz, MP3 → AAC-LC Stereo 192 kbit/s. Die FFmpeg-Vorbereitung enthält weiterhin Zeitstempelwarnungen; diese bleiben transparent dokumentiert. MP4-Fall **Grey’s Anatomy – Durchs Feuer**, drei Behalteabschnitte: MP4Box fertig, otr-can mit **60651** geprüften Videopaketen und **116449920** geprüften Stereo-AAC-Samples, Endmux erfolgreich. Keine zusätzliche aufgeschlüsselte persönliche MP4-Bild-/Tonabnahme aus der reinen Logausgabe abgeleitet.
+
+**VM-Setup und Deinstallation sind damit persönlich bestätigt. Portable/ZIP bleibt offen.** Abnahmestand in README, Anleitung, Release-/Freeze-Unterlagen und VM-Übergabe aktualisiert. Nur Dokumentation geändert; eingefrorene Pakete, Code, Lockdateien und Buildzähler erhalten. Kein neuer CAN-Build/Testlauf; technischer Paketnachweis weiterhin 1347/1347 Tests und Release ohne Warnungen/Fehler. Tag und Veröffentlichung bleiben gesondert freizugeben. [Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 18.10.2026 – Toxic Folge 6: Keyframe-Grenzen sowie Bild und Ton beider Ausgaben geprüft
+
+**Toxic Folge 6 S1E6 (HQ, Aufnahme 17.10.2026)**: Zwei MP4Box-Läufe mit je einem Behalteabschnitt und Abschluss **„Fertig.“**. Zuerst **`-splitx 653.02:3449.48`**, anschließend **`-splitx 653.82:3446.74`**. Der Nutzer bestätigt **„Anfang und Ende auf Key-Frames gesetzt :-)“**. Die zweite Anforderung beginnt 0,800 s später und endet 2,740 s früher; angeforderte Behaltedauer **2792,920 s = 00:46:32.920**, keine gemessene Ausgabedauer.
+
+Keyframe-Auswahl an beiden Grenzen und technischer Abschluss beider Läufe dokumentiert. Anschließend bestätigt der Nutzer ausdrücklich **„Bild und Ton in beiden Fällen check :-)“**: Bild und Ton beider MP4Box-Ausgaben persönlich positiv geprüft. Ein otr-can-Ergebnis für Folge 6 wurde hier nicht mitgeliefert. Keine zusätzliche technische Keyframe-/IDR-Diagnose durchgeführt. Nur Abnahmedokumentation ergänzt; eingefrorene Pakete, Code, Lockdateien und Buildzähler erhalten. Kein neuer CAN-Build/Testlauf; Paketnachweis weiterhin 1347/1347 Tests. [Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 18.10.2026 – Toxic Folge 5: MP4Box mit Lupe korrigiert, gewählte Ausgabe blitzfrei
+
+**Toxic Folge 5 S1E5 (HQ, Aufnahme 17.10.2026)**: MP4Box zunächst mit Werbeblitzer am Anfang. Der Nutzer setzt den Vorspannbeginn anschließend mit der **Frame-Lupe auf Keyframe 28.258** und bestätigt das neue MP4Box-Ergebnis als **werbeblitzerfrei**. Er wählt ausdrücklich diesen MP4Box-Schnitt, da laut seiner Bewertung nur der Vorspann betroffen ist. **otr-can in beiden Varianten persönlich in Ordnung**. Das nachgereichte positive MP4Box-Ergebnis beruht auf der persönlichen Rückmeldung; der gezeigte MP4Box-Aufruf `565.18:3042.58` belegt nicht den exakten Aufruf nach der Korrektur.
+
+Vorliegendes OTR-Protokoll: eine Indexierung, **209972** gültige Quellframes, Behalteabschnitt **565.180–3042.600 s**, **123871** verifizierte Videopakete; Stereo-AAC, 48 kHz, **118916160** verifizierte dekodierte Samples. Abschließende MP4-Prüfung erfolgreich. Konsistente Sollausgabe **2477,420 s = 00:41:17.420**. Ein technischer OTR-Lauf protokolliert; die zweite Variante ist persönlich bestätigt. Keine allgemeine MP4Box-/Keyframe-Garantie daraus abgeleitet.
+
+Nur Abnahmedokumentation und Benutzerhinweis ergänzt; Programm/Motoren, eingefrorene Pakete, Lockdateien und Buildzähler erhalten. Kein neuer CAN-Build/Testlauf, Paketnachweis weiterhin 1347/1347 Tests. [Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
+## 18.10.2026 – Toxic Folge 4: MP4Box-Anfangsblitzer, otr-can am Anfang blitzfrei
+
+**Toxic Folge 4 S1E4 (HQ, Aufnahme 17.10.2026)**: MP4Box beendet den einzelnen Behalteabschnitt **`-splitx 570.12:3202.3`** mit „Fertig.“; persönliche Rückmeldung **„Werbeblitzer am Anfang“**. Der otr-can-0.1.5-Lauf endet samt abschließender MP4-Prüfung erfolgreich; der Nutzer bestätigt **„Keine Blitzer am Anfang“**.
+
+OTR-Protokoll: eine Indexierung, **223494** gültige Quellframes, ein Behalteabschnitt **570.120–3202.320 s**, **131610** verifizierte Videopakete; Stereo-AAC, 48 kHz, **126345600** verifizierte dekodierte Samples. Konsistente Sollausgabe **2632,200 s = 00:43:52.200**. OTR-Endzeit 0,020 s später als die MP4Box-Anforderung; kein vollständig identischer A/B-Plan behauptet. Die persönliche Qualitätsbestätigung bezieht sich ausdrücklich auf den Anfang.
+
+Weitere persönliche MP4Box-Präzisionsgrenze dokumentiert; keine zusätzliche Bild-/Paketdiagnose durchgeführt. Nur Abnahmedokumentation und Benutzerhinweis ergänzt; eingefrorene Pakete, Code, Lockdateien und Buildzähler erhalten. Kein neuer CAN-Build/Testlauf; Paketnachweis weiterhin 1347/1347 Tests. VM-/Portable-/Deinstallationsabnahme bleibt gesondert. [Abnahmebericht](RELEASE-1.0.0-BUILD32-RESULT.md).
+
 ## 17.10.2026 – Heutige Praxistestrunde beendet; Commit und Push freigegeben
 
 Der Nutzer beendet die heutige Testrunde und beauftragt ausdrücklich **Commit und Push**. Gesichert werden der vorbereitete 1.0-Quellstand sowie die persönlichen Abnahmen: Produktiv-Setup, Drag & Drop, beide Ansichten und problemloser Wechsel, Halbierungssuche, Frame-Lupe, Schutzdialog und die dokumentierten Filmtests. Der Doc-Zwischenstand mit unfertiger Cutlist ist aufgelöst; die fertige Cutlist läuft mit beiden Motoren persönlich problemlos. Bekannte Radical-/Toxic-Folge-1-MP4Box-Befunde bleiben dokumentiert.

@@ -13,6 +13,14 @@ CutAssistantNext-1.0.0-Build32-win-x64.zip
 Prüfsummen:
 SHA256SUMS.txt (alle sechs Archive; Quellen-/Lizenzpakete im selben Ordner)
 
+Nachtrag 18.10.2026 – persönlicher VM-Abnahmestand:
+- Setup erfolgreich.
+- Darstellung umschalten erfolgreich.
+- AVI: MP4Box und otr-can sowie Bild/Ton erfolgreich; Frame-Lupe und Halbierungssprung geblockt.
+- MP4: Frame-Lupe „doppel check“; erfolgreiche Schnittprotokolle beider Motoren liegen vor.
+- Deinstallation erfolgreich.
+- Portable/ZIP erfolgreich: anderer otr-can-Pfad; MP4 mit MP4Box und otr-can samt Bild/Ton und Halbierungssprung; AVI mit MP4Box und otr-can. Die vorgesehenen persönlichen VM-Setup-/Deinstallations-/Portable-Prüfungen sind abgeschlossen.
+
 Persönliche Prüfung des neuen Pakets:
 1. Setup in der Windows-11-VM installieren; Start und Anzeige 1.0.0 · Build 32 ohne RC prüfen.
 2. Werkzeugpfade einschließlich des beiliegenden tools\otr-can\otr_can.exe kontrollieren.
@@ -28,4 +36,4 @@ Bekannte Grenzen bleiben dokumentiert: AVI experimentell und geschützt; MP4Box 
 Quellcommit: 3e2ac03dfe4a701ecbc95c80cc06ff2527309b9f
 Technisch geprüft: 0 Warnungen/0 Fehler; 1347/1347 Pakettests; 13 native Fallgruppen; 250 Portable-Dateien; 558 Quellen-ZIP-Dateien.
 
-Pakete eingefroren; bisherige RC-Releases unverändert. Noch kein Push, Tag oder GitHub-Release. Nach persönlicher Paketabnahme erfolgt die gesondert freizugebende stabile Veröffentlichung.
+Pakete eingefroren; bisherige RC-Releases unverändert. Quell- und damaliger Dokumentationsstand am 17.10.2026 auf Nutzerauftrag gepusht. Noch kein Tag oder GitHub-Release. Persönliche VM-Setup-/Deinstallations-/Portable-Abnahme abgeschlossen. Git-Tag v1.0.0 und stabile Veröffentlichung am 18.10.2026 ausdrücklich beauftragt. Ausführungsnachweis: docs/RELEASE-PUBLICATION-1.0.0.md.
