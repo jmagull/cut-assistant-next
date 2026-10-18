@@ -1,5 +1,11 @@
 # Entwicklungstagebuch
 
+## 18.10.2026 – CAN 1.0.0 als erste stabile Latest-Version veröffentlicht
+
+**Cut Assistant Next 1.0.0 · Build 32** auf ausdrücklichen Nutzerauftrag **öffentlich und stabil als Latest** veröffentlicht, kein Entwurf/keine Vorabversion. Annotierter Tag **v1.0.0** am tatsächlich gebauten Quellcommit **3e2ac03dfe4a701ecbc95c80cc06ff2527309b9f**, Motor otr-can 0.1.5 unverändert. Persönliche Produktiv-/VM-Setup-/Deinstallations-/Portable-Abnahme vor Veröffentlichung im jeweils gemeldeten Umfang dokumentiert.
+
+**Alle sieben Uploads vor/nach Freigabe** über Namen, Bytezahl und SHA-256-Digest geprüft; Release Notes, Quellpin und Latest-Status bestätigt. Acht frühere öffentliche Releases, bestehende Tags und 70 ältere lokale Release-Dateien unverändert. Neue Pakete identisch zum eingefrorenen abgenommenen Satz. Acht lokale Lockdateien und Buildzähler 32 erhalten, vier bestehende Produktions-Lockänderungen ausgeschlossen. Kein neuer Build/Versionswechsel/Neuverpacken, Paketnachweis weiterhin **1347/1347 Tests**, Release ohne Warnungen/Fehler. [Stabiles Release](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.0), [Veröffentlichungsnachweis](RELEASE-PUBLICATION-1.0.0.md).
+
 ## 18.10.2026 – Stabile Veröffentlichung CAN 1.0.0 ausdrücklich freigegeben
 
 Nach persönlich abgeschlossener Setup-/Deinstallations-/Portable-Abnahme in der VM beauftragt der Nutzer ausdrücklich **Veröffentlichung**. Die seit dem letzten Push ergänzten persönlichen Prüfungen werden gesichert. Veröffentlichung unveränderter sieben Dateien aus `artifacts/release-1.0.0-build32` als **stabile Version 1.0.0 · Build 32**, keine Vorabversion, als Latest vorgesehen. Annotierter Tag **v1.0.0** muss auf den tatsächlich gebauten Quellcommit **3e2ac03dfe4a701ecbc95c80cc06ff2527309b9f** zeigen.

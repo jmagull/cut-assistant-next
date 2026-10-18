@@ -1,6 +1,6 @@
 # Cut Assistant Next 1.0.0 · Build 32
 
-Stabile Erstveröffentlichung am **18.10.2026** ausdrücklich freigegeben; persönliche Setup-/Deinstallations-/Portable-Abnahme abgeschlossen. Die unveränderten Pakete werden als stabile Latest-Ausgabe veröffentlicht; [Ausführung und Uploadnachweise](RELEASE-PUBLICATION-1.0.0.md).
+Am **18.10.2026** als [erste stabile Latest-Ausgabe veröffentlicht](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.0). Persönliche Setup-/Deinstallations-/Portable-Abnahme abgeschlossen; alle sieben unveränderten Uploads vor und nach Veröffentlichung verifiziert. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-1.0.0.md).
 
 ## Neu gegenüber 0.3.0 · Build 31 · RC3
 
@@ -24,6 +24,6 @@ Auch bei **Toxic Folge 1 und 4** wurden MP4Box-Anfangsblitzer gemeldet; otr-can 
 
 ## Prüfung und Pakete
 
-Persönlich bestätigt: Kommandozeilenstart, Drag & Drop, Power-User-Layout, Frame-Lupe, Frame-Liste sowie erfolgreiche Schnitte mit beiden Motoren. Vorbereitungsstand: **1347/1347 automatisierte Tests**, Release-Build ohne Warnungen/Fehler. Die abschließenden 1.0-Paketnachweise und SHA-256-Prüfsummen stehen im [Paketprüfbericht](RELEASE-1.0.0-BUILD32-RESULT.md). Am **18.10.2026** sind VM-Setup, Darstellungswechsel, AVI-Schnitte mit beiden Motoren samt Bild/Ton und Schutzsperren, MP4-Frame-Lupe sowie Deinstallation persönlich bestätigt. **Portable/ZIP ist anschließend ebenfalls persönlich positiv bestätigt:** anderer otr-can-Pfad, MP4-Schnitte mit beiden Motoren samt Bild/Ton und Halbierungssprung sowie AVI-Schnitte mit beiden Motoren. Setup-/Deinstallations-/Portable-Paketabnahme abgeschlossen; stabile Veröffentlichung am 18.10.2026 ausdrücklich freigegeben.
+Persönlich bestätigt: Kommandozeilenstart, Drag & Drop, Power-User-Layout, Frame-Lupe, Frame-Liste sowie erfolgreiche Schnitte mit beiden Motoren. Vorbereitungsstand: **1347/1347 automatisierte Tests**, Release-Build ohne Warnungen/Fehler. Die abschließenden 1.0-Paketnachweise und SHA-256-Prüfsummen stehen im [Paketprüfbericht](RELEASE-1.0.0-BUILD32-RESULT.md). Am **18.10.2026** sind VM-Setup, Darstellungswechsel, AVI-Schnitte mit beiden Motoren samt Bild/Ton und Schutzsperren, MP4-Frame-Lupe sowie Deinstallation persönlich bestätigt. **Portable/ZIP ist anschließend ebenfalls persönlich positiv bestätigt:** anderer otr-can-Pfad, MP4-Schnitte mit beiden Motoren samt Bild/Ton und Halbierungssprung sowie AVI-Schnitte mit beiden Motoren. Setup-/Deinstallations-/Portable-Paketabnahme abgeschlossen; stabile Veröffentlichung am 18.10.2026 ausdrücklich freigegeben und als Latest ausgeführt.
 
 Setup, Portable-ZIP, passende Quellen-/Lizenzpakete und Prüfsummen werden gemeinsam bereitgestellt. Ältere RC-Releases bleiben unverändert verfügbar. [Benutzeranleitung](NUTZERANLEITUNG.md), [Freeze-Umfang](FREEZE-1.0.0-20261016.md).
