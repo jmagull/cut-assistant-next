@@ -1,6 +1,9 @@
 Cut Assistant Next 1.0.1 · Build 34 – persönliche Paketprüfung
 Paketstand: 19.10.2026. Abnahme und Veröffentlichung: 20.10.2026.
-Stabile Latest-Version: https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.1
+Am 20.10.2026 auf Nutzerwunsch vorübergehend als Entwurf zurückgenommen.
+Aktuelle stabile Latest-Version: CAN 1.0.0 · Build 32
+https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.0
+Die Build-34-Abnahmen bleiben als historische Nachweise erhalten.
 
 BESTÄTIGT: normales Setup auf dem Arbeitsrechner erfolgreich getestet.
 Vera mit MP4Box und Musikladen mit otr-can 0.1.6: jeweils Bild, Ton,

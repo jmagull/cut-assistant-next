@@ -1,5 +1,7 @@
 # Veröffentlichung – CAN 1.0.1 · Build 34
 
+**Aktueller Status, 20.10.2026:** CAN 1.0.1 · Build 34 ist auf ausdrücklichen Nutzerauftrag **vorübergehend nicht öffentlich** und als Entwurf mit allen sieben Dateien erhalten. **CAN 1.0.0 · Build 32 ist wieder die aktuelle stabile Latest-Version.** Die nachstehenden Angaben zur Veröffentlichung von 1.0.1 sind historische Nachweise; [Rücknahme und öffentlicher Status](RELEASE-WITHDRAWAL-1.0.1-20261020.md).
+
 Auf ausdrücklichen Nutzerauftrag am **20.10.2026** als [stabile Version und aktuelle Latest-Ausgabe](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.1) veröffentlicht. **Kein Entwurf und keine Vorabversion.** Sämtliche vorgesehenen persönlichen Pakettests waren vor Veröffentlichung positiv bestätigt.
 
 ## Quellstand, Pakete und Abnahmen

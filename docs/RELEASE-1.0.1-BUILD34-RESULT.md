@@ -1,5 +1,7 @@
 # CAN 1.0.1 · Build 34 – lokaler Paketprüfbericht
 
+**Aktueller Status, 20.10.2026:** CAN 1.0.1 · Build 34 ist auf ausdrücklichen Nutzerauftrag **vorübergehend nicht öffentlich** und als Entwurf mit allen sieben Dateien erhalten. **CAN 1.0.0 · Build 32 ist wieder die aktuelle stabile Latest-Version.** Die nachstehenden Angaben zur Veröffentlichung von 1.0.1 sind historische Nachweise; [Rücknahme und öffentlicher Status](RELEASE-WITHDRAWAL-1.0.1-20261020.md).
+
 Stand: **19.10.2026**. Vom Nutzer ausdrücklich beauftragt: otr-can 0.1.6 in Setup, ZIP und zugehörige Quellen integrieren. **Am 20.10.2026 als stabile Latest-Version veröffentlicht; [Veröffentlichungsnachweis](RELEASE-PUBLICATION-1.0.1.md). Nachtrag 20.10.2026: Setup auf Arbeitsrechner und in der VM, VM-Deinstallation und Portable in der VM persönlich erfolgreich geprüft. Die vorgesehenen persönlichen Pakettests sind abgeschlossen.**
 
 ## Umfang und Ergebnis

@@ -1,5 +1,7 @@
 # Cut Assistant Next 1.0.1 · Build 34
 
+**Aktueller Status, 20.10.2026:** CAN 1.0.1 · Build 34 ist auf ausdrücklichen Nutzerauftrag **vorübergehend nicht öffentlich** und als Entwurf mit allen sieben Dateien erhalten. **CAN 1.0.0 · Build 32 ist wieder die aktuelle stabile Latest-Version.** Die nachstehenden Angaben zur Veröffentlichung von 1.0.1 sind historische Nachweise; [Rücknahme und öffentlicher Status](RELEASE-WITHDRAWAL-1.0.1-20261020.md).
+
 **Veröffentlicht am 20.10.2026** nach erfolgreicher persönlicher Setup-/VM-/Deinstallations-/Portable-Abnahme. Unveränderter geprüfter Paketsatz vom **19.10.2026**; die frühere Version 1.0.0 · Build 32 bleibt erhalten. [Downloads und Veröffentlichungsnachweis](RELEASE-PUBLICATION-1.0.1.md).
 
 ## Neu gegenüber 1.0.0
