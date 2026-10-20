@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using CutAssistantNext.Media.Playback;
+using CutAssistantNext.Media.Analysis;
 
 namespace CutAssistantNext.App.ViewModels;
 
@@ -58,8 +59,11 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
         {
             CutCompletionCheckPointKind.Beginning => "Wiedergabe direkt ab Filmanfang.",
             CutCompletionCheckPointKind.End => "Wiedergabe ab 3 Sekunden vor dem tatsächlichen Filmende.",
-            _ => "Wiedergabe ab 3 Sekunden vor dem Übergang."
-        }) + " Bitte Bild, Ton und Tonsynchronität prüfen.";
+            _ => _completion?.AreTransitionsMeasured == true
+                ? "Wiedergabe ab 3 Sekunden vor dem geprüften Übergang."
+                : "Wiedergabe ab 3 Sekunden vor der berechneten Prüfstelle; der tatsächliche Schnitt kann abweichen."
+        }) + " Bitte Bild, Ton und Tonsynchronität prüfen." +
+        (string.IsNullOrWhiteSpace(_completion?.ReviewNotice) ? string.Empty : " " + _completion.ReviewNotice);
 
     internal Task ReviewAsync(CutCompletionViewModel completion, int index, nint handle)
     {
@@ -78,11 +82,15 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
 
             Playback.CancelSeek();
             var completionChanged = !ReferenceEquals(_completion, completion);
+            var needsReload = completionChanged ||
+                !string.Equals(_loadedPath, completion.OutputFilePath, StringComparison.OrdinalIgnoreCase) ||
+                _player.State is MediaPlayerState.Error or MediaPlayerState.Empty or MediaPlayerState.Ended;
+            if (completion.Result.Timeline.Identity is { } identity)
+                await CutOutputIdentityVerifier.ValidateAsync(completion.OutputFilePath, identity, needsReload, token);
             _completion = completion;
             _index = index;
             Notify();
-            if (completionChanged || !string.Equals(_loadedPath, completion.OutputFilePath, StringComparison.OrdinalIgnoreCase) ||
-                _player.State is MediaPlayerState.Error or MediaPlayerState.Empty or MediaPlayerState.Ended)
+            if (needsReload)
             {
                 _loadedPath = null;
                 await LoadReadyAsync(completion.OutputFilePath, token);

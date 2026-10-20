@@ -59,18 +59,18 @@ function New-Fixture($caseDirectory) {
         [IO.File]::WriteAllText((Join-Path $package $name), 'Synthetic test fixture, not a distribution package.', $utf8)
     }
     # A source checksum fixture; no real sources/release archives are prepared here.
-    [IO.File]::WriteAllText((Join-Path $package 'sources/otr-can-0.1.5-source.zip'), 'source checksum fixture', $utf8)
+    [IO.File]::WriteAllText((Join-Path $package 'sources/otr-can-0.1.6-source.zip'), 'source checksum fixture', $utf8)
     $provenance = [PSCustomObject]@{
-        Version = '0.1.5'
+        Version = '0.1.6'
         ExecutableSha256 = (Get-FileHash -LiteralPath (Join-Path $package 'otr_can.exe') -Algorithm SHA256).Hash
-        SourceArchiveSha256 = (Get-FileHash -LiteralPath (Join-Path $package 'sources/otr-can-0.1.5-source.zip') -Algorithm SHA256).Hash
+        SourceArchiveSha256 = (Get-FileHash -LiteralPath (Join-Path $package 'sources/otr-can-0.1.6-source.zip') -Algorithm SHA256).Hash
     }
     Write-Provenance $package $provenance
     Write-Manifest $package
     return $package
 }
 
-$cases = @('no-motor', 'valid', 'old-snapshot', 'old-provenance', 'missing-source', 'changed-exe', 'wrong-source-hash', 'escape-manifest', 'missing-capability', 'wrong-cli-version')
+$cases = @('no-motor', 'valid', 'old-snapshot', 'old-provenance', 'missing-source', 'changed-exe', 'wrong-source-hash', 'escape-manifest', 'missing-capability', 'missing-overlap-capability', 'wrong-cli-version')
 $results = @()
 foreach ($case in $cases) {
     $caseDirectory = Join-Path $root $case
@@ -79,22 +79,22 @@ foreach ($case in $cases) {
     $publish = Join-Path $caseDirectory 'publish'
     [IO.Directory]::CreateDirectory($logs) | Out-Null
     [IO.Directory]::CreateDirectory($publish) | Out-Null
-    $snapshot = [PSCustomObject]@{ OtrCanVersion = '0.1.5' }
+    $snapshot = [PSCustomObject]@{ OtrCanVersion = '0.1.6' }
     $OtrCanPackageDirectory = if ($case -eq 'no-motor') { '' } else { New-Fixture $caseDirectory }
     $script:CapabilityOverride = $null
     $script:VersionOverride = $null
     $expectedError = $null
     switch ($case) {
-        'old-snapshot' { $snapshot.OtrCanVersion = '0.1.4'; $expectedError = 'source snapshot declares a different motor version' }
+        'old-snapshot' { $snapshot.OtrCanVersion = '0.1.5'; $expectedError = 'source snapshot declares a different motor version' }
         'old-provenance' {
             $provenance = Get-Content -LiteralPath (Join-Path $OtrCanPackageDirectory 'ENGINE-PROVENANCE.json') -Raw | ConvertFrom-Json
-            $provenance.Version = '0.1.4'
+            $provenance.Version = '0.1.5'
             Write-Provenance $OtrCanPackageDirectory $provenance
             Write-Manifest $OtrCanPackageDirectory
             $expectedError = 'Unexpected motor package version'
         }
         'missing-source' {
-            Remove-Item -LiteralPath (Join-Path $OtrCanPackageDirectory 'sources/otr-can-0.1.5-source.zip')
+            Remove-Item -LiteralPath (Join-Path $OtrCanPackageDirectory 'sources/otr-can-0.1.6-source.zip')
             $expectedError = 'Missing motor package file'
         }
         'changed-exe' {
@@ -113,7 +113,8 @@ foreach ($case in $cases) {
             $expectedError = 'Motor manifest entry escapes package'
         }
         'missing-capability' { $script:CapabilityOverride = 'not-mp3-aac-v1'; $expectedError = 'does not report the required MP3-to-AAC capability' }
-        'wrong-cli-version' { $script:VersionOverride = 'otr_can 0.1.4'; $expectedError = 'Bundled motor version check failed' }
+        'missing-overlap-capability' { $script:CapabilityOverride = 'mp3-aac-v1'; $expectedError = 'does not report the required AAC-overlap capability' }
+        'wrong-cli-version' { $script:VersionOverride = 'otr_can 0.1.5'; $expectedError = 'Bundled motor version check failed' }
     }
     $errorMessage = $null
     try { & $validate | Out-Null }
@@ -128,6 +129,7 @@ foreach ($case in $cases) {
             if ((Get-FileHash -LiteralPath $copy -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash) { throw 'Copy changed fixture contents.' }
         }
         if (@((Get-Content -LiteralPath (Join-Path $logs 'motor-capabilities.log') -Raw) -split '\s+') -notcontains 'mp3-aac-v1') { throw 'Real capability probe failed.' }
+        if (@((Get-Content -LiteralPath (Join-Path $logs 'motor-capabilities.log') -Raw) -split '\s+') -notcontains 'aac-overlap-v1') { throw 'Real AAC-overlap capability probe failed.' }
     }
     if ($case -eq 'no-motor' -and ((Test-Path -LiteralPath (Join-Path $publish 'tools/otr-can')) -or @(Get-ChildItem -LiteralPath $logs).Count)) { throw 'Optional motor was unexpectedly used.' }
     $results += [PSCustomObject]@{ Case = $case; Passed = $true; ExpectedRejection = [bool]$expectedError; Message = $errorMessage }

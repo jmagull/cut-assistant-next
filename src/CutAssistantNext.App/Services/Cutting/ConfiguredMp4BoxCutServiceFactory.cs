@@ -76,6 +76,6 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
                 progress);
 
         return new Mp4BoxCutService(
-            runner);
+            runner, new ConfiguredCutOutputAnalyzer());
     }
 }

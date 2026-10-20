@@ -36,7 +36,11 @@ public sealed class OtrCanCutServiceTests : IDisposable
     {
         var request = Request();
         var runner = new FakeRunner();
-        await Service(runner).RunAsync(request);
+        ICutEngine engine = Service(runner);
+        var result = await engine.RunWithResultAsync(request);
+        Assert.Equal(CutReviewTimingKind.Planned, result.TimingKind);
+        Assert.Equal(TimeSpan.FromSeconds(1.16), Assert.Single(result.Timeline.Transitions));
+        Assert.Equal(TimeSpan.FromSeconds(1.84), result.Timeline.Duration);
         Assert.Equal(2, runner.Calls.Count);
         Assert.Equal(["-c", "-k", request.OriginalFilePath], runner.Calls[0].Args.Take(3));
         var args = runner.Calls[1].Args;

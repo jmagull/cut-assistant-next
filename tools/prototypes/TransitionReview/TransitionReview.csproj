@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CanAssemblyDirectory Condition="'$(CanAssemblyDirectory)' == ''">$(MSBuildThisFileDirectory)..\..\..\artifacts\portable-1.0.0-build32-proof</CanAssemblyDirectory>
+  </PropertyGroup>
+  <!-- Isolated experiment: reuse the actual player sources without rebuilding CAN. -->
+  <ItemGroup>
+    <Reference Include="CutAssistantNext.Core"><HintPath>$(CanAssemblyDirectory)\CutAssistantNext.Core.dll</HintPath></Reference>
+    <Reference Include="CutAssistantNext.Media"><HintPath>$(CanAssemblyDirectory)\CutAssistantNext.Media.dll</HintPath></Reference>
+    <Compile Include="../../../src/CutAssistantNext.App/Controls/MpvVideoHost.cs" Link="Player/MpvVideoHost.cs" />
+    <Compile Include="../../../src/CutAssistantNext.App/ViewModels/PlaybackViewModel.cs" Link="Player/PlaybackViewModel.cs" />
+    <Compile Include="../../../src/CutAssistantNext.App/Dialogs/CutReviewWindow.xaml.cs" Link="Player/CutReviewWindow.xaml.cs" />
+    <Page Include="../../../src/CutAssistantNext.App/Dialogs/CutReviewWindow.xaml" Link="Player/CutReviewWindow.xaml" />
+    <None Include="$(CanAssemblyDirectory)\*.dll" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Target Name="RequirePreparedCan" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(CanAssemblyDirectory)\CutAssistantNext.Media.dll') Or !Exists('$(CanAssemblyDirectory)\libmpv-2.dll')" Text="CanAssemblyDirectory must point to an existing CAN runtime, including libmpv. CAN is not rebuilt by this prototype." />
+  </Target>
+</Project>

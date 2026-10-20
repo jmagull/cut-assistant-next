@@ -1,0 +1,33 @@
+Cut Assistant Next 1.0.1 · Build 33 – persönliche Paketprüfung
+Stand: 19.10.2026. Lokal erstellt, noch nicht veröffentlicht.
+
+Pakete im Repository unter artifacts/release-1.0.1-build33:
+- CutAssistantNext-1.0.1-Build33-win-x64-Setup.exe
+- CutAssistantNext-1.0.1-Build33-win-x64.zip
+- Quellen-/Lizenzarchive und SHA256SUMS.txt
+
+Voraussetzungen: Windows 11 x64, .NET 10 Desktop Runtime x64,
+FFmpeg/ffprobe, GPAC/MP4Box, FFMS2; für otr-can passende VC++-Laufzeit.
+
+1. Setup in der Windows-11-VM installieren; bei Bedarf Upgrade über 1.0.0 prüfen.
+2. Versionsanzeige muss „Cut Assistant Next · 1.0.1 · Build 33“ nennen.
+3. Standard-/Power-User-Ansicht, Laden und Wiedergabe kurz prüfen.
+4. MP4Box-Schnitt mit mehreren Abschnitten durchführen. Die Abschlussanzeige
+   kennzeichnet bestätigte Ausgabezeiten; „Prüfen“ startet drei Sekunden vor
+   dem tatsächlichen Übergang, bei sehr frühen Übergängen am Dateianfang.
+5. Wenn eine Zusatzanalyse keinen eindeutigen Nachweis liefert, muss der Film
+   trotzdem erhalten bleiben und die Anzeige die berechneten Prüfstellen nennen.
+   Radical kann hierfür weiterhin ein Praxisfall sein; der bekannte Blitzer bleibt.
+6. Einen bisher erfolgreichen otr-can-Fall auf Bild, Ton und Übergänge prüfen.
+   otr-can bleibt 0.1.5. Musikladen wird durch dieses Paket noch nicht korrigiert.
+7. Setup deinstallieren und Ergebnis zurückmelden.
+8. Portable-ZIP in einem anderen Ordner entpacken, Programm starten,
+   Werkzeugpfade/Version und beide Motoren wie gewohnt prüfen.
+
+Bitte Setup, Deinstallation und Portable getrennt zurückmelden.
+Technisch bestanden: 1385/1385 Paketbuild-Tests, zusätzlich 890/890 App-Tests
+mit finalen Paket-DLLs, 250 Portable-Dateien und drei native Übergangsprüfungen.
+Persönliche Abnahme dieses neuen Pakets ist noch offen.
+
+Detaillierter Nachweis: docs/RELEASE-1.0.1-BUILD33-RESULT.md
+Commit, Push und Veröffentlichung sind noch nicht beauftragt.

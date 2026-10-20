@@ -30,13 +30,23 @@ public sealed class Mp4BoxCutWorkflow
             overwriteExistingOutput);
     }
 
-    public async Task RunAsync(
+    public Task RunAsync(
         string sourceFilePath,
         string outputFilePath,
         IReadOnlyList<Mp4BoxSplitRange> ranges,
         IProgress<CutProgressUpdate>? progress,
         CancellationToken cancellationToken = default,
-        bool overwriteExistingOutput = false)
+        bool overwriteExistingOutput = false) =>
+        RunWithAnalysisAsync(sourceFilePath, outputFilePath, ranges, progress, cancellationToken, overwriteExistingOutput);
+
+    public async Task<Mp4BoxWorkflowResult> RunWithAnalysisAsync(
+        string sourceFilePath,
+        string outputFilePath,
+        IReadOnlyList<Mp4BoxSplitRange> ranges,
+        IProgress<CutProgressUpdate>? progress,
+        CancellationToken cancellationToken = default,
+        bool overwriteExistingOutput = false,
+        ICutOutputAnalyzer? analyzer = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
             sourceFilePath);
@@ -125,47 +135,58 @@ public sealed class Mp4BoxCutWorkflow
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (segmentFilePaths.Count == 1)
+            var pendingOutput = segmentFilePaths.Count == 1 ? segmentFilePaths[0] : concatOutputFilePath;
+            if (segmentFilePaths.Count > 1)
             {
-                File.Move(
-                    segmentFilePaths[0],
-                    fullOutputFilePath,
-                    overwrite: outputFileExists && overwriteExistingOutput);
+                progress?.Report(new(CutProgressKind.Status, "Segmente werden zusammengefügt …"));
+                await _runner.RunConcatAsync(segmentFilePaths, pendingOutput, cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            CutOutputTimeline? timeline = null;
+            string? warning = null;
+            if (analyzer is not null)
+            {
+                progress?.Report(new(CutProgressKind.Status, "Schnittstellen im fertigen Film werden geprüft …"));
+                using var analysisCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                analysisCancellation.CancelAfter(TimeSpan.FromMinutes(10));
+                try
+                {
+                    timeline = await analyzer.AnalyzeAsync(pendingOutput, segmentFilePaths.AsReadOnly(),
+                        progress, analysisCancellation.Token).ConfigureAwait(false);
+                    if (timeline.Transitions.Count != ranges.Count - 1 || timeline.Identity is null)
+                        throw new InvalidDataException("Die Ausgabeanalyse hat keine vollständigen bestätigten Übergänge geliefert.");
+                }
+                catch (Exception error) when (error is not OutOfMemoryException)
+                {
+                    // Cutting is complete. Failed, timed-out or canceled review analysis must not discard the film.
+                    timeline = null;
+                    warning = error is OperationCanceledException
+                        ? "Die Übergangsprüfung wurde abgebrochen. Die Prüfstellen sind nur aus dem Schnittplan berechnet."
+                        : "Die tatsächlichen Übergänge konnten nicht bestätigt werden. Die Prüfstellen sind nur aus dem Schnittplan berechnet.";
+                    progress?.Report(new(CutProgressKind.Output, warning));
+                    progress?.Report(new(CutProgressKind.Output, "Grund der Übergangsprüfung: " + error.Message));
+                }
             }
             else
             {
-                progress?.Report(
-                    new CutProgressUpdate(
-                        CutProgressKind.Status,
-                        "Segmente werden zusammengefügt …"));
-
-                await _runner.RunConcatAsync(
-                    segmentFilePaths,
-                    concatOutputFilePath,
-                    cancellationToken);
-
                 cancellationToken.ThrowIfCancellationRequested();
-
-                File.Move(
-                    concatOutputFilePath,
-                    fullOutputFilePath,
-                    overwrite: outputFileExists && overwriteExistingOutput);
             }
 
-            progress?.Report(
-                new CutProgressUpdate(
-                    CutProgressKind.Status,
-                    "Fertig."));
+            File.Move(pendingOutput, fullOutputFilePath, overwrite: outputFileExists && overwriteExistingOutput);
+            progress?.Report(new(CutProgressKind.Status, "Fertig."));
+            return new(timeline, warning);
         }
         finally
         {
-            File.Delete(
-                concatOutputFilePath);
-
-            foreach (var segmentFilePath in segmentFilePaths)
+            foreach (var path in segmentFilePaths.Prepend(concatOutputFilePath))
             {
-                File.Delete(
-                    segmentFilePath);
+                try { File.Delete(path); }
+                catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+                {
+                    progress?.Report(new(CutProgressKind.Output,
+                        $"Arbeitsdatei konnte nicht gelöscht werden: {path} ({error.Message})"));
+                }
             }
         }
     }

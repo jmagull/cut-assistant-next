@@ -1408,8 +1408,7 @@ public partial class MainWindow : Window
 
                     _cutNamingState = viewModel.CreateNamingState();
 
-                    var completionViewModel =
-                        new CutCompletionViewModel(outputTarget.FilePath, cutPlan);
+                    CutCompletionViewModel? completionViewModel = null;
 
                     var cutApplicationSettingsStore =
                         new CutApplicationSettingsStore();
@@ -1502,10 +1501,11 @@ public partial class MainWindow : Window
                             cutRequest = cutRequest.WithSourceFilePath(temporaryVideo);
                         }
 
-                        await cutEngine.RunAsync(
+                        var cutResult = await cutEngine.RunWithResultAsync(
                             cutRequest,
                             progress,
                             cancellationTokenSource.Token);
+                        completionViewModel = new CutCompletionViewModel(cutResult);
 
                         cutSucceeded = true;
 
@@ -1551,7 +1551,7 @@ public partial class MainWindow : Window
                         }
                     }
 
-                    if (cutSucceeded)
+                    if (cutSucceeded && completionViewModel is not null)
                     {
                         progressDialog.Close();
                         new CutCompletionDialog(completionViewModel, progressViewModel.ProtocolText,

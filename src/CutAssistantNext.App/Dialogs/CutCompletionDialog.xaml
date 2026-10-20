@@ -58,6 +58,7 @@
                     <StackPanel>
                         <TextBlock Text="Stellen zur Kontrolle" FontSize="16" FontWeight="SemiBold" Foreground="#1F2937" />
                         <TextBlock Text="{Binding TimeReferenceText}" TextWrapping="Wrap" Foreground="#6B7280" Margin="0,6,0,14" />
+                        <TextBlock Text="{Binding ReviewNotice}" TextWrapping="Wrap" Foreground="#92400E" Margin="0,0,0,10" />
                         <ItemsControl ItemsSource="{Binding CheckPoints}" AutomationProperties.Name="Kontrollstellen im geschnittenen Film">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>

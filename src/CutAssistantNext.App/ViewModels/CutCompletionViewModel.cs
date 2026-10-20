@@ -2,6 +2,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using CutAssistantNext.Core.Editing;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Cutlists.Editing;
 
 namespace CutAssistantNext.App.ViewModels;
@@ -9,34 +10,29 @@ namespace CutAssistantNext.App.ViewModels;
 public sealed class CutCompletionViewModel
 {
     public CutCompletionViewModel(string outputFilePath, CutPlan cutPlan)
+        : this(CreatePlannedResult(outputFilePath, cutPlan)) { }
+
+    private static CutResult CreatePlannedResult(string outputFilePath, CutPlan cutPlan)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(outputFilePath);
         ArgumentNullException.ThrowIfNull(cutPlan);
+        return CutResult.Planned(outputFilePath, CutlistKeepSegmentBuilder.Build(cutPlan)
+            .Select(s => new KeepSegment(s.Start, s.Duration)));
+    }
 
-        var keepSegments = CutlistKeepSegmentBuilder.Build(cutPlan);
-        if (keepSegments.Count == 0)
-        {
-            throw new ArgumentException("Der Schnittplan enthält keinen Filmabschnitt.", nameof(cutPlan));
-        }
-
-        OutputFilePath = outputFilePath;
-        FileName = Path.GetFileName(outputFilePath);
-
+    public CutCompletionViewModel(CutResult result)
+    {
+        ArgumentNullException.ThrowIfNull(result);
+        Result = result;
+        OutputFilePath = result.OutputFilePath;
+        FileName = Path.GetFileName(OutputFilePath);
         var checkPoints = new List<CutCompletionCheckPoint>
         {
             new("Anfang", TimeSpan.Zero) { Kind = CutCompletionCheckPointKind.Beginning }
         };
-        var outputPosition = TimeSpan.Zero;
-        for (var index = 0; index < keepSegments.Count; index++)
-        {
-            outputPosition += keepSegments[index].Duration;
-            if (index < keepSegments.Count - 1)
-            {
-                checkPoints.Add(new($"Übergang {index + 1}", outputPosition) { TransitionIndex = index });
-            }
-        }
-
-        checkPoints.Add(new("Ende", outputPosition) { Kind = CutCompletionCheckPointKind.End });
+        for (var index = 0; index < result.Timeline.Transitions.Count; index++)
+            checkPoints.Add(new($"Übergang {index + 1}", result.Timeline.Transitions[index]) { TransitionIndex = index });
+        checkPoints.Add(new("Ende", result.Timeline.Duration) { Kind = CutCompletionCheckPointKind.End });
         CheckPoints = checkPoints.Select((point, index) => point with { CheckPointIndex = index }).ToList().AsReadOnly();
         Transitions = CheckPoints.Where(point => point.IsTransition).ToList().AsReadOnly();
 
@@ -45,6 +41,7 @@ public sealed class CutCompletionViewModel
         text.AppendLine(OutputFilePath);
         text.AppendLine();
         text.AppendLine(TimeReferenceText);
+        if (!string.IsNullOrWhiteSpace(ReviewNotice)) text.AppendLine(ReviewNotice);
         foreach (var checkPoint in CheckPoints)
         {
             text.AppendLine($"{checkPoint.PositionText} – {checkPoint.Label}");
@@ -55,14 +52,21 @@ public sealed class CutCompletionViewModel
         ClipboardText = text.ToString();
     }
 
+    public CutResult Result { get; }
+    public bool AreTransitionsMeasured => Result.TimingKind == CutReviewTimingKind.Measured;
+    public string ReviewNotice => Result.Notice ?? string.Empty;
     public string OutputFilePath { get; }
     public string FileName { get; }
     public IReadOnlyList<CutCompletionCheckPoint> CheckPoints { get; }
     public IReadOnlyList<CutCompletionCheckPoint> Transitions { get; }
     public string ClipboardText { get; }
 
-    public string TimeReferenceText =>
-        "Zeitangaben im geschnittenen Film, aus dem Schnittplan berechnet. Kleine Abweichungen sind möglich.";
+    public string TimeReferenceText => Result.TimingKind switch
+    {
+        CutReviewTimingKind.Measured => "Zeitangaben im fertigen Film geprüft.",
+        CutReviewTimingKind.Estimated => "Nur berechnete Prüfstellen: Die tatsächlichen Übergänge sind nicht bestätigt.",
+        _ => "Zeitangaben im geschnittenen Film, aus dem Schnittplan berechnet. Kleine Abweichungen sind möglich."
+    };
 
     public string CheckInstructionText =>
         Transitions.Count > 0

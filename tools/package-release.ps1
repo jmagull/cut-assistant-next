@@ -25,6 +25,8 @@ $version = [string]$versionXml.Project.PropertyGroup.Version
 if ($snapshot.Version -ne $version) { throw 'Version differs from the source snapshot.' }
 if ($snapshot.Candidate -ne $Candidate) { throw 'Candidate differs from the source snapshot.' }
 $candidateSuffix = if ($Candidate) { "-$Candidate" } else { '' }
+$releaseNotes = Join-Path $repo "docs\RELEASE-NOTES-$version.md"
+if (-not (Test-Path -LiteralPath $releaseNotes -PathType Leaf)) { throw "Missing release notes for version $version." }
 
 function Assert-SourceSnapshot {
     foreach ($line in (Get-Content -LiteralPath (Join-Path $repo 'SOURCE-FILES.sha256') -Encoding UTF8)) {
@@ -90,11 +92,11 @@ foreach ($name in @('LICENSE', 'third-party\DOTNET-LICENSING.md', 'third-party\l
 $fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $publish 'CutAssistantNext.App.exe')).FileVersion
 if ($fileVersion -ne "$version.$BuildNumber") { throw "Unexpected file version: $fileVersion" }
 Copy-Item -LiteralPath (Join-Path $repo 'docs\NUTZERANLEITUNG.md') -Destination (Join-Path $publish 'NUTZERANLEITUNG.md')
-Copy-Item -LiteralPath (Join-Path $repo 'docs\RELEASE-NOTES-1.0.0.md') -Destination (Join-Path $publish 'RELEASE-NOTES.md')
+Copy-Item -LiteralPath $releaseNotes -Destination (Join-Path $publish 'RELEASE-NOTES.md')
 Copy-Item -LiteralPath (Join-Path $repo 'installer\HINWEIS-DOTNET-UND-WERKZEUGE.txt') -Destination (Join-Path $publish 'VORAUSSETZUNGEN.txt')
 $engineProvenance = $null
 if ($OtrCanPackageDirectory) {
-    $expectedEngineVersion = '0.1.5'
+    $expectedEngineVersion = '0.1.6'
     $engineSourceArchive = "sources\otr-can-$expectedEngineVersion-source.zip"
     if ($snapshot.OtrCanVersion -ne $expectedEngineVersion) { throw 'CAN source snapshot declares a different motor version.' }
     $enginePackage = (Resolve-Path -LiteralPath $OtrCanPackageDirectory).Path
@@ -126,6 +128,7 @@ if ($OtrCanPackageDirectory) {
     Invoke-Step 'motor-capabilities' (Join-Path $bundledEngine 'otr_can.exe') @('capabilities')
     $capabilities = (Get-Content -LiteralPath (Join-Path $logs 'motor-capabilities.log') -Raw) -split '\s+'
     if ($capabilities -notcontains 'mp3-aac-v1') { throw 'Bundled motor does not report the required MP3-to-AAC capability.' }
+    if ($capabilities -notcontains 'aac-overlap-v1') { throw 'Bundled motor does not report the required AAC-overlap capability.' }
 }
 $sourceHash = (Get-FileHash -LiteralPath $sourceArchive -Algorithm SHA256).Hash
 $provenance = [ordered]@{
