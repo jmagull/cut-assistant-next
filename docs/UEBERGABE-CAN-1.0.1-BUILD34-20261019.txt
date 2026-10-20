@@ -1,0 +1,57 @@
+Cut Assistant Next 1.0.1 · Build 34 – persönliche Paketprüfung
+Paketstand: 19.10.2026. Abnahmestand: 20.10.2026. Noch nicht veröffentlicht.
+
+BESTÄTIGT: normales Setup auf dem Arbeitsrechner erfolgreich getestet.
+Vera mit MP4Box und Musikladen mit otr-can 0.1.6: jeweils Bild, Ton,
+Schnitt und 3-Sekunden-Vorschau erfolgreich; Musikladen ohne NDR-Blitzer.
+BESTÄTIGT: VM-Setup mit MP4Box und otr-can 0.1.6 erfolgreich.
+Grey’s Anatomy und Teufelsbrigade-AVI: Bild, Ton, Schnitte und
+3-Sekunden-Vorschau positiv geprüft. VM-Deinstallation ausdrücklich bestätigt.
+BESTÄTIGT: Portable in der VM, otr-can-Pfad umgestellt; Grey’s Anatomy mit
+otr-can 0.1.6 (Bild, Ton, Schnitt, 3-Sekunden-Vorschau) und Teufelsbrigade-AVI
+mit MP4Box. Nutzer bestätigt „zip insgesamt check“.
+ALLE VORGESEHENEN PERSÖNLICHEN PAKETTESTS ABGESCHLOSSEN.
+Eine gesonderte Upgradeprüfung wurde nicht zusätzlich bestätigt.
+
+NEU: otr-can 0.1.6 mit der geprüften Musikladen-AAC-Korrektur ist enthalten.
+Musikladen und Navy CIS wurden mit derselben Motor-EXE bereits persönlich positiv geprüft.
+Die bestehende MP4Box-Ausgabeübergangsprüfung aus Build 33 ist erhalten.
+
+Pakete im Repository unter artifacts/release-1.0.1-build34:
+- CutAssistantNext-1.0.1-Build34-win-x64-Setup.exe
+- CutAssistantNext-1.0.1-Build34-win-x64.zip
+- CAN-/Motorquellen, libmpv-Quellen-/Relinkarchive und SHA256SUMS.txt
+
+Voraussetzungen: Windows 11 x64, .NET 10 Desktop Runtime x64,
+FFmpeg/ffprobe, GPAC/MP4Box, FFMS2; passende VC++-Laufzeit für otr-can.
+
+1. Setup in Windows 11 x64 installieren; bei Bedarf Upgrade über 1.0.0/1.0.1 prüfen.
+2. Anzeige muss „Cut Assistant Next · 1.0.1 · Build 34“ nennen.
+3. Standard-/Power-User-Ansicht, Laden und Wiedergabe kurz prüfen.
+4. Einstellungen > OTR-CAN-Werkzeuge: den Motor dieser Installation auswählen:
+   im Installationsordner tools/otr-can/otr_can.exe. FFMS2-/FFmpeg-Pfade prüfen.
+   Persönlich eingestellte ältere oder externe Motorpfade werden nicht automatisch ersetzt.
+5. Musikladen mit otr-can schneiden. Das Protokoll muss „CAN engine 0.1.6“ nennen;
+   bei der bekannten Aufnahme werden 34 AAC-Konflikte korrigiert. Anfang/Ende,
+   Bild, Ton und Synchronität prüfen. Optional Navy CIS mit beiden Tonspuren prüfen.
+6. MP4Box mit mehreren Abschnitten prüfen: Abschlussfenster nennt bestätigte
+   Ausgabezeiten; „Prüfen“ startet drei Sekunden vor dem jeweiligen Übergang,
+   bei frühen Übergängen am Dateianfang. Bei unklarer Analyse muss der fertige
+   Film erhalten bleiben und der Hinweis berechnete Prüfstellen kennzeichnen.
+   Die bekannten MP4Box-Blitzer bei Musikladen und Radical sind weiterhin offen.
+7. Setup deinstallieren und Ergebnis zurückmelden.
+8. Portable-ZIP vollständig in einem anderen Ordner entpacken und dort starten.
+   Versionsanzeige prüfen. Unter OTR-CAN-Werkzeuge bewusst den Motor aus diesem
+   entpackten Ordner wählen: tools/otr-can/otr_can.exe. Beide Motoren prüfen.
+
+Bitte Setup, Deinstallation und Portable getrennt zurückmelden.
+Technisch bestanden: 1385 CAN-Tests, zusätzlich 890 App-Tests mit finalen Paket-DLLs,
+53 Rust-Quelltests, 11 Motor-Paketprüfungen, 250 Portable-Dateien,
+drei echte CAN-Aufträge mit dem entpackten Motor und drei native Übergangsprüfungen.
+Setup-Praxistest auf dem Arbeitsrechner positiv bestätigt.
+VM-Setup und VM-Deinstallation positiv bestätigt.
+Persönliche Portable-Abnahme ebenfalls positiv bestätigt.
+Damit sind die vorgesehenen persönlichen Pakettests abgeschlossen.
+
+Detaillierter Nachweis: docs/RELEASE-1.0.1-BUILD34-RESULT.md
+Commit, Push und Veröffentlichung sind noch nicht beauftragt.
