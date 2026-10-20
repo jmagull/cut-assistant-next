@@ -1,6 +1,6 @@
 # CAN 1.0.1 · Build 34 – lokaler Paketprüfbericht
 
-Stand: **19.10.2026**. Vom Nutzer ausdrücklich beauftragt: otr-can 0.1.6 in Setup, ZIP und zugehörige Quellen integrieren. **Pakete lokal fertig; nicht veröffentlicht. Nachtrag 20.10.2026: Setup auf Arbeitsrechner und in der VM, VM-Deinstallation und Portable in der VM persönlich erfolgreich geprüft. Die vorgesehenen persönlichen Pakettests sind abgeschlossen.**
+Stand: **19.10.2026**. Vom Nutzer ausdrücklich beauftragt: otr-can 0.1.6 in Setup, ZIP und zugehörige Quellen integrieren. **Am 20.10.2026 als stabile Latest-Version veröffentlicht; [Veröffentlichungsnachweis](RELEASE-PUBLICATION-1.0.1.md). Nachtrag 20.10.2026: Setup auf Arbeitsrechner und in der VM, VM-Deinstallation und Portable in der VM persönlich erfolgreich geprüft. Die vorgesehenen persönlichen Pakettests sind abgeschlossen.**
 
 ## Umfang und Ergebnis
 
@@ -135,3 +135,7 @@ Lokale Detailnachweise unter `.build/release-1.0.1-build34-20261019`: `PACKAGE-I
 ## Veröffentlichungsfreigabe – 20.10.2026
 
 Nach Abschluss sämtlicher vorgesehener persönlicher Paketprüfungen beauftragt der Nutzer ausdrücklich Commit, Push und Veröffentlichung. Die früheren Hinweise auf fehlende Freigabe dokumentieren den damaligen Stand. Gebauter CAN-Quellcommit **`a6b7e52bddb72a2517631df2a8c5b8fb68c06ea5`**, passender Motorquellcommit **`bbc3a5104b75e7bcfc4f257ea5b14e9a1961f6db`**; alle 593 CAN-Repositorydateien und sämtliche Motorquelldateien gegen die gebauten Snapshots unter regulärer Git-Zeilenendennormalisierung geprüft. Die mitgelieferten Quellenarchive enthalten unverändert die exakten Buildbytes und ursprünglichen Snapshot-Metadaten. Spätere Abnahmen und Veröffentlichungsnachweise sind separate Folgecommits. Pakete werden nicht neu gebaut oder umgepackt. [Veröffentlichungsnachweis](RELEASE-PUBLICATION-1.0.1.md).
+
+## Veröffentlichung abgeschlossen – 20.10.2026
+
+Commit und Push in beiden Repositories abgeschlossen. Annotierter Tag **v1.0.1** am gebauten CAN-Quellcommit **`a6b7e52bddb72a2517631df2a8c5b8fb68c06ea5`**; passender Motorquellcommit **`bbc3a5104b75e7bcfc4f257ea5b14e9a1961f6db`**. [Stabiles GitHub-Release](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.1) als **Latest**, kein Entwurf oder Prerelease. Alle sieben öffentlichen Dateien anhand eindeutiger Namen, Größen und GitHub-SHA-256 mit dem unveränderten persönlich abgenommenen Paketsatz verglichen. Frühere Hinweise auf noch nicht beauftragte Veröffentlichung dokumentieren den vorherigen Stand. Kein neuer Build und kein Neuverpacken. [Vollständiger Veröffentlichungsnachweis](RELEASE-PUBLICATION-1.0.1.md).

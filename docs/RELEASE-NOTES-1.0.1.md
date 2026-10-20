@@ -1,6 +1,6 @@
 # Cut Assistant Next 1.0.1 · Build 34
 
-Lokaler Paketsatz vom **19.10.2026**, zur persönlichen Setup-/Portable-/Windows-11-VM-Abnahme. **Noch nicht veröffentlicht.** Die veröffentlichte Version 1.0.0 · Build 32 bleibt unverändert.
+**Veröffentlicht am 20.10.2026** nach erfolgreicher persönlicher Setup-/VM-/Deinstallations-/Portable-Abnahme. Unveränderter geprüfter Paketsatz vom **19.10.2026**; die frühere Version 1.0.0 · Build 32 bleibt erhalten. [Downloads und Veröffentlichungsnachweis](RELEASE-PUBLICATION-1.0.1.md).
 
 ## Neu gegenüber 1.0.0
 
@@ -25,6 +25,6 @@ AVI bleibt experimentell. Die bestehenden AVI-Bedienungssperren und Zeitstruktur
 
 Die integrierte MP4Box-Verbesserung wurde mit **1385/1385 automatisierten Tests**, Release-Build ohne Warnungen/Fehler und technischen Kontrollplayer-Prüfungen erprobt. Persönliche Rückmeldungen liegen für sieben Schnitt-/Prüffälle mit sechs Aufnahmen vor; [Einzelnachweise und Einschränkungen](UEBERGANGSPRUEFUNG-INTEGRATION-20261018.md).
 
-Für Build 34 werden Restore, Build, Tests und Publish im eingefrorenen Quellstand sowie Paketinhalt, Lizenzen, Motor und Prüfsummen erneut geprüft. Die abschließenden Ergebnisse werden im separat bereitgestellten Paketprüfbericht dokumentiert. Die persönliche Setup-/Portable-/VM-Abnahme von Build 34 ist noch offen; frühere Paketabnahmen und die positiven lokalen Filmprüfungen ersetzen sie nicht.
+Für Build 34 sind Restore, Build, Tests und Publish im eingefrorenen Quellstand sowie Paketinhalt, Lizenzen, Motor und Prüfsummen geprüft. Zusätzlich 890 App-Tests gegen die finalen Paket-DLLs, 53 Rust-Quelltests und elf Motor-Paketprüfungen bestanden. Setup auf dem Arbeitsrechner, VM-Setup mit beiden Motoren, VM-Deinstallation und Portable in der VM persönlich erfolgreich bestätigt. [Paketbericht und genaue Abnahmen](RELEASE-1.0.1-BUILD34-RESULT.md).
 
-[Benutzeranleitung](NUTZERANLEITUNG.md). Commit, Push, Tag und Veröffentlichung sind für diesen lokalen Paketschritt nicht beauftragt.
+[Benutzeranleitung](NUTZERANLEITUNG.md). Commit, Push, Tag **v1.0.1** und Veröffentlichung sind auf ausdrücklichen Nutzerauftrag abgeschlossen. Der Tag zeigt auf den tatsächlich gebauten Quellstand; spätere Dokumentation wird getrennt gesichert.

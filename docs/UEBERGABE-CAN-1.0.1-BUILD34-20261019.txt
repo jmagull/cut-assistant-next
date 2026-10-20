@@ -1,5 +1,6 @@
 Cut Assistant Next 1.0.1 · Build 34 – persönliche Paketprüfung
-Paketstand: 19.10.2026. Abnahmestand: 20.10.2026. Noch nicht veröffentlicht.
+Paketstand: 19.10.2026. Abnahme und Veröffentlichung: 20.10.2026.
+Stabile Latest-Version: https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.1
 
 BESTÄTIGT: normales Setup auf dem Arbeitsrechner erfolgreich getestet.
 Vera mit MP4Box und Musikladen mit otr-can 0.1.6: jeweils Bild, Ton,
@@ -54,4 +55,5 @@ Persönliche Portable-Abnahme ebenfalls positiv bestätigt.
 Damit sind die vorgesehenen persönlichen Pakettests abgeschlossen.
 
 Detaillierter Nachweis: docs/RELEASE-1.0.1-BUILD34-RESULT.md
-Commit, Push und Veröffentlichung sind noch nicht beauftragt.
+Commit, Push und Veröffentlichung auf Nutzerauftrag abgeschlossen.
+Nachweis: docs/RELEASE-PUBLICATION-1.0.1.md
