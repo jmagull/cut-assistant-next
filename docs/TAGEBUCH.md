@@ -1,5 +1,10 @@
 # Entwicklungstagebuch
 
+## 22.10.2026 – Build-35-Pakete aus eingefrorenem Quellcommit fertig
+
+Setup und Portable für **1.0.2 · Build 35** aus **c9e6ebf1368a47211bc0ca22243d6e6138e20959** erstellt, unverändert otr-can 0.1.6/libmpv 0.41.0. Vollständiger Paketbuild/Publish ohne Warnungen/Fehler; **1411 Pakettests**, 40 isolierte Tests, 893 App-Tests gegen finale Paketbibliotheken, elf Motor-Paketprüfungen und drei native kleine synthetische Übergangsprüfungen bestanden. 250 Portable-Dateien, 623 Quellen-ZIP-Dateien und alle Nutzpaket-Prüfsummen geprüft. 146 erfasste Alt-/Lock-/Einstellungsdateien erhalten; Buildzähler erst danach auf 35 übernommen.
+
+Paketbericht und persönliche Prüfübergabe ergänzt. Kein neuer Großdateilauf, keine Installationsänderung. Neue Setup-/VM-/Portable-Abnahme bleibt offen. Commit/Push vom Nutzer beauftragt; **Veröffentlichung erst ab Sonntag, 25.10.2026, nach ausdrücklicher Freigabe**. Keine Uploads, automatischen Termine oder Release-Tags. [Paketnachweis](RELEASE-1.0.2-BUILD35-RESULT.md).
 ## 22.10.2026 – Geprüften Stand für 1.0.2 Build 35 eingefroren
 
 Auf ausdrücklichen Nutzerauftrag Funktions-Freeze, neue Pakete, Commit und Push vorbereiten. Versionskennung 1.0.2; Build 35 erst nach erfolgreichem Paketbuild übernehmen. Bestehende Pakete und vier lokale Produktions-Lockänderungen erhalten. Release Notes und Freeze-Unterlagen ergänzt. Veröffentlichung frühestens **25.10.2026**, zusätzlich ausdrücklich freizugeben; keine automatische Veröffentlichung oder Tag-Erstellung. [Freeze und Umfang](FREEZE-1.0.2-20261022.md).

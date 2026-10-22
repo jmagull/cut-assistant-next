@@ -1,0 +1,33 @@
+CAN 1.0.2 · Build 35 – Paketprüfung
+Stand: 22.10.2026
+
+Neue Pakete: artifacts/release-1.0.2-build35
+Setup: CutAssistantNext-1.0.2-Build35-win-x64-Setup.exe
+Portable: CutAssistantNext-1.0.2-Build35-win-x64.zip
+Prüfsummen: SHA256SUMS.txt
+Details: docs/RELEASE-1.0.2-BUILD35-RESULT.md
+Gebauter Quellcommit: c9e6ebf1368a47211bc0ca22243d6e6138e20959
+
+Technisch geprüft: 1411 Solution-Tests, 40 isolierte Tests,
+893 App-Tests gegen finale Paket-DLLs, elf Motor-Paketprüfungen,
+drei native Prüfungen mit einem kleinen künstlichen MP4Box-Film.
+Keine neue Großdatei-/Belastungsprüfung vorgesehen.
+
+Persönlich mit den NEUEN Paketen prüfen und Ergebnisse melden:
+1. Setup auf dem gewünschten Testsystem, Start und Anzeige 1.0.2 / Build 35.
+2. Externe Werkzeugpfade und bei Verwendung des enthaltenen Motors
+   dessen Version otr-can 0.1.6 kontrollieren; eigene Pfade bleiben erhalten.
+3. MP4Box und otr-can im gewünschten Prüfumfang: Bild, Ton,
+   Schnittübergänge, Tonsynchronität und Drei-Sekunden-Sprung.
+4. Setup/Start und Deinstallation in der Windows-11-VM.
+5. ZIP in einen eigenen neuen Ordner entpacken, Portable starten,
+   Werkzeugpfade und gewünschte Schnitt-/Kontrollfunktionen prüfen.
+
+Frühere Build-34-Paketabnahmen gelten nicht automatisch für Build 35.
+Die Ursache früherer vollständiger Systemhänger bleibt offen.
+Die begrenzte MP4Box-Zuordnung ist keine Reparatur fehlender Bilder.
+
+VERÖFFENTLICHUNG GESPERRT:
+Frühestens Sonntag, 25.10.2026, nach erneuter ausdrücklicher Freigabe.
+Kein automatischer Veröffentlichungstermin, kein neuer Release-Tag.
+Pakete während der Abnahme nicht neu bauen oder verändern.

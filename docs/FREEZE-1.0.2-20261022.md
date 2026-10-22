@@ -23,3 +23,7 @@ Quellcommit und exakte Buildbytes werden im Paketnachweis festgehalten. Spätere
 Letzter Entwicklungsnachweis: **1411/1411 Solution-Tests, 40/40 isolierte Tests, vier von vier native Furiosa-MP4Box-Prüfungen**, Release ohne Warnungen/Fehler. Persönliche Filmprüfungen sind in den jeweiligen Berichten dokumentiert. Neue Paket-/Installer-/Portable-Prüfungen stehen bei Erstellung dieses Freeze-Dokuments noch aus und werden im Ergebnisbericht ergänzt.
 
 Die früheren Systemhänger sind trotz positiver Wiederholungen nicht ursächlich geklärt. Diese Paketierung behauptet keine Fehlerbehebung. Bekannte MP4Box-Bild-/Schnittgrenzen bleiben dokumentiert. Die bisherigen persönlichen Build-34-Setup-/VM-/Portable-Abnahmen werden nicht auf Build 35 übertragen.
+
+## Paketabschluss am 22.10.2026
+
+Pakete aus Quellcommit **c9e6ebf1368a47211bc0ca22243d6e6138e20959** erstellt und technisch geprüft: **1411/1411 Pakettests**, 40 isolierte Tests, 893 App-Tests gegen finale Paket-DLLs, elf Motor-Paketprüfungen und drei native künstliche Übergangsprüfungen bestanden. Build/Publish ohne Warnungen/Fehler. 250 Portable-Dateien, 623 Quellen-ZIP-Dateien und sämtliche Auslieferungsprüfsummen bestätigt; Pakete schreibgeschützt. Buildzähler nach erfolgreicher Prüfung auf 35 übernommen. Die neue persönliche Setup-/VM-/Portable-Abnahme und die spätere Veröffentlichungsfreigabe bleiben offen. [Paketnachweis und Prüfübergabe](RELEASE-1.0.2-BUILD35-RESULT.md).

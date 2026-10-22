@@ -1,5 +1,11 @@
 # Projektstatus
 
+## 22.10.2026 – CAN 1.0.2 Build 35 paketiert und technisch geprüft
+
+Setup, Portable, passende CAN-/Motor-/libmpv-Quellen und Prüfsummen aus Freeze-Quellcommit **c9e6ebf1368a47211bc0ca22243d6e6138e20959** erstellt. **1411/1411 Pakettests**, zusätzlich **40/40 Diagnosetests**, **893/893 App-Tests gegen finale Paket-DLLs**, elf Motor-Paketprüfungen und drei native künstliche Übergangsprüfungen erfolgreich; Build/Publish ohne Warnungen/Fehler. 250 Portable-Dateien und 623 Quellen-ZIP-Dateien verifiziert, 146 erfasste Bestandsdateien erhalten. Buildzähler nach Prüfung auf 35 übernommen.
+
+Neue persönliche Setup-/VM-/Deinstallations-/Portable-Abnahme steht aus. **Keine Veröffentlichung: frühestens 25.10.2026 nach erneuter ausdrücklicher Freigabe**, keine automatische Veröffentlichung oder neuer Release-Tag. Frühere Systemhänger bleiben ungeklärt. [Paketbericht](RELEASE-1.0.2-BUILD35-RESULT.md), [Prüfübergabe](UEBERGABE-CAN-1.0.2-BUILD35-20261022.txt).
+
 ## 22.10.2026 – Freeze und Paketauftrag für 1.0.2 Build 35
 
 Nutzer beauftragt Freeze, Setup/Portable und zugehörige Quellen/Prüfsummen sowie Commit und Push. Neuer Stand **1.0.2 · Build 35**; bestehende Pakete bleiben erhalten. **Veröffentlichung frühestens Sonntag, 25.10.2026, nach zusätzlicher ausdrücklicher Freigabe.** Kein automatischer Termin und kein Release-Tag. Paketprüfungen folgen separat; bekannte Grenzen und offene Freeze-Ursache bleiben dokumentiert. [Freeze](FREEZE-1.0.2-20261022.md), [Release Notes](RELEASE-NOTES-1.0.2.md).
