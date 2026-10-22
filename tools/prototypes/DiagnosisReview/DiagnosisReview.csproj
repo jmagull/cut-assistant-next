@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0-windows</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <PlatformTarget>x64</PlatformTarget>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <CanAssemblyDirectory Condition="'$(CanAssemblyDirectory)' == ''">$(MSBuildThisFileDirectory)..\..\..\src\CutAssistantNext.App\bin\Release\net10.0-windows</CanAssemblyDirectory>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="CutAssistantNext.Core"><HintPath>$(CanAssemblyDirectory)\CutAssistantNext.Core.dll</HintPath></Reference>
+        <Reference Include="CutAssistantNext.Media"><HintPath>$(CanAssemblyDirectory)\CutAssistantNext.Media.dll</HintPath></Reference>
+        <Reference Include="CutAssistantNext.Cutlists"><HintPath>$(CanAssemblyDirectory)\CutAssistantNext.Cutlists.dll</HintPath></Reference>
+        <Compile Include="../../../src/CutAssistantNext.App/Controls/MpvVideoHost.cs" Link="Player/MpvVideoHost.cs" />
+        <Compile Include="../../../src/CutAssistantNext.App/ViewModels/PlaybackViewModel.cs" Link="Player/PlaybackViewModel.cs" />
+        <Compile Include="../../../src/CutAssistantNext.App/ViewModels/CutCompletionViewModel.cs" Link="Player/CutCompletionViewModel.cs" />
+        <Compile Include="../../../src/CutAssistantNext.App/ViewModels/CutReviewViewModel.cs" Link="Player/CutReviewViewModel.cs" />
+        <Compile Include="../../../src/CutAssistantNext.App/Dialogs/CutReviewWindow.xaml.cs" Link="Player/CutReviewWindow.xaml.cs" />
+        <Page Include="../../../src/CutAssistantNext.App/Dialogs/CutReviewWindow.xaml" Link="Player/CutReviewWindow.xaml" />
+        <Compile Include="../TransitionReview/NativeVideoCapture.cs" Link="NativeVideoCapture.cs" />
+        <Compile Include="../TransitionReview/RecordingPlayer.cs" Link="RecordingPlayer.cs" />
+        <None Include="$(CanAssemblyDirectory)\*.dll" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    <Target Name="RequirePreparedCan" BeforeTargets="PrepareForBuild">
+        <Error Condition="!Exists('$(CanAssemblyDirectory)\CutAssistantNext.Media.dll') Or !Exists('$(CanAssemblyDirectory)\libmpv-2.dll')" Text="Vorhandene CAN-Release-Laufzeit mit libmpv über CanAssemblyDirectory angeben. Dieser Prototyp baut CAN nicht neu." />
+    </Target>
+</Project>

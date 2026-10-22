@@ -1,0 +1,7 @@
+<Project>
+    <PropertyGroup>
+        <!-- Keep the prototype's restore separate from the user's existing lock files. -->
+        <NuGetLockFilePath>$(MSBuildThisFileDirectory)..\..\..\.build\transition-diagnosis\locks\$(MSBuildProjectName).packages.lock.json</NuGetLockFilePath>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    </PropertyGroup>
+</Project>

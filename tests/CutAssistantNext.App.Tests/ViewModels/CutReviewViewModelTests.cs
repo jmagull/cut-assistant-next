@@ -340,8 +340,10 @@ public sealed class CutReviewViewModelTests
         Assert.Equal([0, 1], completion.Transitions.Select(p => p.TransitionIndex!.Value));
     }
 
-    [Fact]
-    public async Task MeasuredPositionIsUsedAndChangedOutputIsRejectedBeforeLoad()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task OutputPositionIsUsedAndChangedOutputIsRejectedBeforeLoad(bool overlap)
     {
         var path = Path.Combine(Path.GetTempPath(), "can-measured-review-" + Guid.NewGuid().ToString("N") + ".bin");
         try
@@ -349,15 +351,16 @@ public sealed class CutReviewViewModelTests
             await File.WriteAllTextAsync(path, "fixture");
             var identity = await CutAssistantNext.Media.Analysis.CutOutputIdentityVerifier.ReadAsync(path);
             var result = new CutAssistantNext.Core.Cutting.CutResult(path,
-                new(TimeSpan.FromSeconds(100), [TimeSpan.FromSeconds(10.25)], identity),
-                CutAssistantNext.Core.Cutting.CutReviewTimingKind.Measured);
+                new(TimeSpan.FromSeconds(100), [TimeSpan.FromSeconds(10.25)], identity, overlap),
+                overlap ? CutAssistantNext.Core.Cutting.CutReviewTimingKind.Located :
+                    CutAssistantNext.Core.Cutting.CutReviewTimingKind.Measured);
             var completion = new CutCompletionViewModel(result);
             var player = new Player();
             await using (var model = new CutReviewViewModel(player))
             {
                 await model.ReviewAsync(completion, 1, 123);
                 Assert.Equal(TimeSpan.FromSeconds(7.25), player.Position);
-                Assert.Contains("geprüften", model.StatusText);
+                Assert.Contains(overlap ? "zugeordneten" : "geprüften", model.StatusText);
             }
             var time = File.GetLastWriteTimeUtc(path);
             await File.WriteAllTextAsync(path, "changed");

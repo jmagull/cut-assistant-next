@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using CutAssistantNext.Media.Playback;
 using CutAssistantNext.Media.Analysis;
+using CutAssistantNext.Core.Cutting;
 
 namespace CutAssistantNext.App.ViewModels;
 
@@ -61,7 +62,9 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
             CutCompletionCheckPointKind.End => "Wiedergabe ab 3 Sekunden vor dem tatsächlichen Filmende.",
             _ => _completion?.AreTransitionsMeasured == true
                 ? "Wiedergabe ab 3 Sekunden vor dem geprüften Übergang."
-                : "Wiedergabe ab 3 Sekunden vor der berechneten Prüfstelle; der tatsächliche Schnitt kann abweichen."
+                : _completion?.Result.TimingKind == CutReviewTimingKind.Located
+                    ? "Wiedergabe ab 3 Sekunden vor der zugeordneten Prüfstelle; bitte den Übergang kontrollieren."
+                    : "Wiedergabe ab 3 Sekunden vor der berechneten Prüfstelle; der tatsächliche Schnitt kann abweichen."
         }) + " Bitte Bild, Ton und Tonsynchronität prüfen." +
         (string.IsNullOrWhiteSpace(_completion?.ReviewNotice) ? string.Empty : " " + _completion.ReviewNotice);
 

@@ -1,6 +1,6 @@
 namespace CutAssistantNext.Core.Cutting;
 
-public enum CutReviewTimingKind { Planned, Measured, Estimated }
+public enum CutReviewTimingKind { Planned, Measured, Estimated, Located }
 
 public sealed record CutOutputIdentity(long Length, long LastWriteUtcTicks, string Sha256);
 
@@ -8,6 +8,10 @@ public sealed record CutOutputIdentity(long Length, long LastWriteUtcTicks, stri
 public sealed class CutOutputTimeline
 {
     public CutOutputTimeline(TimeSpan duration, IEnumerable<TimeSpan> transitions, CutOutputIdentity? identity = null)
+        : this(duration, transitions, identity, false) { }
+
+    public CutOutputTimeline(TimeSpan duration, IEnumerable<TimeSpan> transitions, CutOutputIdentity? identity,
+        bool hasOverlappingPresentationTimes)
     {
         ArgumentNullException.ThrowIfNull(transitions);
         if (duration <= TimeSpan.Zero) throw new ArgumentOutOfRangeException(nameof(duration));
@@ -18,13 +22,17 @@ public sealed class CutOutputTimeline
         if (identity is not null && (identity.Length <= 0 || identity.LastWriteUtcTicks <= 0 ||
             identity.Sha256.Length != 64 || !identity.Sha256.All(Uri.IsHexDigit)))
             throw new ArgumentException("Ungültige Identität der Ausgabedatei.", nameof(identity));
+        if (hasOverlappingPresentationTimes && (identity is null || positions.Length == 0))
+            throw new ArgumentException("Überlappende Ausgabezeiten benötigen zugeordnete Prüfstellen und eine Dateiidentität.", nameof(identity));
         Duration = duration;
         Transitions = Array.AsReadOnly(positions);
         Identity = identity;
+        HasOverlappingPresentationTimes = hasOverlappingPresentationTimes;
     }
     public TimeSpan Duration { get; }
     public IReadOnlyList<TimeSpan> Transitions { get; }
     public CutOutputIdentity? Identity { get; }
+    public bool HasOverlappingPresentationTimes { get; }
 }
 
 public sealed class CutResult
@@ -35,8 +43,10 @@ public sealed class CutResult
         ArgumentException.ThrowIfNullOrWhiteSpace(outputFilePath);
         ArgumentNullException.ThrowIfNull(timeline);
         if (!Enum.IsDefined(timingKind)) throw new ArgumentOutOfRangeException(nameof(timingKind));
-        if (timingKind == CutReviewTimingKind.Measured && timeline.Identity is null)
+        if (timingKind is CutReviewTimingKind.Measured or CutReviewTimingKind.Located && timeline.Identity is null)
             throw new ArgumentException("Geprüfte Ausgabezeiten benötigen eine Dateizuordnung.", nameof(timeline));
+        if (timeline.HasOverlappingPresentationTimes != (timingKind == CutReviewTimingKind.Located))
+            throw new ArgumentException("Überlappende Bildzeiten müssen als zugeordnete Prüfstellen gekennzeichnet sein.", nameof(timingKind));
         OutputFilePath = outputFilePath;
         Timeline = timeline;
         TimingKind = timingKind;

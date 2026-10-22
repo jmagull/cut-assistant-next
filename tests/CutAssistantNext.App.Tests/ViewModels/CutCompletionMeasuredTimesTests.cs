@@ -33,4 +33,18 @@ public sealed class CutCompletionMeasuredTimesTests
         Assert.Contains("abgebrochen", completion.ClipboardText);
         Assert.Equal(TimeSpan.FromSeconds(10), completion.Transitions[0].Position);
     }
+
+    [Fact]
+    public void LocatedOutputTimesAreNotPresentedAsMeasuredOrPlanTimes()
+    {
+        var identity = new CutOutputIdentity(1, 1, new string('A', 64));
+        var result = new CutResult("out.mp4", new(TimeSpan.FromSeconds(20), [TimeSpan.FromSeconds(7)], identity, true),
+            CutReviewTimingKind.Located, "Bitte die Übergänge kontrollieren.");
+        var completion = new CutCompletionViewModel(result);
+        Assert.False(completion.AreTransitionsMeasured);
+        Assert.Contains("zugeordnet", completion.TimeReferenceText);
+        Assert.Contains("überlappen", completion.ClipboardText);
+        Assert.DoesNotContain("aus dem Schnittplan", completion.ClipboardText);
+        Assert.Equal("00:00:07.000", Assert.Single(completion.Transitions).PositionText);
+    }
 }

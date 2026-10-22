@@ -11,7 +11,7 @@ internal sealed class FfprobeVideoProbe(string executable) : IVideoProbe
     {
         using var doc = JsonDocument.Parse(await RunJsonAsync([
             "-show_streams", "-show_format", "-show_entries",
-            "stream=codec_type,time_base:format=start_time,duration", path], token));
+            "stream=codec_type,codec_name,time_base:format=start_time,duration", path], token));
         var videos = doc.RootElement.GetProperty("streams").EnumerateArray()
             .Where(s => s.GetProperty("codec_type").GetString() == "video").ToArray();
         if (videos.Length != 1) throw new NotSupportedException("Die Übergangsprüfung benötigt genau eine Videospur.");
@@ -20,14 +20,15 @@ internal sealed class FfprobeVideoProbe(string executable) : IVideoProbe
         var duration = decimal.Parse(format.GetProperty("duration").GetString()!, CultureInfo.InvariantCulture);
         if (start != 0 || duration <= 0)
             throw new NotSupportedException("Die Übergangsprüfung benötigt eine positive Laufzeit mit Zeitstart null.");
-        return new(TimeBase.Parse(videos[0].GetProperty("time_base").GetString()!), start, duration);
+        return new(TimeBase.Parse(videos[0].GetProperty("time_base").GetString()!), start, duration,
+            videos[0].TryGetProperty("codec_name", out var codec) ? codec.GetString() : null);
     }
 
     public async IAsyncEnumerable<Packet> ReadPacketsAsync(string path,
         [EnumeratorCancellation] CancellationToken token)
     {
         using var process = Start(["-select_streams", "v:0", "-show_packets", "-show_data_hash", "sha256",
-            "-show_entries", "packet=pts,flags,pos,data_hash", "-of", "compact=p=0:nk=0", path]);
+            "-show_entries", "packet=pts,dts,duration,flags,pos,data_hash", "-of", "compact=p=0:nk=0", path]);
         var errors = process.StandardError.ReadToEndAsync(token);
         using var registration = token.Register(() => Kill(process));
         try
@@ -43,7 +44,7 @@ internal sealed class FfprobeVideoProbe(string executable) : IVideoProbe
                     !values.TryGetValue("pos", out var position) || !long.TryParse(position, out var pos) || pos < 0 ||
                     !values.TryGetValue("flags", out var flags))
                     throw new InvalidDataException("Videopaket ohne vollständige PTS-/Hash-/Positionsdaten.");
-                yield return new(timestamp, hash, flags, position);
+                yield return new(timestamp, hash, flags, position, OptionalTimestamp(values, "dts"), OptionalTimestamp(values, "duration"));
             }
             await process.WaitForExitAsync(token);
             EnsureSuccess(process.ExitCode, await errors);
@@ -98,8 +99,18 @@ internal sealed class FfprobeVideoProbe(string executable) : IVideoProbe
         };
         info.ArgumentList.Add("-v");
         info.ArgumentList.Add("error");
+        info.ArgumentList.Add("-threads");
+        info.ArgumentList.Add("1");
         foreach (var argument in arguments) info.ArgumentList.Add(argument);
         return Process.Start(info) ?? throw new IOException("ffprobe konnte nicht gestartet werden.");
+    }
+
+    private static long? OptionalTimestamp(IReadOnlyDictionary<string, string> values, string key)
+    {
+        if (!values.TryGetValue(key, out var text) || text == "N/A") return null;
+        if (!long.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value))
+            throw new InvalidDataException("Ungültiger Videopaket-Zeitwert: " + key);
+        return value;
     }
 
     private static void EnsureSuccess(int code, string error)

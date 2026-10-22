@@ -37,7 +37,11 @@ internal sealed class Mp4BoxCutService : ICutEngine
         var result = await _workflow.RunWithAnalysisAsync(request.SourceFilePath, request.OutputFilePath, ranges,
             progress, cancellationToken, request.OverwriteExistingOutput, _outputAnalyzer).ConfigureAwait(false);
         return result.Timeline is { } timeline
-            ? new(request.OutputFilePath, timeline, CutReviewTimingKind.Measured, ImageNotice)
+            ? new(request.OutputFilePath, timeline,
+                timeline.HasOverlappingPresentationTimes ? CutReviewTimingKind.Located : CutReviewTimingKind.Measured,
+                (timeline.HasOverlappingPresentationTimes
+                    ? "Prüfstellen aus der fertigen Datei zugeordnet. Einzelne Bildzeiten überlappen sich geringfügig; bitte die Übergänge kontrollieren. "
+                    : string.Empty) + ImageNotice)
             : new(request.OutputFilePath, planned.Timeline, CutReviewTimingKind.Estimated,
                 (result.AnalysisWarning ?? "Die tatsächlichen Übergänge wurden nicht geprüft. Die Prüfstellen sind nur aus dem Schnittplan berechnet.")
                 + " " + ImageNotice);

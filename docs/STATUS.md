@@ -1,5 +1,69 @@
 # Projektstatus
 
+## 22.10.2026 – Freeze und Paketauftrag für 1.0.2 Build 35
+
+Nutzer beauftragt Freeze, Setup/Portable und zugehörige Quellen/Prüfsummen sowie Commit und Push. Neuer Stand **1.0.2 · Build 35**; bestehende Pakete bleiben erhalten. **Veröffentlichung frühestens Sonntag, 25.10.2026, nach zusätzlicher ausdrücklicher Freigabe.** Kein automatischer Termin und kein Release-Tag. Paketprüfungen folgen separat; bekannte Grenzen und offene Freeze-Ursache bleiben dokumentiert. [Freeze](FREEZE-1.0.2-20261022.md), [Release Notes](RELEASE-NOTES-1.0.2.md).
+
+## 22.10.2026 – Zwei weitere Furiosa-Läufe mit otr-can positiv bestätigt
+
+Der Nutzer meldet **zwei weitere erfolgreiche otr-can-Läufe mit Mad Max/Furiosa, „check bei allen parametern“**. Damit sind in der aktuellen Rückmeldeserie drei erfolgreiche Läufe einschließlich Bild, Ton, Schnitt und Drei-Sekunden-Vorlauf gemeldet: ein vollständig protokollierter Lauf und zwei zusätzliche persönliche Bestätigungen ohne weitere Einzelprotokolle. Frühere VM-Erfolge werden separat gehalten; die Ursache der früheren Systemhänger bleibt offen.
+
+Nur Dokumentation ergänzt; kein neuer Medien-/Build-/Testlauf. Buildnummer 34 und Release-Status unverändert. [Wiederholungsbestätigung](OTR-CAN-FURIOSA-PRAXIS-20261022.md#zwei-weitere-positive-nutzerläufe-am-22102026).
+
+## 22.10.2026 – Furiosa auch mit otr-can erfolgreich abgeschlossen und persönlich geprüft
+
+Neues Nutzerprotokoll **Furiosa Teil 1/2, HD** mit **otr-can 0.1.6**: fünf Behalteabschnitte, **171458** geprüfte Videopakete, je **329199360** dekodierte Samples für AAC- und AC3-Stereo bei 48 kHz, finale native MP4-/CAN-Prüfung erfolgreich. Der Nutzer bestätigt **Bild, Ton, Schnitt und Drei-Sekunden-Vorlauf**. Beginn 583,200 s; kein identischer Wiederholungstest des letzten geschützten Freeze-Auftrags ab 579,960 s. Der positive Lauf klärt die früheren Systemhänger nicht auf.
+
+Nur Prüfbericht, Freeze-Nachtrag, Status und Tagebuch ergänzt; kein eigener Medienlauf oder neuer Build/Test. Buildnummer 34 und Release-Status unverändert. [Erfolg, Prüfumfang und Abgrenzung](OTR-CAN-FURIOSA-PRAXIS-20261022.md).
+
+## 22.10.2026 – Fire Country HQ mit MP4Box persönlich erfolgreich geprüft
+
+**Fire Country – Todesfalle, S3E14** (HQ, 3plus, Aufnahme 21.10.2026): Nutzer bestätigt **Schnitt, Bild, Ton und Drei-Sekunden-Sprung**. Protokoll mit drei Segmenten, gleichen Bildzeiten an beiden inneren Übergängen, jeweiliger Decoderanfangsprüfung und **„Fertig.“** Zusätzlicher erfolgreicher HQ-Praxisfall des bestehenden Prüfwegs nach der Erweiterung; keine kleine Überlappung gemeldet.
+
+Nur Dokumentation ergänzt, kein neuer Build/Testlauf. Testnachweise, Buildnummer 34 und Release-Status unverändert. [Praxisfall](MP4BOX-UEBERGANGSINTEGRATION-20261022.md#weiterer-praxisfall-fire-country--todesfalle-s3e14).
+
+## 22.10.2026 – S.W.A.T. auch mit otr-can persönlich erfolgreich geprüft
+
+**S.W.A.T. – Der Schatz der Santa Clara** mit **otr-can 0.1.6**: Nutzer bestätigt **Bild, Ton, Drei-Sekunden-Vorlauf und Schnitt**. Das Protokoll zeigt einmalige FFMS2-Indexierung, 172492 geprüfte Quellbildzeiten, drei Behalteabschnitte, **59632** geprüfte Videopakete und **114493440** dekodierte Samples der Stereo-AAC-Spur bei 48 kHz. Finale native MP4-Prüfung und CAN-Abschluss erfolgreich. Zusätzlicher positiver Realfall neben der zuvor bestätigten MP4Box-Ausgabe; die früheren Systemhänger bleiben ungeklärt.
+
+Nur Prüfbericht, Status und Tagebuch ergänzt; kein neuer Build/Testlauf, keine Versions-/Releaseänderung. Vorhandener CAN-Testnachweis unverändert. [Protokollauswertung und persönlicher Prüfumfang](OTR-CAN-SWAT-PRAXIS-20261022.md).
+
+## 22.10.2026 – Weiterer MP4Box-Praxisfall S.W.A.T. persönlich erfolgreich
+
+**S.W.A.T. – Der Schatz der Santa Clara**, HD-Aufnahme vom 21.10.2026: Nutzer bestätigt **„Schnitt, Ton, 3 Sekunden check“**. Protokoll mit drei Segmenten, gleicher Bildzeit am zweiten Übergang, Prüfung aller Abschnitte und **„Fertig.“** Damit ist zusätzlich der bestehende Prüfweg für gleiche Zeitstempel nach der Erweiterung persönlich positiv erprobt. Kein neuer Überlappungsfall; keine gesonderte Bildabnahme aus der Rückmeldung abgeleitet.
+
+Nur Dokumentation ergänzt, kein neuer Build/Testlauf. Nachweis weiterhin **1411/1411 Solution-Tests, 40/40 isolierte Tests, vier von vier native Furiosa-Prüfungen**. Build 34 und Release-Status unverändert. [Praxisfall und Umfang](MP4BOX-UEBERGANGSINTEGRATION-20261022.md#weiterer-praxisfall-swat--der-schatz-der-santa-clara).
+
+## 22.10.2026 – Integrierte Furiosa-Prüfung persönlich bestätigt
+
+Der Nutzer bestätigt nach eigenem Schnitt im regulären CAN **„Bild, Ton, Schnitt, 3 Sekunden check“**. Das beigefügte Furiosa-MP4Box-Protokoll zeigt fünf Segmente, die neue Zuordnung der kleinen Überlappung am ersten Übergang, die Prüfung aller Abschnitte und **„Fertig.“** Damit ist zusätzlich zur technischen Integrationsprüfung auch die persönliche Schnitt-/Bild-/Ton-/Vorlaufkontrolle positiv bestätigt.
+
+Nur Prüfbericht, Status und Tagebuch ergänzt; kein neuer Build/Testlauf. Nachweis weiterhin **1411/1411 Solution-Tests, 40/40 isolierte Tests, vier von vier native Prüfungen**. Der bekannte Bildankerbefund und die ungeklärte Systemfreeze-Ursache bleiben erhalten. Build 34 und Release-Status unverändert. [Persönliche Prüfung](MP4BOX-UEBERGANGSINTEGRATION-20261022.md#persönliche-prüfung-im-regulären-can-am-22102026).
+
+## 22.10.2026 – Begrenzte MP4Box-Zuordnung produktiv integriert und mit neuem Furiosa-Schnitt geprüft
+
+Nach persönlicher Schnitt-/Bild-/Ton-/Vorlaufbestätigung und ausdrücklichem Folgeauftrag die kleine H.264-Überlappung unter strengen Paket-/DTS-/Decoderbedingungen im bestehenden Ausgabenanalysator zugeordnet. Der reguläre MP4Box-Service liefert dafür `Located` mit Dateiidentität und verständlichem Überlappungshinweis. Abschluss und Kontrollplayer verwenden diese tatsächlichen Ausgabezeiten; unklare Fälle behalten den bisherigen berechneten Rückfall.
+
+**1411/1411 Solution-Tests, 40/40 isolierte Tests**, Release ohne Warnungen/Fehler. Neuer echter Furiosa-Schnitt über den produktiven App-Service: vier korrekte Prüfpositionen und **vier von vier nativen Kontrollen bestanden**, einschließlich Drei-Sekunden-Auftrag, fortgesetzter Wiedergabe und passendem ersten neuen Originalbild. Letzte alte Referenz am ersten Übergang weiterhin unbeobachtet. Acht vorhandene Lockdateien und Buildzähler erhalten; Version/Build 1.0.1/34 unverändert, keine Pakete oder Veröffentlichung. Die Systemfreeze-Ursache bleibt offen. [Änderung, Nachweis und Grenzen](MP4BOX-UEBERGANGSINTEGRATION-20261022.md).
+
+## 22.10.2026 – Furiosa-Prototyp: Schnitt, Bild, Ton und Drei-Sekunden-Vorlauf persönlich bestätigt
+
+Nach dem separaten libmpv-Prüflauf bestätigt der Nutzer ausdrücklich **„Schnitt, Bild, Ton und 3 Sekunden check“**. Damit liegt zusätzlich zu den vier technischen Bildankerprüfungen eine positive persönliche Bewertung des Schnitts, Bildes, Tons und Vorlaufs vor. Der Befund zur letzten alten Referenz am ersten Übergang bleibt separat erhalten; keine vollständige Bildzählung oder Einzeltonspur-/Synchronitätsmessung daraus abgeleitet.
+
+Nur Prüfbericht, Status und Tagebuch ergänzt; kein neuer Build/Testlauf. Nachweis unverändert **40/40 Prototyptests, 1385/1385 bestehende Tests**, Release ohne Warnungen/Fehler. Keine Produktintegration, neue Version oder Releasefreigabe. Build 34 bleibt Draft; Systemfreeze-Ursache offen. [Persönliche Prüfung und Grenzen](MP4BOX-LIBMPV-KONTROLLE-20261022.md#persönliche-prüfung-am-22102026).
+
+## 22.10.2026 – Vier Furiosa-Kandidaten im separaten libmpv-Prüflauf technisch bestätigt
+
+Neuer isolierter Prüfplayer mit unveränderten aktuellen CAN-Playerquellen: **vier reale Übergangsprüfungen bestanden**, tatsächliche Seek-Aufträge jeweils Kandidat minus drei Sekunden, Wiedergabe über die Grenze und pixelgleiche neue Originalbilder im Schrittfenster. Beim ersten Übergang bleibt die letzte alte Bildreferenz im Schrittfenster unbeobachtet; daraus keine vollständige Bildverlust- oder Wiedergabeaussage abgeleitet. Kandidaten bleiben als unbestätigte produktive Prüfstellen gekennzeichnet; die zunächst offene persönliche Kontrolle ist inzwischen im oben genannten Umfang positiv bestätigt.
+
+**40/40 Prototyptests und 1385/1385 bestehende Tests**, eigener und vollständiger Release-Build ohne Warnungen/Fehler. Acht Lockdateien und Buildzähler per SHA-256 unverändert. Keine produktive Codeänderung, neue Schnitte oder Releaseänderung. Build 34 bleibt Draft, Systemfreeze-Ursache offen. [Nachweis, Einschränkungen und Bedienung](MP4BOX-LIBMPV-KONTROLLE-20261022.md).
+
+## 22.10.2026 – Isolierter MP4Box-Diagnoseprototyp, Furiosa-Zeitabweichung nachvollzogen
+
+Nach ausdrücklich freigegebener Bestandsaufnahme separat implementiert und an der vorhandenen Furiosa-MP4Box-Ausgabe geprüft: alle **171218 Ausgabepakete** dem Original und fünf Behaltebereichen zugeordnet, 109 wiederholte Nutzdaten durch exakt passende beidseitig verankerte Folgen aufgelöst. Erster Übergang mit **8,270833 ms rückläufigen Präsentationszeiten**, weitere drei lokale Decoderfenster mit jeweils einem beobachteten Wechsel. Ausgabeanfänge gegenüber dem Plan **1,117 / 4,910 / 4,695 / 9,300 s früher**. Diagnosekandidaten bleiben ausdrücklich unbestätigte CAN-Prüfpositionen.
+
+**29/29 Prototyptests und 1385/1385 bestehende Tests**, Release-Build ohne Warnungen/Fehler. Keine Änderung am produktiven Schnitt-/Playercode und keine neuen Filmschnitte. Buildnummer 34 und vorhandene Lockdateien erhalten; keine Paketierung oder Veröffentlichung. **1.0.0 Build 32 bleibt Stable/Latest, 1.0.1 Build 34 Draft; frühere Systemhänger weiterhin ungeklärt.** Die positiven Praxistests vom 21.10. sind als Anwenderbefunde aus der Übergabe übernommen, kein neuer Stabilitätsnachweis. [Messung, Grenzen und nächster Schritt](MP4BOX-UEBERGANGSDIAGNOSE-20261022.md).
+
 ## 18.10.2026 – CAN 1.0.0 als erste stabile Latest-Version veröffentlicht
 
 **Cut Assistant Next 1.0.0 · Build 32** auf ausdrücklichen Nutzerauftrag **öffentlich und stabil als Latest** veröffentlicht, kein Entwurf/keine Vorabversion. Annotierter Tag **v1.0.0** am tatsächlich gebauten Quellcommit **3e2ac03dfe4a701ecbc95c80cc06ff2527309b9f**, Motor otr-can 0.1.5 unverändert. Persönliche Produktiv-/VM-Setup-/Deinstallations-/Portable-Abnahme vor Veröffentlichung im jeweils gemeldeten Umfang dokumentiert.

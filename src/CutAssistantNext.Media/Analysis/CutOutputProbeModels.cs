@@ -13,8 +13,8 @@ internal sealed record TimeBase(long Numerator, long Denominator)
         return new(n, d);
     }
 }
-internal sealed record VideoInfo(TimeBase TimeBase, decimal FormatStart, decimal Duration);
-internal sealed record Packet(long Pts, string Hash, string Flags, string Position);
+internal sealed record VideoInfo(TimeBase TimeBase, decimal FormatStart, decimal Duration, string? CodecName = null);
+internal sealed record Packet(long Pts, string Hash, string Flags, string Position, long? Dts = null, long? Duration = null);
 internal sealed record DecodedFrame(long Pts, string Position);
 internal sealed record FileStamp(long Length, long LastWriteUtcTicks)
 {

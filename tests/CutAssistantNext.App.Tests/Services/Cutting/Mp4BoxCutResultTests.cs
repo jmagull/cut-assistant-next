@@ -30,14 +30,29 @@ public sealed class Mp4BoxCutResultTests : IDisposable
         else await CutOutputIdentityVerifier.ValidateAsync(output, result.Timeline.Identity!, true);
     }
 
-    private sealed class Analyzer(bool fail) : ICutOutputAnalyzer
+    [Fact]
+    public async Task EnginePreservesLocatedOutputTimesAndExplainsOverlappingPresentation()
+    {
+        var output = Path.Combine(_work, "out.mp4");
+        ICutEngine engine = new Mp4BoxCutService(new Runner(), new Analyzer(false, overlap: true));
+        var request = new CutRequest(Path.Combine(_work, "in.mp4"), output,
+            [new(TimeSpan.Zero, TimeSpan.FromSeconds(40)), new(TimeSpan.FromSeconds(70), TimeSpan.FromSeconds(30))], 25);
+        var result = await engine.RunWithResultAsync(request);
+        Assert.Equal(CutReviewTimingKind.Located, result.TimingKind);
+        Assert.Equal(TimeSpan.FromSeconds(37.5), Assert.Single(result.Timeline.Transitions));
+        Assert.Contains("überlappen", result.Notice);
+        Assert.DoesNotContain("aus dem Schnittplan", result.Notice);
+        await CutOutputIdentityVerifier.ValidateAsync(output, result.Timeline.Identity!, true);
+    }
+
+    private sealed class Analyzer(bool fail, bool overlap = false) : ICutOutputAnalyzer
     {
         public async Task<CutOutputTimeline> AnalyzeAsync(string path, IReadOnlyList<string> segments,
             IProgress<CutProgressUpdate>? progress, CancellationToken token)
         {
             if (fail) throw new InvalidDataException("Not measured");
             return new(TimeSpan.FromSeconds(67.5), [TimeSpan.FromSeconds(37.5)],
-                await CutOutputIdentityVerifier.ReadAsync(path, token));
+                await CutOutputIdentityVerifier.ReadAsync(path, token), overlap);
         }
     }
     private sealed class Runner : IMp4BoxRunner

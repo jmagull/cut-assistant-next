@@ -15,6 +15,6 @@ Am **20.10.2026** ausdrücklich vom Nutzer beauftragt und durchgeführt:
 - Keine Release-Datei gelöscht, ersetzt oder neu gebaut. Keine Tags oder Quellcommits gelöscht oder verschoben. Lokale Build-34-Pakete und positive Testnachweise bleiben erhalten.
 - README und aktuelle Statushinweise zeigen wieder auf 1.0.0. Der Quellstand und lokale Buildzähler werden dadurch nicht auf eine ältere Entwicklungsversion zurückgesetzt.
 
-Ein technischer Rücknahmegrund wurde vom Nutzer in diesem Auftrag nicht genannt; es wird keiner ergänzt. Eine erneute Veröffentlichung von 1.0.1 erfolgt erst auf neuen ausdrücklichen Auftrag.
+Beim ursprünglichen Rücknahmeauftrag wurde noch kein technischer Grund genannt. Anschließend meldet der Nutzer einen vollständigen Rechnerstillstand beim erneuten otr-can-Schnitt einer großen Mad-Max-/Furiosa-Datei, einschließlich erforderlichem Hardboot. Der Fehler ist offen; [Beobachtung und begrenzte Diagnose](OTR-CAN-MAD-MAX-SYSTEMFREEZE-20261020.md). Eine erneute Veröffentlichung von 1.0.1 erfolgt erst auf neuen ausdrücklichen Auftrag.
 
 Lokale Nachweise: `.build/withdraw-1.0.1-20261020` mit ursprünglicher Release-/Latest-Liste, Änderungsanfragen, neuer Release-/Latest-Liste und `VERIFIED-WITHDRAWAL.json`. Die Dokumentationskorrektur wird separat committet und gepusht; Programme und Paketbytes bleiben unverändert.

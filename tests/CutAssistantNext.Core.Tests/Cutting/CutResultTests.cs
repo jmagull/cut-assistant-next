@@ -39,4 +39,19 @@ public sealed class CutResultTests
         Assert.Equal(CutReviewTimingKind.Estimated, fallback.TimingKind);
         Assert.Contains("fehlgeschlagen", fallback.Notice);
     }
+
+    [Fact]
+    public void OverlappingOutputTimesRequireIdentityAndExplicitLocatedClassification()
+    {
+        var identity = new CutOutputIdentity(1, 1, new string('A', 64));
+        Assert.Throws<ArgumentException>(() => new CutOutputTimeline(TimeSpan.FromSeconds(10), [TimeSpan.FromSeconds(5)], null, true));
+        Assert.Throws<ArgumentException>(() => new CutOutputTimeline(TimeSpan.FromSeconds(10), [], identity, true));
+        var timeline = new CutOutputTimeline(TimeSpan.FromSeconds(10), [TimeSpan.FromSeconds(5)], identity, true);
+        Assert.Throws<ArgumentException>(() => new CutResult("out.mp4", timeline, CutReviewTimingKind.Measured));
+        Assert.Throws<ArgumentException>(() => new CutResult("out.mp4", timeline, CutReviewTimingKind.Estimated));
+        Assert.Throws<ArgumentException>(() => new CutResult("out.mp4", new(TimeSpan.FromSeconds(10), [], identity), CutReviewTimingKind.Located));
+        var result = new CutResult("out.mp4", timeline, CutReviewTimingKind.Located);
+        Assert.True(result.Timeline.HasOverlappingPresentationTimes);
+        Assert.Equal(CutReviewTimingKind.Located, result.TimingKind);
+    }
 }

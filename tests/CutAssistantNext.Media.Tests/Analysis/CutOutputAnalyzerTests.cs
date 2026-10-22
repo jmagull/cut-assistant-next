@@ -84,6 +84,104 @@ public sealed class CutOutputAnalyzerTests : IDisposable
         Assert.NotNull(result.Identity);
     }
 
+    private Probe SmallOverlapFixture(long step = 40, long overlap = 8)
+    {
+        var p = Fixture();
+        p.CodecName = "h264";
+        p.Data[_paths[0]] = [P(0, "a", true), P(step, "b"), P(2 * step, "c"),
+            P(2 * step - overlap, "d", true), P(3 * step - overlap, "e"), P(4 * step - overlap, "h"), P(300, "f", true), P(350, "g")];
+        p.Data[_paths[0]] = p.Data[_paths[0]].Select((packet, i) => packet with
+        {
+            Dts = (i - 2) * step,
+            Duration = i == 2 ? step - overlap : i == 3 ? overlap : step
+        }).ToArray();
+        p.Data[_paths[2]] = [P(0, "d", true), P(100, "e"), P(200, "h")];
+        return p;
+    }
+
+    [Theory]
+    [InlineData(40, 8)]
+    [InlineData(40, 1)]
+    [InlineData(40, 39)]
+    [InlineData(20, 4)]
+    public async Task LocatesOnlyTheBoundedH264OverlapWithOrderedDtsAndDecodedNeighbors(long step, long overlap)
+    {
+        var timeline = await new FfprobeCutOutputAnalyzer(SmallOverlapFixture(step, overlap))
+            .AnalyzeAsync(_paths[0], _paths[1..], null, default);
+        Assert.True(timeline.HasOverlappingPresentationTimes);
+        Assert.Equal(TimeSpan.FromMilliseconds(2 * step - overlap), timeline.Transitions[0]);
+        Assert.Equal(TimeSpan.FromMilliseconds(300), timeline.Transitions[1]);
+        Assert.NotNull(timeline.Identity);
+    }
+
+    [Theory]
+    [InlineData("codec")]
+    [InlineData("missing-dts")]
+    [InlineData("backwards-dts")]
+    [InlineData("missing-duration")]
+    [InlineData("old-duration")]
+    [InlineData("new-duration")]
+    [InlineData("large-overlap")]
+    [InlineData("spacing")]
+    [InlineData("two-old-times")]
+    [InlineData("old-not-last")]
+    [InlineData("duplicate-old")]
+    [InlineData("duplicate-new")]
+    public async Task RejectsUnsupportedOverlapShapesWithoutRelaxingOldGuards(string fault)
+    {
+        var p = SmallOverlapFixture();
+        var output = p.Data[_paths[0]];
+        switch (fault)
+        {
+            case "codec": p.CodecName = "hevc"; break;
+            case "missing-dts": output[0] = output[0] with { Dts = null }; break;
+            case "backwards-dts": output[3] = output[3] with { Dts = -1 }; break;
+            case "missing-duration": output[3] = output[3] with { Duration = null }; break;
+            case "old-duration": output[2] = output[2] with { Duration = 31 }; break;
+            case "new-duration": output[3] = output[3] with { Duration = 7 }; break;
+            case "large-overlap": output[3] = output[3] with { Pts = 40 }; break;
+            case "spacing": output[5] = output[5] with { Pts = 153 }; break;
+            case "two-old-times": output[1] = output[1] with { Pts = 75 }; break;
+            case "old-not-last":
+                (output[1], output[2]) = (output[2], output[1]);
+                (p.Data[_paths[1]][1], p.Data[_paths[1]][2]) = (p.Data[_paths[1]][2], p.Data[_paths[1]][1]);
+                break;
+            case "duplicate-old":
+                p.Data[_paths[0]] = [.. output.Take(3), P(80, "c2") with { Dts = 20, Duration = 32 }, .. output.Skip(3)];
+                p.Data[_paths[1]] = [.. p.Data[_paths[1]], P(0, "c2")];
+                break;
+            case "duplicate-new":
+                p.Data[_paths[0]] = [.. output.Take(4), P(72, "d2") with { Dts = 60, Duration = 8 }, .. output.Skip(4)];
+                p.Data[_paths[2]] = [p.Data[_paths[2]][0], P(0, "d2"), .. p.Data[_paths[2]].Skip(1)];
+                break;
+        }
+        await Assert.ThrowsAsync<NotSupportedException>(() => new FfprobeCutOutputAnalyzer(p).AnalyzeAsync(_paths[0], _paths[1..], null, default));
+    }
+
+    [Theory]
+    [InlineData("missing-old")]
+    [InlineData("missing-new")]
+    [InlineData("wrong-order")]
+    [InlineData("extra-backstep")]
+    [InlineData("equal-time")]
+    [InlineData("duplicate-anchor")]
+    public async Task RejectsAmbiguousDecodedOverlapRatherThanClaimingMeasuredPositions(string fault)
+    {
+        var p = SmallOverlapFixture();
+        var frames = p.Data[_paths[0]].Select(packet => new DecodedFrame(packet.Pts, packet.Position)).ToList();
+        switch (fault)
+        {
+            case "missing-old": frames.RemoveAt(2); break;
+            case "missing-new": frames.RemoveAt(3); break;
+            case "wrong-order": (frames[4], frames[5]) = (frames[5], frames[4]); break;
+            case "extra-backstep": frames[^1] = frames[^1] with { Pts = 299 }; break;
+            case "equal-time": frames[^1] = frames[^1] with { Pts = 300 }; break;
+            case "duplicate-anchor": frames.Insert(4, frames[3]); break;
+        }
+        p.DecodedOverride = frames;
+        await Assert.ThrowsAsync<InvalidDataException>(() => new FfprobeCutOutputAnalyzer(p).AnalyzeAsync(_paths[0], _paths[1..], null, default));
+    }
+
     [Fact]
     public async Task CancelsAndRejectsAliasedOrEmptyInputs()
     {
@@ -122,14 +220,16 @@ public sealed class CutOutputAnalyzerTests : IDisposable
         public bool OmitDecoded { get; set; }
         public bool ShiftDecoded { get; set; }
         public Action? OnDecode { get; set; }
+        public string? CodecName { get; set; }
+        public IReadOnlyList<DecodedFrame>? DecodedOverride { get; set; }
         public Task<VideoInfo> InspectAsync(string path, CancellationToken token)
-        { token.ThrowIfCancellationRequested(); return Task.FromResult(new VideoInfo(new(1, 1000), 0, .8m)); }
+        { token.ThrowIfCancellationRequested(); return Task.FromResult(new VideoInfo(new(1, 1000), 0, .8m, CodecName)); }
         public async IAsyncEnumerable<Packet> ReadPacketsAsync(string path, [EnumeratorCancellation] CancellationToken token)
         { await Task.CompletedTask; foreach (var p in Data[path]) { token.ThrowIfCancellationRequested(); yield return p; } }
         public Task<IReadOnlyList<DecodedFrame>> DecodeAsync(string path, decimal start, decimal end, CancellationToken token)
         {
             token.ThrowIfCancellationRequested(); OnDecode?.Invoke();
-            IReadOnlyList<DecodedFrame> frames = OmitDecoded ? [] : Data[path].Select(p => new DecodedFrame(p.Pts + (ShiftDecoded ? 1 : 0), p.Position)).ToArray();
+            IReadOnlyList<DecodedFrame> frames = DecodedOverride ?? (OmitDecoded ? [] : Data[path].Select(p => new DecodedFrame(p.Pts + (ShiftDecoded ? 1 : 0), p.Position)).ToArray());
             return Task.FromResult(frames);
         }
     }

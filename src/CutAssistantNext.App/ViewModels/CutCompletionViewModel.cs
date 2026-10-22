@@ -64,6 +64,7 @@ public sealed class CutCompletionViewModel
     public string TimeReferenceText => Result.TimingKind switch
     {
         CutReviewTimingKind.Measured => "Zeitangaben im fertigen Film geprüft.",
+        CutReviewTimingKind.Located => "Prüfstellen im fertigen Film zugeordnet; einzelne Bildzeiten überlappen sich geringfügig.",
         CutReviewTimingKind.Estimated => "Nur berechnete Prüfstellen: Die tatsächlichen Übergänge sind nicht bestätigt.",
         _ => "Zeitangaben im geschnittenen Film, aus dem Schnittplan berechnet. Kleine Abweichungen sind möglich."
     };
