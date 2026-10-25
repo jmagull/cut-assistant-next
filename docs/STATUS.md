@@ -1,5 +1,9 @@
 # Projektstatus
 
+## 25.10.2026 – CAN 1.0.2 Build 36 lokal paketiert
+
+Der Cutlist-Motorfix wurde aus Quellcommit fedf3b3ab0ef1470c202ddbceb8c029fc3f3cecb in einen getrennten lokalen Paketsatz mit Setup, Portable-ZIP, Quellen und SHA-256-Prüfsummen übertragen. Release-Build ohne Warnungen/Fehler, 1416/1416 Solution-Tests, 898/898 App-Tests gegen die finalen Portable-DLLs, 250 Portable- und 627 Quellen-ZIP-Dateien geprüft. Buildzähler nach Prüfung 36. Persönliche Setup-/VM-/Portable-Abnahme offen. Kein Tag, Upload, Push oder Release. [Paketbericht](RELEASE-1.0.2-BUILD36-RESULT.md).
+
 ## 25.10.2026 – Cutlist-Motorangabe nach otr-can-Schnitt korrigiert
 
 Beim erneuten Speichern einer Peppermint-Cutlist trug CAN trotz otr-can-Schnitt weiterhin MP4Box, dessen Pfad und dessen Version ein. Der Cutlist-Dialog bietet jetzt eine sichtbare Motorwahl. Vorbelegt wird der zuletzt erfolgreich für die aktuelle Aufnahme verwendete Motor, andernfalls der Motor einer geladenen Cutlist; ohne beides bleibt MP4Box die Vorgabe. Für otr-can werden Name und EXE-Dateiname sowie die tatsächlich abgefragte Version geschrieben. Eine fehlgeschlagene Versionsabfrage lässt die Version leer. Die Peppermint-Cutlist wurde lokal berichtigt. Release-Build ohne Warnungen oder Fehler; 1416/1416 Solution-Tests bestanden. Keine Paket- oder Veröffentlichungsänderung. Der Quellfix gehört nicht zum eingefrorenen Build 35.
