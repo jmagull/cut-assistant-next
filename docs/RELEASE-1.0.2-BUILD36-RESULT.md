@@ -1,6 +1,6 @@
 # CAN 1.0.2 · Build 36 – lokaler Paketbericht
 
-**Stand 25.10.2026: erstellt und technisch geprüft, nicht veröffentlicht.** Kein Tag, kein GitHub-Upload und keine Release-Freigabe. Der Quellcommit ist lokal gesichert; der Push steht aus.
+**Stand 25.10.2026: erstellt und technisch geprüft, nicht veröffentlicht.** Kein Release-Tag, kein Paket-Upload und keine Release-Freigabe. Quellcommit und Paketnachweis sind auf origin/main gesichert.
 
 ## Änderung und Herkunft
 
