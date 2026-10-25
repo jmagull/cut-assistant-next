@@ -1,5 +1,9 @@
 # Projektstatus
 
+## 25.10.2026 – Cutlist-Motorangabe nach otr-can-Schnitt korrigiert
+
+Beim erneuten Speichern einer Peppermint-Cutlist trug CAN trotz otr-can-Schnitt weiterhin MP4Box, dessen Pfad und dessen Version ein. Der Cutlist-Dialog bietet jetzt eine sichtbare Motorwahl. Vorbelegt wird der zuletzt erfolgreich für die aktuelle Aufnahme verwendete Motor, andernfalls der Motor einer geladenen Cutlist; ohne beides bleibt MP4Box die Vorgabe. Für otr-can werden Name und EXE-Dateiname sowie die tatsächlich abgefragte Version geschrieben. Eine fehlgeschlagene Versionsabfrage lässt die Version leer. Die Peppermint-Cutlist wurde lokal berichtigt. Release-Build ohne Warnungen oder Fehler; 1416/1416 Solution-Tests bestanden. Keine Paket- oder Veröffentlichungsänderung. Der Quellfix gehört nicht zum eingefrorenen Build 35.
+
 ## 22.10.2026 – CAN 1.0.2 Build 35 paketiert und technisch geprüft
 
 Setup, Portable, passende CAN-/Motor-/libmpv-Quellen und Prüfsummen aus Freeze-Quellcommit **c9e6ebf1368a47211bc0ca22243d6e6138e20959** erstellt. **1411/1411 Pakettests**, zusätzlich **40/40 Diagnosetests**, **893/893 App-Tests gegen finale Paket-DLLs**, elf Motor-Paketprüfungen und drei native künstliche Übergangsprüfungen erfolgreich; Build/Publish ohne Warnungen/Fehler. 250 Portable-Dateien und 623 Quellen-ZIP-Dateien verifiziert, 146 erfasste Bestandsdateien erhalten. Buildzähler nach Prüfung auf 35 übernommen.

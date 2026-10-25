@@ -361,7 +361,7 @@ Die Wahl einer genauen Schnittzeit garantiert nicht, dass jeder Schnittmotor sie
 
 ## 5. Nur eine Cutlist erstellen
 
-Mit **Cutlist erzeugen** öffnest du den Erstellungsdialog. Prüfe Metadaten, vorgeschlagenen Filmnamen, Bewertung und Kommentar. **Cutlist speichern** schreibt die Datei direkt in den eingestellten Ordner **Eigene Cutlists**. Ein zusätzlicher Dateispeicherdialog erscheint nicht.
+Mit **Cutlist erzeugen** öffnest du den Erstellungsdialog. Prüfe Metadaten, vorgeschlagenen Filmnamen, Bewertung und Kommentar. **Cutlist speichern** schreibt die Datei direkt in den eingestellten Ordner **Eigene Cutlists**. Ein zusätzlicher Dateispeicherdialog erscheint nicht. Im Dialog wählst du auch den vorgesehenen Schnittmotor: mit Haken otr-can, ohne Haken MP4Box. CAN schlägt den zuletzt erfolgreich für diese Aufnahme verwendeten Motor vor, sonst den Motor der geladenen Cutlist; die Wahl bleibt änderbar. Für otr-can liest CAN die Version aus der konfigurierten EXE. Wenn die Versionsabfrage scheitert, bleibt das Versionsfeld leer.
 
 Der Cutlist-Dateiname wird fest aus dem vollständigen Originaldateinamen und der Endung **.cutlist** gebildet, beispielsweise **Aufnahme.HQ.mp4.cutlist**. Ein manuell geänderter Name für den geschnittenen Film verändert diesen Cutlist-Dateinamen nicht.
 

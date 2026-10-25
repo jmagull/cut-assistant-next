@@ -1,6 +1,10 @@
-# Cut Assistant Next 1.0.2 · Build 35
+# Cut Assistant Next 1.0.2 · Build 36
 
-**Eingefrorener Prüfstand vom 22.10.2026. Noch nicht veröffentlicht.** Setup, Portable-ZIP, passende Quellen und Prüfsummen werden auf Nutzerauftrag vorbereitet und per Commit/Push gesichert. Veröffentlichung frühestens **Sonntag, 25.10.2026**, ausschließlich nach erneuter ausdrücklicher Nutzerfreigabe. Kein automatischer Veröffentlichungstermin.
+**Lokaler Nachfolgestand vom 25.10.2026; nicht veröffentlicht.** Setup, Portable-ZIP, passende Quellen und Prüfsummen werden getrennt von Build 35 erstellt. Eine Veröffentlichung erfolgt nur nach ausdrücklicher Nutzerfreigabe; es gibt keinen automatischen Termin.
+
+## Neu gegenüber Build 35
+
+Beim Erzeugen einer Cutlist lässt sich der vorgesehene Schnittmotor sichtbar auswählen. CAN schlägt den zuletzt erfolgreich für dieselbe Aufnahme verwendeten Motor vor, sonst den Motor der geladenen Cutlist. Bei otr-can schreibt CAN den EXE-Dateinamen und die durch --version ermittelte Motorversion statt der MP4Box-Angaben. Ist die Version nicht ermittelbar, bleibt dieses Feld leer. Der Kommentar-Schnellbaustein bleibt unabhängig von der Motorwahl.
 
 ## Änderungen
 
@@ -14,7 +18,7 @@ MP4Box-Schnittparameter und Cutlists werden dadurch nicht verändert. Die Prüfu
 
 ## Prüfbasis und Grenzen
 
-Der Entwicklungsstand besteht **1411 Solution-Tests und 40 isolierte Diagnosetests**. Ein neuer Furiosa-MP4Box-Schnitt über den regulären App-Service bestand vier native Playerprüfungen. Persönlich bestätigt sind Furiosa mit MP4Box sowie S.W.A.T. und Fire Country mit dem jeweils dokumentierten Prüfumfang. Furiosa mit otr-can wurde in der aktuellen Serie dreimal erfolgreich gemeldet; S.W.A.T. ebenfalls persönlich positiv geprüft. Paketprüfungen und persönliche Setup-/Portable-Abnahme werden separat dokumentiert; frühere Build-34-Paketabnahmen gelten nicht automatisch für Build 35.
+Der Entwicklungsstand besteht **1416 Solution-Tests und 40 isolierte Diagnosetests**. Ein neuer Furiosa-MP4Box-Schnitt über den regulären App-Service bestand vier native Playerprüfungen. Persönlich bestätigt sind Furiosa mit MP4Box sowie S.W.A.T. und Fire Country mit dem jeweils dokumentierten Prüfumfang. Furiosa mit otr-can wurde in der aktuellen Serie dreimal erfolgreich gemeldet; S.W.A.T. ebenfalls persönlich positiv geprüft. Paketprüfungen und persönliche Setup-/Portable-Abnahme werden separat dokumentiert; frühere Build-34-Paketabnahmen gelten nicht automatisch für Build 35.
 
 **Offen bleibt die Ursache früherer vollständiger Rechnerstillstände bei großen wiederholten Furiosa-Schnitten mit otr-can.** Positive spätere Läufe belegen keine gezielte Fehlerbehebung. Diese Version enthält keine behauptete Korrektur dieses Systemfehlers. Auch der technische Befund zur letzten alten Bildreferenz am ersten Furiosa-MP4Box-Übergang bleibt erhalten. AVI bleibt experimentell. Bild, Ton, Übergänge und Tonsynchronität persönlich kontrollieren.
 

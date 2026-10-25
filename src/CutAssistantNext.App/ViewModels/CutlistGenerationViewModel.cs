@@ -19,6 +19,7 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
     private string _defaultNameTemplate;
     private string _suggestedMovieName;
     private string _author;
+    private bool _useOtrCan;
     private string _userComment =
         "Mit Cut Assistant Next geschnitten.";
     private int? _selectedRating;
@@ -109,6 +110,17 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
     private bool _preserveSuggestedMovieName;
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    public bool UseOtrCan
+    {
+        get => _useOtrCan;
+        set
+        {
+            if (_useOtrCan == value) return;
+            _useOtrCan = value;
+            OnPropertyChanged();
+        }
+    }
 
     public string NameTemplate
     {

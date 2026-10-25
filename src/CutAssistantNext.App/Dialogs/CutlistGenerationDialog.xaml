@@ -126,6 +126,10 @@
                                Foreground="#1F2937"
                                Text="Cutlist-Informationen" />
 
+                    <CheckBox Margin="0,0,0,14"
+                              Content="Vorgesehener Schnittmotor: otr-can (sonst MP4Box)"
+                              IsChecked="{Binding UseOtrCan}" />
+
                     <TextBlock Margin="0,0,0,5"
                                FontWeight="SemiBold"
                                Foreground="#4B5563"

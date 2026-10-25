@@ -42,6 +42,9 @@ public partial class MainWindow : Window
     private readonly CutReviewController _cutReviewController;
     private CutNamingState? _cutNamingState;
     private string? _loadedCutlistAuthor;
+    private string? _loadedIntendedCutApplicationName;
+    private string? _lastSuccessfulCutMediaPath;
+    private CutEngineKind? _lastSuccessfulCutEngine;
     private string? _lastSavedCutlistFilePath;
     private bool _cutlistUploadInProgress;
     private bool _cutlistSearchInProgress;
@@ -1508,6 +1511,8 @@ public partial class MainWindow : Window
                         completionViewModel = new CutCompletionViewModel(cutResult);
 
                         cutSucceeded = true;
+                        _lastSuccessfulCutMediaPath = originalFilePath;
+                        _lastSuccessfulCutEngine = engineKind;
 
                         progress.Flush();
                         progressViewModel.MarkSucceeded();
@@ -1994,6 +1999,8 @@ public partial class MainWindow : Window
 
             _loadedCutlistAuthor =
                 document.Info.Author;
+            _loadedIntendedCutApplicationName =
+                document.General.IntendedCutApplicationName;
 
             _logger.Information(
                 $"Cutlist wurde geladen: {fileName}");
@@ -2050,10 +2057,6 @@ public partial class MainWindow : Window
             new CutApplicationSettingsStore().Load()
             ?? CutApplicationSettings.CreateDefault();
 
-        var intendedCutApplication =
-            CutApplicationSettingsMapper.ToCutApplicationInfo(
-                cutApplicationSettings);
-
         var cutlistViewModel =
             _cutNamingState is null
                 ? CutlistGenerationViewModelFactory.Create(
@@ -2070,6 +2073,12 @@ public partial class MainWindow : Window
 
         cutlistViewModel.ApplyTemplateAuthor(
             _loadedCutlistAuthor);
+        cutlistViewModel.UseOtrCan =
+            CutlistIntendedApplicationResolver.PreferredEngine(
+                _viewModel.FilePath,
+                _loadedIntendedCutApplicationName,
+                _lastSuccessfulCutMediaPath,
+                _lastSuccessfulCutEngine) == CutEngineKind.OtrCan;
 
         var cutPlan =
             _cutPlanViewModel.CreateCutPlanSnapshot();
@@ -2113,6 +2122,13 @@ public partial class MainWindow : Window
                         ?? throw new InvalidOperationException(
                             "Die Anwendungsversion konnte nicht ermittelt werden.");
 
+                    var intendedCutApplication =
+                        cutlistViewModel.UseOtrCan
+                            ? await CutlistIntendedApplicationResolver.ForOtrCanAsync(
+                                new OtrCanSettingsStore().Load())
+                            : CutApplicationSettingsMapper.ToCutApplicationInfo(
+                                cutApplicationSettings);
+
                     var document =
                         cutlistViewModel.CreateDocument(
                             cutPlan,
@@ -2149,6 +2165,7 @@ public partial class MainWindow : Window
                         overwriteExisting: overwriteConfirmed));
 
                     _lastSavedCutlistFilePath = target.FilePath;
+                    _loadedIntendedCutApplicationName = document.General.IntendedCutApplicationName;
                     _cutNamingState = namingState;
 
                     MessageBox.Show(
@@ -2457,6 +2474,9 @@ public partial class MainWindow : Window
 
         _cutNamingState = null;
         _loadedCutlistAuthor = null;
+        _loadedIntendedCutApplicationName = null;
+        _lastSuccessfulCutMediaPath = null;
+        _lastSuccessfulCutEngine = null;
         _lastSavedCutlistFilePath = null;
 
         await _viewModel.AnalyzeAsync(mediaPath, _mediaInputCancellation.Token);
