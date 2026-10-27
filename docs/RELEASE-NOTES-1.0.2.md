@@ -1,29 +1,33 @@
-# Cut Assistant Next 1.0.2 · Build 36
+# Cut Assistant Next 1.0.2 · Build 41
 
-**Lokaler Nachfolgestand vom 25.10.2026; nicht veröffentlicht.** Setup, Portable-ZIP, passende Quellen und Prüfsummen werden getrennt von Build 35 erstellt. Eine Veröffentlichung erfolgt nur nach ausdrücklicher Nutzerfreigabe; es gibt keinen automatischen Termin.
+Am 27.10.2026 ausdrücklich zur Veröffentlichung freigegeben. CAN 1.0.2 Build 41 enthält **otr-can 0.1.6** und **libmpv 0.41.0**. Setup und Portable-ZIP gehören zum gleichen geprüften Quellenstand.
 
-## Neu gegenüber Build 35
+## Klebecenter
 
-Beim Erzeugen einer Cutlist lässt sich der vorgesehene Schnittmotor sichtbar auswählen. CAN schlägt den zuletzt erfolgreich für dieselbe Aufnahme verwendeten Motor vor, sonst den Motor der geladenen Cutlist. Bei otr-can schreibt CAN den EXE-Dateinamen und die durch --version ermittelte Motorversion statt der MP4Box-Angaben. Ist die Version nicht ermittelbar, bleibt dieses Feld leer. Der Kommentar-Schnellbaustein bleibt unabhängig von der Motorwahl.
+Unter **Klebecenter → Filmteile zusammenfügen …** zwei bereits geschnittene MP4-Dateien auswählen. Zuerst Reihenfolge festlegen, dann pro Teil eine Tonspur wählen. Bei mehreren Spuren gibt es keine Vorauswahl. Die allein gewählte Spur jedes Teils wird verwendet; übrige Spuren entfallen. Beide gewählten Spuren müssen Abtastrate und Kanalbelegung teilen. AAC/AAC und AC-3/AAC sind möglich.
 
-## Änderungen
+Das Bild bleibt unverändert. Der Ton wird samplegenau verbunden und **einmal durchgehend als AAC-LC neu kodiert** (192 kbit/s bei Mono/Stereo, 384 kbit/s bei Mehrkanalton). Eine Vorbereitungskopie oder erneute Anwendung einer Cutlist ist nicht nötig. Genau zwei passende progressive H.264-MP4-Dateien mit konstanten 25/50 fps werden unterstützt; unpassende Formate oder fehlerhafte Zeitachsen werden abgelehnt.
 
-Die MP4Box-Schnittkontrolle kann jetzt auch bestimmte geringfügig überlappende H.264-Bildzeiten im fertigen Film eindeutig zuordnen. Der Kontrollplayer startet drei Sekunden vor der zugeordneten Prüfstelle. Abschlussfenster, Zwischenablage und Player erklären die kleine Überlappung.
+Nach Abschluss **Anfang, Klebestelle und Ende** über „Prüfen“ kontrollieren. Die Vorschau beginnt drei Sekunden vor der tatsächlichen Klebestelle. Nach Erfolg werden Arbeitsdateien und Erfolgsprotokoll samt leerem Arbeitsordner entfernt. Bei Fehler oder Abbruch bleibt die Diagnose erhalten; gesperrte oder fremde Inhalte werden gemeldet und nicht rekursiv gelöscht.
 
-Die Zuordnung setzt die vollständige geordnete Videopaketfolge, passende Zeitwerte und bestätigte dekodierte Nachbarbilder voraus. Sie erkennt das unterstützte Muster unabhängig vom Filmnamen. Größere oder mehrdeutige Überschneidungen bleiben bei ausdrücklich berechneten Prüfstellen. Der bestehende Prüfweg für gleiche oder nicht überlappende Bildzeiten bleibt erhalten.
+[Anleitung](NUTZERANLEITUNG.md), [Klebecenter und Grenzen](KLEBECENTER-20261027.md), [Bereinigungsnachweis](KLEBECENTER-BEREINIGUNG-20261027.md).
 
-MP4Box-Schnittparameter und Cutlists werden dadurch nicht verändert. Die Prüfung stellt keine fehlenden Bilder wieder her und beseitigt keine Werbeblitzer. Der Vera-Befund zu ausgelassenen Anfangsbildern bleibt bestehen.
+## Schnitt und Ton
 
-**otr-can 0.1.6** und die geprüfte libmpv-0.41.0-Laufzeit bleiben unverändert enthalten. Keine neue Produktionsabhängigkeit.
+Der otr-can-Schnitt kann bei erkanntem Tonfehler nach ausdrücklicher Auswahl mit einer streng geprüften intakten AAC-Spur fortgesetzt werden. Entfallene Spuren werden angezeigt; Warnungen werden nicht pauschal ignoriert. Gesunde Aufträge behalten ihren normalen Ablauf. Cutlist-Metadaten nennen den vorgesehenen Schnittmotor samt Version.
 
-## Prüfbasis und Grenzen
+Der MP4Box-Prüfablauf ordnet begrenzte Bildzeitüberlappungen am tatsächlichen Abschnittswechsel zu. Fehlende Originalbilder werden dadurch nicht wiederhergestellt; Werbeblitzer können bei MP4Box bestehen bleiben. Geeignete ältere H.264-AVI-Dateien werden experimentell ohne Video-Neukodierung für den Schnitt vorbereitet; MP3 wird beim otr-can-Schnitt einmal nach AAC-LC kodiert.
 
-Der Entwicklungsstand besteht **1416 Solution-Tests und 40 isolierte Diagnosetests**. Ein neuer Furiosa-MP4Box-Schnitt über den regulären App-Service bestand vier native Playerprüfungen. Persönlich bestätigt sind Furiosa mit MP4Box sowie S.W.A.T. und Fire Country mit dem jeweils dokumentierten Prüfumfang. Furiosa mit otr-can wurde in der aktuellen Serie dreimal erfolgreich gemeldet; S.W.A.T. ebenfalls persönlich positiv geprüft. Paketprüfungen und persönliche Setup-/Portable-Abnahme werden separat dokumentiert; frühere Build-34-Paketabnahmen gelten nicht automatisch für Build 35.
+## Richtige Werkzeugversion
 
-**Offen bleibt die Ursache früherer vollständiger Rechnerstillstände bei großen wiederholten Furiosa-Schnitten mit otr-can.** Positive spätere Läufe belegen keine gezielte Fehlerbehebung. Diese Version enthält keine behauptete Korrektur dieses Systemfehlers. Auch der technische Befund zur letzten alten Bildreferenz am ersten Furiosa-MP4Box-Übergang bleibt erhalten. AVI bleibt experimentell. Bild, Ton, Übergänge und Tonsynchronität persönlich kontrollieren.
+**Mitgeliefert: otr-can 0.1.6**, im Programmordner unter **tools/otr-can/otr_can.exe**. Nach einer Überinstallation unter **Einstellungen → OTR-CAN-Werkzeuge** diesen Pfad prüfen und die mitgelieferte EXE wählen. Eine alte gespeicherte Einstellung kann auf eine frühere Motorversion zeigen. Der frühere Hinweis „0.1.5“ wurde korrigiert; die Paketprüfung gleicht Text, tatsächliche EXE und Herkunft ab.
 
-## Voraussetzungen
+FFmpeg/ffprobe, GPAC/MP4Box und FFMS2/ffmsindex bleiben externe Werkzeuge. Das Klebecenter verwendet die konfigurierten FFmpeg-Werkzeuge. Windows 11 x64, .NET 10 Desktop Runtime x64 und für otr-can die Visual-C++-x64-Laufzeit werden benötigt. Details stehen im mitgelieferten Voraussetzungstext.
 
-Windows 11 x64 mit separat installierter **.NET 10 Desktop Runtime x64**. FFmpeg/ffprobe, GPAC/MP4Box und FFMS2 müssen eingerichtet sein; für otr-can ist die passende Microsoft-VC++-Laufzeit erforderlich. Vorhandene persönliche Werkzeugpfade bleiben konfigurierbar.
+## Prüfstand
 
-[Freeze und Veröffentlichungsgrenze](FREEZE-1.0.2-20261022.md), [MP4Box-Nachweis](MP4BOX-UEBERGANGSINTEGRATION-20261022.md), [Furiosa-otr-can-Prüfungen](OTR-CAN-FURIOSA-PRAXIS-20261022.md), [Nutzeranleitung](NUTZERANLEITUNG.md).
+1489 Pakettests, zusätzlich 1217 Tests gegen finale Produktbibliotheken und 21 native Klebecenter-Fälle bestanden; Release-Build ohne Warnungen/Fehler. John Wick und Furiosa persönlich geprüft. Build-40-Setup-/ZIP-VM-Runde bestätigt; Build-41-Setup auf dem Arbeitsrechner einschließlich verschwundener temporärer Datei und Bild/Ton/Schnitt/Drei-Sekunden-Vorschau/Klebecenter positiv. Eine zusätzliche Build-41-ZIP-/VM-Prüfung wird daraus nicht abgeleitet.
+
+Die Ursache früherer kompletter Furiosa-Rechnerstillstände bleibt ungeklärt; positive spätere Läufe belegen keine gezielte Behebung. Bitte jede Ausgabe auf Bild, Ton, Synchronität und Übergänge kontrollieren.
+
+Die beigelegten Quellenarchive gehören exakt zu den geprüften Binärpaketen und enthalten Dokumentation aus ihrem Erstellungsstand vor der Veröffentlichungsfreigabe. Die aktuellen Repository-Unterlagen und diese Releasebeschreibung ergänzen die spätere Abnahme/Freigabe. [Paketbericht und Prüfsummen](RELEASE-1.0.2-BUILD41-RESULT.md).

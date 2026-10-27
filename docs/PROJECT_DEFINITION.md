@@ -1,12 +1,14 @@
 # Projektdefinition
 
+**Stand 27.10.2026: CAN 1.0.2 Build 40, otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** Das ursprüngliche Wiedergabe-POC-Ziel ist um Schnitt-/Cutlist-Abläufe und das integrierte Klebecenter erweitert. Eigene John-Wick-Kombinationen AC-3/AAC und AAC/AAC positiv bestätigt. Neue vollständige Setup-/Portable-/VM-Abnahme offen; keine Veröffentlichung. [Projektstand](AKTUELLER-STAND.md), [Versionen](VERSIONEN.md).
+
 ## Ausgangslage
 
 Der bestehende Cut Assistant 2018 basiert auf Delphi/VCL, DirectShow und installierten Windows-Codecs. Der vorhandene Quellcode dient als Referenz für bewährte Funktionen, Abläufe und Dateiformate. Geplant ist ein moderner Neuaufbau.
 
 ## Ziel
 
-Der POC soll nachweisen, dass typische OTR-MP4-Dateien ohne DirectShow zuverlässig wiedergegeben und präzise navigiert werden können. Dieser Nachweis ist inzwischen erbracht. Darauf aufbauend wird der POC schrittweise zum Schnittassistenten erweitert. Die manuelle Schnittplanung mit markierten Entfernungsbereichen, die Erzeugung und Verarbeitung klassischer Cutlists, die Anbindung an MP4Box, die Dateinamenslogik sowie der vollständige Cutlist-Server-Workflow mit automatischer Suche, Download und direktem Upload sind inzwischen umgesetzt und praktisch bestätigt. Als wesentlicher V1-Baustein ist noch die Unterstützung echter klassischer OTR-AVI-Dateien offen.
+Der POC soll nachweisen, dass typische OTR-MP4-Dateien ohne DirectShow zuverlässig wiedergegeben und präzise navigiert werden können. Dieser Nachweis ist inzwischen erbracht. Darauf aufbauend wird der POC schrittweise zum Schnittassistenten erweitert. Die manuelle Schnittplanung mit markierten Entfernungsbereichen, die Erzeugung und Verarbeitung klassischer Cutlists, die Anbindung an MP4Box, die Dateinamenslogik sowie der vollständige Cutlist-Server-Workflow mit automatischer Suche, Download und direktem Upload sind inzwischen umgesetzt und praktisch bestätigt. Geeignete klassische H.264-AVI-Dateien werden inzwischen experimentell vorbereitet und geprüft; ungeeignete Zeitstrukturen werden abgelehnt. Keine allgemeine AVI-Freigabe. Zusätzlich sind otr-can mit bestätigtem AAC-Notfallweg und das Klebecenter umgesetzt.
 
 ## Erreichter Zwischenstand
 

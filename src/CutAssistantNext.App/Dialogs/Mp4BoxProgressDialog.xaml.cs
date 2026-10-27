@@ -21,12 +21,17 @@ public partial class Mp4BoxProgressDialog : Window
 
     internal Mp4BoxProgressDialog(
         Mp4BoxProgressViewModel viewModel, BufferedCutProgressReporter? progress = null,
-        WindowSettingsStore? windowSettingsStore = null)
+        WindowSettingsStore? windowSettingsStore = null, string? operationTitle = null)
     {
         ArgumentNullException.ThrowIfNull(
             viewModel);
 
         InitializeComponent();
+        if (!string.IsNullOrWhiteSpace(operationTitle))
+        {
+            Title = operationTitle;
+            OperationHeading.Text = operationTitle;
+        }
         DialogWindowPersistence.Attach(this, CutDialogKind.Progress, windowSettingsStore);
 
         _viewModel =

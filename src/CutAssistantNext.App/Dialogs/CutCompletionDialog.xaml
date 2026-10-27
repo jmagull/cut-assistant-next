@@ -48,7 +48,7 @@
                 <Border Width="44" Height="44" CornerRadius="22" Background="#DCFCE7" HorizontalAlignment="Left">
                     <TextBlock Text="✓" FontSize="26" Foreground="#15803D" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Border>
-                <TextBlock Text="Schneiden abgeschlossen" FontSize="26" FontWeight="SemiBold"
+                <TextBlock Text="{Binding CompletionTitle}" FontSize="26" FontWeight="SemiBold"
                            Foreground="#111827" TextWrapping="Wrap" Margin="0,14,0,8" />
                 <TextBox Text="{Binding FileName, Mode=OneWay}" ToolTip="{Binding OutputFilePath}"
                          IsReadOnly="True" TextWrapping="Wrap" Background="Transparent" BorderThickness="0"

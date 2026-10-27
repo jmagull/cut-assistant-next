@@ -32,9 +32,9 @@ Alle Dateien liegen unter artifacts/release-1.0.2-build36. SHA256SUMS.txt erfass
 | CAN-libmpv-v0.41.0-pruefpaket-2026-09-26.zip | 405926830 | 01546ADB0BCCB15588456CAA2E90BE805B6A55804618E0A4EECA08B01AB1FE8B |
 | CAN-libmpv-v0.41.0-relink-2026-09-26.zip | 47273515 | 00EE11B824D7E28C30D62096C4C1BC5BFD6052FEE393956980FC14152661A342 |
 
-## Offene Abnahme
+## Persönliche Rückmeldung und verbleibende Abnahme
 
-Die persönlichen Bild-/Ton-/Schnitt-/Vorschauprüfungen früherer Peppermint-Läufe gelten für deren damals verwendete Programmdateien. Build 36 wurde noch nicht persönlich als Setup oder Portable gestartet. Vor einer späteren Freigabe sind Installation/Start/Versionsanzeige, eine neu gespeicherte otr-can-Cutlist mit den drei korrekten Motorfeldern und bei Bedarf VM-Deinstallation sowie Portable-Pfade an den tatsächlichen Build-36-Dateien zu prüfen.
+Nachtrag aus dem Chat: Der Nutzer bestätigt ausdrücklich **„setup wurde getestet“**. Zuvor wurden Laden des Videos, Laden der lokalen Peppermint-Cutlist und erneutes Erzeugen einer Cutlist als erfolgreich gemeldet; der Screenshot zeigt Build 36. Die korrekten otr-can-Motorangaben sind ebenfalls persönlich bestätigt. Eine gesonderte neue Portable-/VM-/Deinstallationsabnahme wird daraus nicht abgeleitet. Die ursprünglichen technischen Paketnachweise und eingefrorenen Dateien bleiben unverändert.
 
 Die Ursache der früheren vollständigen Rechnerstillstände ist weiterhin ungeklärt. Build 36 enthält dafür keine Änderung. Keine Veröffentlichung ohne ausdrückliche Freigabe.
 

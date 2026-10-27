@@ -1,5 +1,42 @@
 # Nutzeranleitung – Cut Assistant Next
 
+**Stand 27.10.2026: CAN 1.0.2 Build 41, otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** Veröffentlichung freigegeben für CAN 1.0.2 Build 41. Die Freigabe umfasst den unveränderten geprüften Paketsatz. [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
+
+## Klebecenter – zwei fertige Filmteile verbinden
+
+1. **Klebecenter → Filmteile zusammenfügen …** öffnen. Der Hauptplayer muss keine Datei geladen haben.
+2. Zwei bereits geschnittene MP4-Dateien im Klebecenter auswählen und ihre Reihenfolge festlegen. „Reihenfolge tauschen“ vertauscht Dateien samt zugehöriger Tonspurauswahl.
+3. Danach die gewünschte Tonspur je Teil auswählen. Bei mehreren Spuren keine Vorauswahl; Sprache, Codec, Kanäle, Abtastrate und entfallende Spuren sind sichtbar.
+4. **Prüfen und zusammenfügen …** wählen und eine neue MP4-Ausgabedatei festlegen. Vorhandene Dateien werden nicht ersetzt.
+5. Nach technischer Prüfung **Übergang 1 → Prüfen** im Abschlussdialog öffnen. Start drei Sekunden vor der tatsächlichen Klebestelle; Bild, Ton und Synchronität prüfen. Anfang und Ende ebenfalls kontrollieren.
+
+Ganze Filmteile werden übernommen; Cutlists werden nicht erneut angewendet. Keine zusätzliche Tonspurkopie nötig. Der frühere Menüpunkt „Tonspuren“ ist durch das Klebecenter ersetzt. Hauptplayer-Zustand und Originaldateien bleiben erhalten.
+
+Bild bleibt unverändert. Gewählter Ton wird vollständig streng dekodiert, samplegenau verbunden und einmal durchgehend als AAC-LC neu kodiert. **AAC/AAC und AC-3/AAC sind persönlich positiv geprüft**; Quellcodecs müssen nicht gleich sein. Beide Spuren brauchen passende Kanäle/Abtastrate und jeweils den vollständigen Bildzeitraum.
+
+Erste Fassung: genau zwei passende progressive H.264-MP4-Dateien mit konstanten 25/50 Bildern/s, AAC-/AC-3-Spuren, 44100/48000 Hz und unterstützter Mono-/Stereo-/5.1-Belegung. Keine automatische Reparatur, Zeitkorrektur, Abtastratenwandlung oder Video-Neukodierung. Platz für PCM- und Prüfdateien erforderlich. [Grenzen und Nachweise](KLEBECENTER-20261027.md).
+
+## AAC-Notfallweg beim otr-can-Schnitt
+
+Scheitert der normale Schnitt bei der Tonaufbereitung und ist eine passende AAC-Spur verfügbar, kann CAN nach ausdrücklicher Bestätigung mit dieser Spur erneut schneiden. Die Rückfrage zeigt entfallende Spuren. Erst vollständig fehler- und warnungsfreie Prüfung der gewählten Spur erlaubt den erneuten Versuch mit denselben Schnittpunkten. Gesunde Aufträge behalten alle Tonspuren.
+
+Der Notfallweg repariert keine defekte Spur. Für späteres Kleben genügt die Auswahl pro Teil im Klebecenter; keine separate Vorbereitungskopie erforderlich. [Notfallweg](OTR-CAN-AAC-NOTFALLWEG-20261026.md).
+
+## Versionen und Installation
+
+Build 39 enthielt Motor 0.1.6, nannte im Voraussetzungstext aber 0.1.5. Build 40 korrigiert den Text und ergänzt den Paketabgleich. Der Setup-Screenshot bestätigt den Hinweis **0.1.6**. Nach dem Umstieg auf Setup Build 40 bestätigt der Nutzer beide Furiosa-Schnitte mit otr-can, das Klebecenter und alle Prüfstellen. Damit ist der Arbeits-PC-Funktionslauf positiv; zusätzliche Portable-/VM-/Deinstallationsvarianten bleiben getrennt offen. [Furiosa-Praxisbericht](FURIOSA-KLEBECENTER-PRAXIS-20261027.md). [Pakete und Prüfsummen](RELEASE-1.0.2-BUILD40-RESULT.md).
+
+<details>
+<summary>Historische Vorbereitung in Build 38: separate Tonspurkopie</summary>
+
+Build 38 bot **Tonspuren → Tonspur für Filmteile auswählen …**, um eine zusätzliche MP4 mit einer gewählten AAC-/AC-3-Spur ohne Neukodierung für externes Kleben vorzubereiten. Dieser gesonderte Bedienweg ist im aktuellen Menü nicht mehr nötig. [Historischer Bericht](TONSPURAUSWAHL-FILMTEILE-20261026.md).
+
+</details>
+
+## Herkunft der weiteren Funktionen
+
+Die nachfolgenden datierten Einführungen erläutern ihre früheren Entwicklungs-/Paketstände, nicht die aktuelle Versionsnummer oder die heutigen Menüpunkte oben.
+
 ## CAN 1.0.0 · Build 32 – erste stabile Version
 
 Stand **18.10.2026**, [stabil veröffentlicht](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.0): Kommandozeilenstart, Drag & Drop und umschaltbare Standard-/Power-User-Ansicht sind persönlich bestätigt. Frame-Lupe, Frame-Liste und beide Schnittmotoren wurden persönlich geprüft. Die stabile Fassung trägt keinen RC-Zusatz. Setup und Portable sind lokal erstellt, technisch geprüft und eingefroren. Am **18.10.2026** sind **VM-Setup und Deinstallation** einschließlich Darstellungswechsel, AVI-Schnitten mit beiden Motoren samt Bild/Ton und AVI-Schutzsperren sowie MP4-Frame-Lupe persönlich bestätigt. **Portable/ZIP ist inzwischen ebenfalls persönlich geprüft:** anderer otr-can-Pfad, MP4-Schnitte mit beiden Motoren samt Bild/Ton und Halbierungssprung sowie AVI-Schnitte mit beiden Motoren. Die persönliche Setup-/Deinstallations-/Portable-Abnahme der neuen Pakete ist damit dokumentiert. [Release Notes](RELEASE-NOTES-1.0.0.md), [Paketnachweis](RELEASE-1.0.0-BUILD32-RESULT.md), [Funktions-Freeze](FREEZE-1.0.0-20261016.md). Die folgenden älteren Einführungen erläutern die Herkunft der weiterhin enthaltenen Funktionen. AVI- und MP4Box-Grenzen gelten weiterhin.
@@ -428,7 +465,7 @@ Am **18.10.2026** meldet der Nutzer bei **Toxic Folge 4 S1E4 (HQ)** ebenfalls ei
 
 Mit **Schneiden otr-can (framegenau, langsam)** werden geeignete MP4-Dateien direkt verwendet. Für geeignete H.264-AVI-Dateien bietet CAN eine experimentelle MP4-Vorbereitung an: Video und Ton werden ohne Neukodierung kopiert; das Original bleibt unverändert. Die vorbereitete Datei wird an den Motor übergeben, die Schnittpunkte bleiben gleich. CAN erstellt genau einen FFMS2-Index pro Schnittvorgang, übergibt die Behaltebereiche und startet den nativen CPU-Motor. Geeignete Abschnitte zwischen IDR-Bildern werden kopiert, Video-Schnittgrenzen neu kodiert. Alle unterstützten Tonspuren werden einmal vollständig neu kodiert. Bei AAC/AC-3 bleiben Codec, Kanallayout, Samplerate und Zielbitrate erhalten; MP3 wird erst nach dem PCM-Schnitt nach AAC-LC kodiert. Die Tonübernahme ist damit verlustbehaftet. CAN prüft die erzeugte MP4 und ihre Video-/Audiostruktur, bevor es die gewählte Ausgabe anlegt oder eine bestätigte vorhandene Datei ersetzt.
 
-Nach Erfolg, Fehler oder Abbruch entfernt CAN seine Arbeitsdateien im Ausgabeordner. Abbruch beendet auch laufende FFmpeg-Kindprozesse. Falls Aufräumen scheitert, zeigt das Protokoll den verbliebenen Pfad. Das Original wird nicht verschoben. Motor 0.1.5 unterstützt eine Videospur an Streamposition 0, H.264 mit 25/50 fps und Quellstart null sowie AAC-LC/AC-3 und geeignete MP3-Spuren; Schnittzeiten müssen unter 24 Stunden liegen. Andere Codecs oder Zeitstrukturen werden mit einer Meldung abgelehnt. Der gemeinsame Pines-Film wurde persönlich als synchron bestätigt; der reguläre CAN-Auftrag liefert denselben Dateiinhalt in rund 3:33 Minuten. Weitere reale Formate und getrennte Tonspurkontrollen bleiben vor Version 1.0 offen. Prüfe Anfang, Übergänge, Ende und jede Tonspur persönlich. Die Prüfgrenzen stehen im [0.1.3-Prüfbericht](OTR-CAN-0.1.3-PRUEFBERICHT.md).
+Nach Erfolg, Fehler oder Abbruch entfernt CAN seine Arbeitsdateien im Ausgabeordner. Abbruch beendet auch laufende FFmpeg-Kindprozesse. Falls Aufräumen scheitert, zeigt das Protokoll den verbliebenen Pfad. Das Original wird nicht verschoben. Der aktuelle lokale Motor 0.1.6 unterstützt eine Videospur an Streamposition 0, H.264 mit 25/50 fps und Quellstart null sowie AAC-LC/AC-3 und geeignete MP3-Spuren; Schnittzeiten müssen unter 24 Stunden liegen. Andere Codecs oder Zeitstrukturen werden mit einer Meldung abgelehnt. Der gemeinsame Pines-Film wurde persönlich als synchron bestätigt; der reguläre CAN-Auftrag liefert denselben Dateiinhalt in rund 3:33 Minuten. Weitere reale Formate und getrennte Tonspurkontrollen bleiben vor Version 1.0 offen. Prüfe Anfang, Übergänge, Ende und jede Tonspur persönlich. Die Prüfgrenzen stehen im [0.1.3-Prüfbericht](OTR-CAN-0.1.3-PRUEFBERICHT.md).
 
 **Cutlist einschließlich Schlussbereich fertigstellen:** Alle behaltenen Bereiche müssen vollständig von den Originaltonspuren abgedeckt sein. Andernfalls kann otr-can 0.1.5 mit **„PCM count differs“** abbrechen; fehlender Originalton wird nicht automatisch durch Stille ergänzt. Bei **Doc S02E16** reichte die noch unfertige Cutlist bis über das Tonende der Aufnahme. Nach dem fertigen Schluss-Schnitt sind **beide Motoren persönlich problemlos geprüft**. Prüfe deshalb vor dem Schneiden auch den Schlussbereich. Ein zusätzlicher Schluss-Schnitt ist nicht erforderlich, wenn die vorhandenen Tonspuren den gewünschten Behaltebereich bereits vollständig abdecken. [Praxistest und Auflösung](DOC-S02E16-AUDIOENDE-20261017.md).
 
@@ -439,7 +476,7 @@ Der Dialog **Video vorbereiten und schneiden** zeigt den aktuellen Schritt und d
 
 Bei sehr großen Protokollen zeigt das Fenster die jüngsten Meldungen und einen Hinweis auf ältere Einträge. **In Zwischenablage** kopiert weiterhin das vollständige Protokoll. Die Anzeige wird gebündelt aktualisiert, damit Laufzeit, Fehleranzeige und Bedienung reagieren.
 
-Bei otr-can zeigt CAN die Indexierung mit den tatsächlichen Prozentwerten. Danach siehst du den aktuellen Behaltebereich, Kopieren oder CPU-Neukodierung der Schnittkante und den betreffenden Zeitbereich im Original. Hinzu kommen Laufzeit, Dauer des aktuellen Schritts und Zeit seit der letzten Programmmeldung. Der bewegte Balken bei CPU-Arbeit zeigt den laufenden Vorgang; er ist kein Gesamtprozentwert und keine Restzeitprognose. Motor 0.1.5 zeigt zusätzlich Originalton vorbereiten, alle Tonspuren neu kodieren sowie Bild/Ton zusammenführen und prüfen. Einzelne Decoder-/Encoderphasen können trotzdem ohne neue Meldung laufen. Die Zeitansicht läuft weiter; Abbrechen bleibt verfügbar. Nach Ende, Fehler oder Abbruch bleibt die gemessene Laufzeit stehen.
+Bei otr-can zeigt CAN die Indexierung mit den tatsächlichen Prozentwerten. Danach siehst du den aktuellen Behaltebereich, Kopieren oder CPU-Neukodierung der Schnittkante und den betreffenden Zeitbereich im Original. Hinzu kommen Laufzeit, Dauer des aktuellen Schritts und Zeit seit der letzten Programmmeldung. Der bewegte Balken bei CPU-Arbeit zeigt den laufenden Vorgang; er ist kein Gesamtprozentwert und keine Restzeitprognose. otr-can zeigt zusätzlich Originalton vorbereiten, alle Tonspuren neu kodieren sowie Bild/Ton zusammenführen und prüfen. Einzelne Decoder-/Encoderphasen können trotzdem ohne neue Meldung laufen. Die Zeitansicht läuft weiter; Abbrechen bleibt verfügbar. Nach Ende, Fehler oder Abbruch bleibt die gemessene Laufzeit stehen.
 
 Bei experimenteller Vorbereitung geschieht Folgendes:
 
@@ -508,6 +545,10 @@ Unter **Credits** findest du die Danksagung mit Links zu den beteiligten Projekt
 
 ## 10. Experimenteller Umfang und Testbasis
 
+Aktueller technischer Stand für Build 38: **1446/1446 Pakettests**, zusätzlich **925 App-/249 Medientests gegen finale Produkt-DLLs** und **zehn native Normal-/Fehlerfälle** bestanden. Die persönlichen Bestätigungen beziehen sich auf die genannten tatsächlichen Abläufe; sie sind keine allgemeine Format- oder Paketfreigabe. [Testplan](TESTPLAN.md), [Paketbericht](RELEASE-1.0.2-BUILD38-RESULT.md).
+
+Die folgenden AVI-Beispiele sind historische konkrete Praxisfälle mit ihren jeweiligen Grenzen.
+
 Der integrierte AVI-Ablauf wurde mit **Die Diplomatin – Tod einer Nonne** und **Rubikon**, jeweils OTR-HD-AVI, mit jeweils zwei Cutlists erfolgreich geprüft. Die ausgegebenen MP4-Dateien enthielten H.264 mit 1280×720 bei 50 fps sowie MP3-Stereoton. Der Nutzer bestätigte Schnittgrenzen und Ton-Synchronität.
 
 Das sind konkrete Beispiele, keine Garantie für alle historischen AVI-, MKV- oder sonstigen Codec-Kombinationen. Weitere technische Prüfergebnisse stehen im [Testplan](TESTPLAN.md), die genauen aktuellen Toleranzen im [Projektstatus](STATUS.md).
@@ -517,3 +558,11 @@ Ein weiterer Praxistest mit „Enigma – Das Geheimnis“ (AVI, H.264/MP3, 25 f
 Bei einer anderen Full-HD-Aufnahme („Wo die Liebe hinfällt“) wurden dagegen bereits bei der Wiedergabe und Frame-Navigation Auffälligkeiten festgestellt. Die Datei besitzt einen AVI-Container, obwohl ihr Name auf `.avi.mp4` endet. Für diese Aufnahme liegt keine erfolgreiche Schnittabnahme vor. Am 11.10.2026 bestätigt der Nutzer das Original als bereits untauglich; diese Aufnahme wird auf seinen Wunsch nicht weiter untersucht. Er wartet auf einen neuen Sendetermin.
 
 Besonders bei solchen älteren AVI-Aufnahmen können Bild-, Ton- oder Navigationsprobleme schon in der unveränderten Originaldatei vorliegen. CAN verändert das Original beim Einlesen nicht. Kontrolliere vor dem Schneiden die Wiedergabe und anschließend das tatsächliche Schnittergebnis sorgfältig.
+
+## Klebecenter-Arbeitsordner ab Build 41
+
+Nach Erfolg werden temporäre Dateien, Erfolgsprotokoll und leerer Arbeitsordner entfernt. Bei Fehler oder Abbruch bleibt die Diagnose erhalten; ihr Pfad steht im Protokoll. Gesperrte Dateien oder fremde Inhalte werden gemeldet und erhalten. Bereits verbliebene Ordner älterer Läufe werden nicht automatisch durchsucht. [Änderung und Prüfung](KLEBECENTER-BEREINIGUNG-20261027.md).
+
+## Mitgelieferten Motor nach Überinstallation prüfen
+
+Der aktuelle Paketsatz enthält **otr-can 0.1.6** unter **tools/otr-can/otr_can.exe**. Unter **Einstellungen → OTR-CAN-Werkzeuge** den Pfad auf diese mitgelieferte EXE setzen. Eine übernommene Einstellung kann weiterhin auf eine ältere Kopie zeigen. Die Versionsprüfung muss **0.1.6** melden. Das Klebecenter verwendet die konfigurierten FFmpeg-Werkzeuge; je Teil wird genau eine gewählte Tonspur übernommen und der verbundene Ton einmal als AAC-LC kodiert.

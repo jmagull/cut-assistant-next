@@ -1,5 +1,7 @@
 # CAN-libmpv 0.41.0: geprüfter Kandidat
 
+**Abgleich 27.10.2026:** Laufzeit unverändert **libmpv 0.41.0**, auch in CAN 1.0.2 Build 40. Die folgenden Herstellungs-/Lizenzangaben gehören zum unveränderten Vier-DLL-Stack. [Aktuelle CAN-/Motorversionen](../../VERSIONEN.md).
+
 **Status: geprüfter und bereits veröffentlichter Vier-DLL-Stack.** Diese Unterlagen dokumentieren den selbst gebauten September-Stand. Die vier DLLs, das Quellen-Prüfpaket und das Relink-Paket wurden mit RC2 veröffentlicht und mit Build 7 RC2 unverändert weitergegeben; siehe [Veröffentlichungsnachweis](../../RELEASE-PUBLICATION-BUILD7-RC2.md). Sie ersetzen den früheren Juli-Kandidaten. Ältere Prüfabschnitte halten ihren damaligen Stand fest; Aussagen zur seinerzeit noch offenen Freigabe sind keine aktuelle Aufgabenliste.
 
 ## Herkunft und Binärdateien
@@ -18,7 +20,7 @@
 | `libshaderc_shared.dll` | `A66696E62D2207B259E33BC3E00E02C55B77F74048872596805B8D82BCDABFB6` |
 | `libspirv-cross-c-shared.dll` | `2AF800CBBD27CEA876227DD3903F7FB662652BBC86E2BA9F92F13E501F1E637A` |
 
-Das gesicherte Quellen-, Lizenz- und Build-Prüfpaket heißt `CAN-libmpv-v0.41.0-pruefpaket-2026-09-26.zip`, umfasst 405.926.830 Bytes und hat SHA-256 `01546ADB0BCCB15588456CAA2E90BE805B6A55804618E0A4EECA08B01AB1FE8B`. Es ist derzeit lokal gesichert und **noch kein öffentlich erreichbares Release-Asset**. Bei einer Veröffentlichung müssen die ausgelieferten Binärdateien und ihre korrespondierenden Quellen gemeinsam dauerhaft erreichbar sein. Dieses große Archiv gehört als Release-Asset neben die Binärdateien, nicht in die Git-Historie.
+Das gesicherte Quellen-, Lizenz- und Build-Prüfpaket heißt `CAN-libmpv-v0.41.0-pruefpaket-2026-09-26.zip`, umfasst 405.926.830 Bytes und hat SHA-256 `01546ADB0BCCB15588456CAA2E90BE805B6A55804618E0A4EECA08B01AB1FE8B`. Die folgende Freigabeplanung beschreibt den ursprünglichen September-Prüfstand. Das Archiv ist inzwischen laut [Veröffentlichungsnachweis CAN 1.0.0](../../RELEASE-PUBLICATION-1.0.0.md) als korrespondierendes Quellen-Asset veröffentlicht; dasselbe unveränderte Archiv wird lokal auch in Build 40 mitgeführt. Bei einer Veröffentlichung müssen die ausgelieferten Binärdateien und ihre korrespondierenden Quellen gemeinsam dauerhaft erreichbar sein. Dieses große Archiv gehört als Release-Asset neben die Binärdateien, nicht in die Git-Historie.
 
 Das separate Relink-Paket `CAN-libmpv-v0.41.0-relink-2026-09-26.zip` umfasst 47.273.515 Bytes und hat SHA-256 `00EE11B824D7E28C30D62096C4C1BC5BFD6052FEE393956980FC14152661A342`. Es enthält die 216 mpv-Objektdateien, 63 Link-Archive, einen ortsunabhängigen Link-Aufruf und PowerShell-5.1-Skripte. Es wurde nach dem Entpacken in einem anderen Ordner sowohl unverändert als auch mit einem geänderten `libfribidi.a` erfolgreich neu verknüpft. Der neue Marker wurde in der DLL nachgewiesen; beide DLLs initialisierten mpv erfolgreich. Details: [RELINK-VERIFICATION.md](RELINK-VERIFICATION.md). Dieses Paket muss bei einer öffentlichen Ausgabe neben dem Quellenpaket erreichbar sein.
 

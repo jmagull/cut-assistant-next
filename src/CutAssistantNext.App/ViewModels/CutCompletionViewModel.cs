@@ -20,10 +20,11 @@ public sealed class CutCompletionViewModel
             .Select(s => new KeepSegment(s.Start, s.Duration)));
     }
 
-    public CutCompletionViewModel(CutResult result)
+    public CutCompletionViewModel(CutResult result, string completionTitle = "Schneiden abgeschlossen")
     {
         ArgumentNullException.ThrowIfNull(result);
         Result = result;
+        CompletionTitle = completionTitle;
         OutputFilePath = result.OutputFilePath;
         FileName = Path.GetFileName(OutputFilePath);
         var checkPoints = new List<CutCompletionCheckPoint>
@@ -37,7 +38,7 @@ public sealed class CutCompletionViewModel
         Transitions = CheckPoints.Where(point => point.IsTransition).ToList().AsReadOnly();
 
         var text = new StringBuilder();
-        text.AppendLine("Schneiden abgeschlossen");
+        text.AppendLine(CompletionTitle);
         text.AppendLine(OutputFilePath);
         text.AppendLine();
         text.AppendLine(TimeReferenceText);
@@ -53,6 +54,7 @@ public sealed class CutCompletionViewModel
     }
 
     public CutResult Result { get; }
+    public string CompletionTitle { get; }
     public bool AreTransitionsMeasured => Result.TimingKind == CutReviewTimingKind.Measured;
     public string ReviewNotice => Result.Notice ?? string.Empty;
     public string OutputFilePath { get; }

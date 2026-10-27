@@ -1,5 +1,7 @@
 # Diagnosekandidaten mit dem CAN-libmpv-Kontrollplayer prüfen
 
+**Einordnung 27.10.2026:** Dieses README beschreibt den isolierten Diagnose-/Kontrollprototyp, keine aktuelle CAN-Paketversion. Produktive Schnitt-/Klebekontrollen sind separat dokumentiert. Aktuell **CAN 1.0.2 Build 40 / otr-can 0.1.6**. [Projektstand](../../../docs/AKTUELLER-STAND.md), [Versionen](../../../docs/VERSIONEN.md).
+
 Separater Windows-/WPF-Prototyp für den JSON-Bericht von `TransitionDiagnosis`. Keine Einbindung in CAN oder Änderung seiner Schnittlogik. Er verwendet die **aktuellen unveränderten Quellen** von Kontrollfenster, Kontroll-ViewModel, Abschlussmodell, Playback-ViewModel und Videohost. Core, Media, Cutlists und die vier libmpv-Dateien stammen aus einer vorhandenen CAN-Release-Laufzeit.
 
 ## Build und Tests

@@ -1,5 +1,7 @@
 # MP4Box-Übergangsdiagnose
 
+**Einordnung 27.10.2026:** Dieses README beschreibt den isolierten Diagnose-/Kontrollprototyp, keine aktuelle CAN-Paketversion. Produktive Schnitt-/Klebekontrollen sind separat dokumentiert. Aktuell **CAN 1.0.2 Build 40 / otr-can 0.1.6**. [Projektstand](../../../docs/AKTUELLER-STAND.md), [Versionen](../../../docs/VERSIONEN.md).
+
 Separater .NET-10-Konsolenprototyp. Keine Einbindung in CAN oder die Produktions-Solution. Er liest ein Original, eine **bereits fertige MP4Box-Ausgabe** und die dazugehörige Cutlist. Es werden weder neue Schnitte noch Audioverarbeitung, Neukodierung oder Playeraufrufe ausgeführt. Die Eingaben bleiben während der Diagnose gegen Schreiben und Löschen gesperrt.
 
 ## Bauen und testen

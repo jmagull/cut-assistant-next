@@ -1,5 +1,18 @@
 # Architektur – Arbeitsstand
 
+**Arbeitsabgleich 27.10.2026: CAN 1.0.2 Build 40, otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
+
+## Klebecenter und Paketierung – umgesetzt
+
+- WPF: **JoinDialog/MainWindow.Join** wählen zwei ganze Filmteile, zuerst Reihenfolge, danach Tonspuren. Die Hauptplayer-Schnittliste wird nicht angewendet oder verändert.
+- **CutAssistantNext.Media/Joining/Mp4JoinService** orchestriert Prüfung, PCM-Verbindung, einmaliges AAC-Encoding, unveränderte Videokopie, Bereinigung und neue Dateiübernahme.
+- **FfprobeStreamCopyVerifier.Join** prüft rationale Uhren, Quelltonkontinuität, Bildraster, Videopakete/Zeiten und AAC-Zeitachse. **BoundedJoinToolRunner** kapselt FFmpeg-Ressourcengrenzen und Abbruch.
+- **CutResult/CutOutputTimeline** tragen geprüfte Ausgabedauer, Klebestelle und Dateiidentität. Vorhandene **CutCompletionDialog/CutReviewController** ermöglichen die Kontrolle mit drei Sekunden Vorlauf.
+- Der AAC-Notfallschnitt bleibt in **OtrCanAacEmergencyCutService/SelectedAudioSource** gesondert. Gemeinsame Prüfungen werden nicht gelockert.
+- Feste Quellsnapshots, gesperrter Restore, Publish-Manifeste, Setup/Portable und SHA-256 sind umgesetzt. Seit Build 40 zusätzlicher Abgleich zwischen Voraussetzungstext und Motorversion. Alte Archive bleiben erhalten.
+
+Die folgenden POC-Abschnitte erläutern Grundarchitektur und Entstehung.
+
 ## Zielbild
 
 ```text
@@ -15,11 +28,11 @@ Anwendungslogik / ViewModels
 Cutlists            | Schnittmotoren | Server | später: Renamer | Stapel
 ```
 
-## Vorgesehene Projekte
+## Projekte
 
 - `CutAssistantNext.App` – WPF-Oberfläche und Startpunkt
 - `CutAssistantNext.Core` – Modelle, Verträge und Anwendungslogik
-- `CutAssistantNext.Media` – mpv/libmpv und ffprobe
+- `CutAssistantNext.Media` – mpv/libmpv, ffprobe, gekapselte Werkzeuge und Klebecenter-Verarbeitung
 - `CutAssistantNext.Cutlists` – Cutlist-Modell, Metadaten, Parser, Serialisierung sowie Datei-Ein- und -Ausgabe
 - passende Testprojekte unter `tests/`
 
@@ -154,4 +167,4 @@ Die Kompatibilitätsdetails der erzeugten Dateien sind in ADR-007 festgelegt und
 - möglicher späterer Wechsel von der HWND-Einbettung zur libmpv-Render-API
 - Strategie für Aktualisierungen der fest versionierten nativen Laufzeit
 - MVVM-Hilfsbibliothek oder möglichst wenige externe Pakete
-- Installer-/Portable-Konzept
+- Persönliche neue Paket-/Installationsabnahme; Setup-/Portable-Konzept ist umgesetzt

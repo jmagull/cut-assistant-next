@@ -1,4 +1,4 @@
-﻿namespace CutAssistantNext.Core.Media;
+namespace CutAssistantNext.Core.Media;
 
 public sealed record MediaAnalysisResult(
     string? FormatName,
@@ -35,4 +35,6 @@ public sealed record AudioStreamInfo(
     string? ChannelLayout)
 {
     public double? StartTimeSeconds { get; init; }
+    public string? Language { get; init; }
+    public string? Title { get; init; }
 }

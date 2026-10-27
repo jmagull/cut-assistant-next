@@ -1,9 +1,28 @@
-﻿using CutAssistantNext.Media.Analysis;
+using CutAssistantNext.Media.Analysis;
 
 namespace CutAssistantNext.Media.Tests;
 
 public class FfprobeJsonParserTests
 {
+    [Fact]
+    public void ParseKeepsAudioLanguageAndTitleForExplicitTrackChoice()
+    {
+        const string json = """
+            {"streams":[
+              {"index":1,"codec_type":"audio","codec_name":"aac","tags":{"language":"deu","title":"Deutsch"}},
+              {"index":2,"codec_type":"audio","codec_name":"aac","tags":{"language":"eng","title":"Originalton"}},
+              {"index":3,"codec_type":"audio","codec_name":"ac3"}
+            ],"format":{"format_name":"mp4","duration":"10"}}
+            """;
+        var tracks = FfprobeJsonParser.Parse(json).AudioStreams;
+        Assert.Equal("deu", tracks[0].Language);
+        Assert.Equal("Deutsch", tracks[0].Title);
+        Assert.Equal("eng", tracks[1].Language);
+        Assert.Equal("Originalton", tracks[1].Title);
+        Assert.Null(tracks[2].Language);
+        Assert.Null(tracks[2].Title);
+    }
+
     [Fact]
     public void Parse_ReadsVideoAudioAndFormatInformation()
     {

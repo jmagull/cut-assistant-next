@@ -19,6 +19,7 @@ internal partial class CutCompletionDialog : Window
         _reviewAsync = reviewAsync;
         InitializeComponent();
         DataContext = viewModel;
+        Title = viewModel.CompletionTitle;
         ProtocolTextBox.Text = protocolText;
         DialogWindowPersistence.Attach(this, CutDialogKind.Completion, windowSettingsStore);
     }

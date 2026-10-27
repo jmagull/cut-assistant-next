@@ -1,5 +1,7 @@
 # Isolierter Prototyp: Ausgabeübergänge im Kontrollplayer
 
+**Einordnung 27.10.2026:** Dieses README beschreibt den isolierten Diagnose-/Kontrollprototyp, keine aktuelle CAN-Paketversion. Produktive Schnitt-/Klebekontrollen sind separat dokumentiert. Aktuell **CAN 1.0.2 Build 40 / otr-can 0.1.6**. [Projektstand](../../../docs/AKTUELLER-STAND.md), [Versionen](../../../docs/VERSIONEN.md).
+
 Dieser .NET-10-/WPF-Prototyp ist **nicht in CAN eingebaut**. Er verändert weder Schnittplan noch Cutlist und schneidet beim Analysieren keine neue Datei. Er benötigt die erzeugten MP4Box-Segmente und deren Gesamtfilm. Die Produktions-Solution bindet dieses Projekt nicht ein.
 
 ## Verfahren und Grenzen

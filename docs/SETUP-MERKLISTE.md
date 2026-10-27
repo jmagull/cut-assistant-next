@@ -1,8 +1,58 @@
 # Setup-Merkliste
 
-Stand: 11.10.2026. Die ursprüngliche Planung vom September ist mit dem aktuellen Projektstand abgeglichen. Öffentliche Vorabversion: **0.2.1 Build 13 RC3 mit otr-can 0.1.4**, auf Nutzerauftrag nach den technischen Prüfungen veröffentlicht. Persönliche vollständige Paketabnahme: **Build 12 RC3**, dessen Pakete unverändert separat erhalten bleiben.
+**Stand 27.10.2026: CAN 1.0.2 Build 41, otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Paketbericht](RELEASE-1.0.2-BUILD41-RESULT.md).
 
-Aktuelle Nachweise: [Projektstatus](STATUS.md), [Build-13-Prüfung](RELEASE-BUILD13-RC3-RESULT.md), [RC3-Veröffentlichung](RELEASE-PUBLICATION-BUILD13-RC3.md), [persönliche Build-12-Abnahme](RELEASE-BUILD12-RC3-RESULT.md).
+## Erledigt
+
+- [x] Filmteile/Reihenfolge im Klebecenter wählen, danach Tonspur je Teil. Keine Vorbereitungskopie.
+- [x] Technische Prüfung, Abschlussdialog und Kontrollplayer mit drei Sekunden Vorlauf.
+- [x] Eigener John-Wick-Lauf AC-3/AAC persönlich positiv bestätigt.
+- [x] Zweiter eigener Lauf AAC/AAC persönlich positiv bestätigt.
+- [x] Build-40-Setup, Portable, Quellen, Motor-/libmpv-Quellen, Relink und Prüfsummen erstellt/geprüft.
+- [x] Voraussetzungstext auf 0.1.6 korrigiert, Version beim Paketbau abgeglichen. Motor war bereits 0.1.6.
+- [x] Setup-Screenshot zeigt den korrigierten Build-40-Hinweis.
+
+## Weitere Paketvarianten
+
+- [x] Arbeits-PC-Funktionslauf nach Umstieg auf Setup Build 40: beide Furiosa-Schnitte mit otr-can und Klebecenter samt allen Prüfstellen positiv gemeldet.
+- [ ] Weitere Installationsvarianten gesondert prüfen, soweit gewünscht.
+- [x] Erster VM-Setup-Fall: Die Teufelsbrigade AVI mit MP4Box, Ton/Schnitt/Bild/Drei-Sekunden-Vorschau positiv.
+- [x] Zweiter VM-Setup-Fall: Die Teufelsbrigade AVI mit otr-can 0.1.6, MP3→AAC; Ton/Bild/Schnitt/Drei-Sekunden-Vorschau positiv.
+- [x] Dritter VM-Setup-Fall: Grey’s Anatomy MP4 mit MP4Box, drei Abschnitte; Ton/Bild/Schnitt/Drei-Sekunden-Vorschau positiv.
+- [x] Vierter VM-Setup-Fall: Grey’s Anatomy MP4 mit otr-can 0.1.6; Ton/Bild/Schnitt/Drei-Sekunden-Vorschau positiv. AVI und MP4 damit jeweils mit beiden Motoren bestätigt.
+- [x] Fünfter VM-Setup-Fall: Furiosa HD mit MP4Box, fünf Abschnitte und Zuordnung der kleinen Überlappung an Übergang 1; Bild/Ton/Schnitt/Drei-Sekunden-Vorschau positiv.
+- [x] Sechster VM-Setup-Fall: Furiosa HD mit otr-can 0.1.6, AAC/AC-3 technisch geprüft; Bild/Schnitt/Ton/Drei-Sekunden-Vorschau positiv. AVI, HQ und HD damit jeweils mit beiden Motoren bestätigt.
+- [x] Siebter VM-Setup-Fall: Furiosa Teil 2 HD mit MP4Box, zwei Abschnitte; Bild/Schnitt/Ton/Drei-Sekunden-Vorschau positiv.
+- [x] Achter VM-Setup-Fall: Furiosa Teil 2 HD mit otr-can 0.1.6; Bild/Schnitt/Ton/Drei-Sekunden-Vorschau positiv, beide Tonspuren technisch geprüft.
+- [x] Neunter VM-Setup-Fall: Furiosa-Klebecenter mit AAC/AAC, Bild/Ton/Klebestelle/Drei-Sekunden-Vorschau positiv.
+- [x] VM-Deinstallation persönlich bestätigt; Diagnoseordner mit protocol.txt im Filmordner als Rest beobachtet.
+- [x] Build 41: nach Erfolg Protokoll und leeren Arbeitsordner bereinigen, bei Fehler/Abbruch Diagnose erhalten; vier Regressionstests und 21 native Fälle positiv.
+- [x] Build-41-Setup auf dem Arbeitsrechner mit John Wick: temporäre Datei weg; Bild/Ton/Schnitt/Drei-Sekunden-Vorschau und Klebecenter positiv.
+- [ ] Neue Build-41-ZIP-/VM-Bereinigung getrennt prüfen, soweit vorgesehen.
+- [x] Erster VM-Portable-Fall nach Setup-Deinstallation: Grey’s Anatomy mit MP4Box, Bild/Ton/Schnitt/Drei-Sekunden-Vorschau positiv.
+- [x] Zweiter VM-Portable-Fall: Teufelsbrigade AVI mit otr-can 0.1.6, sechs Abschnitte, Bild/Ton/Schnitt/Drei-Sekunden-Vorschau positiv.
+- [x] Dritter VM-Portable-Fall: Furiosa-Klebecenter AAC/AAC; Bild/Ton/Klebestelle/Drei-Sekunden-Vorschau positiv.
+- [x] Persönliche ZIP-Prüfrunde Build 40 mit „damit zip check“ ausdrücklich abgeschlossen.
+- [ ] Persönliche neue Fehler-/Abbruchfälle nach Bedarf.
+
+Keine Veröffentlichung ohne Freigabe. Dokumentationsabgleich ändert weder Pakete noch Zähler 40. Die folgenden historischen Planungen sind keine aktuelle Aufgabenliste.
+
+## Historische Planung und Ausgangspunkt vom 26.10.2026
+
+## Klebecenter – vorgemerkt am 26.10.2026
+
+**Fortsetzung geplant für morgen, 27.10.2026.** Als erster Praxisfall dienen **John Wick: Kapitel 4, Teil 1 und Teil 2**. Die Einbindung des Zusammenfügens in CAN ist noch offen; ein separat mit FFmpeg erzeugter Referenzfilm ist bereits erfolgreich geprüft.
+
+- [x] **Erster Baustein: Tonspurkopie für weitere Filmteile.** In Build 38 umgesetzt: bereits geschnittenen Filmteil laden, unter **Tonspuren → Tonspur für Filmteile auswählen …** eine Spur bewusst wählen und eine zusätzliche MP4-Kopie ohne Neukodierung speichern. Der Nutzer hat den Ablauf mit John Wick Teil 1 samt Erfolgsprotokoll und Abschlussmeldung persönlich bestätigt. Die neue Kopie enthält AAC/Deutsch/Stereo; der automatische Notfallweg für Teil 2 ist ebenfalls persönlich bestätigt. [Umsetzung und Grenzen](TONSPURAUSWAHL-FILMTEILE-20261026.md).
+- [ ] **Teile auswählen:** bereits geschnittene Filmteile für einen gemeinsamen Film auswählen und ihre Reihenfolge festlegen.
+- [ ] **Tonspuren auswählen:** pro Teil die passenden Spuren wählen und deren Eignung für das Zusammenfügen prüfen; insbesondere Sprache, Codec, Kanalzahl und Samplerate. Die vorhandene bewusste Tonspurauswahl bildet die Grundlage.
+- [ ] **Kleben:** die vorbereiteten Teile zu einer neuen Datei zusammenfügen und anschließend den Übergang sowie Bild und Ton kontrollieren. Vorhandene Teile erhalten.
+
+**Aufhänger für die nächste Sitzung:** Teil 1 wurde mit Build 38 als **John Wick Kapitel 4 Teil 1 otr-can - AAC.mp4** gespeichert. Teil 2 ist die erfolgreiche AAC-Notfallausgabe **John Wick Kapitel 4 Teil 2 mit Audio Korrektur.mp4**. Beide haben eine passende AAC-Stereospur mit 48000 Hz. Beide Dateien wurden anschließend separat mit FFmpeg zu **John Wick Kapitel 4 mit Audio Korrektur.mp4** zusammengefügt; der Nutzer bestätigt den sauberen Übergang. Laufzeit **02:38:49.160**, Klebestelle **01:57:37.120**, Drei-Sekunden-Vorlauf **01:57:34.120**. Bild vollständig unverändert, Ton unter Beachtung des AAC-Paddings einmal durchgehend kodiert. [Geprüftes Muster und Zeitstempelfallstrick](JOHN-WICK-4-KLEBECENTER-REFERENZ-20261026.md).
+
+## Historische Setup- und Abnahmeplanung
+
+Die folgenden Abschnitte beschreiben ihre jeweils datierten früheren Stände. Den aktuellen Stand und die nächsten Schritte nennen der Überblick und der Klebecenter-Eintrag oben.
 
 ## Eingefrorener Paketsatz – 13.10.2026
 
@@ -27,7 +77,7 @@ Aktuelle Nachweise: [Projektstatus](STATUS.md), [Build-13-Prüfung](RELEASE-BUIL
 
 Fenstergrößen am 11.10.2026 unter Build 11 umgesetzt, gebaut und geprüft: damals 767 CAN-Tests und echter WPF-Neustarttest, anschließend persönlich bestätigt. Details im [Prüfbericht](DIALOG-FENSTERGROESSEN-PRUEFBERICHT-20261011.md).
 
-## Aktueller Installer und portable Ausgabe
+## Installer und portable Ausgabe – historischer Stand vom 11.10.2026
 
 - [x] Frameworkabhängige Ausgabe mit separat installierter .NET 10 Desktop Runtime; geprüfter CAN-libmpv-0.41.0-Stack enthalten. FFmpeg/ffprobe und GPAC/MP4Box separat einrichten.
 - [x] Build-12-RC3-Setup und Portable-ZIP mit optionalem otr-can 0.1.4, passenden Quellen, Lizenztexten und Prüfsummen gebaut und automatisch geprüft: **785 CAN-/40 Rust-Tests**.
@@ -68,12 +118,16 @@ Zusätzliche Werkzeug-Downloadlinks unter Hilfe sind für dieses Konzept nicht v
 
 ## Nächster Schritt
 
-Build 13 RC3 ist veröffentlicht. Weitere Rückmeldungen mit konkreter Versions-/Buildkennung festhalten; eine zusätzliche persönliche Build-13-Paketprüfung kann nachgetragen werden. Nächste Funktionsaufgabe getrennt festlegen. Version 1.0 ist weiterhin nicht festgelegt.
+Am 27.10.2026 die CAN-Integration des Klebecenters auf Basis des persönlich bestätigten John-Wick-Referenzfalls beginnen. Vorhandene Dateien schützen, passende Tonspuren bewusst wählen und die fertige Bild-/Tonzeitachse prüfen. Separate neue Portable-/VM-/Deinstallationsprüfungen für den aktuellen Paketsatz bleiben offen. Veröffentlichung nur nach ausdrücklicher Freigabe.
 
-## V2
+## Weitere Planung
 
-- Klebezentrum (experimentell): mehrteilige Aufnahmen zusammenfügen.
+- **Klebecenter (experimentell):** Teile auswählen, Tonspuren auswählen und zusammenfügen. Nächster Praxisfall am 27.10.2026: John Wick Kapitel 4, Teil 1 und Teil 2; siehe den Eintrag vom 26.10.2026 oben.
 - Schnittbereiche beim Schneiden gemäß den Hinweisen von chrisdude feinabstimmen; konkrete Regeln vor der Umsetzung festlegen.
 - Auswahl der Tonspur in CANs Player anbieten, wenn eine Aufnahme mehrere Tonspuren enthält; Sprachen und Kennzeichnungen verständlich anzeigen.
 
 Stapelverarbeitung und Smart Rendering bleiben weitere spätere Wünsche ohne feste Versionszuordnung.
+
+## Korrigierter Voraussetzungstext – Build 40
+
+Hinweis nennt jetzt korrekt Motor 0.1.6; tatsächlicher Motor war auch in Build 39 bereits 0.1.6. Neue Pakete und Quellen geprüft; Klebecenter unverändert. Setup-Test auf dem Arbeits-PC vom Nutzer begonnen, Abschluss noch nicht bestätigt. Neue Build-40-/Portable-/VM-Abnahme offen.

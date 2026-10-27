@@ -1,12 +1,59 @@
 # Testplan – aktueller Funktionsstand
 
+**Stand 27.10.2026: CAN 1.0.2 Build 41, Motor 0.1.6.** [Versionen](VERSIONEN.md), [Paketbericht](RELEASE-1.0.2-BUILD41-RESULT.md).
+
+## Technische Basis
+
+**1489/1489 Pakettests**, zusätzlich **925 App-/292 Medientests** gegen finale DLLs, 0 Warnungen/Fehler. Build 41 ergänzt nur die Bereinigung nach Erfolg und vier Regressionstests. 21 native Klebecenter-Fälle mit finalen DLLs prüfen Erfolg, Fehler und Abbruch samt Aufräumregel; zehn frühere Notfall-/Kopiefälle stammen aus Build 39 und wurden für diese Korrektur nicht erneut ausgeführt.
+
+## Persönliche Abnahme
+
+| Bereich | Bestätigt | Noch offen |
+|---|---|---|
+| AAC-Notfallweg | eigener John-Wick-Teil-2-Schnitt nach Rückfrage | neue Fehler-/Abbruchvarianten |
+| Klebecenter AC-3/AAC | vollständiger eigener Lauf, Prüfdialog, Bild/Ton/Übergang | keine allgemeine Formatfreigabe |
+| Klebecenter AAC/AAC | zweiter eigener Lauf mit Erfolgsprotokoll und „Auch hier alles prima“ | kein Schluss auf alle Installationsvarianten |
+| Arbeits-PC-Setup Build 40 | nach Umstieg beide Furiosa-Schnitte und Klebecenter samt allen Prüfstellen positiv | zusätzliche Installations-/Deinstallationsvarianten |
+| Furiosa, große Aufnahme | zwei otr-can-Schnitte, AAC/AAC-Kleben und alle Prüfstellen positiv | kein Nachweis einer behobenen Freeze-Ursache |
+| Arbeits-PC-Setup Build 41 | John Wick: temporäre Datei weg, Bild/Ton/Schnitt/Drei-Sekunden-Vorschau und Klebecenter positiv | neue ZIP-/VM- und persönliche Fehler-/Abbruchfälle separat |
+| Build-40-Hinweis | Screenshot zeigt korrekt otr-can 0.1.6 | kein Beleg für alle Installationsschritte |
+| VM-Setup, Fall 1 | Die Teufelsbrigade AVI mit MP4Box, Ton/Schnitt/Bild/3-Sekunden-Vorschau positiv | Fall abgeschlossen; anschließende Deinstallation bestätigt |
+| VM-Setup, Fall 2 | gleiche AVI mit otr-can 0.1.6, MP3→AAC und Ton/Bild/Schnitt/3-Sekunden-Vorschau positiv | Fall abgeschlossen; anschließende Deinstallation bestätigt |
+| VM-Setup, Fall 3 | Grey’s Anatomy MP4, MP4Box mit drei Abschnitten; Ton/Bild/Schnitt/3-Sekunden-Vorschau positiv | Fall abgeschlossen; anschließende Deinstallation bestätigt |
+| VM-Setup, Fall 4 | gleiche MP4 mit otr-can 0.1.6, drei Abschnitte; Ton/Bild/Schnitt/3-Sekunden-Vorschau positiv | Fall abgeschlossen; anschließende Deinstallation bestätigt |
+| VM-Setup, Fall 5 | Furiosa HD mit MP4Box, fünf Abschnitte, kleine Bildzeitüberlappung am ersten Übergang zugeordnet; Bild/Ton/Schnitt/3-Sekunden-Vorschau positiv | Fall abgeschlossen; anschließende Deinstallation bestätigt |
+| VM-Setup, Fall 6 | Furiosa HD mit otr-can 0.1.6, fünf Abschnitte, AAC und AC-3 technisch geprüft; Bild/Ton/Schnitt/3-Sekunden-Vorschau positiv | Fall abgeschlossen; anschließende Deinstallation bestätigt |
+| VM-Setup, Fall 7 | Furiosa Teil 2 HD mit MP4Box, zwei Abschnitte; Bild/Schnitt/Ton/3-Sekunden-Vorschau positiv | Fall abgeschlossen; anschließende Deinstallation bestätigt |
+| VM-Setup, Fall 8 | Furiosa Teil 2 HD mit otr-can 0.1.6, zwei Abschnitte, AAC/AC-3 technisch geprüft; Bild/Schnitt/Ton/3-Sekunden-Vorschau positiv | Fall abgeschlossen; anschließende Deinstallation bestätigt |
+| VM-Setup, Fall 9 | Furiosa-Klebecenter AAC/AAC, Bild/Ton/Klebestelle/3-Sekunden-Vorschau positiv; 387448320 Samples | Fall abgeschlossen; anschließende Deinstallation bestätigt |
+| VM-Deinstallation | Nutzer bestätigt Deinstallation; protocol.txt im Klebe-Arbeitsordner bleibt gemäß aktueller Regel | in Build 41 technisch korrigiert; persönliche Prüfung offen |
+| Portable Build 40, Fälle 1–3 | Grey’s Anatomy/MP4Box, Teufelsbrigade AVI/otr-can und Furiosa-Klebecenter AAC/AAC; jeweilige Bild-/Ton-/Schnitt-/Klebestellen-/Vorschauchecks positiv; „damit zip check“ | persönliche ZIP-Prüfung abgeschlossen; weitere Fehlerfälle nach Bedarf |
+
+## Klebecenter gezielt prüfen
+
+- Filmteile im Klebecenter wählen; Reihenfolge vor Tonspurwahl. Beim Tausch folgt die Auswahl der Datei.
+- Keine Vorauswahl bei mehreren Spuren; entfallende Spuren/AAC-Neukodierung sichtbar. AAC/AAC sowie AC-3/AAC bei passenden Kanälen/Abtastraten prüfen.
+- Erfolgsdialog mit Anfang, tatsächlicher Klebestelle und Ende. Drei Sekunden Vorlauf; Bild, Ton und Synchronität kontrollieren.
+- Furiosa: **387448320 Tonsamples**, **02:14:31.840** Dauer, **01:54:18.320** Klebestelle, Vorlauf **01:54:15.320**. [Praxisbericht](FURIOSA-KLEBECENTER-PRAXIS-20261027.md).
+- John Wick: **238229 Videopakete**, **457399680 Tonsamples**, **02:38:49.160** Dauer, **01:57:37.120** Klebestelle, Vorlauf **01:57:34.120**.
+- Negative Fälle: fehlende/unpassende Spur oder Datei, inkompatibles Video, Decoderwarnung, Quelltonlücken/Überlappungen, geänderte Pakete, falsche Samplezahlen, Abbruch, vorhandenes Ziel/Zieldatei-Rennen und Platzmangel. Nur sichere Ablehnung gilt als bestanden.
+- Gewählte Spur vollständig prüfen; beschädigte entfallende Spur nicht dekodieren. Originale/Ziele erhalten, große Zwischenstände bereinigen; ab Build 41 Protokoll bei Fehler/Abbruch erhalten und nach Erfolg samt leerem Arbeitsordner entfernen.
+
+## Paket-/Versionsprüfung
+
+App **1.0.2.40**, tatsächliche Motor-EXE **otr_can 0.1.6**, Voraussetzungstext **0.1.6**. Quellen-/Portable-Manifeste, SHA-256, Laufzeit-/Lizenzhinweise gemäß Paketbericht. Die Mindestangabe „MP3 ab 0.1.5“ bleibt richtig.
+
+## Historische Prüfstände bis 13.10.2026
+
+Die nachfolgenden Zahlen, Paketmeldungen und datierten Einführungen beschreiben ihre früheren Prüfstände. Aktuelle Zahlen und offene Aufgaben stehen oben.
+
 Stand des Abgleichs: 11.10.2026. Vollständiger Release-Testlauf für den lokalen **Build 13 RC3: 785/785 CAN-Tests**, 0 Warnungen/0 Fehler. Nativer Motor otr-can 0.1.4 unverändert, letzter nativer Prüfstand: **40/40 Rust-Tests**. Ältere Zahlen weiter unten gehören zu den ausdrücklich datierten Prüfständen.
 
 Timeline-Klick ist seit 05.10.2026 persönlich abgenommen; die vier Schnittdialoge speichern ihre Größen und Maximierung und bestanden am 11.10.2026 den WPF-Neustarttest sowie die persönliche Prüfung. Der lokale Build-12-RC3-Paketsatz bestand Setup-, Überinstallations-, Windows-11-VM-, Schnitt-, Bild-/Ton-, Deinstallations- und separate Portable-Prüfungen; siehe [Paketprüfbericht](RELEASE-BUILD12-RC3-RESULT.md). Diese Punkte sind keine offenen September-Aufgaben mehr. Weitere Format-/Tonspurprüfungen bleiben Ausbauprüfungen mit den dokumentierten Grenzen.
 
 ## Credits – KI-Hinweis
 
-- **Hilfe → Credits und Dank** öffnen und bis zum Abschnitt **KI-unterstützte Entwicklung** scrollen. Vollständiger Wortlaut aus [DANKSAGUNG.md](DANKSAGUNG.md), einschließlich Modellangaben und Entscheidungshoheit von Jörg.
+- **Credits** im Hauptmenü öffnen und bis zum Abschnitt **KI-unterstützte Entwicklung** scrollen. Vollständiger Wortlaut aus [DANKSAGUNG.md](DANKSAGUNG.md), einschließlich Modellangaben und Entscheidungshoheit von Jörg.
 - Normales Fenster und Mindestgröße 540 × 400 prüfen: Text umbrochen, bis zum Ende scrollbar, Schließen erreichbar. Keine persönlichen Einstellungen verändern.
 - Diese Dialogergänzung gehört zum neuen lokalen Entwicklungsstand; die bereits abgenommenen Build-12-Pakete enthalten sie noch nicht.
 - Automatischer echter WPF-Dialogtest und visuelle Kontrolle am 11.10.2026 bestanden: Absatz exakt mit DANKSAGUNG.md verglichen, 780 × 720 und 540 × 400 gerendert, Schließen erreichbar, keine Bindungsfehler; vorhandene OTR-Projektlinks und Handler ebenfalls geprüft. Belege in .build/credits-ai-20261011; keine neue persönliche Paketabnahme für Build 13.
@@ -171,3 +218,15 @@ Der damalige vollständige automatisierte Testlauf umfasste 450 erfolgreiche Tes
 Diese Liste kennzeichnet noch zu vertiefende Prüfungen; sie behauptet keine bereits erfolgte vollständige Abdeckung. Keine realen Filmdateien ins Repository aufnehmen.
 
 Die Review-Korrekturen sind durch Tests für widersprüchliche Cutlist-Bereiche sowie die Ausgabeübernahme nach erfolgreichem Zusammenfügen abgesichert. Fehler, Abbruch, vorhandene Ausgaben und während des Schnitts neu angelegte Zieldateien werden geprüft.
+
+## VM-Setup-Prüfrunde Build 40
+
+Erster AVI-/MP4Box-Fall persönlich positiv. Originalzeitstempelwarnungen sind im Protokoll dokumentiert; Vorbereitungsprüfungen und alle sechs Abschnittsprüfungen abgeschlossen. Weitere Fälle noch laufend. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+## Eigene Portable-ZIP-Prüfung in der VM
+
+Erster Fall nach Setup-Deinstallation persönlich positiv. Setup- und Portable-Nachweise getrennt halten; aktueller Bericht nennt die einzelnen Fälle. [Portable-Prüfrunde](VM-PORTABLE-BUILD40-20261027.md).
+
+## Build-41-Bereinigung persönlich prüfen
+
+Ein erfolgreiches Kleben darf keinen neuen .can-join-Arbeitsordner zurücklassen. Bei Fehler/Abbruch muss das Diagnoseprotokoll erhalten und sein Pfad lesbar sein. Technisch durch vier Regressionstests und 21 native Fälle geprüft. Persönlicher Setup-Test auf dem Arbeitsrechner mit John Wick positiv: temporäre Datei weg, Bild/Ton/Schnitt/Drei-Sekunden-Vorschau und Klebecenter bestätigt. Neue ZIP-/VM- und persönliche Fehler-/Abbruchprüfung daraus nicht abgeleitet.

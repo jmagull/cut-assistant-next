@@ -1,5 +1,18 @@
 # Anforderungen
 
+**Umsetzungsstand 27.10.2026: CAN 1.0.2 Build 40.** Die nachfolgenden POC-0.1-Anforderungen sind die ursprüngliche Grundlage, keine aktuelle Versionsbezeichnung. [Projektstand](AKTUELLER-STAND.md).
+
+## Ergänzte Anforderungen
+
+- Windows 11 x64, .NET 10/WPF, libmpv 0.41.0, ffprobe, MP4Box und optional otr-can 0.1.6 ohne DirectShow.
+- Zwei fertige MP4-Dateien vollständig im Klebecenter wählen; Reihenfolge vor Tonspurwahl, eine bewusst gewählte Spur je Teil, keine Vorab-Einzelkopie.
+- Kompatibles H.264-Video unverändert übernehmen; gewählten AAC-/AC-3-Ton streng prüfen und samplegenau zu einer einmal durchgehend kodierten AAC-LC-Spur verbinden.
+- Exakte Quell-/Ausgabezeit-, Paket- und Sampleprüfung; sicherer Abbruch, Original-/Zieldateischutz, vorhandener Kontrollplayer mit tatsächlicher Klebestelle und drei Sekunden Vorlauf.
+- Grenzen sichtbar: genau zwei Teile, passende Kanäle/Abtastraten und Zeitstruktur; keine allgemeine Reparatur oder Video-Neukodierung.
+- Paketquellen/Prüfsummen passen zum Build; Voraussetzungstext und tatsächliche Motor-EXE weisen dieselbe Version aus. Ungeprüfte Installationsvarianten nicht als abgenommen ausgeben.
+
+[Grenzen](KLEBECENTER-20261027.md), [Versionen](VERSIONEN.md).
+
 ## Muss-Anforderungen POC 0.1
 
 - Windows-11-x64-Anwendung

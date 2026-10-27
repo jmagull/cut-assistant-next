@@ -13,15 +13,18 @@ internal sealed record OtrCanToolPaths(string Engine, string Indexer, string Ffm
 internal sealed class OtrCanCutService : ICutEngine
 {
     private readonly OtrCanToolPaths _tools;
+    private readonly int? _retainedAudioStreamIndex;
     private readonly ICutToolRunner _runner;
     private readonly Func<string, CancellationToken, Task<MediaAnalysisResult>> _analyze;
     private readonly Func<bool, CancellationToken, Task> _checkTools;
 
     internal OtrCanCutService(OtrCanToolPaths tools, ICutToolRunner? runner = null,
         Func<string, CancellationToken, Task<MediaAnalysisResult>>? analyze = null,
-        Func<bool, CancellationToken, Task>? checkTools = null)
+        Func<bool, CancellationToken, Task>? checkTools = null,
+        int? retainedAudioStreamIndex = null)
     {
         _tools = tools;
+        _retainedAudioStreamIndex = retainedAudioStreamIndex;
         _runner = runner ?? new CutToolRunner();
         _analyze = analyze ?? new FfprobeRunner(tools.Ffprobe).RunAsync;
         _checkTools = checkTools ?? ((_, _) => Task.CompletedTask);
@@ -50,11 +53,13 @@ internal sealed class OtrCanCutService : ICutEngine
         if (!File.Exists(request.SourceFilePath)) throw new FileNotFoundException("Die Schnittquelle fehlt.", request.SourceFilePath);
         Report(CutProgressKind.Status, "OTR-CAN-Werkzeuge werden geprüft …");
         var original = await _analyze(request.OriginalFilePath, token).ConfigureAwait(false);
+        var expectedOriginal = ExpectedOriginal(original, _retainedAudioStreamIndex);
         await _checkTools(original.AudioStreams.Any(s => s.CodecName == "mp3"), token).ConfigureAwait(false);
         var source = string.Equals(request.SourceFilePath, request.OriginalFilePath, StringComparison.OrdinalIgnoreCase)
             ? original : await _analyze(request.SourceFilePath, token).ConfigureAwait(false);
-        if (!string.Equals(request.SourceFilePath, request.OriginalFilePath, StringComparison.OrdinalIgnoreCase))
-            ValidateOutput(original, source, allowMp3Conversion: false);
+        if (_retainedAudioStreamIndex is not null ||
+            !string.Equals(request.SourceFilePath, request.OriginalFilePath, StringComparison.OrdinalIgnoreCase))
+            ValidateOutput(expectedOriginal, source, allowMp3Conversion: false);
         if (source.VideoStreams.Count != 1 || source.VideoStreams[0].Index != 0)
             throw new InvalidOperationException("OTR-CAN unterstützt derzeit genau eine Videospur an Streamposition 0.");
         if (source.Duration is { } duration && request.KeepSegments[^1].End > duration + TimeSpan.FromMilliseconds(100))
@@ -100,15 +105,23 @@ internal sealed class OtrCanCutService : ICutEngine
             }
             token.ThrowIfCancellationRequested();
             Report(CutProgressKind.Status, "OTR-CAN schneidet mit CPU-Encoding …");
-            await _runner.RunAsync(_tools.Engine,
-                ["-vv", "cut-can", "--input", request.SourceFilePath, "--output", pending,
-                    "--index", index, "--temp-dir", work, "--cutlist", cutlist,
-                    "--ffmpeg", _tools.Ffmpeg, "--ffprobe", _tools.Ffprobe],
-                new OtrCanProgressReporter(progress, request.KeepSegments.Count, indexing: false), token).ConfigureAwait(false);
+            try
+            {
+                await _runner.RunAsync(_tools.Engine,
+                    ["-vv", "cut-can", "--input", request.SourceFilePath, "--output", pending,
+                        "--index", index, "--temp-dir", work, "--cutlist", cutlist,
+                        "--ffmpeg", _tools.Ffmpeg, "--ffprobe", _tools.Ffprobe],
+                    new OtrCanProgressReporter(progress, request.KeepSegments.Count, indexing: false), token).ConfigureAwait(false);
+            }
+            catch (InvalidOperationException error) when (_retainedAudioStreamIndex is null &&
+                OtrCanAudioFailureException.IsAudioFailure(error.Message))
+            {
+                throw new OtrCanAudioFailureException(original, source, error);
+            }
             if (!File.Exists(pending) || new FileInfo(pending).Length == 0)
                 throw new InvalidOperationException("OTR-CAN hat keine Ausgabedatei erzeugt.");
             Report(CutProgressKind.Status, "MP4-Ausgabe und Tonspuren werden geprüft …");
-            ValidateOutput(original, await _analyze(pending, token).ConfigureAwait(false));
+            ValidateOutput(expectedOriginal, await _analyze(pending, token).ConfigureAwait(false));
             token.ThrowIfCancellationRequested();
             File.Move(pending, request.OutputFilePath, overwrite: existed && request.OverwriteExistingOutput);
             Report(CutProgressKind.Status, "OTR-CAN-Schnitt abgeschlossen.");
@@ -136,6 +149,15 @@ internal sealed class OtrCanCutService : ICutEngine
                 Report(CutProgressKind.Output, $"Arbeitsdateien konnten nicht vollständig gelöscht werden: {path} ({error.Message})");
             }
         }
+    }
+
+    internal static MediaAnalysisResult ExpectedOriginal(MediaAnalysisResult original, int? selected)
+    {
+        if (selected is null) return original;
+        var track = original.AudioStreams.SingleOrDefault(s => s.Index == selected);
+        if (original.AudioStreams.Count < 2 || track?.CodecName != "aac")
+            throw new ArgumentException("Die freigegebene AAC-Tonspur ist nicht vorhanden.");
+        return original with { AudioStreams = [track] };
     }
 
     internal static string BuildCutlist(CutRequest request)

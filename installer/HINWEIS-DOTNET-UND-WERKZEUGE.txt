@@ -18,7 +18,7 @@ GPAC einschließlich MP4Box (nicht im CAN-Paket enthalten):
 https://gpac.io/downloads/gpac-nightly-builds/
 Im Abschnitt "Current Stable Installers" die stabile Windows-64-Bit-Version wählen.
 
-Optionaler Schnittmotor otr-can 0.1.5:
+Optionaler Schnittmotor otr-can 0.1.6:
 Im neuen Paket unter tools\otr-can\otr_can.exe enthalten.
 Diesen Pfad unter Einstellungen > OTR-CAN-Werkzeuge auswählen.
 Die zugehörigen Quellen und Lizenzhinweise liegen im selben Unterordner.

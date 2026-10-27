@@ -1,5 +1,143 @@
 # Entwicklungstagebuch
 
+## 27.10.2026 – CAN 1.0.2 Build 41 zur Veröffentlichung freigegeben
+
+Nutzer beauftragt Commit, Push und Veröffentlichung sowie aktuelle README/Dokumentation und Klebecenter-Anleitung. Geprüfter Motor unverändert otr-can 0.1.6; Überinstallationen müssen den gespeicherten Motorpfad auf die mitgelieferte tools/otr-can/otr_can.exe setzen. Setup-Abnahme auf dem Arbeitsrechner einschließlich Bereinigung positiv. Eingefrorene, persönlich geprüfte Build-41-Pakete bleiben unverändert; aktuelle Arbeitsdokumente ergänzen die Veröffentlichungsfreigabe. Vier vorbestehende lokale Produktions-Lockänderungen bleiben außerhalb des Commits. Veröffentlichung wird nach erfolgreichem Upload gesondert nachgewiesen.
+
+
+## 27.10.2026 – Build-41-Setup auf Arbeitsrechner persönlich bestätigt
+
+John Wick im Setup auf dem Arbeitsrechner geprüft: temporäre Datei weg, Bild, Ton, Schnitt, Drei-Sekunden-Vorschau und Klebecenter positiv. Damit ist die Erfolgsbereinigung persönlich im Setup bestätigt. Keine neue ZIP-/VM- oder persönliche Fehler-/Abbruchprüfung daraus abgeleitet. Nur Arbeitsdokumentation ergänzt; Code, eingefrorene Pakete, Prüfsummen und Zähler 41 unverändert, keine Veröffentlichung. [Prüfstand](KLEBECENTER-BEREINIGUNG-20261027.md).
+
+
+## 27.10.2026 – Klebecenter-Bereinigung als Build 41
+
+Beauftragte Korrektur umgesetzt: nach Erfolg Arbeitsordner entfernen, bei Fehler/Abbruch Diagnose behalten; fremde oder gesperrte Inhalte erhalten und melden. Release-Build ohne Warnungen/Fehler, 1489 Entwicklungstests positiv. Neue Pakete erstellt: 1489 Pakettests, zusätzlich 1217 Tests gegen finale DLLs und 21 native Klebecenter-Fälle positiv. Endgültiger Paketsatz samt Quellen/Prüfsummen geprüft und schreibgeschützt. Persönliche Prüfung der neuen Bereinigung noch offen; keine Veröffentlichung. [Nachweis](KLEBECENTER-BEREINIGUNG-20261027.md).
+
+
+## 27.10.2026 – VM-Portable: Klebecenter positiv, ZIP-Prüfung abgeschlossen
+
+Furiosa AAC/AAC mit unverändertem Bild verbunden: 387448320 Tonsamples, Klebestelle 01:54:18.320, Dauer 02:14:31.840. Technische Abschlussprüfungen erfolgreich. Nutzer bestätigt Bild, Ton, Klebestelle und Drei-Sekunden-Vorschau sowie ausdrücklich „damit zip check“. Drei Portable-Fälle persönlich positiv; ZIP-Prüfrunde abgeschlossen. Erfolgs-Protokollbereinigung bleibt vorgemerkt. Keine Code-/Paket-/Zähleränderung oder Veröffentlichung. [Portable-Bericht](VM-PORTABLE-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Portable: Teufelsbrigade AVI mit otr-can positiv
+
+Zweiter Portable-Fall persönlich bestätigt: Bild, Ton, Schnitt und Drei-Sekunden-Vorschau. Sechs Abschnitte; 182574 Videopakete und 350542080 Tonsamples geprüft, MP3 einmal als AAC-LC kodiert. Finale Paket-/Zeitprüfung bestanden. AVI-Vorbereitungshinweise zu fehlenden ursprünglichen Videozeitstempeln im Bericht erhalten. Zwei Portable-Fälle dokumentiert, Gesamtabschluss weiterhin offen. Nur Dokumentation; Code, Pakete und Buildzähler unverändert. [Portable-Bericht](VM-PORTABLE-BUILD40-20261027.md).
+
+
+## 27.10.2026 – Portable-ZIP in der VM: erster MP4Box-Fall positiv
+
+Nach Setup-Deinstallation Wechsel zur ZIP-Prüfung. Grey’s Anatomy – Durchs Feuer mit MP4Box in drei Abschnitten geschnitten, alle Abschnittsprüfungen abgeschlossen, „Fertig.“. Bild/Ton/Schnitt/Drei-Sekunden-Vorschau persönlich bestätigt. Erster Portable-Fall getrennt von neun Setup-Funktionstests erfasst; noch kein ZIP-Gesamtabschluss. Nur Dokumentation, Code/Pakete/Zähler unverändert. [Portable-Bericht](VM-PORTABLE-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Deinstallation bestätigt, Diagnoseordner als Rest beobachtet
+
+Nutzer meldet „deinstallation check“. Im Filmordner bleibt .can-join-1c228393a3cc469488f215ef90f82288/protocol.txt. Quellcodeprüfung bestätigt die bewusste Protokollaufbewahrung auch nach Erfolg; große Zwischenfilme/PCM-Dateien werden bereinigt. Deinstaller löscht keine solchen Filmordner. Als Verbesserung vorgemerkt: Erfolgs-Protokollordner bereinigen, Fehlerdiagnose erhalten; noch nicht umgesetzt. Keine Nutzerdateien gelöscht, keine Code-/Paket-/Zähleränderung. Portable-Abnahme offen. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Setup: Klebecenter persönlich positiv
+
+Neunter Funktionsfall: beide in der VM geschnittenen Furiosa-Teile mit AAC-Spur 1 (Deutsch/Stereo/48000 Hz) verbunden. Vollständige technische Prüfung erfolgreich, 387448320 Tonsamples, 02:14:31.840 Dauer, Klebestelle 01:54:18.320, Vorlauf 01:54:15.320. Nutzer bestätigt Bild/Ton/Klebestelle/Drei-Sekunden-Vorschau. Damit acht Schnittfälle plus Klebecenter in der VM positiv. Gesamtabschluss, Portable und Deinstallation nicht vorweggenommen. Nur Dokumentation, keine Code-/Paket-/Zähleränderung. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Setup: Furiosa Teil 2 auch mit otr-can positiv
+
+Achter Schnittfall: 165004 Quellframes, zwei Behalteabschnitte, 30338 Videopakete; AAC und AC-3 je mit 58248960 Samples bei 48000 Hz technisch verifiziert. Finaler MP4-Paket-/Zeit-/Padding-/Konfigurationsvergleich erfolgreich. Nutzer bestätigt Bild/Schnitt/Ton/Drei-Sekunden-Vorschau und testet weiter. Teufelsbrigade, Grey’s Anatomy und beide Furiosa-Teile damit jeweils mit beiden Motoren positiv. Noch kein daraus abgeleiteter VM-Klebecenter-/Portable-/Deinstallationsabschluss. Nur Dokumentation, Code/Pakete/Zähler unverändert. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Setup: Furiosa Teil 2 mit MP4Box positiv
+
+Siebter VM-Fall: Furiosa Teil 2 HD direkt mit MP4Box in zwei Abschnitten geschnitten und zusammengefügt, beide Abschnittsprüfungen abgeschlossen, „Fertig.“. Nutzer bestätigt Bild/Schnitt/Ton/Drei-Sekunden-Vorschau und ausdrücklich weiteres Testen. Kein daraus abgeleiteter otr-can-Teil-2-/Klebecenter-VM-Test; Prüfrunde bleibt laufend. Nur Dokumentation, Code/Pakete/Zähler unverändert. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Setup: Furiosa HD auch mit otr-can positiv
+
+Sechster VM-Fall: 307470 Furiosa-Quellframes indexiert, fünf Abschnitte, 171458 Videopakete geprüft; AAC- und AC-3-Stereospur je mit 329199360 Samples bei 48000 Hz und kontinuierlicher Rohzeitachse verifiziert. Finaler MP4-Paket-/Zeit-/Padding-/Konfigurationsvergleich erfolgreich. Nutzer bestätigt Bild/Schnitt/Ton/Drei-Sekunden-Vorschau und testet weiter. Damit AVI, HQ-MP4 und HD je mit beiden Motoren positiv. Nur Dokumentation; weitere VM-Prüfung offen. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Setup: Furiosa HD mit MP4Box positiv
+
+Fünfter VM-Fall: Furiosa Teil 1 HD mit MP4Box, fünf Abschnitte geschnitten und zusammengefügt, alle Abschnittsprüfungen abgeschlossen. Am ersten Übergang Meldung zur begrenzten Zuordnung geringfügig überlappender Bildzeiten; Abschluss „Fertig.“. Nutzer bestätigt Bild/Ton/Schnitt/Drei-Sekunden-Vorschau und testet weiter. Keine vollständige VM-Endabnahme, keine Code-/Paket-/Zähleränderung. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Setup: vierter Motor-/Formatfall positiv
+
+Grey’s Anatomy MP4 auch mit otr-can 0.1.6 erfolgreich: 119927 Quellframes, drei Behalteabschnitte, 60651 Videopakete und 116449920 Tonsamples bei 48000 Hz verifiziert; abschließende MP4-Prüfung erfolgreich. Nutzer bestätigt Ton/Schnitt/Bild/Drei-Sekunden-Vorschau und testet weiter. Damit AVI und MP4 je mit MP4Box und otr-can positiv, Prüfrunde insgesamt weiter laufend. Nur Dokumentation, keine Code-/Paket-/Zähleränderung. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Setup: Grey’s Anatomy MP4 mit MP4Box positiv
+
+Dritter VM-Fall: Greys_Anatomy_-_Die_jungen_Aerzte__Durchs_Feuer_26.09.30_20-15_sixx_55_TVOON_DE.HQ.mp4 direkt mit MP4Box in drei Abschnitten geschnitten und zusammengefügt; alle Abschnittsprüfungen abgeschlossen, „Fertig.“. Nutzer bestätigt Ton/Bild/Schnitt/Drei-Sekunden-Vorschau und testet weiter. Prüfrunde nicht pauschal abgeschlossen; Code/Pakete/Zähler unverändert. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Setup: auch otr-can-AVI-/MP3-Weg positiv
+
+Die Teufelsbrigade AVI mit otr-can 0.1.6 nach verlustfreier MP4-Vorbereitung geschnitten. 263694 Quellframes indexiert, sechs Keeps, 182574 Videopakete sowie 350542080 Tonsamples verifiziert; MP3 einmal nach AAC-LC/Stereo/48000 Hz/192 kbit/s kodiert. Nutzer bestätigt Ton/Bild/Schnitt/Drei-Sekunden-Vorschau und „test weiter“. VM-Prüfrunde bleibt laufend; keine vollständige Portable-/Deinstallationsabnahme. Nur Dokumentation, keine Code-/Paket-/Zähleränderung. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+
+## 27.10.2026 – VM-Setup: erster AVI-/MP4Box-Fall positiv, Prüfung läuft
+
+Die Teufelsbrigade als klassische H.264-/MP3-AVI verlustfrei in MP4-Arbeitsdatei vorbereitet; 263694 übernommene Bilder und erfolgreiche Paket-/Stream-/Zeitprüfung. MP4Box schneidet sechs Abschnitte, prüft sie und endet mit „Fertig.“. Nutzer bestätigt Ton, Schnitt, Bild und Drei-Sekunden-Vorschau; „teste weiter“. Kein neuer otr-can-Fall oder vollständige VM-/Portable-/Deinstallationsabnahme daraus abgeleitet. Originalzeitstempelwarnungen bleiben im Nachweis erhalten. Nur Praxisdokumentation geändert. [VM-Bericht](VM-SETUP-BUILD40-20261027.md).
+
+
+## 27.10.2026 – Furiosa: beide otr-can-Schnitte und Klebecenter positiv
+
+**Zusätzliche Nutzerbestätigung: „und kein absturz“** – der gemeldete vollständige Praxislauf verlief ohne Absturz. Kein daraus abgeleiteter Nachweis einer behobenen früheren Freeze-Ursache.
+
+Nutzer bestätigt nach Wechsel zu Setup Build 40 beide Furiosa-Teile mit otr-can geschnitten, anschließend im Klebecenter mit AAC-Spur 1 je Teil verbunden, alle Prüfstellen kontrolliert. Vollständiges Erfolgsprotokoll: 387448320 Samples, 02:14:31.840 Gesamtdauer, 01:54:18.320 Klebestelle, Vorlauf 01:54:15.320. Arbeits-PC-Funktionslauf der Setup-Prüfrunde positiv; keine zusätzliche VM-/Portable-/Deinstallationsabnahme und keine behauptete Behebung der ungeklärten Freeze-Ursache. Nur Dokumentation, keine Paket-/Code-/Zähleränderung. [Praxisbericht](FURIOSA-KLEBECENTER-PRAXIS-20261027.md).
+
+
+## 27.10.2026 – Dokumentation auf Build 40 abgeglichen
+
+Aktuelle Zuordnung: **CAN 1.0.2 Build 40, otr-can 0.1.6, libmpv 0.41.0**. Eigene AC-3/AAC- und AAC/AAC-Klebecenter-Läufe mit Bild/Ton/Übergang positiv bestätigt. Screenshot bestätigt den korrigierten Build-40-Setuphinweis, vollständige neue Setup-/Portable-/VM-Abnahme offen. Architektur, Anforderungen, Bedienung, Merkliste, Testplan, Release Notes, Berichte und READMEs abgeglichen. Frühere Einzelkopie und datierte Entwicklungsstände als Historie erkennbar. [Versionsübersicht](VERSIONEN.md).
+
+Nur Arbeitsdokumentation geändert. Kein neuer Build/Testlauf, keine Paketänderung, kein Zählerwechsel, kein Commit/Push oder Release. Vorhandene Build-40-Nachweise unverändert; Links, Versionskonsistenz und geschützte Dateien werden gesondert geprüft. Die nachfolgenden datierten Einträge beschreiben ihre jeweiligen damaligen Stände.
+
+
+## 27.10.2026 – Build 40: Voraussetzungstext berichtigt und Paketabgleich ergänzt
+
+Neue Setup-/Portable-/Quellpakete getrennt von Build 39. Infotext korrekt 0.1.6; tatsächlicher Motor bereits zuvor 0.1.6. 1485 Pakettests und zusätzlich 1213 Tests gegen finale Produkt-DLLs bestanden, Release ohne Warnungen/Fehler. 361 Anwendungs-/Testquellen bytegleich zu Build 39; dessen 31 native Nachweise nicht erneut ausgeführt. 660 Manifest-Quelldateien, 661 Quellen-ZIP-Dateien und 250 Portable-Dateien geprüft. Frühere Pakete/Lockänderungen erhalten, Zähler nach Erfolg 39 → 40. Neue persönliche Paketabnahme offen; keine Veröffentlichung oder Commit/Push. [Paketbericht](RELEASE-1.0.2-BUILD40-RESULT.md).
+
+
+## 27.10.2026 – Voraussetzungstext korrigiert, Build 40 in Vorbereitung
+
+Der Nutzer entdeckt im Setuphinweis die veraltete Angabe „otr-can 0.1.5“. Die tatsächlich beigelegte Build-39-EXE meldet **otr_can 0.1.6**; der Motor war bereits korrekt. Korrigiert wurde **installer/HINWEIS-DOTNET-UND-WERKZEUGE.txt** auf 0.1.6. **tools/package-release.ps1** prüft nun zusätzlich, dass die im Installer/Portable-Hinweis genannte Version zur erwarteten und danach tatsächlich geprüften Motorversion passt. Keine Laufzeit-/Klebecenter-/Motoränderung. Neue Pakete als Build 40 getrennt von Build 39; keine Veröffentlichung oder automatischer Commit/Push.
+
+
+## 27.10.2026 – CAN 1.0.2 Build 39 paketiert und eingefroren
+
+Setup, Portable, exakte CAN-Quellen, unveränderte Motor-/libmpv-Quellen, Relink und Prüfsummen getrennt von Build 38 erstellt. 1485/1485 Pakettests, zusätzlich 925 App-/288 Medientests gegen finale Produkt-DLLs sowie 21 native Klebecenter- und zehn bisherige native Notfall-/Kopiefälle bestanden. Release ohne Warnungen/Fehler; 658 Manifest-Quelldateien, 659 Quellen-ZIP-Dateien und 250 Portable-Dateien vollständig geprüft. Appversion 1.0.2.39. Alte Pakete und vier Lockänderungen erhalten; Zähler erst nach Erfolg 38 → 39. Eigener John-Wick-Klebecenter-Lauf mit AC-3/AAC und Bild/Ton/Übergang persönlich bestätigt. Neue Setup-/Portable-/VM-Abnahme offen. Keine Veröffentlichung oder Commit/Push. [Paketbericht](RELEASE-1.0.2-BUILD39-RESULT.md).
+
+
+## 27.10.2026 – Klebecenter persönlich bestätigt, Build 39 zur Paketierung beauftragt
+
+Eigener vollständiger Klebecenter-Lauf mit John Wick Kapitel 4: Teil 1 Spur 2 AC-3, Teil 2 Spur 1 AAC; jeweils Deutsch/Stereo/48000 Hz. Erfolgsprotokoll, Prüfdialog und kopierte Abschlussinformationen mit 457399680 Samples, 02:38:49.160 Gesamtdauer und 01:57:37.120 Klebestelle. Anschließend „Alles super check“ und Auftrag für Setup, ZIP und weitere Quellenpakete. Herstellung als neuer Build 39 getrennt von Build 38; keine Veröffentlichung oder automatischer Commit/Push. Neue Installer-/Portable-/VM-Abnahme bleibt gesondert offen. [Paketumfang](FREEZE-1.0.2-BUILD39-20261027.md).
+
+
+## 27.10.2026 – Klebecenter integriert, persönliche Abnahme offen
+
+Neues Menü **Klebecenter** ersetzt **Tonspuren** im Entwicklungsstand. Auswahl zweier bereits geschnittener MP4-Dateien und ihrer Reihenfolge, anschließend Tonspur je Teil direkt im selben Dialog; keine zusätzliche Einzelkopie erforderlich. Geprüfte Verarbeitung mit unverändertem Video, samplegenau verbundenem PCM und einmaligem durchgehendem AAC-LC-Encoding. Vorhandener Kontrollplayer mit tatsächlicher Klebestelle und drei Sekunden Vorlauf.
+
+**1485/1485 Tests**, Release **0 Warnungen/0 Fehler**, 21 native Klebecenter-Fälle und zehn bisherige native Notfall-/Tonspurkopiefälle bestanden; Dialog gerendert und Auswahl/Tausch geprüft. John Wick direkt aus dem zweispurigen Teil 1 mit expliziter AAC-Spur technisch erfolgreich: 238229 Videopakete, 457399680 Tonsamples, Gesamtdauer 02:38:49.160, Klebestelle 01:57:37.120. Persönliche Prüfung dieser neuen Ausgabe offen. Bestehende Pakete/Buildzähler 38, Motor 0.1.6 und vier Lockänderungen erhalten; keine neue Paketierung, kein Commit/Push oder Release. [Details und erste Grenzen](KLEBECENTER-20261027.md).
+
+Die nachfolgenden datierten Angaben beschreiben ihre jeweiligen damaligen Paket-/Entwicklungsstände.
+
+## 26.10.2026 – AAC-Notfallweg, manuelle Tonspurkopie und bestätigter Klebe-Referenzfall
+
+Nach AC-3-Decoderfehler bei John Wick Kapitel 4 Teil 2 einen ausdrücklich bestätigten AAC-Notfallweg in CAN integriert und als Build 37 paketiert. Der Nutzer bestätigt den vollständigen realen Rückfrage-/Prüf-/Schnittablauf. Keine Reparatur der defekten AC-3-Spur und keine Übernahme des nicht bestandenen separaten AC-3-Versuchs.
+
+Build 38 ergänzt **Tonspuren → Tonspur für Filmteile auswählen …**: zusätzliche vollständig geprüfte Kopie ohne Neukodierung und ohne Anwenden der Schnittliste. Der Nutzer bestätigt den realen manuellen Ablauf mit Teil 1 durch Erfolgsprotokoll und Abschlussmeldung. Paketstand: 1446 Tests, zusätzlich 925 App-/249 Medientests gegen finale DLLs, zehn native Fälle; Release ohne Warnungen/Fehler. Neue Portable-/VM-/Deinstallationsfälle und persönliche Fehlerfallprüfungen bleiben offen.
+
+Anschließend beide vorbereiteten Teile separat mit FFmpeg zu **John Wick Kapitel 4 mit Audio Korrektur.mp4** zusammengefügt. Bild unverändert, Ton samplegenau vorbereitet und einmal durchgehend als AAC-LC/Stereo/48000 Hz/192 kbit/s kodiert. 238229 Videopakete, 457399680 Tonsamples, kontinuierliche Audiozeitstempel und Übergangsdecode geprüft. Individuelles AAC-Padding und ein vor der Ausgabe korrigierter Bildzeitversatz dokumentiert. Der Nutzer bestätigt den sauberen Übergang.
+
+Arbeitsdokumentation auf den aktuellen Stand gebracht; ältere Prüfstände als historisch kenntlich gemacht. Nur Dokumentation geändert, kein neuer Produktbuild oder Release; bestehende Pakete und Prüfsummen erhalten. Klebecenter für den 27.10.2026 vorgemerkt: Teile auswählen, Reihenfolge und Tonspuren abstimmen, zusammenfügen und prüfen. Die CAN-Integration des Zusammenfügens ist noch offen.
+
+[Aktueller Stand](AKTUELLER-STAND.md), [Paketbericht Build 38](RELEASE-1.0.2-BUILD38-RESULT.md), [Klebecenter-Referenz](JOHN-WICK-4-KLEBECENTER-REFERENZ-20261026.md).
+
+## 25.10.2026 – Build 36: Cutlist-Motorzuordnung und Paketierung
+
+Build 36 ergänzt die sichtbare Motorwahl beim Erzeugen einer Cutlist und die korrekten otr-can-Angaben. Setup, Portable und Quellen technisch geprüft: 1416 Pakettests und 898 zusätzliche App-Tests gegen finale Paketbibliotheken. Nutzerbestätigung zu Setup und lokal geladener/neu erzeugter Peppermint-Cutlist liegt vor; neue VM-/Portable-Fälle sind daraus nicht abgeleitet. [Paketbericht](RELEASE-1.0.2-BUILD36-RESULT.md).
+
 ## 22.10.2026 – Build-35-Pakete aus eingefrorenem Quellcommit fertig
 
 Setup und Portable für **1.0.2 · Build 35** aus **c9e6ebf1368a47211bc0ca22243d6e6138e20959** erstellt, unverändert otr-can 0.1.6/libmpv 0.41.0. Vollständiger Paketbuild/Publish ohne Warnungen/Fehler; **1411 Pakettests**, 40 isolierte Tests, 893 App-Tests gegen finale Paketbibliotheken, elf Motor-Paketprüfungen und drei native kleine synthetische Übergangsprüfungen bestanden. 250 Portable-Dateien, 623 Quellen-ZIP-Dateien und alle Nutzpaket-Prüfsummen geprüft. 146 erfasste Alt-/Lock-/Einstellungsdateien erhalten; Buildzähler erst danach auf 35 übernommen.

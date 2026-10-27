@@ -1,6 +1,35 @@
 # Cut Assistant Next
 
+Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Es verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codec-Pakete vorauszusetzen.
+
+**Dokumentationsstand: 27.10.2026.** [Aktueller Projektstand und offene Aufgaben](docs/AKTUELLER-STAND.md).
+
+**Freigegebener Stand: CAN 1.0.2 · Build 41 · otr-can 0.1.6.** [Setup](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2/CutAssistantNext-1.0.2-Build41-win-x64-Setup.exe), [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2/CutAssistantNext-1.0.2-Build41-win-x64.zip), [Quellen und Prüfsummen](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2). Die Veröffentlichung wurde am 27.10.2026 ausdrücklich beauftragt; der abschließende Nachweis folgt nach dem Upload. Frühere stabile Version: 1.0.0 Build 32; [Rücknahme von 1.0.1](docs/RELEASE-WITHDRAWAL-1.0.1-20261020.md).
+
+**Geprüfter Paketsatz: CAN 1.0.2 · Build 41.** Klebecenter räumt nach Erfolg seinen Arbeitsordner samt Protokoll auf; Fehler und Abbruch behalten die Diagnose. Keine Änderung der Bild-/Tonverarbeitung oder des Motors **otr-can 0.1.6**. **1489 Pakettests**, zusätzlich **1217 Tests gegen finale Produktbibliotheken** und **21 native Klebecenter-Fälle** bestanden. Release ohne Warnungen/Fehler. [Paketbericht](docs/RELEASE-1.0.2-BUILD41-RESULT.md), [Bereinigungsnachweis](docs/KLEBECENTER-BEREINIGUNG-20261027.md), [Release Notes](docs/RELEASE-NOTES-1.0.2.md).
+
+Persönlich bestätigt sind AAC-Notfallweg, frühere Tonspurkopie und beide Klebecenter-Kombinationen **AC-3/AAC sowie AAC/AAC**, jeweils mit positivem Bild-/Ton-/Übergangscheck. Der aktuelle Setup-Screenshot zeigt korrekt **otr-can 0.1.6**. Der Arbeits-PC-Funktionslauf nach dem Umstieg auf Setup Build 40 ist durch die Furiosa-Rückmeldung positiv gemeldet. In der VM sind neun Setup-Funktionstests und die Deinstallation bestätigt; die persönliche [Portable-ZIP-Prüfung](docs/VM-PORTABLE-BUILD40-20261027.md) ist nach MP4Box-, otr-can- und Klebecenter-Fall mit „damit zip check“ abgeschlossen. Die danach beauftragte Bereinigung ist in Build 41 umgesetzt und technisch geprüft; ihre persönliche Setup-Abnahme auf dem Arbeitsrechner mit John Wick ist nun bestätigt: temporäre Datei weg, Bild/Ton/Schnitt/Drei-Sekunden-Vorschau und Klebecenter positiv. Die neue ZIP-/VM-Prüfung bleibt getrennt offen. **Veröffentlichung am 27.10.2026 ausdrücklich freigegeben.** [Versionszuordnung](docs/VERSIONEN.md).
+
+**Klebecenter seit Build 39, Bereinigung ergänzt in Build 41:** **Klebecenter → Filmteile zusammenfügen …** öffnet die Auswahl zweier fertiger MP4-Dateien. Zuerst Reihenfolge festlegen, danach Tonspur je Teil wählen. Keine Vorbereitungskopie. Bild bleibt unverändert, Ton wird samplegenau verbunden und einmal durchgehend als AAC kodiert. Der Kontrollplayer beginnt drei Sekunden vor der tatsächlichen Klebestelle. [Bedienung und Grenzen](docs/KLEBECENTER-20261027.md).
+
+**Klebecenter bedienen:** Zwei bereits geschnittene MP4-Filmteile auswählen, zuerst Reihenfolge festlegen, dann je Teil eine intakte Tonspur mit passender Abtastrate/Kanalbelegung wählen. Genau eine gewählte Spur je Teil wird verbunden; übrige Spuren entfallen. Bild unverändert, Ton einmal durchgehend als AAC-LC. Anschließend Anfang, Klebestelle und Ende mit „Prüfen“ kontrollieren. [Schrittfolge und Grenzen](docs/NUTZERANLEITUNG.md#klebecenter--zwei-fertige-filmteile-verbinden).
+
+**Richtigen Motor verwenden:** Setup und ZIP enthalten **otr-can 0.1.6** unter **tools/otr-can/otr_can.exe**. Nach Überinstallation unter **Einstellungen → OTR-CAN-Werkzeuge** diese mitgelieferte EXE wählen; ein gespeicherter Pfad kann noch auf eine ältere Kopie zeigen. FFmpeg/ffprobe und FFMS2 bleiben separat einzurichten. Das Klebecenter nutzt die konfigurierten FFmpeg-Werkzeuge. [Werkzeuge und Versionen](docs/VERSIONEN.md).
+
+**Großer Praxislauf Furiosa:** Nach Umstieg auf Setup Build 40 beide eigenen otr-can-Schnitte und das anschließende AAC/AAC-Kleben samt allen Prüfstellen positiv bestätigt. Dauer **02:14:31.840**, Klebestelle **01:54:18.320**, **387448320 Tonsamples**. [Praxisbericht](docs/FURIOSA-KLEBECENTER-PRAXIS-20261027.md).
+
+**Offener Befund:** Die Ursache früherer vollständiger Rechnerstillstände bei wiederholten großen otr-can-Schnitten ist weiterhin ungeklärt. Der damalige Schutzstopp vom 20.10.2026 und spätere positive Praxisläufe sind datiert dokumentiert; die Erfolge belegen keine gezielte Behebung. [Diagnosestand](docs/OTR-CAN-MAD-MAX-SYSTEMFREEZE-20261020.md).
+
+<details>
+<summary>Historische Entwicklungs-, Paket- und Abnahmestände bis Build 38</summary>
+
+Die folgenden Einträge bewahren den jeweiligen damaligen Stand. Spätere persönliche Bestätigungen und der aktuelle Veröffentlichungsstatus stehen im Überblick oben und in den verlinkten Berichten.
+
 **Aktuelle stabile Version: CAN 1.0.0 · Build 32.** Seit **20.10.2026** wieder als **Latest** angeboten: [Setup](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.0/CutAssistantNext-1.0.0-Build32-win-x64-Setup.exe), [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.0/CutAssistantNext-1.0.0-Build32-win-x64.zip), [alle Downloads einschließlich Quellen und Prüfsummen](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.0). **CAN 1.0.1 · Build 34 wurde auf Nutzerwunsch vorübergehend aus der öffentlichen Veröffentlichung genommen und als Entwurf erhalten.** [Rücknahmenachweis](docs/RELEASE-WITHDRAWAL-1.0.1-20261020.md). **Offener kritischer Befund:** kompletter Rechnerstillstand beim erneuten otr-can-Schnitt einer großen Mad-Max-/Furiosa-Datei; Erneut auch unter 2-GiB-/25-Prozent-Ressourcengrenzen aufgetreten; weitere Realfilm-Schnitttests gestoppt. Ursache noch nicht nachgewiesen. [Diagnosestand](docs/OTR-CAN-MAD-MAX-SYSTEMFREEZE-20261020.md). Die Rückkehr zu Build 32 ist kein nachgewiesener Schutz für diesen konkreten Fall. Die folgenden Einträge dokumentieren auch frühere Entwicklungs-, Abnahme- und Veröffentlichungsstände.
+
+**Neuer lokaler Paketsatz: CAN 1.0.2 · Build 38** (26.10.2026). Neue bewusste Tonspurauswahl für weitere bereits geschnittene Filmteile: zusätzliche MP4-Kopie ohne Neukodierung, strenge Prüfung einschließlich exakter Wiedergabezeiten. 1446 Entwicklungstests, zehn native Fälle und echter John-Wick-Teil-1-AAC-Test erfolgreich. Setup, Portable und Quellen getrennt von Build 37 technisch geprüft: 1446 Pakettests, zusätzlich 1174 Tests gegen finale Produktbibliotheken und zehn native Fälle. Persönliche Paket-/Dialogabnahme offen; keine Veröffentlichung ohne Freigabe. [Paketbericht](docs/RELEASE-1.0.2-BUILD38-RESULT.md). [Bedienung und Grenzen](docs/TONSPURAUSWAHL-FILMTEILE-20261026.md), [Paketumfang](docs/FREEZE-1.0.2-BUILD38-20261026.md).
+
+**Neuer lokaler Paketsatz: CAN 1.0.2 · Build 37** (26.10.2026). Bei erkannter otr-can-Tonstörung kann nach ausdrücklicher Rückfrage mit einer streng geprüften AAC-Spur erneut geschnitten werden. Der Spurverlust wird sichtbar genannt. 1429 Entwicklungstests und native Fehler-/Normalfälle erfolgreich; John Wick Teil 2 mit AAC persönlich als passend bestätigt. Setup, Portable und Quellen getrennt von Build 36 technisch geprüft; 1429 Pakettests, zusätzlich 1157 Tests gegen finale Paketbibliotheken. Persönliche Paketabnahme offen; keine Veröffentlichung ohne Freigabe. [Paketbericht](docs/RELEASE-1.0.2-BUILD37-RESULT.md), [Paketumfang](docs/FREEZE-1.0.2-BUILD37-20261026.md), [Umsetzung und Grenzen](docs/OTR-CAN-AAC-NOTFALLWEG-20261026.md).
 
 **Lokaler Nachfolgestand: CAN 1.0.2 · Build 36** (25.10.2026). Die Cutlist-Metadaten können den tatsächlich vorgesehenen Motor otr-can ausweisen. Setup, Portable, Quellen und Prüfsummen liegen getrennt von Build 35 lokal bereit; 1416 Pakettests und 898 weitere App-Tests gegen die finalen Portable-DLLs bestanden. Persönliche Paketabnahme offen. **Keine Veröffentlichung ohne ausdrückliche Freigabe.** [Paketbericht](docs/RELEASE-1.0.2-BUILD36-RESULT.md), [Release Notes](docs/RELEASE-NOTES-1.0.2.md).
 
@@ -44,6 +73,8 @@ Für Build 16 sind frische Setup-Installation in der VM, beide Motoren, Deinstal
 
 Die vorherige [Build-16-RC3-Ausgabe](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build16-rc3), die [Build-13-RC3-Ausgabe](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.2.1-build13-rc3) und frühere Releases bleiben verfügbar. Die ältere AAC-/AC3-Erprobung steht im [Radical-Korrekturbericht](docs/OTR-CAN-RADICAL-KORREKTUR-20261011.md). Weitere reale Formate und getrennte Tonspurkontrollen folgen vor Version 1.0.
 
+</details>
+
 ## Lizenz
 
 Der vom CAN-Projekt selbst entwickelte Quellcode steht unter **GPL-3.0-or-later**. Der vollständige Lizenztext steht in [LICENSE](LICENSE). Eingebundene Bibliotheken, NuGet-Pakete und die .NET-Laufzeit behalten ihre eigenen Lizenzen; die [libmpv-Hinweise](docs/libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) und die [.NET-/NuGet-Bestandsaufnahme](docs/DOTNET-LICENSING.md) ordnen sie zu. Die öffentliche RC3-Ausgabe ist als Vorabversion gekennzeichnet; die zugehörigen Quellen und Prüfsummen stehen beim Release.
@@ -54,6 +85,8 @@ CAN baut auf Ideen und Arbeit vieler Menschen und Projekte auf. Die [Danksagung]
 
 ## Einstieg
 
+- [Aktueller Stand](docs/AKTUELLER-STAND.md): Build 38, bestätigte Abläufe, offene Paketprüfungen und nächste Aufgabe.
+- [Klebecenter-Referenzfall](docs/JOHN-WICK-4-KLEBECENTER-REFERENZ-20261026.md): John Wick 4, AAC-Padding und geprüfte Bild-/Tonzeitachse.
 - [Nutzeranleitung](docs/NUTZERANLEITUNG.md): Einrichtung, Bedienung, Cutlists, Schneiden und Hilfe bei Fehlern.
 - [Projektstatus](docs/STATUS.md): umgesetzter Umfang, bestätigte Tests und offene Aufgaben.
 - [Entwicklungstagebuch](docs/TAGEBUCH.md): aktuelle Änderungen, Prüfergebnisse und offene Schritte.
@@ -85,6 +118,8 @@ CAN baut auf Ideen und Arbeit vieler Menschen und Projekte auf. Die [Danksagung]
 - MP4-Inhalte direkt mit MP4Box schneiden, auch bei abweichender Dateiendung.
 - Andere Container nach Bestätigung experimentell mit FFmpeg verlustfrei nach MP4 umpacken und anschließend mit MP4Box schneiden.
 - Optional mit OTR-CAN aus geeigneten MP4-Dateien oder experimentell vorbereiteten H.264-AVI-Dateien schneiden, FFMS2 einmal indexieren und unterstützte Tonspuren übernehmen; CPU-Encoding an Video-Schnittgrenzen und vollständige Audio-Neukodierung, bei MP3 einmal nach AAC-LC.
+- **Lokale 1.0.2:** Bei passender otr-can-Tonstörung nach bewusster Bestätigung mit streng geprüfter AAC-Spur erneut schneiden.
+- **Lokale 1.0.2:** Zusätzliche MP4-Kopie mit einer bewusst gewählten AAC-/AC-3-Spur für weitere bereits geschnittene Filmteile speichern; ohne Neukodierung und ohne Anwenden der Schnittliste.
 - Fortschritt und Protokoll anzeigen, kopieren und den Vorgang abbrechen.
 - Hauptfenster und die vier Schnittdialoge (Schneiden, Fortschritt/Protokoll, Abschluss, Cutlist erzeugen) merken Größe und Maximierung; die Player-Lautstärke wird ebenfalls gespeichert. Inhalte bleiben bei kleinen Fenstern scrollbar.
 
@@ -111,7 +146,7 @@ Ab dem lokalen Build 25 öffnet **Prüfen** neben Anfang, jedem Übergang und En
 
 MP4 ist ein Container, keine Bezeichnung für einen bestimmten Videocodec. Ob sich ein anderes Format verlustfrei vorbereiten lässt, hängt von seinen Streams ab. Die MP4Box-Vorbereitung verwendet Stream-Copy. Der optionale OTR-CAN-Motor kopiert geeignete IDR-Abschnitte, kodiert Video-Schnittgrenzen und jede vollständige Tonspur auf der CPU neu. Ungeeignete Dateien oder deutliche Abweichungen werden mit einer Fehlermeldung gestoppt.
 
-Die Prüfung der Arbeitsdatei ist eine Plausibilitätsprüfung anhand der Medieninformationen. Sie ersetzt nicht die Kontrolle der Schnittstellen und der Ton-Synchronität. OTR-CANs Video-Smart-Rendering und Audio-Neukodierung sind synthetisch und mit Pines geprüft; Stapelverarbeitung und integrierte mehrteilige Aufnahmen sind noch nicht umgesetzt.
+Die allgemeine Container-Vorbereitung prüft Medienstruktur und Zeitverhältnisse. Beim AAC-Notfallweg und bei der manuellen Tonspurkopie werden zusätzlich sämtliche übernommenen Bild-/Tonpakete und Wiedergabezeiten exakt verglichen. Diese technischen Prüfungen ersetzen nicht die persönliche Kontrolle der Schnittstellen und Tonsynchronität. OTR-CANs Video-Smart-Rendering und Audio-Neukodierung sind synthetisch und mit Pines geprüft; Stapelverarbeitung und integrierte mehrteilige Aufnahmen sind noch nicht umgesetzt.
 
 Insbesondere bei historischen AVI-Dateien können bereits im Original Probleme mit Zeitstempeln, Bildaktualisierung oder Ton-Synchronität auftreten. Eine irreführende Dateiendung wie `.avi.mp4` ändert nichts am tatsächlich erkannten Container. CAN zeigt bei tatsächlich erkanntem AVI bereits nach dem Laden einen gelben Hinweis auf mögliche Probleme im Original; eine abweichende Dateiendung wird zusätzlich erklärt. Weitere Praxistests erfolgen mit geeigneten neuen Aufnahmen.
 
@@ -119,7 +154,7 @@ Die Gesamtabnahme in Build 24 hat bei einer erzeugten Datei mit zwei gleichartig
 
 ## Für Anwender
 
-Vorgesehene Umgebung ist Windows 11 x64. Die öffentliche RC3-Vorabversion bietet Setup und Portable-ZIP sowie den optionalen Motor otr-can 0.1.5. Die .NET 10 Desktop Runtime muss separat installiert werden; die vier geprüften libmpv-DLLs sind enthalten. ffprobe, FFmpeg und MP4Box werden separat installiert und über die Einstellungen konfiguriert.
+Vorgesehene Umgebung ist Windows 11 x64. Öffentlich dokumentierter stabiler Stand ist 1.0.0 Build 32. Die lokale Prüffassung 1.0.2 Build 38 bietet Setup und Portable-ZIP mit otr-can 0.1.6; ihre Veröffentlichung ist noch nicht freigegeben. Die .NET 10 Desktop Runtime muss separat installiert werden; die vier geprüften libmpv-DLLs sind enthalten. ffprobe, FFmpeg und MP4Box werden separat installiert und über die Einstellungen konfiguriert.
 
 Die [Nutzeranleitung](docs/NUTZERANLEITUNG.md) erklärt die Einrichtung ohne Entwicklungswerkzeuge.
 

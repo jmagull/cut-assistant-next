@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text.Json;
 using CutAssistantNext.Core.Media;
 
@@ -51,7 +51,11 @@ public static class FfprobeJsonParser
                         GetInt32(stream, "channels"),
                         GetString(stream, "channel_layout"))
                     {
-                        StartTimeSeconds = GetDouble(stream, "start_time")
+                        StartTimeSeconds = GetDouble(stream, "start_time"),
+                        Language = stream.TryGetProperty("tags", out var audioTags)
+                            ? GetString(audioTags, "language") : null,
+                        Title = stream.TryGetProperty("tags", out var titleTags)
+                            ? GetString(titleTags, "title") : null
                     });
                 }
             }

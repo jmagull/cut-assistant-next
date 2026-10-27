@@ -1,5 +1,15 @@
 # Architekturentscheidungen
 
+**Einordnung 27.10.2026:** lokaler Stand CAN 1.0.2 Build 40 mit Motor 0.1.6. Frühere ADR-Statusangaben gelten für ihren damaligen Schritt. [Versionen](VERSIONEN.md).
+
+## ADR-019 – Bewusste Tonspurauswahl und kontrolliertes Klebecenter
+
+**Status:** seit Build 39 umgesetzt, in Build 40 unverändert. AC-3/AAC und AAC/AAC persönlich positiv bestätigt.
+
+Das Klebecenter übernimmt zwei fertige Filmteile vollständig. Dateien und Reihenfolge werden vor Tonspuren gewählt. Keine Vorab-Einzelkopie, Cutlist-Anwendung oder stille Vorauswahl bei mehreren Spuren. Video wird nur bei bewiesener Kompatibilität kopiert. Gewählter Ton wird mit tatsächlicher Auffüllung dekodiert, samplegenau verbunden und einmal durchgehend als AAC-LC kodiert. Erst exakte Quell-/Ausgabeprüfungen erlauben Übernahme und Erfolg. Der vorhandene Kontrollplayer erhält geprüfte Klebestelle und Dateiidentität. Ein FFmpeg-Erfolg oder -copyts allein genügt nicht.
+
+Build 40 ergänzt den Abgleich zwischen Voraussetzungstext und Motorversion; Motor unverändert 0.1.6. AAC-Notfallschnitt, integriertes Kleben und die frühere manuelle Vorbereitung bleiben unterscheidbar. [Nachweise](KLEBECENTER-20261027.md).
+
 ## ADR-018 – Gepufferte Schnittprotokolle und stabiler Audiofilterzustand
 
 **Status:** 11.10.2026 nach reproduziertem Radical-Fehler umgesetzt.

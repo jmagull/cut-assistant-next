@@ -13,7 +13,7 @@ public partial class MainWindow
 
     private bool CanOpenMedia => !_isClosed && !_shutdownStarted && !_mediaLoadInProgress &&
         !_cutlistSearchInProgress && !_cutlistUploadInProgress && !_frameLoupeOpening &&
-        !_cutOutputOpening && !_playerFrameSearch.IsNavigating && !_keyframeNavigation.IsNavigating && IsEnabled;
+        !_cutOutputOpening && !_audioTrackCopyInProgress && !_joinInProgress && !_playerFrameSearch.IsNavigating && !_keyframeNavigation.IsNavigating && IsEnabled;
 
     private void InitializeMediaInput(string[] arguments, string startupDirectory)
     {

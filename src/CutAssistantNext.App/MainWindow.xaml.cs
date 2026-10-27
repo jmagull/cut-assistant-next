@@ -45,6 +45,7 @@ public partial class MainWindow : Window
     private string? _loadedIntendedCutApplicationName;
     private string? _lastSuccessfulCutMediaPath;
     private CutEngineKind? _lastSuccessfulCutEngine;
+    private string? _lastCutAudioNotice;
     private string? _lastSavedCutlistFilePath;
     private bool _cutlistUploadInProgress;
     private bool _cutlistSearchInProgress;
@@ -1459,7 +1460,21 @@ public partial class MainWindow : Window
                                 new Mp4BoxRunner(
                                     executablePath,
                                     _logger,
-                                    runnerProgress)));
+                                    runnerProgress)),
+                            confirmAudioFallback: (offer, token) => Dispatcher.InvokeAsync(() =>
+                            {
+                                token.ThrowIfCancellationRequested();
+                                var audioDialog = new AacEmergencyDialog(offer)
+                                {
+                                    Owner = (Window?)progressDialog ?? this
+                                };
+                                using var cancellationRegistration = token.Register(() =>
+                                    Dispatcher.BeginInvoke(new Action(() =>
+                                    {
+                                        if (audioDialog.IsVisible) audioDialog.Close();
+                                    })));
+                                return audioDialog.ShowDialog() == true ? audioDialog.SelectedChoice : null;
+                            }, System.Windows.Threading.DispatcherPriority.Normal, token).Task);
 
                     dialog.IsEnabled = false;
                     var cutEngine = await Task.Run(() => cutEngineFactory.Create(engineKind, selection, progress));
@@ -1513,6 +1528,8 @@ public partial class MainWindow : Window
                         cutSucceeded = true;
                         _lastSuccessfulCutMediaPath = originalFilePath;
                         _lastSuccessfulCutEngine = engineKind;
+                        _lastCutAudioNotice = cutResult.Notice?.StartsWith("Notfallausgabe:", StringComparison.Ordinal) == true
+                            ? cutResult.Notice : null;
 
                         progress.Flush();
                         progressViewModel.MarkSucceeded();
@@ -2073,6 +2090,8 @@ public partial class MainWindow : Window
 
         cutlistViewModel.ApplyTemplateAuthor(
             _loadedCutlistAuthor);
+        if (!string.IsNullOrWhiteSpace(_lastCutAudioNotice))
+            cutlistViewModel.ApplyQuickText(_lastCutAudioNotice);
         cutlistViewModel.UseOtrCan =
             CutlistIntendedApplicationResolver.PreferredEngine(
                 _viewModel.FilePath,
@@ -2477,6 +2496,7 @@ public partial class MainWindow : Window
         _loadedIntendedCutApplicationName = null;
         _lastSuccessfulCutMediaPath = null;
         _lastSuccessfulCutEngine = null;
+        _lastCutAudioNotice = null;
         _lastSavedCutlistFilePath = null;
 
         await _viewModel.AnalyzeAsync(mediaPath, _mediaInputCancellation.Token);

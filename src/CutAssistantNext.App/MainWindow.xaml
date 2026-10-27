@@ -86,6 +86,12 @@
             <MenuItem Header="Video-Informationen"
                       Click="VideoInformationMenuItem_Click" />
 
+            <MenuItem Header="Klebecenter">
+                <MenuItem Header="Filmteile zusammenfügen …"
+                          Click="JoinMenuItem_Click"
+                          ToolTip="Zwei bereits geschnittene MP4-Filmteile mit bewusst gewählten Tonspuren zusammenfügen." />
+            </MenuItem>
+
             <MenuItem Header="Hilfe">
                 <MenuItem Header="Nutzeranleitung (GitHub)"
                           Click="UserGuideMenuItem_Click" />

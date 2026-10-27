@@ -99,6 +99,11 @@ if ($OtrCanPackageDirectory) {
     $expectedEngineVersion = '0.1.6'
     $engineSourceArchive = "sources\otr-can-$expectedEngineVersion-source.zip"
     if ($snapshot.OtrCanVersion -ne $expectedEngineVersion) { throw 'CAN source snapshot declares a different motor version.' }
+    $prerequisitesText = Get-Content -LiteralPath (Join-Path $publish 'VORAUSSETZUNGEN.txt') -Encoding UTF8 -Raw
+    $documentedEngine = [regex]::Match($prerequisitesText, '(?m)^Optionaler Schnittmotor otr-can (?<version>\d+\.\d+\.\d+):\s*$')
+    if (-not $documentedEngine.Success -or $documentedEngine.Groups['version'].Value -ne $expectedEngineVersion) {
+        throw 'Installer prerequisite text declares a different motor version.'
+    }
     $enginePackage = (Resolve-Path -LiteralPath $OtrCanPackageDirectory).Path
     foreach ($name in @('otr_can.exe', 'LICENSE', 'THIRD-PARTY-NOTICES.md', 'ENGINE-PROVENANCE.json', 'ENGINE-FILES.sha256', $engineSourceArchive)) {
         if (-not (Test-Path -LiteralPath (Join-Path $enginePackage $name) -PathType Leaf)) { throw "Missing motor package file: $name" }
