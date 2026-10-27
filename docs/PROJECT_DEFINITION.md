@@ -1,6 +1,6 @@
 # Projektdefinition
 
-**Stand 27.10.2026: CAN 1.0.2 Build 40, otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** Das ursprüngliche Wiedergabe-POC-Ziel ist um Schnitt-/Cutlist-Abläufe und das integrierte Klebecenter erweitert. Eigene John-Wick-Kombinationen AC-3/AAC und AAC/AAC positiv bestätigt. Neue vollständige Setup-/Portable-/VM-Abnahme offen; keine Veröffentlichung. [Projektstand](AKTUELLER-STAND.md), [Versionen](VERSIONEN.md).
+**Stand 27.10.2026: CAN 1.0.2 Build 41, otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** Das ursprüngliche Wiedergabe-POC-Ziel ist um Schnitt-/Cutlist-Abläufe und das integrierte Klebecenter erweitert. Eigene John-Wick-Kombinationen AC-3/AAC und AAC/AAC positiv bestätigt. Build-40-Setup-/ZIP-VM-Runde und Build-41-Arbeits-PC-Setup einschließlich Bereinigung persönlich bestätigt. CAN 1.0.2 Build 41 ist veröffentlicht; zusätzliche Build-41-ZIP-/VM-Prüfung bleibt separat offen. [Projektstand](AKTUELLER-STAND.md), [Versionen](VERSIONEN.md).
 
 ## Ausgangslage
 

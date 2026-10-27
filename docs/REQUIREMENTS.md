@@ -1,6 +1,6 @@
 # Anforderungen
 
-**Umsetzungsstand 27.10.2026: CAN 1.0.2 Build 40.** Die nachfolgenden POC-0.1-Anforderungen sind die ursprüngliche Grundlage, keine aktuelle Versionsbezeichnung. [Projektstand](AKTUELLER-STAND.md).
+**Umsetzungsstand 27.10.2026: CAN 1.0.2 Build 41.** Die nachfolgenden POC-0.1-Anforderungen sind die ursprüngliche Grundlage, keine aktuelle Versionsbezeichnung. [Projektstand](AKTUELLER-STAND.md).
 
 ## Ergänzte Anforderungen
 
@@ -52,3 +52,7 @@
 - erzeugte Cutlists als UTF-8 ohne BOM mit CRLF-Zeilenenden schreiben
 - Unit-Tests für testbare Fachlogik
 - manueller Test mit mindestens drei OTR-MP4-Dateien
+
+## Veröffentlichter Stand Build 41
+
+CAN 1.0.2 Build 41 mit otr-can 0.1.6 veröffentlicht. Nach erfolgreichem Kleben werden bekannte Arbeitsdateien, Erfolgsprotokoll und leerer Arbeitsordner bereinigt; Fehler/Abbruch erhalten Diagnose. Gesperrte oder fremde Inhalte werden gemeldet und erhalten. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).

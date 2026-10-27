@@ -1,6 +1,6 @@
 # Architekturentscheidungen
 
-**Einordnung 27.10.2026:** lokaler Stand CAN 1.0.2 Build 40 mit Motor 0.1.6. Frühere ADR-Statusangaben gelten für ihren damaligen Schritt. [Versionen](VERSIONEN.md).
+**Einordnung 27.10.2026:** veröffentlichter Stand CAN 1.0.2 Build 41 mit Motor 0.1.6. Frühere ADR-Statusangaben gelten für ihren damaligen Schritt. [Versionen](VERSIONEN.md).
 
 ## ADR-019 – Bewusste Tonspurauswahl und kontrolliertes Klebecenter
 
@@ -273,3 +273,7 @@ Begründung und Regeln:
 - Nur eine Serverantwort mit gültiger numerischer Cutlist-ID gilt als erfolgreicher Upload.
 
 Damit bleiben Bearbeitung, lokale Speicherung, Serverkompatibilität und Veröffentlichung klar voneinander getrennt. Eine heruntergeladene Fremd-Cutlist kann als Arbeitsgrundlage dienen, wird aber nicht unbeabsichtigt als eigene Fassung veröffentlicht.
+
+## Veröffentlichter Stand Build 41
+
+CAN 1.0.2 Build 41 mit otr-can 0.1.6 veröffentlicht. Nach erfolgreichem Kleben werden bekannte Arbeitsdateien, Erfolgsprotokoll und leerer Arbeitsordner bereinigt; Fehler/Abbruch erhalten Diagnose. Gesperrte oder fremde Inhalte werden gemeldet und erhalten. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).

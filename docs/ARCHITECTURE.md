@@ -1,6 +1,6 @@
 # Architektur – Arbeitsstand
 
-**Arbeitsabgleich 27.10.2026: CAN 1.0.2 Build 40, otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
+**Arbeitsabgleich 27.10.2026: CAN 1.0.2 Build 41, otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
 
 ## Klebecenter und Paketierung – umgesetzt
 
@@ -168,3 +168,7 @@ Die Kompatibilitätsdetails der erzeugten Dateien sind in ADR-007 festgelegt und
 - Strategie für Aktualisierungen der fest versionierten nativen Laufzeit
 - MVVM-Hilfsbibliothek oder möglichst wenige externe Pakete
 - Persönliche neue Paket-/Installationsabnahme; Setup-/Portable-Konzept ist umgesetzt
+
+## Veröffentlichter Stand Build 41
+
+CAN 1.0.2 Build 41 mit otr-can 0.1.6 veröffentlicht. Nach erfolgreichem Kleben werden bekannte Arbeitsdateien, Erfolgsprotokoll und leerer Arbeitsordner bereinigt; Fehler/Abbruch erhalten Diagnose. Gesperrte oder fremde Inhalte werden gemeldet und erhalten. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
