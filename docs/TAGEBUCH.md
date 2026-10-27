@@ -1,5 +1,10 @@
 # Entwicklungstagebuch
 
+## 27.10.2026 – CAN 1.0.2 Build 41 veröffentlicht
+
+Nach ausdrücklicher Freigabe Commit/Push und Veröffentlichung abgeschlossen. **[v1.0.2 / Latest](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2)**, Release-Commit **6f4c3dc**. Alle acht Uploadgrößen und GitHub-SHA-256-Prüfsummen entsprechen den unveränderten geprüften Assets. Motor **otr-can 0.1.6** direkt und im ZIP geprüft. README, Anleitung und Klebecenter-Hinweise aktualisiert, Überinstallationspfad erklärt. Vier Nutzer-Lockänderungen erhalten und nicht committed. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
+
+
 ## 27.10.2026 – CAN 1.0.2 Build 41 zur Veröffentlichung freigegeben
 
 Nutzer beauftragt Commit, Push und Veröffentlichung sowie aktuelle README/Dokumentation und Klebecenter-Anleitung. Geprüfter Motor unverändert otr-can 0.1.6; Überinstallationen müssen den gespeicherten Motorpfad auf die mitgelieferte tools/otr-can/otr_can.exe setzen. Setup-Abnahme auf dem Arbeitsrechner einschließlich Bereinigung positiv. Eingefrorene, persönlich geprüfte Build-41-Pakete bleiben unverändert; aktuelle Arbeitsdokumente ergänzen die Veröffentlichungsfreigabe. Vier vorbestehende lokale Produktions-Lockänderungen bleiben außerhalb des Commits. Veröffentlichung wird nach erfolgreichem Upload gesondert nachgewiesen.

@@ -1,6 +1,6 @@
 # Nutzeranleitung – Cut Assistant Next
 
-**Stand 27.10.2026: CAN 1.0.2 Build 41, otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** Veröffentlichung freigegeben für CAN 1.0.2 Build 41. Die Freigabe umfasst den unveränderten geprüften Paketsatz. [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
+**Stand 27.10.2026: CAN 1.0.2 Build 41, otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** CAN 1.0.2 Build 41 ist seit 27.10.2026 als v1.0.2 / Latest veröffentlicht. [Release und Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2). [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
 
 ## Klebecenter – zwei fertige Filmteile verbinden
 

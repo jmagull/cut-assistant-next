@@ -1,6 +1,6 @@
 # CAN 1.0.2 Build 41 – Klebecenter-Bereinigung
 
-Stand 27.10.2026, lokaler Paketsatz; keine Veröffentlichung. Nach Erfolg Arbeitsordner entfernen, bei Fehler/Abbruch Diagnose erhalten. Medienverarbeitung, Motor otr-can 0.1.6 und libmpv 0.41.0 unverändert. [Änderung und Prüfung](KLEBECENTER-BEREINIGUNG-20261027.md), [Umfang](FREEZE-1.0.2-BUILD41-20261027.md).
+Stand 27.10.2026: als v1.0.2 / Latest veröffentlicht, Commit/Push abgeschlossen. Nach Erfolg Arbeitsordner entfernen, bei Fehler/Abbruch Diagnose erhalten. Medienverarbeitung, Motor otr-can 0.1.6 und libmpv 0.41.0 unverändert. [Änderung und Prüfung](KLEBECENTER-BEREINIGUNG-20261027.md), [Umfang](FREEZE-1.0.2-BUILD41-20261027.md).
 
 ## Technische Nachweise
 
@@ -12,7 +12,7 @@ Basiscommit 1631aa7367a328bf86fd291a54a6c62f8731626f plus dokumentierte Arbeits�
 
 Setup, Portable-ZIP, CAN-Quellen und unveränderte Motor-/libmpv-Quellen samt Relink/Prüfsummen unter **artifacts/release-1.0.2-build41**. Frühere Pakete einschließlich Build 40 erhalten. Dieser Bericht ergänzt nach endgültigem Dokumentationsabgleich die Paketdateien und Prüfsummen; der Quellsnapshot zeigt seinen Erstellungsstand.
 
-Build-40-Setup und -ZIP persönlich positiv geprüft; persönliche Setup-Abnahme der neuen Build-41-Bereinigung auf dem Arbeitsrechner mit John Wick nun positiv: temporäre Datei weg, Bild/Ton/Schnitt/Drei-Sekunden-Vorschau und Klebecenter bestätigt. Neue ZIP-/VM-Prüfung bleibt getrennt offen. Keine automatische Installation, kein Commit/Push, keine Veröffentlichung. Lokale Nachweise unter **.build/release-1.0.2-build41-20261027/**.
+Build-40-Setup und -ZIP persönlich positiv geprüft; persönliche Setup-Abnahme der neuen Build-41-Bereinigung auf dem Arbeitsrechner mit John Wick nun positiv: temporäre Datei weg, Bild/Ton/Schnitt/Drei-Sekunden-Vorschau und Klebecenter bestätigt. Neue ZIP-/VM-Prüfung bleibt getrennt offen. Keine automatische Installation; Commit/Push und Veröffentlichung sind nach ausdrücklicher Freigabe abgeschlossen. Lokale Nachweise unter **.build/release-1.0.2-build41-20261027/**.
 
 ## Abschließender Paketnachweis
 
@@ -30,3 +30,7 @@ Build-40-Setup und -ZIP persönlich positiv geprüft; persönliche Setup-Abnahme
 ## Veröffentlichungsfreigabe
 
 Am 27.10.2026 beauftragt der Nutzer ausdrücklich Commit, Push und Veröffentlichung dieses unveränderten Build-41-Paketsatzes. README, Releasebeschreibung und Klebecenter-Anleitung ergänzen aktuelle Abnahme, Motorversion 0.1.6 und Pfadprüfung nach Überinstallation. Archivdokumente behalten ihren damaligen Erstellungsstand; nach Upload folgt ein eigener Veröffentlichungsnachweis.
+
+## Veröffentlichung abgeschlossen
+
+Nach ausdrücklicher Freigabe am 27.10.2026 als **v1.0.2 / Latest** veröffentlicht. Alle acht Assetgrößen und GitHub-SHA-256-Prüfsummen stimmen mit dem unveränderten geprüften Paketsatz überein. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).

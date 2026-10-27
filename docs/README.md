@@ -1,6 +1,6 @@
 # Dokumentation – Cut Assistant Next
 
-**Stand 27.10.2026: CAN 1.0.2 Build 41 · otr-can 0.1.6 · libmpv 0.41.0.** Veröffentlichung von CAN 1.0.2 Build 41 ausdrücklich freigegeben.
+**Stand 27.10.2026: CAN 1.0.2 Build 41 · otr-can 0.1.6 · libmpv 0.41.0.** CAN 1.0.2 Build 41 veröffentlicht als v1.0.2 / Latest.
 
 ## Aktuell lesen
 
@@ -8,6 +8,7 @@
 - [Versionszuordnung](VERSIONEN.md): CAN/Build/Motor getrennt, historische Versionen richtig einordnen.
 - [Nutzeranleitung](NUTZERANLEITUNG.md): Klebecenter und reguläre Bedienung.
 - [Klebecenter](KLEBECENTER-20261027.md): Dateien/Reihenfolge, danach Tonspuren; AAC/AAC und AC-3/AAC bestätigt.
+- [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md): Release, Commit, acht identische Assets.
 - [Build-41-Paketbericht](RELEASE-1.0.2-BUILD41-RESULT.md): Setup, Portable, Quellen und Prüfsummen.
 - [Klebecenter-Bereinigung](KLEBECENTER-BEREINIGUNG-20261027.md): Erfolg aufräumen, Fehlerdiagnose erhalten.
 - [Release Notes](RELEASE-NOTES-1.0.2.md), [Testplan](TESTPLAN.md), [Merkliste](SETUP-MERKLISTE.md).

@@ -1,6 +1,6 @@
 # Cut Assistant Next 1.0.2 · Build 41
 
-Am 27.10.2026 ausdrücklich zur Veröffentlichung freigegeben. CAN 1.0.2 Build 41 enthält **otr-can 0.1.6** und **libmpv 0.41.0**. Setup und Portable-ZIP gehören zum gleichen geprüften Quellenstand.
+Am 27.10.2026 nach ausdrücklicher Freigabe als **v1.0.2 / Latest veröffentlicht**. CAN 1.0.2 Build 41 enthält **otr-can 0.1.6** und **libmpv 0.41.0**. Setup und Portable-ZIP gehören zum gleichen geprüften Quellenstand.
 
 ## Klebecenter
 

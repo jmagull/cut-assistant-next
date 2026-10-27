@@ -4,7 +4,7 @@
 
 | CAN | Build | otr-can | Einordnung |
 |---|---:|---|---|
-| 1.0.0 | 32 | 0.1.5 | Öffentlich dokumentierter stabiler Stand |
+| 1.0.0 | 32 | 0.1.5 | Früherer stabiler Stand |
 | 1.0.1 | 34 | 0.1.6 | Veröffentlichung zurückgenommen; datierter Nachweis |
 | 1.0.2 | 35 | 0.1.6 | MP4Box-Übergangszuordnung |
 | 1.0.2 | 36 | 0.1.6 | Schnittmotor-Cutlist-Metadaten |
@@ -12,9 +12,9 @@
 | 1.0.2 | 38 | 0.1.6 | Damalige Einzelkopie für externes Kleben |
 | 1.0.2 | 39 | 0.1.6 | Integriertes Klebecenter; Voraussetzungstext noch fälschlich 0.1.5 |
 | 1.0.2 | 40 | 0.1.6 | Hinweis berichtigt; Setup-/ZIP-Prüfung persönlich abgeschlossen |
-| 1.0.2 | 41 | 0.1.6 | Aktueller lokaler Paketsatz: Klebecenter-Arbeitsordner nach Erfolg entfernen |
+| 1.0.2 | 41 | 0.1.6 | Veröffentlicht als v1.0.2 / Latest; Klebecenter-Arbeitsordner nach Erfolg entfernen |
 
-Aktuelle App-Dateiversion **1.0.2.41**, libmpv **0.41.0**, Framework **.NET 10**, Ziel **Windows 11 x64/WPF**. Veröffentlichung von 1.0.2 Build 41 am 27.10.2026 ausdrücklich freigegeben.
+Aktuelle App-Dateiversion **1.0.2.41**, libmpv **0.41.0**, Framework **.NET 10**, Ziel **Windows 11 x64/WPF**. CAN 1.0.2 Build 41 wurde am 27.10.2026 nach ausdrücklicher Freigabe veröffentlicht. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
 
 ## Technische Nachweise
 

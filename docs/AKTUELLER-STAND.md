@@ -6,8 +6,8 @@
 
 | Bereich | Aktueller Stand |
 |---|---|
-| Öffentlich dokumentierter stabiler Stand | CAN 1.0.0 Build 32; Rücknahme von 1.0.1 dokumentiert |
-| Neuester lokaler Paketsatz | CAN 1.0.2 Build 41; App-Dateiversion 1.0.2.41 |
+| Öffentlich dokumentierter stabiler Stand | CAN 1.0.2 Build 41, veröffentlicht als v1.0.2 / Latest; Rücknahme von 1.0.1 bleibt dokumentiert |
+| Veröffentlichter Paketsatz | CAN 1.0.2 Build 41; App-Dateiversion 1.0.2.41 |
 | Schnittmotor / Wiedergabe | otr-can 0.1.6 / libmpv 0.41.0 |
 | Build-41-Paketprüfung | 1489/1489 Tests, zusätzlich 925 App-/292 Medientests gegen finale DLLs; 0 Warnungen/Fehler |
 | Native Laufzeitnachweise | Build 41: 21 Klebecenter-Fälle einschließlich Bereinigung; frühere Notfall-/Kopiefälle aus Build 39 bleiben separat dokumentiert |
@@ -19,7 +19,7 @@
 | VM-Portable Build 40 | drei Fälle: Grey’s Anatomy/MP4Box, Teufelsbrigade AVI/otr-can und Furiosa-Klebecenter AAC/AAC positiv; persönliche ZIP-Prüfung mit „damit zip check“ abgeschlossen |
 | Build-41-Setup auf Arbeits-PC | John Wick: temporäre Datei weg, Bild/Ton/Schnitt/Drei-Sekunden-Vorschau und Klebecenter persönlich positiv |
 | Weitere Aufgaben | neue Build-41-ZIP-/VM-Prüfung getrennt offen; weitere Varianten nach Bedarf |
-| Veröffentlichung | CAN 1.0.2 Build 41 am 27.10.2026 ausdrücklich freigegeben; Commit/Push und Upload beauftragt |
+| Veröffentlichung | [v1.0.2 / Latest](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2), 27.10.2026; acht Assets vollständig gegen SHA-256 geprüft |
 
 Pakete unter **artifacts/release-1.0.2-build41**: Setup, Portable, exakte CAN-Quellen, passende Motor-/libmpv-Quellen, Relink und Prüfsummen. Frühere Pakete erhalten. [Paketbericht](RELEASE-1.0.2-BUILD41-RESULT.md), [Release Notes](RELEASE-NOTES-1.0.2.md).
 
@@ -54,7 +54,7 @@ Die gezielte Bereinigung wird als eigener Paketsatz Build 41 ausgeliefert. Früh
 
 ## Nächster Schritt und Grenzen
 
-Arbeits-PC- und neun VM-Funktionsfälle sowie VM-Deinstallation persönlich positiv gemeldet. Build-40-Portable-Prüfung persönlich abgeschlossen. Die daraufhin beauftragte Bereinigung ist in Build 41 technisch geprüft; persönliche Setup-Prüfung der Korrektur auf dem Arbeitsrechner mit John Wick positiv; neue ZIP-/VM-Prüfung getrennt offen. Ursache früherer Furiosa-Rechnerstillstände ungeklärt; spätere Erfolge belegen keine gezielte Behebung. AVI experimentell; MP4Box-/Vera-/Werbeblitzer-Grenzen bestehen fort. Veröffentlichung, Commit und Push sind am 27.10.2026 ausdrücklich beauftragt.
+Arbeits-PC- und neun VM-Funktionsfälle sowie VM-Deinstallation persönlich positiv gemeldet. Build-40-Portable-Prüfung persönlich abgeschlossen. Die daraufhin beauftragte Bereinigung ist in Build 41 technisch geprüft; persönliche Setup-Prüfung der Korrektur auf dem Arbeitsrechner mit John Wick positiv; neue ZIP-/VM-Prüfung getrennt offen. Ursache früherer Furiosa-Rechnerstillstände ungeklärt; spätere Erfolge belegen keine gezielte Behebung. AVI experimentell; MP4Box-/Vera-/Werbeblitzer-Grenzen bestehen fort. Veröffentlichung, Commit und Push sind am 27.10.2026 nach ausdrücklicher Freigabe erfolgt.
 
 ## VM-Setuptest begonnen
 
@@ -71,3 +71,7 @@ Nach bestätigter Setup-Deinstallation zur ZIP-Prüfung gewechselt. Grey’s Ana
 ## Bereinigung ab Build 41
 
 Nach Erfolg Arbeitsordner entfernen; bei Fehler/Abbruch Diagnose erhalten. Gesperrte oder fremde Inhalte bleiben mit Meldung erhalten. Keine automatische Löschung alter Arbeitsordner. [Umsetzung und Nachweise](KLEBECENTER-BEREINIGUNG-20261027.md).
+
+## Veröffentlichungsabschluss
+
+Release-Tag v1.0.2 zeigt auf den gepushten Programmstand; acht Assets öffentlich mit identischen Prüfsummen. [Nachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
