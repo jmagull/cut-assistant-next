@@ -1,5 +1,38 @@
 # Setup-Merkliste
 
+## Entwicklungsauftrag 29.10.2026 – Build 46
+
+- [x] QUICK als pragmatischen Streamcopy-Weg mit bestätigter Mehrspurzuordnung umsetzen.
+- [x] Meckerecke ergänzen; Hinweise allein verhindern keinen Erfolg, keine zusätzlichen Vollprüfungen.
+- [x] Build/1576 Tests, 27 native QUICK- und 21 bisherige Fälle, drei reale Referenzen technisch positiv.
+- [x] Eigener Build-46-QUICK-Praxislauf mit AAC+AC-3 in 23,74 s: Bild/Ton/Klebestelle/Drei-Sekunden-Vorschau persönlich bestätigt.
+- [x] Neuer John-Wick-MP4Box-Mehrspurlauf mit AAC+AC-3 in 16,44 s: Ton/Bild/Übergang/Klebestelle/Drei-Sekunden-Vorschau persönlich positiv.
+- [ ] Weitere persönliche Referenz-/Setup-/Portable-/VM-Prüfungen getrennt dokumentieren.
+- [x] Bestätigten Stand am 29.10.2026 auf Nutzerauftrag als Build 46 einfrieren.
+- [x] Setup, Portable, CAN-/Motor-/libmpv-Quellen und Prüfsummen erstellt, technisch geprüft und schreibgeschützt eingefroren (1576 + 1304 Tests, 27 QUICK-/21 Enthusiast-Fälle, UI/Player positiv).
+- [ ] Danach Commit und Push; vorbestehende lokale Produktions-Locks ausschließen.
+- [ ] Veröffentlichung ausschließlich nach erneuter ausdrücklicher Ansage.
+
+[Nachweis](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md). Build-45-Freeze unverändert.
+
+## Freeze-Auftrag 29.10.2026 – Build 45
+
+- [x] Tonspurhinweis persönlich anhand des Build-45-Screenshots bestätigt.
+- [x] Bestätigten Produktstand für Paketierung unverändert festhalten.
+- [x] Setup, Portable, CAN-/Motor-/libmpv-Quellen und Prüfsummen als separaten Build-45-Paketsatz erstellt/geprüft; acht Auslieferungsdateien und manifestierten Quellsnapshot schreibgeschützt eingefroren.
+- [ ] Neue persönliche Setup-/Portable-/VM-Abnahme getrennt halten; zehn positive Build-44-Setup-Fälle sind keine pauschale Build-45-Paketabnahme.
+
+[Paketbericht](RELEASE-1.0.2-BUILD45-RESULT.md). Keine neue Veröffentlichungsfreigabe.
+
+## Vormerkung 29.10.2026 – mögliche spätere Werkzeugrubrik
+
+- [x] Im Entwicklungsbuild 44 den separaten Tonspurkopie-Eintrag aus dem Klebecenter-Menü entfernen. Tonspuren direkt beim Zusammenfügen wählen; keine Vorbereitungskopie erforderlich. Bisherigen Kopierdienst erhalten. Menü am 29.10.2026 persönlich bestätigt; Setup/ZIP/Quellen für Build 44 erstellt und technisch geprüft; persönliche neue Paketabnahme offen. Build-43-Pakete unverändert.
+- [ ] Falls weitere Werkzeuge hinzukommen, eine gemeinsame Rubrik prüfen und die eigenständige Tonspurkopie dort wieder berücksichtigen.
+- [ ] Martins Ansatz einer Werbebildervorschau berücksichtigen; Konzept und Umsetzung noch offen.
+- [ ] Ein-/Ausblenden von Untertiteln als weiteres mögliches Werkzeug berücksichtigen; noch kein Umsetzungsauftrag.
+
+Die folgenden Einträge bewahren ihren jeweiligen historischen Stand.
+
 **Stand 27.10.2026: CAN 1.0.2 Build 41, otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Paketbericht](RELEASE-1.0.2-BUILD41-RESULT.md).
 
 ## Erledigt

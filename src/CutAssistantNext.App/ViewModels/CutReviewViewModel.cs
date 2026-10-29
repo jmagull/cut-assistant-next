@@ -19,6 +19,11 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
     private CutCompletionViewModel? _completion;
     private int _index;
     private string? _loadedPath;
+    private IReadOnlyList<PlayerAudioTrack> _audioTracks = [];
+    private PlayerAudioTrack? _selectedAudioTrack;
+    public IReadOnlyList<PlayerAudioTrack> AudioTracks => _audioTracks;
+    public PlayerAudioTrack? SelectedAudioTrack => _selectedAudioTrack;
+    public bool HasMultipleAudioTracks => _audioTracks.Count > 1;
     private bool _initialized;
     private bool _busy;
     private Task? _closeTask;
@@ -66,7 +71,9 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
                     ? "Wiedergabe ab 3 Sekunden vor der zugeordneten Prüfstelle; bitte den Übergang kontrollieren."
                     : "Wiedergabe ab 3 Sekunden vor der berechneten Prüfstelle; der tatsächliche Schnitt kann abweichen."
         }) + " Bitte Bild, Ton und Tonsynchronität prüfen." +
-        (string.IsNullOrWhiteSpace(_completion?.ReviewNotice) ? string.Empty : " " + _completion.ReviewNotice);
+        (string.IsNullOrWhiteSpace(_completion?.ReviewNotice) ? string.Empty : " " +
+            (_completion.ReviewNotice.StartsWith("QUICK AND COPY:", StringComparison.Ordinal)
+                ? _completion.ReviewNotice.Split('\n')[0] : _completion.ReviewNotice));
 
     internal Task ReviewAsync(CutCompletionViewModel completion, int index, nint handle)
     {
@@ -143,6 +150,24 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
         }
         await Playback.SeekToAsync(position, token);
     });
+    internal Task SelectAudioAsync(PlayerAudioTrack track) => ExecuteAsync(async token =>
+    {
+        if (_player is not IAudioTrackSelection selection || !_audioTracks.Any(t => t.Id == track.Id) || _completion is null)
+            throw new ArgumentException("Diese Tonspur steht nicht zur Verfügung.", nameof(track));
+        await _player.PauseAsync(token);
+        await selection.SelectAudioTrackAsync(track.Id, token);
+        _selectedAudioTrack = _audioTracks.Single(t => t.Id == track.Id);
+        var point = _completion.CheckPoints[_index];
+        var position = point.Kind switch
+        {
+            CutCompletionCheckPointKind.Beginning => TimeSpan.Zero,
+            CutCompletionCheckPointKind.End => (_player.Duration ?? TimeSpan.Zero) - TimeSpan.FromSeconds(3),
+            _ => point.Position - TimeSpan.FromSeconds(3)
+        };
+        await _player.SeekAsync(position < TimeSpan.Zero ? TimeSpan.Zero : position, token);
+        await _player.PlayAsync(token);
+    });
+
     internal Task SetVolumeAsync(double volume) => ExecuteAsync(token => Playback.SetVolumeAsync(volume, token));
 
     private async Task ExecuteAsync(Func<CancellationToken, Task> action)
@@ -190,6 +215,9 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
             {
                 throw new InvalidOperationException("Die geschnittene Datei wurde nicht rechtzeitig geladen. Bitte erneut prüfen.", exception);
             }
+            _audioTracks = _player is IAudioTrackSelection audio ? await audio.GetAudioTracksAsync(token) : [];
+            _selectedAudioTrack = _audioTracks.FirstOrDefault(t => t.Selected);
+            Notify();
         }
         finally
         {
@@ -225,6 +253,9 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
 
     private void Notify()
     {
+        OnPropertyChanged(nameof(AudioTracks));
+        OnPropertyChanged(nameof(SelectedAudioTrack));
+        OnPropertyChanged(nameof(HasMultipleAudioTracks));
         OnPropertyChanged(nameof(IsIdle));
         OnPropertyChanged(nameof(CanPrevious));
         OnPropertyChanged(nameof(CanNext));

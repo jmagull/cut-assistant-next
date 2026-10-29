@@ -1,15 +1,19 @@
 # Architektur – Arbeitsstand
 
-**Arbeitsabgleich 27.10.2026: CAN 1.0.2 Build 41, otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
+**Arbeitsabgleich 29.10.2026: eingefroren CAN 1.0.2 Build 46, öffentlich Build 41; otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
 
 ## Klebecenter und Paketierung – umgesetzt
 
-- WPF: **JoinDialog/MainWindow.Join** wählen zwei ganze Filmteile, zuerst Reihenfolge, danach Tonspuren. Die Hauptplayer-Schnittliste wird nicht angewendet oder verändert.
-- **CutAssistantNext.Media/Joining/Mp4JoinService** orchestriert Prüfung, PCM-Verbindung, einmaliges AAC-Encoding, unveränderte Videokopie, Bereinigung und neue Dateiübernahme.
-- **FfprobeStreamCopyVerifier.Join** prüft rationale Uhren, Quelltonkontinuität, Bildraster, Videopakete/Zeiten und AAC-Zeitachse. **BoundedJoinToolRunner** kapselt FFmpeg-Ressourcengrenzen und Abbruch.
-- **CutResult/CutOutputTimeline** tragen geprüfte Ausgabedauer, Klebestelle und Dateiidentität. Vorhandene **CutCompletionDialog/CutReviewController** ermöglichen die Kontrolle mit drei Sekunden Vorlauf.
-- Der AAC-Notfallschnitt bleibt in **OtrCanAacEmergencyCutService/SelectedAudioSource** gesondert. Gemeinsame Prüfungen werden nicht gelockert.
-- Feste Quellsnapshots, gesperrter Restore, Publish-Manifeste, Setup/Portable und SHA-256 sind umgesetzt. Seit Build 40 zusätzlicher Abgleich zwischen Voraussetzungstext und Motorversion. Alte Archive bleiben erhalten.
+- WPF: **JoinDialog/MainWindow.Join** wählen zwei ganze Filmteile, zuerst Reihenfolge, danach Tonspuren und bewusst eines der zwei Verfahren. Die Hauptplayer-Schnittliste wird nicht angewendet oder verändert. QUICK erfordert sichtbare, eindeutige Mehrspurzuordnung und ausdrückliche Bestätigung; keine automatische Verfahrensumschaltung.
+- **QuickCopyJoinService/QuickCopyMediaProbe**: kurze Medienkopf-/Kompatibilitätsprüfung, FFmpeg concat mit `-c copy`, bei unterschiedlicher Streamanordnung nur Streamcopy-Vorbereitung. Alle gewählten kompatiblen AAC-/AC-3-Paare erhalten. Keine Vollton-/Vollvideo-/Paketprüfung oder Sampleabweichungsgrenze im QUICK-Weg. Unterschiedliche H.264-Konfigurationshashes und Werkzeugwarnungen sind allein keine Fehler.
+- Die QUICK-**Meckerecke – technische Hinweise** sammelt vorhandene Medienangaben und Werkzeugmeldungen über einen temporären Spool im bestehenden Protokoll. Keine zusätzlichen aufwendigen Prüfungen nur für Hinweise. Echte Prozess-, Ausgabe- und Dateischutzfehler bleiben Fehler.
+- **Mp4JoinService** ist AUDIO-ENTHUSIAST: genau eine Spur je Teil, strenge Prüfung, direkte geprüfte RF64-Zusammensetzung ohne zusätzliche Gesamt-PCM-Kopie, einmaliges durchgehendes AAC-LC-Encoding und unveränderte Videokopie. **FfprobeStreamCopyVerifier.Join** behält seine strengen Uhren-/Audio-/Raster-/Paketprüfungen. Alte QUICK-Verifikationshelfer bleiben samt Tests als historische Prüflogik erhalten, werden vom pragmatischen Produktweg nicht aufgerufen.
+- **JoinPhaseTimer** protokolliert Phasenzeiten. **BoundedJoinToolRunner** kapselt FFmpeg-Ressourcengrenzen und Abbruch für beide Dienste.
+- **CutResult/CutOutputTimeline** tragen Ausgabedauer, Prüfstellen und Dateiidentität. QUICK meldet die Naht als **Estimated** aus der Concat-Containerlaufzeit, AUDIO-ENTHUSIAST behält nachgewiesene Zeiten. **CutCompletionDialog/CutReviewController** ermöglichen drei Sekunden Vorlauf und Tonspurwahl anhand tatsächlicher libmpv-IDs; Auswahl wird zurückgelesen.
+- Der AAC-Notfallschnitt bleibt in **OtrCanAacEmergencyCutService/SelectedAudioSource** gesondert. Gemeinsame strenge Prüfungen und der eigenständige Tonspurkopiedienst bleiben unverändert; dessen zusätzlicher Menüeintrag ist ausgeblendet und für spätere Werkzeuge vorgemerkt.
+- Feste Quellsnapshots, gesperrter Restore, Publish-Manifeste, Setup/Portable und SHA-256 sind umgesetzt. Seit Build 40 zusätzlicher Abgleich zwischen Voraussetzungstext und Motorversion. Nach Erfolg bekannte Arbeitsdateien löschen, bei Fehler/Abbruch Diagnose erhalten; unbekannte Inhalte nicht löschen. Alte Archive bleiben erhalten. Paketstand Build 46 ohne neue Veröffentlichungsfreigabe.
+
+[Verfahren, Nachweise und Grenzen](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md), [Paketprüfung](RELEASE-1.0.2-BUILD46-RESULT.md).
 
 Die folgenden POC-Abschnitte erläutern Grundarchitektur und Entstehung.
 

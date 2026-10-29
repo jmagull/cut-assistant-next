@@ -194,29 +194,92 @@ public sealed class Mp4JoinTests : IDisposable
         Assert.Throws<InvalidDataException>(() => FfprobeStreamCopyVerifier.ValidateJoinCompatibility(first, second));
     }
 
+    private static JoinPart PcmPart(int channels = 2, string layout = "stereo", int rate = 48000) =>
+        new("unused", 1, 0, 12800, 0, 25, rate, channels, layout, "deu", "unused", 0);
+
     [Fact]
-    public async Task PcmJoinRetainsEverySampleAtTheBoundaryInSelectedOrder()
+    public async Task DirectWaveRetainsEverySampleAtTheBoundaryAndTheOriginals()
     {
         var first = Path.Combine(_root, "one.pcm"); var second = Path.Combine(_root, "two.pcm");
-        var output = Path.Combine(_root, "result.pcm");
-        var a = Enumerable.Range(0, 4097).Select(i => (byte)(i % 251)).ToArray();
-        var b = new byte[] { 99, 98, 97, 96, 95 };
+        var output = Path.Combine(_root, "result.wav");
+        var a = Enumerable.Range(0, 4096).Select(i => (byte)(i % 251)).ToArray();
+        byte[] b = [99, 98, 97, 96, 95, 94, 93, 92];
         await File.WriteAllBytesAsync(first, a); await File.WriteAllBytesAsync(second, b);
-        await Mp4JoinService.JoinPcmAsync([first, second], output, CancellationToken.None);
-        Assert.Equal(a.Concat(b), await File.ReadAllBytesAsync(output));
+        await Mp4JoinService.JoinWaveAsync([first, second], output, PcmPart(), (a.Length + b.Length) / 8, CancellationToken.None);
+        Assert.Equal(a.Concat(b), (await File.ReadAllBytesAsync(output)).Skip(104));
         Assert.Equal(a, await File.ReadAllBytesAsync(first));
+        Assert.Equal(b, await File.ReadAllBytesAsync(second));
+    }
+
+    [Theory]
+    [InlineData(1, "mono", 4u)]
+    [InlineData(2, "stereo", 3u)]
+    [InlineData(6, "5.1", 63u)]
+    [InlineData(6, "5.1(side)", 1551u)]
+    public void Rf64HeaderRetains64BitSizesSamplesAndExplicitChannelMask(int channels, string layout, uint mask)
+    {
+        var bytes = ((long)uint.MaxValue / (channels * 4) + 1) * channels * 4;
+        var header = Mp4JoinService.WaveHeader(bytes, PcmPart(channels, layout));
+        Assert.Equal(104, header.Length);
+        Assert.Equal("RF64", System.Text.Encoding.ASCII.GetString(header, 0, 4));
+        Assert.Equal(uint.MaxValue, BitConverter.ToUInt32(header, 4));
+        Assert.Equal((ulong)bytes + 96, BitConverter.ToUInt64(header, 20));
+        Assert.Equal((ulong)bytes, BitConverter.ToUInt64(header, 28));
+        Assert.Equal((ulong)bytes / (uint)(channels * 4), BitConverter.ToUInt64(header, 36));
+        Assert.Equal(48000u, BitConverter.ToUInt32(header, 60));
+        Assert.Equal(mask, BitConverter.ToUInt32(header, 76));
+        Assert.Equal(uint.MaxValue, BitConverter.ToUInt32(header, 100));
+    }
+
+    [Theory]
+    [InlineData("short")]
+    [InlineData("extra")]
+    [InlineData("unaligned")]
+    [InlineData("missing")]
+    public async Task DirectWaveRejectsMissingOrIncorrectPcmData(string kind)
+    {
+        var a = Path.Combine(_root, "a.pcm"); var b = Path.Combine(_root, "b.pcm");
+        File.WriteAllBytes(a, new byte[8]);
+        if (kind != "missing") File.WriteAllBytes(b, new byte[kind == "short" ? 0 : kind == "extra" ? 16 : 7]);
+        var operation = () => Mp4JoinService.JoinWaveAsync([a, b], Path.Combine(_root, "bad.wav"), PcmPart(), 2, CancellationToken.None);
+        if (kind == "missing") await Assert.ThrowsAsync<FileNotFoundException>(operation);
+        else await Assert.ThrowsAsync<InvalidDataException>(operation);
+    }
+
+    [Theory]
+    [InlineData("header")]
+    [InlineData("payload")]
+    [InlineData("truncated")]
+    [InlineData("appended")]
+    public async Task IndependentWaveReadbackRejectsChangedHeaderPayloadOrLength(string change)
+    {
+        var a = Path.Combine(_root, "a.pcm"); var b = Path.Combine(_root, "b.pcm"); var output = Path.Combine(_root, "out.wav");
+        File.WriteAllBytes(a, new byte[8]); File.WriteAllBytes(b, new byte[8]);
+        await Mp4JoinService.JoinWaveAsync([a, b], output, PcmPart(), 2, CancellationToken.None);
+        var data = File.ReadAllBytes(output);
+        if (change == "header") data[76] ^= 1;
+        if (change == "payload") data[^1] ^= 1;
+        if (change == "truncated") data = data[..^1];
+        if (change == "appended") data = [.. data, 0];
+        File.WriteAllBytes(output, data);
+        await Assert.ThrowsAsync<InvalidDataException>(() => Mp4JoinService.VerifyWaveAsync(output, PcmPart(), 2,
+            System.Security.Cryptography.SHA256.HashData(new byte[16]), CancellationToken.None));
     }
 
     [Fact]
-    public async Task PcmJoinDoesNotReplaceAnExistingFileAndHonoursCancellation()
+    public async Task DirectWaveDoesNotOverwriteAndHonoursCancellationBeforeCreatingOutput()
     {
-        var existing = Path.Combine(_root, "existing.pcm"); File.WriteAllText(existing, "keep");
-        await Assert.ThrowsAsync<IOException>(() => Mp4JoinService.JoinPcmAsync([], existing, CancellationToken.None));
+        var a = Path.Combine(_root, "a.pcm"); var b = Path.Combine(_root, "b.pcm"); var existing = Path.Combine(_root, "existing.wav");
+        File.WriteAllBytes(a, new byte[8]); File.WriteAllBytes(b, new byte[8]); File.WriteAllText(existing, "keep");
+        await Assert.ThrowsAsync<IOException>(() => Mp4JoinService.JoinWaveAsync([a, b], existing, PcmPart(), 2, CancellationToken.None));
         Assert.Equal("keep", File.ReadAllText(existing));
         using var cancel = new CancellationTokenSource(); cancel.Cancel();
-        var source = Path.Combine(_root, "source.pcm"); File.WriteAllBytes(source, [1, 2]);
+        var output = Path.Combine(_root, "cancelled.wav");
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            Mp4JoinService.JoinPcmAsync([source], Path.Combine(_root, "cancelled.pcm"), cancel.Token));
+            Mp4JoinService.JoinWaveAsync([a, b], output, PcmPart(), 2, cancel.Token));
+        Assert.False(File.Exists(output));
+        await Assert.ThrowsAsync<OverflowException>(() =>
+            Mp4JoinService.JoinWaveAsync([a, b], output, PcmPart(), long.MaxValue, CancellationToken.None));
     }
 
     [Theory]

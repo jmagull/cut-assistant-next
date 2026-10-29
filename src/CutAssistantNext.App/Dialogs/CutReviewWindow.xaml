@@ -5,6 +5,7 @@
         Title="Geschnittenen Film prüfen" Width="880" Height="660" MinWidth="600" MinHeight="480"
         WindowStartupLocation="CenterOwner" Background="#F4F6F8" PreviewKeyDown="Window_PreviewKeyDown">
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="AudioVisibility" />
         <Style TargetType="Button">
             <Setter Property="Padding" Value="14,8" />
             <Setter Property="MinHeight" Value="38" />
@@ -28,6 +29,12 @@
             <controls:MpvVideoHost x:Name="VideoHost" />
         </Border>
         <StackPanel Grid.Row="2" IsEnabled="{Binding IsIdle}">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8" Visibility="{Binding HasMultipleAudioTracks, Converter={StaticResource AudioVisibility}}">
+                <TextBlock Text="Tonspur prüfen:" VerticalAlignment="Center" Margin="0,0,10,0" />
+                <ComboBox x:Name="ReviewAudio" Width="420" ItemsSource="{Binding AudioTracks}" DisplayMemberPath="Description"
+                          SelectedItem="{Binding SelectedAudioTrack, Mode=OneWay}" SelectionChanged="ReviewAudio_SelectionChanged"
+                          AutomationProperties.Name="Tonspur im Kontrollplayer auswählen; Prüfstelle erneut abspielen" />
+            </StackPanel>
             <StackPanel DataContext="{Binding Playback}">
                 <Slider x:Name="PositionSlider" Minimum="0" Maximum="{Binding DurationSeconds}"
                         Value="{Binding TimelinePositionSeconds, Mode=OneWay}" IsEnabled="{Binding CanSeek}"

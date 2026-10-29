@@ -13,6 +13,9 @@ internal interface ILibMpvClient : IAsyncDisposable
         IReadOnlyList<string> arguments,
         CancellationToken cancellationToken = default);
 
+    Task<string?> GetStringPropertyAsync(string propertyName, CancellationToken cancellationToken = default) =>
+        Task.FromResult<string?>(null);
+
     Task ObservePropertyAsync(
         string propertyName,
         CancellationToken cancellationToken = default);

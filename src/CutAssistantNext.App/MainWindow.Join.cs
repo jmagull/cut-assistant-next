@@ -23,7 +23,9 @@ public partial class MainWindow
             var ffmpeg = resolver.Resolve(BundledToolKind.Ffmpeg, settings.FfmpegExecutablePath);
             var ffprobe = resolver.Resolve(BundledToolKind.Ffprobe, settings.FfprobeExecutablePath);
             var selection = new JoinDialog(ffprobe) { Owner = this };
-            if (selection.ShowDialog() != true || selection.Request is not { } request) return;
+            if (selection.ShowDialog() != true || selection.Request is null && selection.QuickRequest is null) return;
+            var request = selection.Request;
+            var quickRequest = selection.QuickRequest;
             var viewModel = new Mp4BoxProgressViewModel();
             using var cancel = new CancellationTokenSource();
             var progress = new BufferedCutProgressReporter(viewModel.ApplyProgress);
@@ -37,7 +39,18 @@ public partial class MainWindow
                 started = true; viewModel.MarkRunning();
                 try
                 {
-                    result = await Task.Run(() => new Mp4JoinService(ffmpeg, ffprobe).RunAsync(request, progress, cancel.Token));
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
+                    if (quickRequest is not null)
+                        result = await Task.Run(() => new QuickCopyJoinService(ffmpeg, ffprobe).RunAsync(quickRequest, progress, cancel.Token));
+                    else
+                    {
+                        result = await Task.Run(() => new Mp4JoinService(ffmpeg, ffprobe).RunAsync(request!, progress, cancel.Token));
+                        watch.Stop();
+                        var total = $"Gesamtzeit AUDIO-ENTHUSIAST: {watch.Elapsed:hh\\:mm\\:ss\\.ff}.";
+                        progress.Report(new(CutProgressKind.Status, total));
+                        result = new(result.OutputFilePath, result.Timeline, result.TimingKind,
+                            "AUDIO-ENTHUSIAST – NEUKODIERUNG. " + result.Notice + "\n" + total);
+                    }
                     progress.Flush(); viewModel.MarkSucceeded();
                 }
                 catch (OperationCanceledException)

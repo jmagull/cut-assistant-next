@@ -47,6 +47,12 @@ internal partial class CutReviewWindow : Window
         }
     }
 
+    private async void ReviewAudio_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (_viewModel.IsIdle && ReviewAudio.SelectedItem is PlayerAudioTrack track && track.Id != _viewModel.SelectedAudioTrack?.Id)
+            await RunAsync(() => _viewModel.SelectAudioAsync(track));
+    }
+
     private async void PreviousButton_Click(object sender, RoutedEventArgs e) =>
         await RunAsync(() => _viewModel.MoveAsync(-1, VideoHost.VideoWindowHandle));
     private async void NextButton_Click(object sender, RoutedEventArgs e) =>

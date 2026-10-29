@@ -1,20 +1,25 @@
 # Nutzeranleitung – Cut Assistant Next
 
-**Stand 27.10.2026: CAN 1.0.2 Build 41, otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** CAN 1.0.2 Build 41 ist seit 27.10.2026 als v1.0.2 / Latest veröffentlicht. [Release und Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2). [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
+**Stand 29.10.2026: stabil CAN 1.0.2 Build 41; bestätigter, technisch geprüfter und eingefrorener Paketsatz Build 46; Nachweise siehe [Paketbericht](RELEASE-1.0.2-BUILD46-RESULT.md); otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** CAN 1.0.2 Build 41 ist seit 27.10.2026 als v1.0.2 / Latest veröffentlicht. [Release und Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2). [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
 
 ## Klebecenter – zwei fertige Filmteile verbinden
 
-1. **Klebecenter → Filmteile zusammenfügen …** öffnen. Der Hauptplayer muss keine Datei geladen haben.
-2. Zwei bereits geschnittene MP4-Dateien im Klebecenter auswählen und ihre Reihenfolge festlegen. „Reihenfolge tauschen“ vertauscht Dateien samt zugehöriger Tonspurauswahl.
-3. Danach die gewünschte Tonspur je Teil auswählen. Bei mehreren Spuren keine Vorauswahl; Sprache, Codec, Kanäle, Abtastrate und entfallende Spuren sind sichtbar.
-4. **Prüfen und zusammenfügen …** wählen und eine neue MP4-Ausgabedatei festlegen. Vorhandene Dateien werden nicht ersetzt.
-5. Nach technischer Prüfung **Übergang 1 → Prüfen** im Abschlussdialog öffnen. Start drei Sekunden vor der tatsächlichen Klebestelle; Bild, Ton und Synchronität prüfen. Anfang und Ende ebenfalls kontrollieren.
+**Die zwei Verfahren und die Tonspurwahl im Kontrollplayer gelten für die lokale Prüffassung ab Build 43; QUICK arbeitet ab Build 46 pragmatisch. Der veröffentlichte Build 41 hat weiterhin den bisherigen einzelnen Neukodierungsweg („Prüfen und zusammenfügen …“).**
 
-Ganze Filmteile werden übernommen; Cutlists werden nicht erneut angewendet. Keine zusätzliche Tonspurkopie nötig. Der frühere Menüpunkt „Tonspuren“ ist durch das Klebecenter ersetzt. Hauptplayer-Zustand und Originaldateien bleiben erhalten.
+1. **Klebecenter → Filmteile zusammenfügen …** öffnen. Eine Datei muss nicht vorher im Hauptplayer geladen sein.
+2. Zwei bereits geschnittene MP4-Dateien wählen und ihre Reihenfolge festlegen. „Reihenfolge tauschen“ nimmt die Spurauswahl mit; die QUICK-Zuordnung danach erneut bestätigen.
+3. Für **QUICK AND COPY** die vorgeschlagenen Tonspurpaare prüfen. Jede Quelltonspur darf nur einmal zugeordnet werden. Nicht benötigte Paare abwählen und die Zuordnung anschließend erneut bestätigen. Ab Entwicklungsbuild 45 erklärt der Haken zusätzlich: **„nur bei übereinstimmendem Tonformat“**. Eindeutig passende AAC- und AC-3-Spuren werden gemeinsam vorgeschlagen, etwa beide Furiosa-Spuren. Je Paar kann die passende Spur des zweiten Teils bewusst gewählt werden. Bei John Wick bleibt nur die gemeinsame AAC-Spur; die entfallende AC-3-Spur von Teil 1 wird genannt. Fehlende Spuren werden nicht ergänzt. Zuordnung und entfallende Spuren mit dem Bestätigungsfeld ausdrücklich bestätigen.
+4. Für **AUDIO-ENTHUSIAST – NEUKODIERUNG** stattdessen genau eine Tonspur je Teil wählen. Bei mehreren Spuren gibt es dafür keine Vorauswahl. Dieser bisherige Ablauf erlaubt auch unterschiedliche Quellcodecs wie AC-3/AAC, sofern Kanalbelegung und Abtastrate passen.
+5. Die gewünschte Schaltfläche bewusst drücken und eine neue MP4-Ausgabedatei festlegen. Keine Verfahrensvoreinstellung, kein Enter-Standard, keine automatische Umschaltung bei Fehlern. Vorhandene Dateien werden nicht ersetzt.
+6. Nach Abschluss Anfang, **Übergang 1 → Prüfen** und Ende kontrollieren. Die Vorschau startet drei Sekunden vor der Übergangsposition; bei QUICK ist diese aus den Containerangaben angenähert. Bei mehreren erhaltenen Tonspuren im Kontrollfenster **Tonspur prüfen** umstellen; die gleiche Prüfstelle wird mit der gewählten Spur erneut abgespielt.
 
-Bild bleibt unverändert. Gewählter Ton wird vollständig streng dekodiert, samplegenau verbunden und einmal durchgehend als AAC-LC neu kodiert. **AAC/AAC und AC-3/AAC sind persönlich positiv geprüft**; Quellcodecs müssen nicht gleich sein. Beide Spuren brauchen passende Kanäle/Abtastrate und jeweils den vollständigen Bildzeitraum.
+**QUICK AND COPY (ab Build 46):** Zwei Filmteile mit FFmpeg concat und `-c copy` verbinden. Video und alle bestätigten kompatiblen AAC-/AC-3-Spurpaare werden ohne Neukodierung übernommen. Keine vollständige PCM-/Paketidentitätsprüfung oder obligatorische Vollvideodekodierung, keine samplegenaue Zusage. Kleine oder vorhandene Zeitstempelunregelmäßigkeiten, unterschiedliche H.264-Decoderparameter und zusätzliche Audiosamples sind allein keine Ablehnungsgründe. Alle vorhandenen technischen Hinweise und FFmpeg-Warnungen stehen im eigenen Protokollabschnitt **„Meckerecke – technische Hinweise“**; dafür werden keine zusätzlichen Vollprüfungen gestartet. Das Protokoll lässt sich im Abschlussdialog öffnen/kopieren. Echte Prozessfehler, unlesbare Ausgaben, falsche Spurzuordnung und gefährdete Originaldateien brechen weiterhin ab. Bitte Bild und Ton insbesondere an der Klebestelle selbst kontrollieren.
 
-Erste Fassung: genau zwei passende progressive H.264-MP4-Dateien mit konstanten 25/50 Bildern/s, AAC-/AC-3-Spuren, 44100/48000 Hz und unterstützter Mono-/Stereo-/5.1-Belegung. Keine automatische Reparatur, Zeitkorrektur, Abtastratenwandlung oder Video-Neukodierung. Platz für PCM- und Prüfdateien erforderlich. [Grenzen und Nachweise](KLEBECENTER-20261027.md).
+**AUDIO-ENTHUSIAST:** ausgewählte Spuren vollständig streng dekodieren, direkt als geprüftes RF64 samplegenau verbinden und einmal durchgehend als AAC-LC neu kodieren. Alle bisherigen Paket-, Sample-, Zeitachsen- und Decoderprüfungen bleiben bestehen. Ergebnis mit genau einer Tonspur. Die AAC-Kodierung ist verlustbehaftet.
+
+Bei beiden Verfahren bleibt das passende H.264-Bild unverändert. Ganze Filmteile werden übernommen; Cutlists werden nicht erneut angewendet. Originale und Hauptplayer-Zustand bleiben erhalten. Genau zwei H.264-MP4-Dateien mit passenden Bildformaten und vorhandenen, eindeutig zugeordneten Tonspuren verwenden. QUICK verlangt kompatible AAC-/AC-3-Paare. AUDIO-ENTHUSIAST behält zusätzlich seine bisherigen Anforderungen an konstante 25/50 fps, 44100/48000 Hz und unterstützte Kanalbelegung. Keine automatische Videoreparatur oder Abtastratenwandlung. Freier Platz für Ausgabe und gegebenenfalls Vorbereitung erforderlich; im strengen Verfahren zusätzlich für PCM/RF64. Nach Erfolg bekannte Arbeitsdateien aufräumen, bei Fehler/Abbruch Diagnose erhalten. [Aktuelle QUICK-Regeln und Nachweise](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md), [Herkunft des bisherigen Verfahrens](KLEBECENTER-20261027.md).
+
+**Menü ab Entwicklungsbuild 44:** Im Klebecenter gibt es nur **Filmteile zusammenfügen …**. Tonspuren werden direkt in diesem Dialog gewählt; eine Vorbereitungskopie ist nicht erforderlich. Der separate Eintrag **Tonspur für Filmteile auswählen …** wurde entfernt. Seine bisherige Funktion bleibt im Code für eine mögliche spätere Werkzeugrubrik erhalten. Die bereits erstellten Build-43-Pakete enthalten den alten zusätzlichen Eintrag weiterhin.
 
 ## AAC-Notfallweg beim otr-can-Schnitt
 
@@ -29,7 +34,7 @@ Build 39 enthielt Motor 0.1.6, nannte im Voraussetzungstext aber 0.1.5. Build 40
 <details>
 <summary>Historische Vorbereitung in Build 38: separate Tonspurkopie</summary>
 
-Build 38 bot **Tonspuren → Tonspur für Filmteile auswählen …**, um eine zusätzliche MP4 mit einer gewählten AAC-/AC-3-Spur ohne Neukodierung für externes Kleben vorzubereiten. Dieser gesonderte Bedienweg ist im aktuellen Menü nicht mehr nötig. [Historischer Bericht](TONSPURAUSWAHL-FILMTEILE-20261026.md).
+Build 38 bot **Tonspuren → Tonspur für Filmteile auswählen …**, um eine zusätzliche MP4 mit einer gewählten AAC-/AC-3-Spur ohne Neukodierung für externes Kleben vorzubereiten. In Build 39–42 war dieser gesonderte Menüweg nicht mehr sichtbar; Build 43 machte ihn zusätzlich wieder erreichbar. Ab Entwicklungsbuild 44 ist er auf Nutzerwunsch wieder aus dem Klebecenter-Menü entfernt. Der Kopierdienst bleibt unverändert erhalten. [Historischer Bericht](TONSPURAUSWAHL-FILMTEILE-20261026.md).
 
 </details>
 
@@ -565,4 +570,4 @@ Nach Erfolg werden temporäre Dateien, Erfolgsprotokoll und leerer Arbeitsordner
 
 ## Mitgelieferten Motor nach Überinstallation prüfen
 
-Der aktuelle Paketsatz enthält **otr-can 0.1.6** unter **tools/otr-can/otr_can.exe**. Unter **Einstellungen → OTR-CAN-Werkzeuge** den Pfad auf diese mitgelieferte EXE setzen. Eine übernommene Einstellung kann weiterhin auf eine ältere Kopie zeigen. Die Versionsprüfung muss **0.1.6** melden. Das Klebecenter verwendet die konfigurierten FFmpeg-Werkzeuge; je Teil wird genau eine gewählte Tonspur übernommen und der verbundene Ton einmal als AAC-LC kodiert.
+Der aktuelle Paketsatz enthält **otr-can 0.1.6** unter **tools/otr-can/otr_can.exe**. Unter **Einstellungen → OTR-CAN-Werkzeuge** den Pfad auf diese mitgelieferte EXE setzen. Eine übernommene Einstellung kann weiterhin auf eine ältere Kopie zeigen. Die Versionsprüfung muss **0.1.6** melden. Das Klebecenter verwendet die konfigurierten FFmpeg-Werkzeuge. Der veröffentlichte Build 41 und lokal AUDIO-ENTHUSIAST verwenden genau eine gewählte Spur je Teil mit durchgehender AAC-LC-Neukodierung; QUICK AND COPY ab lokalem Build 43 erhält die bestätigten kompatiblen AAC-/AC-3-Paare ohne Neukodierung.

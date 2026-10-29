@@ -4,7 +4,7 @@ using CutAssistantNext.Media.Playback.Interop;
 
 namespace CutAssistantNext.Media.Playback;
 
-public sealed class MpvMediaPlayerService : IMediaPlayerService
+public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioTrackSelection
 {
     private const string TimePositionProperty = "time-pos";
     private const string DurationProperty = "duration";

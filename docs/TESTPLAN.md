@@ -1,8 +1,20 @@
 # Testplan – aktueller Funktionsstand
 
-**Stand 27.10.2026: CAN 1.0.2 Build 41, Motor 0.1.6.** [Versionen](VERSIONEN.md), [Paketbericht](RELEASE-1.0.2-BUILD41-RESULT.md).
+**Stand 29.10.2026: eingefroren CAN 1.0.2 Build 46, öffentlich Build 41, Motor 0.1.6.** [Versionen](VERSIONEN.md), [Paketbericht](RELEASE-1.0.2-BUILD46-RESULT.md).
 
-## Technische Basis
+## Aktuelle Build-46-Prüfung
+
+- Entwicklung: 1576 Tests, 27 native QUICK- und 21 bisherige Enthusiast-Fälle bestanden. Paket-DLLs nach Publish erneut gezielt prüfen.
+- QUICK: beide kompatiblen AAC-/AC-3-Spuren automatisch vorschlagen, bestätigen und erhalten; unterschiedliche Streamanordnung und bewusste Einzelwahl prüfen. Fehlende/doppelte Zuordnung, unpassende Formate und Überschreibversuche verhindern.
+- QUICK-Warnungen einschließlich unbekannter FFmpeg-Meldungen und vorhandener Zeitstempel-/H.264-/Laufzeitabweichungen nur dokumentieren. Meckerecke vorhanden; keine zusätzlichen Vollprüfungen und keine Neukodierung. Erfolgreiche lesbare Ausgabe trotz Hinweisen akzeptieren.
+- Echte Prozessfehler, leere/unlesbare oder falsch zugeordnete Ausgabe und Abbruch weiterhin negativ testen. Originale erhalten, bei Erfolg aufräumen, bei Fehler Diagnose behalten.
+- AUDIO-ENTHUSIAST: bisherige strenge Prüfungen, RF64 und AAC-Neukodierung unverändert; neun erfolgreiche Ausgaben bytegleich zur Build-45-Referenz. Keine automatische Umstellung.
+- Kompiliertes Menü, Paarbestätigung/-änderung/-tausch, Textumbruch, beide Methoden und Kontrollplayer mit tatsächlicher Tonspurumschaltung prüfen.
+- Persönlich positiv: Furiosa und John Wick aus jeweils neuen MP4Box-Teilen, beide AAC+AC-3, Bild/Ton/Klebestelle/Drei-Sekunden-Vorschau; 23,74 bzw. 16,44 s. Weitere automatisch erzeugte Referenzen und neue Setup-/ZIP-/VM-Abnahme getrennt halten.
+
+[Entwicklung und persönliche Praxis](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md), [Freeze](FREEZE-1.0.2-BUILD46-20261029.md).
+
+## Historische technische Basis Build 41
 
 **1489/1489 Pakettests**, zusätzlich **925 App-/292 Medientests** gegen finale DLLs, 0 Warnungen/Fehler. Build 41 ergänzt nur die Bereinigung nach Erfolg und vier Regressionstests. 21 native Klebecenter-Fälle mit finalen DLLs prüfen Erfolg, Fehler und Abbruch samt Aufräumregel; zehn frühere Notfall-/Kopiefälle stammen aus Build 39 und wurden für diese Korrektur nicht erneut ausgeführt.
 

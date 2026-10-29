@@ -9,6 +9,48 @@ namespace CutAssistantNext.Media.Tests;
 public sealed class MpvMediaPlayerServiceTests
 {
     [Fact]
+    public async Task AudioTrackSelectionUsesRealMpvIdsAndVerifiesReadback()
+    {
+        var client = new StubLibMpvClient();
+        client.StringProperties["track-list/count"] = "3";
+        client.StringProperties["track-list/0/type"] = "video";
+        client.StringProperties["track-list/1/type"] = "audio"; client.StringProperties["track-list/1/id"] = "7";
+        client.StringProperties["track-list/1/codec"] = "aac"; client.StringProperties["track-list/1/lang"] = "deu";
+        client.StringProperties["track-list/1/selected"] = "yes";
+        client.StringProperties["track-list/2/type"] = "audio"; client.StringProperties["track-list/2/id"] = "11";
+        client.StringProperties["track-list/2/codec"] = "ac3";
+        client.StringProperties["aid"] = "11";
+        await using var service = new MpvMediaPlayerService(client);
+        await service.InitializeAsync(123);
+        var tracks = await service.GetAudioTracksAsync();
+        Assert.Equal(new[] { 7, 11 }, tracks.Select(t => t.Id));
+        Assert.Contains("AAC", tracks[0].Description); Assert.True(tracks[0].Selected);
+        await service.SelectAudioTrackAsync(11);
+        Assert.Equal(new[] { "set", "aid", "11" }, Assert.Single(client.Commands));
+        await Assert.ThrowsAsync<ArgumentException>(() => service.SelectAudioTrackAsync(1));
+        client.StringProperties["aid"] = "7";
+        await Assert.ThrowsAsync<InvalidOperationException>(() => service.SelectAudioTrackAsync(11));
+    }
+
+    [Theory]
+    [InlineData("-1")]
+    [InlineData("129")]
+    public async Task RejectsInvalidAudioTrackInventory(string count)
+    {
+        var client = new StubLibMpvClient(); client.StringProperties["track-list/count"] = count;
+        await using var service = new MpvMediaPlayerService(client); await service.InitializeAsync(123);
+        await Assert.ThrowsAsync<InvalidDataException>(() => service.GetAudioTracksAsync());
+    }
+
+    [Fact]
+    public async Task AudioSelectionHonorsCancellation()
+    {
+        await using var service = new MpvMediaPlayerService(new StubLibMpvClient()); await service.InitializeAsync(123);
+        using var cancel = new CancellationTokenSource(); cancel.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => service.GetAudioTracksAsync(cancel.Token));
+    }
+
+    [Fact]
     public async Task InitializeAsync_InitializesClientAndObservesProperties()
     {
         var client = new StubLibMpvClient();
@@ -820,12 +862,18 @@ public sealed class MpvMediaPlayerServiceTests
         public List<string> ObservedProperties { get; } = [];
 
         public List<string[]> Commands { get; } = [];
+        public Dictionary<string, string?> StringProperties { get; } = [];
+        public Task<string?> GetStringPropertyAsync(string propertyName, CancellationToken cancellationToken = default)
+        { cancellationToken.ThrowIfCancellationRequested(); return Task.FromResult(StringProperties.GetValueOrDefault(propertyName)); }
+
 
         public List<(string Name, bool Value)>
-            BooleanPropertyCalls { get; } = [];
+            BooleanPropertyCalls
+        { get; } = [];
 
         public List<(string Name, double Value)>
-            DoublePropertyCalls { get; } = [];
+            DoublePropertyCalls
+        { get; } = [];
 
         public bool IsDisposed { get; private set; }
 

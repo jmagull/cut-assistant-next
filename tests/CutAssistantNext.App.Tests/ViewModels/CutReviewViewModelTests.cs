@@ -373,9 +373,36 @@ public sealed class CutReviewViewModelTests
         finally { File.Delete(path); }
     }
 
-    private sealed class Player : IMediaPlayerService
+    [Fact]
+    public async Task ReviewAudioSelectionReplaysSameSpliceWithThreeSecondPreroll()
+    {
+        var p = new Player { AudioTracks = [new(7, "AAC", true), new(11, "AC3", false)] };
+        await using var model = new CutReviewViewModel(p, _ => true);
+        await model.ReviewAsync(Completion(), 1, 123);
+        Assert.True(model.HasMultipleAudioTracks); Assert.Equal(7, model.SelectedAudioTrack!.Id);
+        await model.SelectAudioAsync(model.AudioTracks[1]);
+        Assert.Equal(11, model.SelectedAudioTrack!.Id);
+        Assert.Equal(new[] { "pause", "audio:11", "seek:7", "play" }, p.Commands.TakeLast(4));
+        await Assert.ThrowsAsync<ArgumentException>(() => model.SelectAudioAsync(new(99, "not present", false)));
+    }
+
+    [Fact]
+    public async Task SingleAudioTrackDoesNotShowUnnecessaryReviewSelection()
+    {
+        var p = new Player { AudioTracks = [new(1, "AAC", true)] };
+        await using var model = new CutReviewViewModel(p, _ => true);
+        await model.ReviewAsync(Completion(), 0, 123);
+        Assert.False(model.HasMultipleAudioTracks);
+    }
+
+    private sealed class Player : IMediaPlayerService, IAudioTrackSelection
     {
         internal readonly List<string> Commands = [];
+        internal IReadOnlyList<PlayerAudioTrack> AudioTracks { get; init; } = [];
+        public Task<IReadOnlyList<PlayerAudioTrack>> GetAudioTracksAsync(CancellationToken token = default) => Task.FromResult(AudioTracks);
+        public Task SelectAudioTrackAsync(int id, CancellationToken token = default)
+        { token.ThrowIfCancellationRequested(); Commands.Add("audio:" + id); return Task.CompletedTask; }
+
         internal bool DeferredLoad { get; set; }
         internal string? BlockPhase { get; init; }
         private bool _running;

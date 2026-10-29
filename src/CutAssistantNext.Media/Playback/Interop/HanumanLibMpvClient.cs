@@ -115,6 +115,23 @@ internal sealed class HanumanLibMpvClient : ILibMpvClient
         }
     }
 
+    public async Task<string?> GetStringPropertyAsync(string propertyName, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
+        cancellationToken.ThrowIfCancellationRequested();
+        var context = GetContext();
+        // The bundled wrapper's async getter throws on its event thread for unavailable optional
+        // metadata. Use libmpv's synchronous getter off the UI thread and handle only that status.
+        return await Task.Run(() =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            try { return context.GetPropertyString(propertyName); }
+            catch (MpvException error) when (error.Code == (int)MpvError.PropertyUnavailable ||
+                error.Code == (int)MpvError.PropertyNotFound)
+            { return null; }
+        }, cancellationToken).ConfigureAwait(false);
+    }
+
     public Task ObservePropertyAsync(
         string propertyName,
         CancellationToken cancellationToken = default)

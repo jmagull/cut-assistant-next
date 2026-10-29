@@ -1,5 +1,78 @@
 # Entwicklungstagebuch
 
+## 29.10.2026 – Build-46-Paketsatz vollständig geprüft und schreibgeschützt
+
+Setup, Portable und Quellen ausschließlich aus manifestiertem Snapshot erstellt: 697 Quelldateien/698 Quellen-ZIP-Dateien, 250 Portable-Dateien. 1576 Pakettests plus 1304 Tests gegen finale DLLs, 27 native QUICK-/21 Enthusiast-Fälle, neun bytegleiche Neukodierungsausgaben und vier Hinweisfälle sowie Menü-/Dialog-/Playerprüfungen positiv. Datei-/Motorversion 1.0.2.46/0.1.6 bestätigt; Quellen, Lizenzen und Prüfsummen vorhanden. Acht Auslieferungsdateien und 698 Snapshot-Dateien schreibgeschützt; alle 373 Produkt-/Testdateien und 50 geschützten Ursprungsdateien unverändert. Persönliche Entwicklungsfälle positiv; neue Setup-/Portable-/VM-Abnahme separat offen. Commit/Push folgen gemäß Auftrag; Veröffentlichung erst nach neuer Ansage. [Paketbericht](RELEASE-1.0.2-BUILD46-RESULT.md).
+
+## 29.10.2026 – Build 46 eingefroren, Paketierung und Git-Abgleich beauftragt
+
+Nach zwei persönlichen positiven MP4Box-Mehrspurläufen Auftrag zum Freeze, Dokumentationsabgleich, Setup/Portable/Quellen und anschließend Commit/Push. Produktlogik und Buildzähler 46 unverändert gesichert; Motor 0.1.6, libmpv 0.41.0. Vier vorbestehende Produktions-Locks erhalten und ausgeschlossen, frühere Pakete gesichert. Veröffentlichung erst nach erneuter Ansage. [Paketprüfung](RELEASE-1.0.2-BUILD46-RESULT.md).
+
+## 29.10.2026 – Build 46: John Wick aus neuen MP4Box-Teilen persönlich positiv
+
+Nach Neuerzeugung beider Teile mit MP4Box QUICK AND COPY mit AAC und AC-3 gemeinsam erfolgreich. Concat 12,190 s, Dateiidentität 3,973 s, insgesamt **16,440 s** (Anzeige 16,43 s). Ausgabe **John Wick Kapitel 4 MP4Box - zusammengefügt.mp4**, berechneter Übergang 01:57:34.480, Ausgabedauer 02:38:46.397. Nutzer bestätigt Ton/Bild/Übergang/Klebestelle/Drei-Sekunden-Vorschau. Warnungen und Laufzeitunterschiede in der Meckerecke, Ausgabeprüfung und Bereinigung erfolgreich. Eigenständiger zweiter persönlicher MP4Box-Mehrspurfall nach Furiosa; ältere John-Wick-AAC-Referenz bleibt getrennt. Nur Dokumentation, Code/Build 46/Pakete unverändert; keine Git- oder Releaseaktion. [Nachtrag](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md#john-wick-neue-mp4box-teile-mit-beiden-tonspuren-persönlich-bestätigt).
+
+## 29.10.2026 – Build 46: eigener QUICK-Mehrspurlauf persönlich positiv
+
+Nutzer bestätigt Bild, Ton, Klebestelle und Drei-Sekunden-Vorschau. Protokoll: AAC und AC-3 gemeinsam per Streamcopy, Concat 16,779 s, Dateiidentität 6,129 s, gesamt **23,740 s**; Ausgabeprüfung, Übernahme und Bereinigung erfolgreich. Meckerecke enthält Werkzeugwarnung sowie Bildraten-/H.264-/Laufzeithinweise, ohne den Erfolg zu blockieren. Zweimal identisches Protokoll zählt als ein Lauf. Keine gesonderte Hörbewertung jeder Spur oder pauschale Paketabnahme behauptet. Nur Dokumentation, Code/Buildzähler 46/Pakete unverändert; kein Commit/Push/Release. [Praxisnachtrag](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md#persönlicher-build-46-praxislauf-bestätigt).
+
+## 29.10.2026 – Build 46: QUICK klebt, Meckerecke protokolliert
+
+Nach verbindlicher Nutzerkorrektur pragmatisches FFmpeg concat/Streamcopy umgesetzt: bestätigte kompatible Mehrspurzuordnung erhalten, keine Vollton-/Vollvideo-/Paketprüfung im QUICK-Produktweg. Vorhandene Zeitstempel-/H.264-/Laufzeithinweise und sämtliche Werkzeugwarnungen in eigenem Abschnitt „Meckerecke – technische Hinweise“; Warnungen allein führen nicht zum Abbruch. Echte Prozess-/Lese-/Zuordnungsfehler und Originalschutz bleiben. AUDIO-ENTHUSIAST, RF64 und strenge Prüfungen bytegleich zur gesicherten Basis. Build 46 mit 0 Warnungen/Fehlern, 1576 Tests, 27 nativen QUICK-Fällen und 21 bisherigen Fällen positiv; neun Enthusiast-Ausgaben bytegleich zu Build 45. Furiosa MP4Box mit AAC+AC-3 in 20,28 s Produktgesamtzeit, otr-can in 19,58 s, John Wick nur AAC in 21,93 s. Eigener Nutzerlauf anschließend in 23,74 s persönlich positiv bestätigt; siehe Nachtrag oben. Keine Pakete, Commits, Pushes oder Releases. Frühere Rücksprache-Sperre durch neuen Auftrag aufgehoben; historische Diagnose bleibt. [Nachweis](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md).
+
+## 29.10.2026 – MUCH MORE QUICK AND COPY: Referenzprüfung verlangt Rücksprache
+
+Vollständigen Entwicklungsauftrag eingelesen, Git-/Quell-/Paketstand gesichert und manuellen Furiosa-MP4Box-Film technisch geprüft. 201566 Video-NAL-Folgen und wirksame SPS/PPS sowie 377950 AAC-/251960 AC-3-Nutzpakete erhalten; vollständige Decodierung durchgeführt. Zwei Konflikte: Decoder-Präsentationszeit bei etwa 37:40 um 397/48000 s rückläufig, bereits in Quelle vorhanden; AAC-Ausgabe +4093 Samples / 85,271 ms gegenüber getrennten Quellen, oberhalb bisheriger 3072-Sample-/80-ms-Grenze. Gemäß Auftragsabschnitt 9 vor Produktänderungen Rücksprache erforderlich. Keine Implementierung, keine neue Buildnummer; Code, Locks, Motor und eingefrorene Pakete unverändert. [Messungen und nächster Prüfpunkt](KLEBECENTER-MP4BOX-REFERENZPRUEFUNG-20261029.md).
+
+## 29.10.2026 – Furiosa-MP4Box-Ablehnung konkret nachgestellt
+
+Lokale Eingabepfade aus Nutzerscreenshot mit finalen unveränderten Build-45-DLLs geprüft. Beide MP4Box-Dateien an Bildvorprüfung abgewiesen; vollständige Paketzeiten zeigen neun bzw. drei Abweichungen vom 40-ms-Raster. Zusätzliche Unterschiede bei Audio-/Video-Endzeiten und H.264-Decoderkonfigurationen. otr-can-Vergleichsdateien bestehen die Vorprüfung und haben exaktes Raster. Kein allgemeiner MP4Box-Ausschluss oder Beweis fehlender Bilder. VM-otr-can-QUICK für Furiosa auf Bild/Ton/Übergang persönlich positiv, AAC und AC-3 erhalten. Produktcode und eingefrorene Pakete unverändert; ausschließlich Diagnose und Dokumentation. [Befund und Grenzen](KLEBECENTER-MP4BOX-FURIOSA-DIAGNOSE-20261029.md).
+
+## 29.10.2026 – Build 45 vollständig paketiert und eingefroren
+
+Setup, Portable, exakte CAN-Quellen, passende Motor-/libmpv-Quellen und Prüfsummen aus manifestiertem Snapshot erstellt. Produktcode und Zähler 45 bei Paketierung unverändert. 1552 Pakettests, zusätzlich 1280 Tests gegen finale DLLs, 28 QUICK-/21 AUDIO-ENTHUSIAST-Nativfälle und vier native Hinweisfälle bestanden; Menü/Dialog und echte AAC-/AC-3-Umschaltung geprüft. 690 manifestierte Quelldateien, 691 Quellen-ZIP-Dateien und 250 Portable-Dateien vollständig verglichen. Acht Auslieferungsdateien plus 691 Snapshot-Dateien schreibgeschützt eingefroren. Neue persönliche Paketabnahme offen, bisherige zehn Build-44-Setup-Fälle und neuer Hinweis separat bestätigt. Motor 0.1.6; kein Commit, Push oder Release. [Freeze und Prüfsummen](RELEASE-1.0.2-BUILD45-RESULT.md).
+
+## 29.10.2026 – Build-45-Hinweis persönlich bestätigt, Freeze und Pakete beauftragt
+
+Nutzer bestätigt den klareren Tonspurhinweis anhand des Build-45-Screenshots und beauftragt Setup/ZIP/Quellen sowie Einfrieren des aktuellen Stands. Produktquellen bei Paketierung unverändert, Dateiversion 1.0.2.45 und Motor 0.1.6. Neue Pakete separat; zehn Build-44-Setup-Funktionstests ersetzen keine neue Paketabnahme. Keine neue Git-/Veröffentlichungsfreigabe. [Freeze](FREEZE-1.0.2-BUILD45-20261029.md).
+
+## 29.10.2026 – John Wick AUDIO-ENTHUSIAST persönlich positiv
+
+Bild, Ton und Übergang bestätigt; technische Prüfung 457399680 Samples, Klebestelle 01:57:37.120, Dauer 02:38:49.160, Verarbeitungszeit 00:05:30.21. Zwei bytegleiche Anhänge als einen weiteren Lauf gezählt: zehn positive Setup-Funktionsfälle auf dem Arbeitsrechner, John Wick mit beiden Klebeverfahren. Nutzer kündigt Wechsel zu Build 45 an; lokale Entwicklungs-EXE vorhanden, Setup/ZIP weiterhin Build 44. Keine neue Code-/Paket-/Git-Aktion oder vollständige Paketabnahme. [Nachweis](KLEBECENTER-TONSPURHINWEIS-20261029.md#john-wick--audio-enthusiast-persönlich-bestätigt).
+
+## 29.10.2026 – Build-44-Setup: John Wick QUICK auf Ton und Übergang positiv
+
+Auf dem Arbeitsrechner John Wick Kapitel 4 mit gemeinsamer AAC-Spur erfolgreich zusammengefügt. 446682 unveränderte AAC-Pakete, 457401216 Ausgabesamples gegenüber Referenz 457399680, erklärte +1536 Samples / 32 ms; Laufzeit 00:01:20.34. Nutzer bestätigt Ton und Übergang. Zwei bytegleiche Anhänge zählen als ein Lauf: acht HD-Schnittfälle plus dieser Klebecenter-Fall ergeben neun positive Setup-Funktionstests. Keine zusätzliche Furiosa-/Bild-/Gesamtabnahme behauptet. Nur Dokumentation; laufende Setup-Prüfrunde und Pakete Build 44 bleiben erhalten. [Nachweis](KLEBECENTER-TONSPURHINWEIS-20261029.md#john-wick--quick-and-copy-persönlich-bestätigt).
+
+## 29.10.2026 – Build 45: Tonspurpaar-Hinweis ergänzt
+
+Auf Nutzerwunsch Checkbox „Dieses Tonspurpaar übernehmen (nur bei übereinstimmendem Tonformat)“ mit Textumbruch; zusätzlicher Hinweis auf einmalige Zuordnung und Abwahl nicht benötigter Paare. Nur JoinDialog.xaml geändert, beide Medienverfahren/Schutzregeln unverändert. Release 0 Warnungen/Fehler, 1552 Tests und vier native WPF-Fälle (John Wick/Furiosa, 680/900 DIP) positiv, sichtbaren Text geprüft. Acht HD-Setup-Schnittfälle auf dem Arbeitsrechner persönlich positiv; laufender Klebecenter-Test noch ohne Gesamtabschluss. Build-44-Pakete unverändert, keine neue Paketierung oder Git-/Releaseaktion. [Nachweis](KLEBECENTER-TONSPURHINWEIS-20261029.md).
+
+## 29.10.2026 – Build-44-Pakete erstellt und technisch geprüft
+
+Nach persönlicher Menü-Abnahme separater Setup-/Portable-/Quellensatz aus manifestiertem Snapshot erstellt. Dateiversion 1.0.2.44, unverändert otr-can 0.1.6 und libmpv 0.41.0. 1552 Pakettests, zusätzlich 1280 Tests gegen finale DLLs sowie 28 QUICK-/21 AUDIO-ENTHUSIAST-Nativfälle bestanden. Kompiliertes Menü mit genau einem Zusammenfügen-Eintrag, Dialogbestätigung und echte AAC-/AC-3-Playerumschaltung geprüft. 687 Quellmanifest-/688 Quellen-ZIP-Dateien und 250 Portable-Dateien vollständig geprüft; passende Drittquellen und Prüfsummen dabei. Alte Pakete, Locks, Produktquellen und Zähler 44 unverändert. Neue persönliche Setup-/Portable-/VM-Abnahme offen; keine Veröffentlichung oder Git-Aktion. [Paketbericht](RELEASE-1.0.2-BUILD44-RESULT.md).
+
+## 29.10.2026 – Build-44-Menü persönlich bestätigt, Pakete beauftragt
+
+Nutzer bestätigt die Menüvereinfachung mit „tip top gecheckt“ und beauftragt Setup, ZIP, Quellen und weitere passende Pakete. Herstellung separat als Build 44; beide Klebeverfahren und Motor otr-can 0.1.6 unverändert. Neue Paketabnahme gesondert offen; keine Veröffentlichung oder Git-Aktion. [Paketumfang](FREEZE-1.0.2-BUILD44-20261029.md).
+
+## 29.10.2026 – Build 44: Klebecenter-Menü vereinfacht
+
+Auf Nutzerwunsch nur den Eintrag **Tonspur für Filmteile auswählen …** aus MainWindow.xaml entfernt. Tonspurwahl direkt im Zusammenfügen-Dialog bleibt, eigenständiger Kopierdienst unverändert für eine mögliche spätere Werkzeugrubrik erhalten. Martins Werbebildervorschau und Untertitelanzeige auf der Merkliste; noch keine Umsetzung dieser Werkzeuge. Release-Rebuild **0 Warnungen/0 Fehler**, **1552/1552 Tests**, keine übersprungen. Menüstruktur und vollständige Unverändertheit aller übrigen Produkt-/Testquellen, acht ursprünglicher Lockdateien und 24 Auslieferungsdateien der Builds 40/41/43 geprüft. Erste Wiederherstellung im Locked Mode wegen vorbestehender Test-Locks für win-x64 abgelehnt; anschließend isolierter Restore erfolgreich, Original-Locks unverändert. Zähler 43 → 44 nur nach erfolgreichem Build. Vorhandene Build-43-Pakete unverändert; kein Setup-/ZIP-Neubau, Commit, Push oder Release. Persönliche Prüfung des neuen Menüs offen. [Vormerkung](SETUP-MERKLISTE.md), [Bedienung](NUTZERANLEITUNG.md).
+
+## 28.10.2026 – Build-43-Pakete erstellt und technisch geprüft
+
+Setup, Portable und Quellen nach Nutzerauftrag aus eigenem manifestierten Snapshot erstellt, unverändert otr-can 0.1.6 / libmpv 0.41.0. 1552 Pakettests und zusätzlich 1280 Tests gegen finale DLLs positiv; 28 QUICK- und 21 bisherige native Fälle sowie Paketdialog und echte Tonspurumschaltung bestanden. 685 Quellenmanifest-Dateien, 686 Quellen-ZIP-Dateien und 250 Portable-Dateien vollständig abgeglichen. Motor-/libmpv-Quellen und Prüfsummen dabei. Nutzer-Locks, Code und Zähler 43 erhalten; alte Pakete unverändert. Persönliche neue Setup-/Portable-/VM-Abnahme offen. Keine Veröffentlichung oder Git-Aktion. [Paketbericht](RELEASE-1.0.2-BUILD43-RESULT.md).
+
+## 28.10.2026 – Build 43: QUICK AND COPY mit bestätigter Mehrspurzuordnung
+
+Zwei bewusst gewählte Verfahren umgesetzt. QUICK AND COPY erhält kompatible AAC-/AC-3-Paare ohne Neukodierung und zeigt eng nachgewiesene Tonabweichungen; Zuordnung und entfallende Spuren müssen bestätigt werden. AUDIO-ENTHUSIAST und eigenständiger Tonspurkopiedienst bytegleich zur Build-42-Basis; Einzelkopie zusätzlich wieder im Menü. Tonspurwahl im Kontrollplayer mit echten libmpv-IDs. 1552 Tests, 28 native QUICK-Fälle, 21 alte native Fälle und neun bytegleiche Neukodierungsausgaben positiv. Echte finale Referenzen: John Wick nur AAC; Furiosa AAC und AC-3 gemeinsam. John-Wick-Gesamtvergleich unter gleichen Grenzen: 309,11 s Neukodierung / 87,15 s QUICK; Furiosa QUICK zweispurig 138,36 s. Persönliche neue Bild-/Hörabnahme offen. Keine Pakete/Commit/Push/Veröffentlichung, Motor 0.1.6 und bestehende Locks unverändert. [Umsetzung und Grenzen](KLEBECENTER-QUICK-COPY-20261028.md).
+
+## 28.10.2026 – Klebecenter: Phasenzeiten und direkte RF64-Zusammensetzung
+
+Nach Freigabe zuerst den unveränderten Ablauf instrumentiert, dann joined.pcm samt zusätzlicher RF64-Kopie ersetzt. Vollständiger Header-/Samplezahl-/Payload-Readback bleibt erhalten. Entwicklungsbuild 42 ohne Warnungen/Fehler; 1505 Tests positiv, 21 native Fälle je Variante plus zwei Zusatzläufe. Neun erfolgreiche MP4s byteidentisch. 4,3-GB-PCM-Test: Median 14,19 → 11,54 s, 18,7 % weniger für diesen Schritt, 8,6 GB weniger I/O; RF64 über 4 GiB byteidentisch. Keine Gesamtfilm-Beschleunigung daraus abgeleitet. Motor 0.1.6 und Veröffentlichung Build 41 unverändert; keine Pakete/Commit/Push/Veröffentlichung. [Nachweis](KLEBECENTER-PHASENZEITEN-RF64-20261028.md).
+
+
 ## 27.10.2026 – CAN 1.0.2 Build 41 veröffentlicht
 
 Nach ausdrücklicher Freigabe Commit/Push und Veröffentlichung abgeschlossen. **[v1.0.2 / Latest](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2)**, Release-Commit **6f4c3dc**. Alle acht Uploadgrößen und GitHub-SHA-256-Prüfsummen entsprechen den unveränderten geprüften Assets. Motor **otr-can 0.1.6** direkt und im ZIP geprüft. README, Anleitung und Klebecenter-Hinweise aktualisiert, Überinstallationspfad erklärt. Vier Nutzer-Lockänderungen erhalten und nicht committed. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
