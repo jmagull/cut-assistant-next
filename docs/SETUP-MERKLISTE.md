@@ -10,7 +10,7 @@
 - [ ] Weitere persönliche Referenz-/Setup-/Portable-/VM-Prüfungen getrennt dokumentieren.
 - [x] Bestätigten Stand am 29.10.2026 auf Nutzerauftrag als Build 46 einfrieren.
 - [x] Setup, Portable, CAN-/Motor-/libmpv-Quellen und Prüfsummen erstellt, technisch geprüft und schreibgeschützt eingefroren (1576 + 1304 Tests, 27 QUICK-/21 Enthusiast-Fälle, UI/Player positiv).
-- [ ] Danach Commit und Push; vorbestehende lokale Produktions-Locks ausschließen.
+- [x] Danach Commit **f60e480** und Push nach origin/main erfolgreich; vorbestehende lokale Produktions-Locks ausgeschlossen.
 - [ ] Veröffentlichung ausschließlich nach erneuter ausdrücklicher Ansage.
 
 [Nachweis](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md). Build-45-Freeze unverändert.

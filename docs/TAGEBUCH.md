@@ -1,5 +1,9 @@
 # Entwicklungstagebuch
 
+## 29.10.2026 – Build 46: Commit und Push abgeschlossen, Veröffentlichung gesperrt
+
+Geprüften und eingefrorenen Build-46-Stand mit **f60e480d12bc87263d1c3f28ef05ddba502c57ec** committet und nach origin/main gepusht. Remote-Hash stimmt überein. Abschließender Dokumentationsnachtrag ergänzt den Git-Nachweis; keine Änderung der 373 Produkt-/Testdateien, Pakete oder Buildnummer. Vier vorbestehende Produktions-Lockänderungen unverändert außerhalb des Commits. Keine Tags, Assets oder Releases erstellt; Veröffentlichung ausschließlich nach erneuter Ansage. [Paketbericht](RELEASE-1.0.2-BUILD46-RESULT.md).
+
 ## 29.10.2026 – Build-46-Paketsatz vollständig geprüft und schreibgeschützt
 
 Setup, Portable und Quellen ausschließlich aus manifestiertem Snapshot erstellt: 697 Quelldateien/698 Quellen-ZIP-Dateien, 250 Portable-Dateien. 1576 Pakettests plus 1304 Tests gegen finale DLLs, 27 native QUICK-/21 Enthusiast-Fälle, neun bytegleiche Neukodierungsausgaben und vier Hinweisfälle sowie Menü-/Dialog-/Playerprüfungen positiv. Datei-/Motorversion 1.0.2.46/0.1.6 bestätigt; Quellen, Lizenzen und Prüfsummen vorhanden. Acht Auslieferungsdateien und 698 Snapshot-Dateien schreibgeschützt; alle 373 Produkt-/Testdateien und 50 geschützten Ursprungsdateien unverändert. Persönliche Entwicklungsfälle positiv; neue Setup-/Portable-/VM-Abnahme separat offen. Commit/Push folgen gemäß Auftrag; Veröffentlichung erst nach neuer Ansage. [Paketbericht](RELEASE-1.0.2-BUILD46-RESULT.md).

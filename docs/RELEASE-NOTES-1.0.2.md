@@ -6,7 +6,7 @@
 
 **AUDIO-ENTHUSIAST unverändert**, einschließlich strenger Prüfungen, RF64, AAC-Neukodierung und Zeitmessung. Beide Verfahren kopieren Video. 1576 Tests, 27 native QUICK- und 21 bisherige Fälle bestanden; neun Enthusiast-Ausgaben bytegleich. Drei reale Referenzen technisch erfolgreich; zwei eigene MP4Box-QUICK-Läufe mit AAC+AC-3 persönlich auf Bild/Ton/Klebestelle/Drei-Sekunden-Vorschau bestätigt: Furiosa 23,74 s, danach John Wick 16,44 s. [Details](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md).
 
-Dateiversion **1.0.2.46**, otr-can **0.1.6**, libmpv **0.41.0**. Bestätigter Stand eingefroren; Setup/Portable/Quellen erstellt, technisch geprüft und schreibgeschützt. 1576 Pakettests plus 1304 Tests gegen finale DLLs und native Prüfungen positiv; Commit/Push anschließend beauftragt. [Paketprüfung](RELEASE-1.0.2-BUILD46-RESULT.md). Veröffentlichung erst nach erneuter Ansage. Build-45-Pakete bleiben erhalten, öffentlich bleibt Build 41. Die folgenden Abschnitte beschreiben den damaligen Build-45-Paketstand und dessen frühere strenge QUICK-Regeln.
+Dateiversion **1.0.2.46**, otr-can **0.1.6**, libmpv **0.41.0**. Bestätigter Stand eingefroren; Setup/Portable/Quellen erstellt, technisch geprüft und schreibgeschützt. 1576 Pakettests plus 1304 Tests gegen finale DLLs und native Prüfungen positiv; Quellstand danach committet und nach origin/main gepusht. [Paketprüfung](RELEASE-1.0.2-BUILD46-RESULT.md). Veröffentlichung erst nach erneuter Ansage. Build-45-Pakete bleiben erhalten, öffentlich bleibt Build 41. Die folgenden Abschnitte beschreiben den damaligen Build-45-Paketstand und dessen frühere strenge QUICK-Regeln.
 
 ## Historisch: Build 45 – eingefrorene lokale Paketfassung
 

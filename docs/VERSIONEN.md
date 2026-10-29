@@ -17,7 +17,7 @@
 | 1.0.2 | 43 | 0.1.6 | Lokale Prüffassung: QUICK AND COPY mit AAC-/AC-3-Mehrspurzuordnung, unveränderter AUDIO-ENTHUSIAST, Tonspurwahl im Kontrollplayer; Setup/Portable/Quellen lokal geprüft, nicht veröffentlicht |
 | 1.0.2 | 44 | 0.1.6 | Lokale Menüvereinfachung: separate Tonspurkopie im Klebecenter ausgeblendet; Auswahl beim Zusammenfügen bleibt. Menü persönlich bestätigt; Setup/Portable/Quellen lokal technisch geprüft; persönliche neue Paketabnahme offen, nicht veröffentlicht |
 | 1.0.2 | 45 | 0.1.6 | Lokaler Hinweis am Tonspurpaar-Haken und Erklärung doppelter Zuordnung; nur XAML-Text/Textumbruch, persönlich bestätigt und eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt eingefroren; neue persönliche Paketabnahme offen, nicht veröffentlicht |
-| 1.0.2 | 46 | 0.1.6 | Bestätigtes pragmatisches QUICK mit Meckerecke eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt; Commit/Push beauftragt, Veröffentlichung erst nach Ansage |
+| 1.0.2 | 46 | 0.1.6 | Bestätigtes pragmatisches QUICK mit Meckerecke eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt; Quellstand committet/gepusht, Veröffentlichung erst nach Ansage |
 
 Veröffentlichte App-Dateiversion **1.0.2.41**, lokale Weiterentwicklung **1.0.2.46** (geprüfter Paketsatz 1.0.2.46 schreibgeschützt eingefroren; frühere Pakete erhalten), libmpv **0.41.0**, Framework **.NET 10**, Ziel **Windows 11 x64/WPF**. CAN 1.0.2 Build 41 wurde am 27.10.2026 nach ausdrücklicher Freigabe veröffentlicht. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
 

@@ -8,7 +8,7 @@
 
 ## Aktuell lesen
 
-- [Build-46-Freeze und Paketprüfung](RELEASE-1.0.2-BUILD46-RESULT.md): bestätigtes pragmatisches QUICK, Setup/ZIP/Quellen erstellt/geprüft und schreibgeschützt, Commit/Push danach; Veröffentlichung nur nach Ansage.
+- [Build-46-Freeze und Paketprüfung](RELEASE-1.0.2-BUILD46-RESULT.md): bestätigtes pragmatisches QUICK, Setup/ZIP/Quellen erstellt/geprüft und schreibgeschützt, Quellstand committet/gepusht; Veröffentlichung nur nach Ansage.
 
 - [Build 46: pragmatisches QUICK und Meckerecke](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md): neuer lokaler Produktweg; AUDIO-ENTHUSIAST unverändert, Build-45-Pakete eingefroren.
 

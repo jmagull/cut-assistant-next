@@ -1,6 +1,6 @@
 # CAN 1.0.2 Build 46 – eingefrorener und geprüfter Paketsatz
 
-**29.10.2026: Setup, Portable und passende Quellen vollständig erstellt, technisch geprüft und auf Nutzerauftrag eingefroren. Commit und Push sind anschließend beauftragt. Keine Veröffentlichung ohne erneute Ansage.** Dateiversion **1.0.2.46**, Motor unverändert **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64. Öffentlich bleibt Build 41. [Freeze](FREEZE-1.0.2-BUILD46-20261029.md), [Bedienung](NUTZERANLEITUNG.md), [Verfahren und persönliche Praxis](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md).
+**29.10.2026: Setup, Portable und passende Quellen vollständig erstellt, technisch geprüft und auf Nutzerauftrag eingefroren. Quellstand anschließend committet und nach origin/main gepusht. Keine Veröffentlichung ohne erneute Ansage.** Dateiversion **1.0.2.46**, Motor unverändert **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64. Öffentlich bleibt Build 41. [Freeze](FREEZE-1.0.2-BUILD46-20261029.md), [Bedienung](NUTZERANLEITUNG.md), [Verfahren und persönliche Praxis](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md).
 
 ## Eingefrorener Umfang
 
@@ -48,4 +48,6 @@ Archive bewahren den Dokumentationsstand bei Snapshot-Erstellung vor Abschluss d
 
 ## Git und Veröffentlichung
 
-Commit und Push auf den bestehenden main-Zweig sind nach erfolgreicher Paketprüfung ausdrücklich beauftragt; der Abschlussnachweis wird nach dem Push ergänzt. Die vier lokalen Produktions-Locks bleiben außerhalb des Commits. Buildausgaben und Archive bleiben lokal unter artifacts und werden nicht in Git aufgenommen. **Keine Veröffentlichung, kein Tag und kein Upload ohne erneute ausdrückliche Ansage.**
+Implementierung, aktuelle Dokumentation, Freeze und Paketbericht mit **f60e480d12bc87263d1c3f28ef05ddba502c57ec** committet und nach **origin/main** gepusht; anschließend Remote-Hash identisch nachgewiesen. Dieser Abschlussnachtrag ist eine reine Dokumentationsänderung, keine neue Produkt-/Paketfassung. Der Snapshot manifestiert weiterhin exakt seine frühere Basis plus Arbeitsänderungen; die späteren Ergebnis-/Git-Nachträge im Repository ändern keine eingefrorenen Archive.
+
+Die vier vorbestehenden lokalen Produktions-Locks bleiben unverändert außerhalb des Commits. Buildausgaben und Archive bleiben lokal unter artifacts und sind nicht in Git aufgenommen. **Keine Veröffentlichung, kein Release-Tag und kein Asset-Upload ohne erneute ausdrückliche Ansage.** Öffentlich bleibt Build 41.
