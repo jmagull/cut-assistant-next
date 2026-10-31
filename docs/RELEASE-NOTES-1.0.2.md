@@ -1,3 +1,35 @@
+# Cut Assistant Next 1.0.2 · Build 47
+
+**31.10.2026 – eingefroren und zur Veröffentlichung freigegeben als [v1.0.2-build47](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47).** App-Dateiversion **1.0.2.47**, unverändert otr-can **0.1.6** und libmpv **0.41.0**. Setup, Portable, passende CAN-/Motor-/libmpv-Quellen und Prüfsummen gehören zum technisch geprüften Paketsatz.
+
+## Klebecenter
+
+- **QUICK AND COPY** verbindet Video und bestätigte kompatible AAC-/AC-3-Spurpaare ohne Neukodierung. Vorhandene Zeitstempel-/Laufzeit-/Decoderparameterhinweise und Werkzeugwarnungen stehen in der **Meckerecke** und brechen allein nicht ab. Keine samplegenaue Tonzusage, keine zusätzlichen Vollprüfungen. Ausgabe, Originalschutz, Abbruch und Bereinigung bleiben geprüft.
+- **AUDIO-ENTHUSIAST** verwendet genau eine gewählte Tonspur je Teil, vollständige strenge Prüfung, samplegenaue RF64-Verbindung und einmalige durchgehende AAC-LC-Neukodierung. Das Bild bleibt unverändert.
+- **Neu in Build 47:** Erkannte GPAC/MP4Box-Filmteile sperren AUDIO-ENTHUSIAST samt Tonspurauswahl. Dauerhaft sichtbarer Hinweis bei den Startknöpfen verweist auf QUICK. Gemischte Paare und Tauschen/Ersetzen berücksichtigt; erneute Dienstprüfung vor Verarbeitung. Die Erkennung basiert auf einer vorhandenen GPAC-Containerkennung, nicht auf Dateinamen. Fehlende Kennung bleibt unbekannt; technische Vorprüfungen bleiben bestehen.
+- Kein Standardverfahren und keine automatische Umschaltung. Tonspurzuordnung vor QUICK bestätigen. Anschließend Anfang, Klebestelle und Ende mit drei Sekunden Vorlauf kontrollieren, jede erhaltene Tonspur wählen. QUICK-Prüfzeiten sind angenähert.
+
+## Prüfung und persönliche Nachweise
+
+**1593 Pakettests** plus **1321 Tests gegen finale Produktbibliotheken** bestanden; Release ohne Warnungen/Fehler. Alle **250 Portable-Nutzdateien**, **705 manifestierten Quelldateien / 706 Quellen-ZIP-Dateien** und acht Auslieferungsdateien geprüft. Native Herkunfts-/Dialogprüfung einschließlich zweier Fenstergrößen positiv.
+
+Build-47-VM-Setup: MP4Box → QUICK, otr-can → QUICK und AUDIO-ENTHUSIAST persönlich positiv; Sperre und Hinweisentfernung beim Dateitausch bestätigt. Portable-ZIP: beide QUICK-Wege mit persönlichem Bild-/Ton-/Vorschaucheck positiv, otr-can-AUDIO-ENTHUSIAST technisch erfolgreich; persönliche Kontrolle dieses letzten Laufs nicht separat zugeordnet. Deinstallation Build 47 nicht gesondert bestätigt. Der Nutzer gibt diesen Stand am 31.10.2026 ausdrücklich zur Veröffentlichung frei.
+
+Die aktuellen positiven Schnitttests Rocky Horror/50 fps/otr-can sowie Doc und Brilliant Minds/25 fps/MP4Box stammen ausdrücklich aus **Build 46, Setup auf dem Arbeitsrechner**. Sie werden nicht als neue Build-47-VM-Fälle ausgegeben.
+
+## Einrichtung und Grenzen
+
+Windows 11 x64, .NET 10 Desktop Runtime x64 und für otr-can die Visual-C++-x64-Laufzeit separat erforderlich. FFmpeg/ffprobe, GPAC/MP4Box und FFMS2 bleiben separat einzurichten. Mitgeliefert **tools/otr-can/otr_can.exe 0.1.6**; gespeicherten Pfad nach Überinstallation prüfen.
+
+AVI experimentell; MP4Box kann Schnittgrenzen verschieben und Werbeblitzer belassen. Die Ursache früherer vollständiger Rechnerstillstände bei großen otr-can-Schnitten bleibt ungeklärt; spätere Erfolge belegen keine gezielte Behebung. Jede Ausgabe persönlich kontrollieren.
+
+Quellenarchive gehören exakt zu den geprüften Binärpaketen. Die eingefrorenen Pakete werden nicht neu gebaut oder verändert; ihre beigelegte Dokumentation behält den Erstellungsstand vor der späteren Freigabe. Aktuelle Repository-Unterlagen und diese Releasebeschreibung ergänzen Tests und Veröffentlichungsstatus. Frühere Releases bleiben erhalten.
+
+[Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md), [Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md), [Anleitung](NUTZERANLEITUNG.md), [Setup-Nachweise](VM-SETUP-BUILD47-20261031.md), [Portable-Nachweise](VM-PORTABLE-BUILD47-20261031.md), [Praxistests](PRAXISTESTS-20261031.md).
+
+<details>
+<summary>Historische Release Notes bis Build 46</summary>
+
 # Cut Assistant Next 1.0.2 · Build 46 – eingefrorener Stand
 
 **29.10.2026:** QUICK AND COPY verwendet FFmpeg concat mit `-c copy`. Alle bestätigten kompatiblen AAC-/AC-3-Spurpaare bleiben ohne Neukodierung erhalten. Technische Warnungen, vorhandene PTS-Unregelmäßigkeiten, unterschiedliche H.264-Decoderparameter oder zusätzliche Samples allein brechen QUICK nicht ab. Keine obligatorischen vollständigen PCM-/Video-/Paketprüfungen im QUICK-Weg.
@@ -80,5 +112,8 @@ FFmpeg/ffprobe, GPAC/MP4Box und FFMS2/ffmsindex bleiben externe Werkzeuge. Das K
 Die Ursache früherer kompletter Furiosa-Rechnerstillstände bleibt ungeklärt; positive spätere Läufe belegen keine gezielte Behebung. Bitte jede Ausgabe auf Bild, Ton, Synchronität und Übergänge kontrollieren.
 
 Die beigelegten Quellenarchive gehören exakt zu den geprüften Binärpaketen und enthalten Dokumentation aus ihrem Erstellungsstand vor der Veröffentlichungsfreigabe. Die aktuellen Repository-Unterlagen und diese Releasebeschreibung ergänzen die spätere Abnahme/Freigabe. [Paketbericht und Prüfsummen](RELEASE-1.0.2-BUILD41-RESULT.md).
+
+</details>
+
 
 </details>

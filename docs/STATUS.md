@@ -1,5 +1,13 @@
 # Projektstatus
 
+## 31.10.2026 – Build 47 zur Veröffentlichung freigegeben
+
+Nach den dokumentierten Setup-/Portable-Funktionsläufen und aktuellen Arbeitsrechner-Praxistests beauftragt der Nutzer ausdrücklich Freeze, vollständigen Dokumentationsabgleich, Commit, Push und Veröffentlichung. Unveränderter geprüfter Build-47-Paketsatz wird unter v1.0.2-build47 veröffentlicht; v1.0.2/Build 41 bleibt erhalten. Produktcode, Buildzähler 47 und acht Paketdateien unverändert; vier vorbestehende Produktions-Lockänderungen werden nicht committed. Tatsächliche Testumfänge bleiben getrennt: Build-47-VM/Portable sowie Arbeits-PC-Praxis mit Build 46. [Release-Nachweis](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md).
+
+## 31.10.2026 – Build 47: Pakete nach persönlichem Dialogcheck erstellt
+
+MP4Box-Sperre für AUDIO-ENTHUSIAST mit John-Wick-Dialog persönlich bestätigt. Beauftragte Setup-/Portable-/Quellpakete separat erstellt, aus exakt manifestiertem Snapshot geprüft: 1593 Pakettests und zusätzlich 1321 Tests gegen finale DLLs, Release ohne Warnungen/Fehler; native Erkennung und kleine/normale Dialogansicht positiv. 705 manifestierte Quelldateien, 706 Quellen-ZIP-Dateien, 250 Portable-Dateien vollständig verglichen. Motor otr-can 0.1.6 und libmpv 0.41.0 unverändert. Pakete/Prüfsummen schreibgeschützt unter artifacts/release-1.0.2-build47; neue persönliche Installation-/ZIP-/VM-Abnahme offen. Build 46, Nutzeränderungen und vorherige Pakete erhalten; kein Commit/Push/Release. [Prüfbericht](RELEASE-1.0.2-BUILD47-RESULT.md).
+
 ## 29.10.2026 – Build 46: Commit und Push abgeschlossen, Veröffentlichung gesperrt
 
 Geprüften und eingefrorenen Build-46-Stand mit **f60e480d12bc87263d1c3f28ef05ddba502c57ec** committet und nach origin/main gepusht. Remote-Hash stimmt überein. Abschließender Dokumentationsnachtrag ergänzt den Git-Nachweis; keine Änderung der 373 Produkt-/Testdateien, Pakete oder Buildnummer. Vier vorbestehende Produktions-Lockänderungen unverändert außerhalb des Commits. Keine Tags, Assets oder Releases erstellt; Veröffentlichung ausschließlich nach erneuter Ansage. [Paketbericht](RELEASE-1.0.2-BUILD46-RESULT.md).

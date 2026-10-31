@@ -1,6 +1,6 @@
 # Versionen und Nachweise
 
-**Stand 29.10.2026.** CAN-Anwendung, Buildnummer, Schnittmotor und Wiedergabebibliothek haben getrennte Versionen. [Aktueller Stand](AKTUELLER-STAND.md).
+**Stand 31.10.2026.** CAN-Anwendung, Buildnummer, Schnittmotor und Wiedergabebibliothek haben getrennte Versionen. [Aktueller Stand](AKTUELLER-STAND.md).
 
 | CAN | Build | otr-can | Einordnung |
 |---|---:|---|---|
@@ -12,16 +12,19 @@
 | 1.0.2 | 38 | 0.1.6 | Damalige Einzelkopie für externes Kleben |
 | 1.0.2 | 39 | 0.1.6 | Integriertes Klebecenter; Voraussetzungstext noch fälschlich 0.1.5 |
 | 1.0.2 | 40 | 0.1.6 | Hinweis berichtigt; Setup-/ZIP-Prüfung persönlich abgeschlossen |
-| 1.0.2 | 41 | 0.1.6 | Veröffentlicht als v1.0.2 / Latest; Klebecenter-Arbeitsordner nach Erfolg entfernen |
+| 1.0.2 | 41 | 0.1.6 | Früherer stabiler Release v1.0.2 vom 27.10.2026; bleibt erhalten |
 | 1.0.2 | 42 | 0.1.6 | Lokaler Entwicklungsbuild: Phasenzeiten und direkte RF64-Zusammensetzung; nicht paketiert/veröffentlicht |
 | 1.0.2 | 43 | 0.1.6 | Lokale Prüffassung: QUICK AND COPY mit AAC-/AC-3-Mehrspurzuordnung, unveränderter AUDIO-ENTHUSIAST, Tonspurwahl im Kontrollplayer; Setup/Portable/Quellen lokal geprüft, nicht veröffentlicht |
 | 1.0.2 | 44 | 0.1.6 | Lokale Menüvereinfachung: separate Tonspurkopie im Klebecenter ausgeblendet; Auswahl beim Zusammenfügen bleibt. Menü persönlich bestätigt; Setup/Portable/Quellen lokal technisch geprüft; persönliche neue Paketabnahme offen, nicht veröffentlicht |
 | 1.0.2 | 45 | 0.1.6 | Lokaler Hinweis am Tonspurpaar-Haken und Erklärung doppelter Zuordnung; nur XAML-Text/Textumbruch, persönlich bestätigt und eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt eingefroren; neue persönliche Paketabnahme offen, nicht veröffentlicht |
 | 1.0.2 | 46 | 0.1.6 | Bestätigtes pragmatisches QUICK mit Meckerecke eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt; Quellstand committet/gepusht, Veröffentlichung erst nach Ansage |
+| 1.0.2 | 47 | 0.1.6 | Eingefroren, geprüft und am 31.10.2026 zu Commit/Push und Veröffentlichung als v1.0.2-build47 freigegeben; MP4Box-Sperre, Setup-/Portable-Funktionsnachweise dokumentiert |
 
-Veröffentlichte App-Dateiversion **1.0.2.41**, lokale Weiterentwicklung **1.0.2.46** (geprüfter Paketsatz 1.0.2.46 schreibgeschützt eingefroren; frühere Pakete erhalten), libmpv **0.41.0**, Framework **.NET 10**, Ziel **Windows 11 x64/WPF**. CAN 1.0.2 Build 41 wurde am 27.10.2026 nach ausdrücklicher Freigabe veröffentlicht. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
+Bisher veröffentlichte App-Dateiversion **1.0.2.41**, neuer zur Veröffentlichung freigegebener Paketsatz **1.0.2.47** (technisch geprüft und schreibgeschützt; frühere Pakete einschließlich Build 46 erhalten), libmpv **0.41.0**, Framework **.NET 10**, Ziel **Windows 11 x64/WPF**. CAN 1.0.2 Build 41 wurde am 27.10.2026 nach ausdrücklicher Freigabe veröffentlicht. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
 
 ## Technische Nachweise
+
+- Build 47: 1593 Pakettests und zusätzlich 1321 Tests gegen finale DLLs, native MP4Box-/otr-can-Erkennung und zwei Dialoggrößen positiv. Persönlicher Dialogcheck bestanden, neue Paketabnahme offen. [Pakete und Prüfsummen](RELEASE-1.0.2-BUILD47-RESULT.md).
 
 - Build 46: 1576 Tests, 27 native QUICK- und 21 bisherige Fälle; neun bytegleiche Enthusiast-Ausgaben; drei reale Referenzen erfolgreich. [Ablauf und Grenzen](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md).
 
@@ -37,6 +40,8 @@ Veröffentlichte App-Dateiversion **1.0.2.41**, lokale Weiterentwicklung **1.0.2
 Ein neuer CAN-Build bedeutet keinen neuen Motor. Historische 0.1.3-/0.1.4-/0.1.5-Angaben werden nicht auf 0.1.6 umgeschrieben. „MP3-Unterstützung ab 0.1.5“ bleibt richtig.
 
 ## Quellen und Pakete
+
+Aktuell **artifacts/release-1.0.2-build47**: Setup, Portable-ZIP, **CutAssistantNext-1.0.2-Build47-source.zip**, passende unveränderte Motor-/libmpv-Quellen, Relink und Prüfsummen. SOURCE-SNAPSHOT.json und SOURCE-FILES.sha256 nennen die exakten Eingaben. [Paketbericht 47](RELEASE-1.0.2-BUILD47-RESULT.md).
 
 **artifacts/release-1.0.2-build40** mit **CutAssistantNext-1.0.2-Build40-source.zip**, SOURCE-SNAPSHOT.json/SOURCE-FILES.sha256. Passend dazu unverändert **otr-can-0.1.6-source.zip**, **CAN-libmpv-v0.41.0-pruefpaket-2026-09-26.zip**, Relink-Paket und SHA256SUMS.txt. Keine echten Filme im Repository.
 

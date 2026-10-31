@@ -1,39 +1,30 @@
 # Dokumentation – Cut Assistant Next
 
-**Historischer Build 45:** [Tonspurhinweis](KLEBECENTER-TONSPURHINWEIS-20261029.md), nur Beschriftung und Textumbruch. Hinweis persönlich bestätigt; [eingefrorene Build-45-Pakete](RELEASE-1.0.2-BUILD45-RESULT.md) erstellt und technisch geprüft; neue persönliche Paketabnahme offen. Frühere Pakete bleiben erhalten.
-
-**29.10.2026 – lokale Menüänderung in Build 44:** Klebecenter nur mit **Filmteile zusammenfügen …**; Tonspurwahl direkt dort. Menü persönlich bestätigt; Setup/Portable/Quellen für Build 44 lokal erstellt und technisch geprüft; persönliche Paketabnahme offen. [Paketbericht](RELEASE-1.0.2-BUILD44-RESULT.md). Vorhandene Build-43-Pakete bleiben erhalten. [Bedienung](NUTZERANLEITUNG.md), [spätere Werkzeugrubrik](SETUP-MERKLISTE.md).
-
-**Stand 29.10.2026: stabil CAN 1.0.2 Build 41 · eingefrorener Stand Build 46 · otr-can 0.1.6 · libmpv 0.41.0.** CAN 1.0.2 Build 41 veröffentlicht als v1.0.2 / Latest. Build-43-Pakete sind lokal technisch geprüft; persönliche Setup-/Portable-Abnahme steht aus.
+**Stand 31.10.2026: CAN 1.0.2 Build 47 ist eingefroren und zur Veröffentlichung freigegeben.** App-Dateiversion **1.0.2.47**, Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64. Die Veröffentlichung läuft unter **v1.0.2-build47**; der frühere Release v1.0.2 mit Build 41 bleibt erhalten.
 
 ## Aktuell lesen
 
-- [Build-46-Freeze und Paketprüfung](RELEASE-1.0.2-BUILD46-RESULT.md): bestätigtes pragmatisches QUICK, Setup/ZIP/Quellen erstellt/geprüft und schreibgeschützt, Quellstand committet/gepusht; Veröffentlichung nur nach Ansage.
-
-- [Build 46: pragmatisches QUICK und Meckerecke](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md): neuer lokaler Produktweg; AUDIO-ENTHUSIAST unverändert, Build-45-Pakete eingefroren.
-
-- [Build-45-Freeze, Paketprüfung und Prüfsummen](RELEASE-1.0.2-BUILD45-RESULT.md): bestätigter Tonspurhinweis, eingefrorener Setup-/Portable-/Quellensatz.
-- [Build-44-Paketprüfung und Prüfsummen](RELEASE-1.0.2-BUILD44-RESULT.md): vereinfachtes Menü, passender Setup-/Portable-/Quellensatz.
-- [Build-43-Paketprüfung](RELEASE-1.0.2-BUILD43-RESULT.md): Setup, Portable, Quellen und Prüfsummen; persönlicher Pakettest separat.
-
-- [Projektstand](AKTUELLER-STAND.md): Funktionen, technische Nachweise und persönliche Abnahmen.
-- [Versionszuordnung](VERSIONEN.md): CAN/Build/Motor getrennt, historische Versionen richtig einordnen.
-- [Nutzeranleitung](NUTZERANLEITUNG.md): Klebecenter und reguläre Bedienung.
-- [Klebecenter](KLEBECENTER-20261027.md): Dateien/Reihenfolge, danach Tonspuren; AAC/AAC und AC-3/AAC bestätigt.
-- [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md): Release, Commit, acht identische Assets.
-- [Build-41-Paketbericht](RELEASE-1.0.2-BUILD41-RESULT.md): Setup, Portable, Quellen und Prüfsummen.
-- [Klebecenter-Bereinigung](KLEBECENTER-BEREINIGUNG-20261027.md): Erfolg aufräumen, Fehlerdiagnose erhalten.
-- [Build-42-Phasenzeiten und RF64](KLEBECENTER-PHASENZEITEN-RF64-20261028.md): technische Prüfungen und persönlicher John-Wick-Lauf.
-- [QUICK AND COPY / AUDIO-ENTHUSIAST](KLEBECENTER-QUICK-COPY-20261028.md): lokale Umsetzung Build 43, bestätigte Mehrspurzuordnung und begrenzte transparente Tonabweichungen.
-- [Vorherige Machbarkeitsprüfung](KLEBECENTER-ZWEI-AUDIOVERFAHREN-MACHBARKEIT-20261028.md): damaliger Vorschlag eines ausschließlich sampleidentischen Kopierwegs; durch den späteren QUICK-Auftrag mit anderen Qualitätszusagen abgelöst.
-- [Release Notes](RELEASE-NOTES-1.0.2.md), [Testplan](TESTPLAN.md), [Merkliste](SETUP-MERKLISTE.md).
+- [Projektstand](AKTUELLER-STAND.md): Version, Verfahren, Nachweise und Grenzen.
+- [Build-47-Veröffentlichung](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md): Freigabe und anschließende Commit-/Tag-/Assetprüfung.
+- [Build-47-Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md): Setup, Portable, genaue Quellen und Prüfsummen.
+- [Build-47-Freeze](FREEZE-1.0.2-BUILD47-20261031.md): eingefrorener Produktstand und Herkunft.
+- [Release Notes](RELEASE-NOTES-1.0.2.md), [Nutzeranleitung](NUTZERANLEITUNG.md), [Versionszuordnung](VERSIONEN.md).
+- [MP4Box-Sperre für AUDIO-ENTHUSIAST](MP4BOX-AUDIO-ENTHUSIAST-SPERRE-20261031.md): Container-Erkennung, Dialog-/Dienstsperre und Grenzen.
+- [QUICK und Meckerecke](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md): pragmatischer Kopierweg ab Build 46, im Build 47 enthalten.
+- [Build-47-Setup in der VM](VM-SETUP-BUILD47-20261031.md) und [Portable-ZIP in der VM](VM-PORTABLE-BUILD47-20261031.md): getrennte persönliche Nachweise.
+- [Aktuelle Praxistests](PRAXISTESTS-20261031.md): Rocky Horror, Doc und Brilliant Minds mit Build-46-Setup auf dem Arbeitsrechner.
+- [Testplan](TESTPLAN.md), [Setup-Merkliste](SETUP-MERKLISTE.md), [Status](STATUS.md), [Tagebuch](TAGEBUCH.md).
 - [Architektur](ARCHITECTURE.md), [Entscheidungen](DECISIONS.md), [Anforderungen](REQUIREMENTS.md), [Projektdefinition](PROJECT_DEFINITION.md).
-- [Status](STATUS.md) und [Tagebuch](TAGEBUCH.md): neueste Einträge oben, datierte Historie darunter.
 
-## Historie und unveränderte Unterlagen
+## Frühere Versionen und Funktionsnachweise
 
-Datierte Release-/Freeze-/Praxisberichte und Übergabetexte halten ihren damaligen Stand fest. Die separate Tonspurkopie gehört zu Build 38 und wird im heutigen Klebecenter nicht vorab benötigt. Die externe John-Wick-Referenz vom 26.10. ist inzwischen produktiv integriert. Alte Motorversionen in historischen Berichten sind keine aktuelle Installationsanweisung.
+- [Build-46-Pakete](RELEASE-1.0.2-BUILD46-RESULT.md), [Build 45](RELEASE-1.0.2-BUILD45-RESULT.md), [Build 44](RELEASE-1.0.2-BUILD44-RESULT.md), [Build 43](RELEASE-1.0.2-BUILD43-RESULT.md) bleiben erhalten.
+- [Build-41-Veröffentlichung](RELEASE-1.0.2-PUBLISHED-20261027.md) und [Paketbericht](RELEASE-1.0.2-BUILD41-RESULT.md) dokumentieren den vorherigen öffentlichen Stand.
+- [Klebecenter](KLEBECENTER-20261027.md), [Bereinigung](KLEBECENTER-BEREINIGUNG-20261027.md), [Phasenzeiten/RF64](KLEBECENTER-PHASENZEITEN-RF64-20261028.md), [zwei Klebeverfahren](KLEBECENTER-QUICK-COPY-20261028.md).
+- [AAC-Notfallweg](OTR-CAN-AAC-NOTFALLWEG-20261026.md), [historische Tonspurkopie](TONSPURAUSWAHL-FILMTEILE-20261026.md), [Furiosa-Diagnose](FURIOSA-MP4BOX-AUDIO-ENTHUSIAST-20261031.md).
 
-Die [libmpv-Unterlagen](libmpv/v0.41.0/README.md) beschreiben den unveränderten 0.41.0-Stack; Drittanbieter-Lizenzen werden nicht auf neue CAN-Buildnummern umgeschrieben. Die READMEs unter tools/prototypes betreffen isolierte Diagnosen. Aktuelle Installationspakete verwenden installer/HINWEIS-DOTNET-UND-WERKZEUGE.txt; die ältere HINWEIS-EXTERNE-WERKZEUGE.txt gehört zum früheren Installationsweg.
+## Historie und unveränderte Archive
 
-Eingefrorene Paket-/Quellarchive behalten ihre damaligen Dokumente und Prüfsummen. Dieser Arbeitsabgleich verändert keine Pakete und benötigt keinen neuen Codebuild.
+Datierte Berichte bewahren ihre damaligen Versions-, Abnahme- und Freigabestände. Ältere Angaben wie „öffentlich Build 41“ oder „keine Veröffentlichung beauftragt“ sind dort historische Aussagen. Eingefrorene Quellen-/Paketarchive behalten ihre damalige Dokumentation und Prüfsummen; Repository und Releasebeschreibung ergänzen spätere Tests und Freigaben.
+
+Die [libmpv-Unterlagen](libmpv/v0.41.0/README.md) beschreiben den unveränderten 0.41.0-Stack. Drittanbieter-Versionen und Lizenzen werden nicht auf CAN-Buildnummern umgeschrieben. READMEs unter tools/prototypes gehören zu isolierten Diagnosen. Aktuelle Installationspakete verwenden installer/HINWEIS-DOTNET-UND-WERKZEUGE.txt.

@@ -1,5 +1,15 @@
 # Setup-Merkliste
 
+## Veröffentlichungsauftrag 31.10.2026 – Build 47
+
+- [x] Produktstand Build 47 eingefroren, Setup/Portable/Quellen und Prüfsummen technisch geprüft (1593 + 1321 Tests).
+- [x] Persönliche Setup-/Portable-Funktionsläufe und separate aktuelle Build-46-Arbeits-PC-Schnitte dokumentiert.
+- [x] Freeze, Commit, Push und Veröffentlichung ausdrücklich freigegeben; ältere Releases erhalten.
+- [ ] Release-Commit/Tag pushen, acht Assets zunächst als Entwurf hochladen und SHA-256 vergleichen, danach als stabile Latest-Version veröffentlichen.
+- [ ] Tatsächlichen Commit-/Tag-/Release-/Digestnachweis ergänzen.
+
+[Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md). Die folgenden datierten Aufgaben bewahren ihren damaligen Stand.
+
 ## Entwicklungsauftrag 29.10.2026 – Build 46
 
 - [x] QUICK als pragmatischen Streamcopy-Weg mit bestätigter Mehrspurzuordnung umsetzen.

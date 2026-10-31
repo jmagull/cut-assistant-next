@@ -37,6 +37,9 @@ public sealed class Mp4JoinService(string ffmpeg, string ffprobe, ICutToolRunner
             // Locks cover inspection, decoding, packet proof and final publication.
             using var firstLock = new FileStream(request.FirstPath, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var secondLock = new FileStream(request.SecondPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            if (await Mp4BoxOriginDetector.IsMp4BoxOutputAsync(request.FirstPath, token).ConfigureAwait(false) ||
+                await Mp4BoxOriginDetector.IsMp4BoxOutputAsync(request.SecondPath, token).ConfigureAwait(false))
+                throw new InvalidDataException(Mp4BoxOriginDetector.EnthusiastUnavailableMessage);
             log.Status("Filmteile und ausgewählte Tonspuren werden geprüft …");
             var first = await timing.RunAsync("inspect-input-1", () => _verifier.InspectJoinPartAsync(request.FirstPath, request.FirstAudioIndex, token)).ConfigureAwait(false);
             var second = await timing.RunAsync("inspect-input-2", () => _verifier.InspectJoinPartAsync(request.SecondPath, request.SecondAudioIndex, token)).ConfigureAwait(false);

@@ -38,18 +38,21 @@
                     <CheckBox x:Name="CopyConfirmed" Checked="CopyConfirmationChanged" Unchecked="CopyConfirmationChanged" Margin="0,0,0,16">
                         <TextBlock Text="Ich habe die Zuordnung und die entfallenden Tonspuren geprüft." TextWrapping="Wrap" />
                     </CheckBox>
-                    <TextBlock Text="3. Tonspur für AUDIO-ENTHUSIAST" FontSize="16" FontWeight="SemiBold" Margin="0,8,0,8" />
-                    <TextBlock Text="Genau eine Tonspur je Teil; Ton einmal durchgehend als AAC-LC neu kodieren." TextWrapping="Wrap" Margin="0,0,0,8" />
-                    <TextBlock Text="Tonspur für den ersten Filmteil:" /><ComboBox x:Name="FirstAudio" DisplayMemberPath="Description" SelectionChanged="SelectionChanged" Margin="0,4,0,0" />
-                    <TextBlock x:Name="FirstNotice" TextWrapping="Wrap" Margin="0,8,0,12" Foreground="#92400E" />
-                    <TextBlock Text="Tonspur für den zweiten Filmteil:" /><ComboBox x:Name="SecondAudio" DisplayMemberPath="Description" SelectionChanged="SelectionChanged" Margin="0,4,0,0" />
-                    <TextBlock x:Name="SecondNotice" TextWrapping="Wrap" Margin="0,8,0,12" Foreground="#92400E" />
+                    <StackPanel x:Name="EnthusiastInputs">
+                        <TextBlock Text="3. Tonspur für AUDIO-ENTHUSIAST" FontSize="16" FontWeight="SemiBold" Margin="0,8,0,8" />
+                        <TextBlock Text="Genau eine Tonspur je Teil; Ton einmal durchgehend als AAC-LC neu kodieren." TextWrapping="Wrap" Margin="0,0,0,8" />
+                        <TextBlock Text="Tonspur für den ersten Filmteil:" /><ComboBox x:Name="FirstAudio" DisplayMemberPath="Description" SelectionChanged="SelectionChanged" Margin="0,4,0,0" />
+                        <TextBlock x:Name="FirstNotice" TextWrapping="Wrap" Margin="0,8,0,12" Foreground="#92400E" />
+                        <TextBlock Text="Tonspur für den zweiten Filmteil:" /><ComboBox x:Name="SecondAudio" DisplayMemberPath="Description" SelectionChanged="SelectionChanged" Margin="0,4,0,0" />
+                        <TextBlock x:Name="SecondNotice" TextWrapping="Wrap" Margin="0,8,0,12" Foreground="#92400E" />
+                    </StackPanel>
                 </StackPanel>
                 <TextBlock TextWrapping="Wrap" Margin="0,0,0,12" Foreground="#4B5563" Text="Bei beiden Verfahren bleiben Bild und Originaldateien erhalten. Passende H.264-Bildformate sind erforderlich; AUDIO-ENTHUSIAST setzt zusätzlich durchgehende 25/50 Bilder/s voraus. Danach Anfang, Klebestelle und Ende auf jeder erhaltenen Tonspur kontrollieren. Die Vorschau beginnt drei Sekunden vor der Klebestelle." />
                 <TextBlock x:Name="StatusText" TextWrapping="Wrap" Foreground="#1E40AF" AutomationProperties.LiveSetting="Polite" Text="Bitte beide Filmteile auswählen." />
             </StackPanel>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Margin="0,18,0,0">
+            <TextBlock x:Name="EnthusiastAvailabilityNotice" TextWrapping="Wrap" Foreground="#92400E" Margin="0,0,0,12" Visibility="Collapsed" AutomationProperties.LiveSetting="Polite" />
             <WrapPanel HorizontalAlignment="Right">
                 <Button x:Name="QuickButton" Content="QUICK AND COPY" Padding="14,9" Margin="0,0,10,8" IsEnabled="False" Click="AcceptQuick" />
                 <Button x:Name="AcceptButton" Content="AUDIO-ENTHUSIAST – NEUKODIERUNG" Padding="14,9" Margin="0,0,10,8" IsEnabled="False" Click="Accept" />

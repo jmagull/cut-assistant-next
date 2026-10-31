@@ -16,6 +16,7 @@ public partial class JoinDialog : Window
     private readonly string _ffprobe;
     private readonly CancellationTokenSource _cancel = new();
     private readonly MediaAnalysisResult?[] _media = new MediaAnalysisResult?[2];
+    private readonly bool[] _mp4BoxSources = new bool[2];
     private JoinCopyRow[] _rows = [];
     private bool _closed;
     private bool _busy;
@@ -47,7 +48,10 @@ public partial class JoinDialog : Window
             if (_closed) return;
             if (!VideoPreparation.IsMp4(media) || media.VideoStreams.Count != 1 || media.AudioStreams.Count == 0)
                 throw new InvalidDataException("Bitte eine MP4-Datei mit einer Videospur und mindestens einer Tonspur wählen.");
+            var mp4Box = await Mp4BoxOriginDetector.IsMp4BoxOutputAsync(open.FileName, _cancel.Token);
+            if (_closed) return;
             _media[index] = media;
+            _mp4BoxSources[index] = mp4Box;
             (index == 0 ? FirstPath : SecondPath).Text = open.FileName;
             var choices = media.AudioStreams.Select(a => new AudioTrackCopyChoice(a)).ToArray();
             var combo = index == 0 ? FirstAudio : SecondAudio;
@@ -67,6 +71,7 @@ public partial class JoinDialog : Window
         var pairs = SelectedPairs();
         (FirstPath.Text, SecondPath.Text) = (SecondPath.Text, FirstPath.Text);
         (_media[0], _media[1]) = (_media[1], _media[0]);
+        (_mp4BoxSources[0], _mp4BoxSources[1]) = (_mp4BoxSources[1], _mp4BoxSources[0]);
         var firstItems = FirstAudio.ItemsSource; var firstSelected = FirstAudio.SelectedItem;
         var secondItems = SecondAudio.ItemsSource; var secondSelected = SecondAudio.SelectedItem;
         FirstAudio.ItemsSource = secondItems; FirstAudio.SelectedItem = secondSelected;
@@ -98,10 +103,15 @@ public partial class JoinDialog : Window
     private void CopyConfirmationChanged(object sender, RoutedEventArgs e) => UpdateSelection();
     private void UpdateSelection()
     {
-        if (AcceptButton is null || QuickButton is null || CopyNotice is null) return;
+        if (AcceptButton is null || QuickButton is null || CopyNotice is null || EnthusiastInputs is null || EnthusiastAvailabilityNotice is null) return;
         FirstNotice.Text = Notice(0, FirstAudio.SelectedItem as AudioTrackCopyChoice);
         SecondNotice.Text = Notice(1, SecondAudio.SelectedItem as AudioTrackCopyChoice);
-        AcceptButton.IsEnabled = !_busy && FirstAudio.SelectedItem is AudioTrackCopyChoice && SecondAudio.SelectedItem is AudioTrackCopyChoice;
+        var mp4Box = _mp4BoxSources.Any(value => value);
+        EnthusiastInputs.IsEnabled = !mp4Box;
+        EnthusiastAvailabilityNotice.Text = mp4Box ? Mp4BoxOriginDetector.EnthusiastUnavailableMessage : "";
+        EnthusiastAvailabilityNotice.Visibility = mp4Box ? Visibility.Visible : Visibility.Collapsed;
+        AcceptButton.ToolTip = mp4Box ? Mp4BoxOriginDetector.EnthusiastUnavailableMessage : null;
+        AcceptButton.IsEnabled = !_busy && !mp4Box && FirstAudio.SelectedItem is AudioTrackCopyChoice && SecondAudio.SelectedItem is AudioTrackCopyChoice;
         var pairs = SelectedPairs();
         var valid = pairs.Length != 0 && pairs.Length == _rows.Count(r => r.Include) &&
             pairs.Select(p => p.FirstAudioIndex).Distinct().Count() == pairs.Length && pairs.Select(p => p.SecondAudioIndex).Distinct().Count() == pairs.Length;
@@ -129,7 +139,7 @@ public partial class JoinDialog : Window
 
     private async Task Accept(bool quick)
     {
-        if (_busy) return;
+        if (_busy || !quick && !AcceptButton.IsEnabled) return;
         var pairs = quick ? SelectedPairs() : FirstAudio.SelectedItem is AudioTrackCopyChoice first && SecondAudio.SelectedItem is AudioTrackCopyChoice second
             ? [new QuickCopyTrackPair(first.Stream.Index, second.Stream.Index)] : Array.Empty<QuickCopyTrackPair>();
         if (pairs.Length == 0 || quick && !QuickButton.IsEnabled) return;

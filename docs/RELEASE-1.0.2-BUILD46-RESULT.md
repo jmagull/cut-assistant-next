@@ -27,11 +27,21 @@ Quellbasis **d200ebf7567bceeab012ee9a2bb6b564635382a4** plus **52 manifestierte 
 
 ## Persönliche Abnahme und Grenzen
 
+**Weiterer Praxisfall 31.10.2026 – Brilliant Minds S01E11 Die andere Frau:** Laufende Umgebung **Build 46 / Setup / Arbeitsrechner** fortgeführt. Cutlist mit 25 fps, MP4Box 26.07 und drei Behaltebereichen; Protokoll bestätigt Schneiden, Zusammenfügen und alle drei Schnittstellenprüfungen bis „Fertig.“. Übergang 1 mit zusätzlicher Prüfung des dekodierten neuen Anfangs bei gleicher Bildzeit. Bild/Ton/Schnitt/Drei-Sekunden-Vorschau persönlich bestanden. Zusammen mit Rocky Horror und Doc drei aktuelle Praxisfälle dokumentiert. [Nachweis](PRAXISTESTS-20261031.md#fall-3-brilliant-minds-s01e11--die-andere-frau-5plus-hq-25-fps).
+
+**Weiterer Praxisfall 31.10.2026 – Doc S02E18 Orientierung:** Unter der zuletzt genannten Umgebung **Build 46, Setup auf dem Arbeitsrechner** fortgeführt. Cutlist nennt 25 fps, MP4Box 26.07 und zwei Behaltebereiche; Kommentar vermerkt vollständig entfernte Werbung. Bild/Ton/Schnitt/Drei-Sekunden-Vorschau persönlich bestanden. [Praxisnachweis und Planwerte](PRAXISTESTS-20261031.md#fall-2-doc-s02e18--orientierung-5plus-hq-25-fps). Kein neuer Build-47-VM-/Portable-Fall.
+
+**Praxisnachtrag 31.10.2026 – Build 46, Setup auf dem Arbeitsrechner:** The Rocky Horror Picture Show (arte HD vom 30.10.2026), Cutlist mit 50 fps, einem Behaltebereich und vorgesehenem Motor otr-can 0.1.6. Ton/Bild/Schnitt/Drei-Sekunden-Vorschau persönlich bestanden. Cutlist-Kommentar nennt keine Werbung und keinen verbliebenen arte-Vorspann-Blitzer. Build-/Setup-/Rechnerzuordnung vom Nutzer ausdrücklich präzisiert. Getrennt von Build-47-VM/Portable und ohne vollständige neue Paket-Endabnahme dokumentiert. [Praxisnachweis](PRAXISTESTS-20261031.md#fall-1-the-rocky-horror-picture-show-arte-hd-50-fps).
+
 Der eingefrorene Entwicklungsstand ist persönlich positiv bestätigt: **Furiosa aus MP4Box-Teilen mit AAC+AC-3 in 23,74 s** und danach **John Wick aus neuen MP4Box-Teilen mit AAC+AC-3 in 16,44 s**, jeweils Bild, Ton, Übergang/Klebestelle und Drei-Sekunden-Vorschau. Das doppelte Furiosa-Protokoll zählt als ein Lauf. Die allgemeine Tonbestätigung ist keine gesonderte Hörbewertung jeder einzelnen Spur. Weitere automatische otr-can-/AAC-Referenzen bleiben getrennte Nachweise.
 
-**Neue persönliche Setup-/Portable-/VM-Abnahme des Paketsatzes ist offen.** Laufzeitabhängig: .NET 10 Desktop Runtime x64 separat installieren; FFmpeg/ffprobe konfigurieren. Unter Einstellungen → OTR-CAN-Werkzeuge die mitgelieferte **tools/otr-can/otr_can.exe** wählen und Version 0.1.6 kontrollieren; ältere gespeicherte Pfade können auf andere Kopien zeigen. Beide Verfahren verlangen passende Bildformate; Video wird nicht automatisch repariert. QUICK liefert keine sampleidentische Qualitätsgarantie.
+**Nachtrag 31.10.2026 – persönliche VM-Setup-Prüfung begonnen:** Installation von CAN 1.0.2 Build 46 bestätigt, Version im Screenshot sichtbar. QUICK AND COPY mit AAC und AC-3 erfolgreich in **30,03 s**, Ton/Bild/Schnitt/Klebestelle/Drei-Sekunden-Vorschau persönlich positiv. Nutzer testet weiter; vollständige VM-Endabnahme, Deinstallation und neue Portable-ZIP-Prüfung bleiben offen. [Laufender VM-Bericht](VM-SETUP-BUILD46-20261031.md).
+
+Laufzeitabhängig: .NET 10 Desktop Runtime x64 separat installieren; FFmpeg/ffprobe konfigurieren. Unter Einstellungen → OTR-CAN-Werkzeuge die mitgelieferte **tools/otr-can/otr_can.exe** wählen und Version 0.1.6 kontrollieren; ältere gespeicherte Pfade können auf andere Kopien zeigen. Beide Verfahren verlangen passende Bildformate; Video wird nicht automatisch repariert. QUICK liefert keine sampleidentische Qualitätsgarantie.
 
 Archive bewahren den Dokumentationsstand bei Snapshot-Erstellung vor Abschluss der Paketprüfung. Dieser aktuelle Arbeitsbericht ergänzt spätere vollständige Ergebnisse und Prüfsummen; schreibgeschützte Archive und Quellsnapshot werden dafür nicht nachträglich verändert.
+
+**Zweiter VM-Funktionsfall am 31.10.2026:** AUDIO-ENTHUSIAST mit John Wick Kapitel 4 und AAC/AAC technisch erfolgreich in **00:05:54.41**; Bild, Ton und Drei-Sekunden-Vorschau persönlich bestanden. **457399680 Tonsamples**, Klebestelle **01:57:37.120**, Dauer **02:38:49.160** verifiziert, Ausgabeübernahme und Bereinigung erfolgreich. Beide Klebeverfahren sind damit in der laufenden VM-Setuprunde positiv; keine vollständige Endabnahme. [Nachweis](VM-SETUP-BUILD46-20261031.md#fall-2-audio-enthusiast-mit-john-wick-kapitel-4).
 
 ## Auslieferungsdateien
 

@@ -1,6 +1,74 @@
 # Testplan – aktueller Funktionsstand
 
-**Stand 29.10.2026: eingefroren CAN 1.0.2 Build 46, öffentlich Build 41, Motor 0.1.6.** [Versionen](VERSIONEN.md), [Paketbericht](RELEASE-1.0.2-BUILD46-RESULT.md).
+**Stand 31.10.2026: geprüfter und eingefrorener Build 47 zur Veröffentlichung als v1.0.2-build47 freigegeben; frühere Releases/Pakete bleiben erhalten, Motor 0.1.6.** [Versionen](VERSIONEN.md), [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md).
+
+## Freigabe zum Einfrieren und Veröffentlichen am 31.10.2026
+
+Der Nutzer beauftragt ausdrücklich, den bestätigten Stand einzufrieren, README/Dokumentation abzugleichen, zu committen, zu pushen und zu veröffentlichen. Veröffentlicht wird der unveränderte geprüfte Build-47-Paketsatz unter **v1.0.2-build47**; ältere Releases bleiben erhalten. Die bisherigen Aussagen über noch fehlende Veröffentlichungsfreigaben beschreiben den damaligen Paketierungsstand und sind durch diesen Auftrag abgelöst. Kein bisher nicht gemeldeter persönlicher Test wird dadurch als bestanden ergänzt. [Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md).
+
+## Aktuelle Praxistests am 31.10.2026
+
+**Brilliant Minds S01E11 – Die andere Frau, 5plus HQ – Build 46 / Setup / Arbeitsrechner:** Cutlist mit 25 fps, MP4Box 26.07 und drei Behaltebereichen. Protokoll bestätigt drei geschnittene und zusammengefügte Segmente, alle drei Schnittstellenprüfungen und Abschluss „Fertig.“; an Übergang 1 gleicher Bildzeitpunkt, dekodierter neuer Anfang zusätzlich geprüft. Nutzer bestätigt **Bild, Ton, Schnitt und Drei-Sekunden-Vorschau**. Dritter aktueller persönlicher Praxisfall nach Rocky Horror und Doc. [Nachweis](PRAXISTESTS-20261031.md#fall-3-brilliant-minds-s01e11--die-andere-frau-5plus-hq-25-fps).
+
+**Doc S02E18 – Orientierung, 5plus HQ – Build 46, Setup auf dem Arbeitsrechner (laufende Umgebung fortgeführt):** Cutlist mit 25 fps, vorgesehenem Motor MP4Box 26.07 und zwei Behaltebereichen **584,200–1925,240 s** / **2618,560–3768,720 s**. Geplante Gesamtdauer **00:41:31.200**, rechnerischer innerer Übergang **00:22:21.040**; keine gemessenen Ausgabezeiten. Nutzer bestätigt **Bild, Ton, Schnitt und Drei-Sekunden-Vorschau**. Cutlist-Kommentar vermerkt vollständig entfernte Werbung. [Praxisbericht](PRAXISTESTS-20261031.md#fall-2-doc-s02e18--orientierung-5plus-hq-25-fps).
+
+**The Rocky Horror Picture Show, arte HD – Build 46, Setup auf dem Arbeitsrechner (vom Nutzer präzisiert):** Cutlist nennt CAN 1.0.2, 50 fps und vorgesehenen Motor otr-can 0.1.6, einen Behaltebereich **374,300–6094,960 s** mit **5720,660 s** Dauer. Geplant 286033 Bilder bei 50 fps, keine gemessene Ausgabebildanzahl. Nutzer bestätigt **Ton, Bild, Schnitt und Drei-Sekunden-Vorschau**. Laut Cutlist-Kommentar keine Werbung und arte-Vorspann-Blitzer nicht mehr sichtbar. Getrennt von Build-47-VM/Portable dokumentiert; keine vollständige Paket-Endabnahme. [Praxisbericht](PRAXISTESTS-20261031.md#fall-1-the-rocky-horror-picture-show-arte-hd-50-fps).
+
+## Portable-ZIP Build 47 in der VM begonnen
+
+**Weitere Nachweise:** Furiosa-MP4Box-Sperre persönlich per Screenshot bestätigt. Neuer QUICK-Lauf nach ausdrücklicher Nutzerklärung aus **otr-can-Teilen**: AAC und AC-3 erhalten, **00:00:41.93**, Ton/Bild/Schnitt/Drei-Sekunden-Vorschau persönlich bestanden; Codec-Framegrößen- und Audio-DTS-Warnung in der Meckerecke erhalten. Angehängter eigener Furiosa-otr-can-AUDIO-ENTHUSIAST-Lauf mit AAC/AAC technisch erfolgreich in **00:05:26.37**, **387448320 Samples**, Klebestelle **01:54:18.320**, Dauer **02:14:31.840**. Persönliche Kontrolle des letzten Laufs nicht separat zugeordnet. Drei Portable-Läufe dokumentiert, ZIP-Endabnahme weiter offen. [Fälle und Abnahmestand](VM-PORTABLE-BUILD47-20261031.md#abnahmestand).
+
+Nutzer wechselt mit „jetzt zip“ zur getrennten Portable-Prüfung. Erster Fall John Wick Kapitel 4 aus zwei MP4Box-Teilen: Sperrhinweis für AUDIO-ENTHUSIAST im Screenshot sichtbar, QUICK mit AAC und AC-3 ohne Neukodierung erfolgreich in **28,6188598 s** (Anzeige **00:00:28.61**). Ausgabeübernahme und Bereinigung erfolgreich; Warnung/Laufzeitunterschiede in der Meckerecke erhalten. **Ton, Bild und Drei-Sekunden-Vorschau persönlich bestanden.** Weitere Portable-Fälle und ZIP-Endabnahme offen, keine Setup-Deinstallation daraus abgeleitet. [Portable-Bericht](VM-PORTABLE-BUILD47-20261031.md).
+
+## VM-Setup Build 47: drei bestätigte Verfahrenswege
+
+**Fortschreibung: drei Verarbeitungsläufe persönlich positiv.** Der Nutzer hält ausdrücklich fest: **MP4Box → QUICK AND COPY; otr-can → QUICK AND COPY sowie AUDIO-ENTHUSIAST.** Neuer otr-can-QUICK-Lauf mit AAC und AC-3 in **00:00:42.79**, Bild/Ton/Drei-Sekunden-Vorschau bestätigt; Codec-Framegrößen- und Audio-DTS-Warnung in der Meckerecke erhalten. Furiosa-otr-can mit AUDIO-ENTHUSIAST und AAC/AAC in **00:05:37.95**: **387448320 Samples**, Klebestelle **01:54:18.320**, Dauer **02:14:31.840**, technische Prüfungen vollständig positiv, Bild/Ton persönlich bestätigt. Deinstallation, Portable und vollständige Endabnahme bleiben separat offen. [Fälle und Zuordnung](VM-SETUP-BUILD47-20261031.md#vom-nutzer-festgehaltene-verfahrenszuordnung).
+
+Zusätzlicher Dialogcheck mit Furiosa: Wechsel von zwei MP4Box-Teilen zu zwei otr-can-Teilen lässt den Sperrhinweis wie vorgesehen verschwinden, mit zwei Screenshots persönlich bestätigt. Kein neuer Verarbeitungslauf gezählt. Die eigene Tonspurauswahl für AUDIO-ENTHUSIAST bleibt eine zusätzliche Startvoraussetzung. [Dialognachweis](VM-SETUP-BUILD47-20261031.md#zusätzlicher-dialogcheck-von-mp4box-zu-otr-can-wechseln).
+
+MP4Box-Sperre für AUDIO-ENTHUSIAST persönlich bestätigt. QUICK AND COPY mit AAC und AC-3 (jeweils Deutsch/Stereo/48000 Hz) technisch erfolgreich, Gesamt **27,8317790 s** (Anzeige **00:00:27.83**). Nutzer bestätigt QUICK, Bild, Ton und Drei-Sekunden-Vorschau; Ausgabeübernahme und Bereinigung erfolgreich, Werkzeugwarnung und Laufzeitunterschiede in der Meckerecke erhalten. Weitere VM-Fälle und Endabnahme sowie Deinstallation/Portable-ZIP offen. [Laufender VM-Bericht](VM-SETUP-BUILD47-20261031.md).
+
+## Build-47-Paketprüfung
+
+1593 Pakettests und zusätzlich 1321 Tests gegen finale Produkt-DLLs (934 App/387 Media) positiv, keine übersprungen. 705 Quellenmanifest-Dateien/706 Quellen-ZIP-Dateien und 250 Portable-Nutzdateien vollständig geprüft, Release ohne Warnungen/Fehler, native Herkunfts-/Dialogprüfung und zwei Fenstergrößen positiv. Persönlicher John-Wick-MP4Box-Dialogcheck bestanden. Nächster Schritt: neue Setup-Installation, Portable-ZIP und VM-Funktionsprüfung getrennt bestätigen. Die neue Paketabnahme ist durch den Entwicklungsdialogcheck noch nicht abgeschlossen. [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md).
+
+## Entwicklungsbuild 47: MP4Box-Sperre für AUDIO-ENTHUSIAST
+
+**1593 Tests bestanden:** 200 Core, 72 Cutlists, 387 Media, 934 App. 17 neue Erkennungs-/Dienst-/Dialogfälle, native Prüfung realer Furiosa-MP4Box-Teile und otr-can-Vergleich sowie visuelle Prüfung zweier Dialoggrößen positiv. Persönlich noch zu prüfen: MP4Box in beiden Positionen und gemischte Paare sperren AUDIO-ENTHUSIAST samt Tonspurauswahl; QUICK bleibt nach bestätigter Zuordnung nutzbar. Beim Tauschen bleibt die Sperre richtig zugeordnet, beim Ersetzen durch unmarkierte Dateien wird sie aufgehoben. Hinweis muss auch im kleinen Fenster sichtbar bleiben. Herkunft ohne GPAC-Kennung unbekannt, bestehende Medienprüfungen bleiben aktiv. [Umsetzung und Prüfgrenzen](MP4BOX-AUDIO-ENTHUSIAST-SPERRE-20261031.md).
+
+## VM-Setup Build 46 am 31.10.2026
+
+**Separater lokaler Furiosa-Nachweis:** AUDIO-ENTHUSIAST lehnt die im neuen Screenshot benannten MP4Box-Dateien schon an der Bildvorprüfung ab. Metadaten direkt gelesen: nominell 25 fps, mittlere Raten ≈ 24,999561/24,999216; zusätzlich AAC-Dauerabweichungen ≈ 21,271/14,083 ms und unterschiedliche H.264-Konfigurationshashes. Kein zusätzlicher positiver VM-Fall. [Details und Prüfgrenzen](FURIOSA-MP4BOX-AUDIO-ENTHUSIAST-20261031.md).
+
+**Offener Befund:** Zwei MP4Box-Teile werden vor dem AUDIO-ENTHUSIAST-Start mit der blauen Meldung zu identischen Bild-/Tonzeiträumen ab null abgewiesen. Nutzer bestätigt, dass kein Lauf startet. Exakte Start-/Endzeiten des konkreten Dateipaars noch zu ermitteln; die früher gemeldeten 40-ms-Unterschiede der MP4Box-Teile sind ein Hinweis, kein neuer Dateinachweis. Drei bisherige Erfolge bleiben erhalten, kein vierter Erfolg gezählt. [Diagnosestand](VM-SETUP-BUILD46-20261031.md#offener-befund-zwei-mp4box-teile-mit-audio-enthusiast).
+
+**Dritter Funktionsfall: QUICK AND COPY mit einer AAC-Spur**, John Wick Kapitel 4 Teil 1/2, jeweils Deutsch/Stereo/48000 Hz. Vorbereitung beider gewählter Spuren und anschließendes Concat ohne Neukodierung erfolgreich, Gesamt **00:00:28.88**. Ausgabeübernahme und Bereinigung erfolgreich. FFmpeg korrigiert einen nicht monotonen Audio-DTS; Warnung und Laufzeitunterschied bleiben in der Meckerecke. Nutzer bestätigt **Ton, Bild und Drei-Sekunden-Vorschau**. Drei persönliche Funktionsfälle und Installation positiv, VM-Prüfrunde weiterhin laufend. [Nachweis](VM-SETUP-BUILD46-20261031.md#fall-3-quick-and-copy-mit-einer-aac-spur).
+
+**Zweiter Funktionsfall: AUDIO-ENTHUSIAST**, John Wick Kapitel 4 Teil 1/2, jeweils AAC/Deutsch/Stereo/48000 Hz. Bild unverändert, Ton samplegenau verbunden und einmal durchgehend als AAC-LC kodiert; alle technischen Prüfungen einschließlich Klebestellendekodierung, Ausgabeübernahme und Bereinigung erfolgreich. **457399680 Tonsamples**, Klebestelle **01:57:37.120**, Gesamtdauer **02:38:49.160**, Verarbeitung **00:05:54.41**. Nutzer bestätigt **Bild, Ton und Drei-Sekunden-Vorschau**. Damit zwei persönliche Funktionsfälle; VM-Prüfrunde weiterhin laufend. [Nachweis](VM-SETUP-BUILD46-20261031.md#fall-2-audio-enthusiast-mit-john-wick-kapitel-4).
+
+Setup-Installation persönlich bestanden; Screenshot zeigt CAN 1.0.2 Build 46. Erster Funktionsfall: QUICK AND COPY mit bestätigter AAC-/AC-3-Mehrspurzuordnung (jeweils Deutsch/Stereo/48000 Hz), keine entfallenden Spuren, keine Neukodierung. Gesamt **30,0369156 s**, Anzeige **00:00:30.03**. Ausgabeprüfung, Übernahme und Bereinigung laut Protokoll erfolgreich; Meckerecke bewahrt Werkzeugwarnung und Laufzeitunterschiede. **Ton, Bild, Schnitt/Klebestelle und Drei-Sekunden-Vorschau persönlich bestanden.** Nutzer testet weiter; weitere VM-Fälle, Deinstallation und Portable-ZIP nicht vorweggenommen. [Laufender Bericht und Messwerte](VM-SETUP-BUILD46-20261031.md).
+
+## Persönliche Schnittprüfung am 30.10.2026
+
+Der Nutzer bestätigt ausdrücklich: **Bild, Ton, Schnittübergänge und Drei-Sekunden-Vorschau bei OTR-CAN und MP4Box erfolgreich geprüft.**
+
+| Schnittmotor | Persönliches Ergebnis | Technischer Nachweis |
+|---|---|---|
+| otr-can 0.1.6 | Alle vier Prüfpunkte bestanden | Übermitteltes Erfolgsprotokoll zu „Das Weihnachtsschloss“, HQ-MP4 vom 29.10.2026: fünf Behaltebereiche, 134128 Videopakete; AAC-Stereo, 48000 Hz, 257525760 verifizierte Tonsamples. Finale MP4 einschließlich Bild-/Tonpaketen, PTS/DTS, Padding und Decoderkonfigurationen verifiziert. |
+| MP4Box | Dieselben vier Prüfpunkte bestanden | Persönliche Bestätigung; kein separates MP4Box-Protokoll übermittelt. |
+
+Vor dem otr-can-Aufruf wurden 194955 eindeutige, aufsteigende Bildzeiten und die 25/50-fps-Zeitstruktur geprüft. CAN-Buildnummer und Installationsvariante sind im übermittelten Protokoll nicht angegeben. Das Ergebnis bestätigt die gemeldeten Schnittprüfungen; eine vollständige Setup-/Portable-/VM-Abnahme oder Veröffentlichung ist damit nicht beauftragt.
+
+### Weiterer Fall: John Wick – Kapitel 3
+
+HD-MP4 vom 20.10.2026, sechs Behaltebereiche. Der Nutzer bestätigt für **beide Schnittmotoren Schnitt, Ton, Bild und Drei-Sekunden-Vorschau als bestanden**.
+
+| Schnittmotor | Technischer Nachweis aus den übermittelten Protokollen |
+|---|---|
+| otr-can 0.1.6 | 352507 eindeutige, aufsteigende Bildzeiten mit bestätigter 25/50-fps-Zeitstruktur; 183126 Videopakete einschließlich roher PTS/DTS verifiziert. Zwei vollständige Tonspuren einmal durchgehend kodiert: AAC und AC-3, jeweils Stereo/48000 Hz und 351601920 verifizierte decodierte Samples mit kontinuierlichen rohen PTS. Finale MP4 einschließlich aller Bild-/Tonpakete, PTS/DTS, Padding und Decoderkonfigurationen verifiziert. |
+| MP4Box | Sechs Abschnitte geschnitten und zusammengefügt; Schnittstellenprüfung aller sechs Abschnitte mit „Fertig.“ abgeschlossen. An Übergang 2 und 3 jeweils gleiche Bildzeit am Abschnittswechsel gemeldet und der dekodierte neue Anfang zusätzlich geprüft. |
+
+Eigenständiger weiterer Praxisfall nach „Das Weihnachtsschloss“. CAN-Buildnummer und Installationsvariante sind weiterhin nicht angegeben. Die persönliche Bestätigung nennt Ton allgemein; eine gesonderte Hörbewertung jeder einzelnen Tonspur wird daraus nicht abgeleitet.
 
 ## Aktuelle Build-46-Prüfung
 
