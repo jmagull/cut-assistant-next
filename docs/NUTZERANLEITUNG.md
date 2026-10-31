@@ -1,6 +1,6 @@
 # Nutzeranleitung – Cut Assistant Next
 
-**Stand 31.10.2026: CAN 1.0.2 Build 47 ist eingefroren und zur Veröffentlichung freigegeben; otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** [Release und Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47), [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md), [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md). Frühere Pakete bleiben erhalten.
+**Stand 31.10.2026: CAN 1.0.2 Build 47 ist als stabile Latest-Version veröffentlicht; otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** [Release und Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47), [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md), [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md). Frühere Pakete bleiben erhalten.
 
 ## Klebecenter – zwei fertige Filmteile verbinden
 
@@ -570,4 +570,4 @@ Nach Erfolg werden temporäre Dateien, Erfolgsprotokoll und leerer Arbeitsordner
 
 ## Mitgelieferten Motor nach Überinstallation prüfen
 
-Der aktuelle Paketsatz enthält **otr-can 0.1.6** unter **tools/otr-can/otr_can.exe**. Unter **Einstellungen → OTR-CAN-Werkzeuge** den Pfad auf diese mitgelieferte EXE setzen. Eine übernommene Einstellung kann weiterhin auf eine ältere Kopie zeigen. Die Versionsprüfung muss **0.1.6** melden. Das Klebecenter verwendet die konfigurierten FFmpeg-Werkzeuge. Der veröffentlichte Build 41 und lokal AUDIO-ENTHUSIAST verwenden genau eine gewählte Spur je Teil mit durchgehender AAC-LC-Neukodierung; QUICK AND COPY ab lokalem Build 43 erhält die bestätigten kompatiblen AAC-/AC-3-Paare ohne Neukodierung.
+Der aktuelle Paketsatz enthält **otr-can 0.1.6** unter **tools/otr-can/otr_can.exe**. Unter **Einstellungen → OTR-CAN-Werkzeuge** den Pfad auf diese mitgelieferte EXE setzen. Eine übernommene Einstellung kann weiterhin auf eine ältere Kopie zeigen. Die Versionsprüfung muss **0.1.6** melden. Das Klebecenter verwendet die konfigurierten FFmpeg-Werkzeuge. Im veröffentlichten Build 47 verwendet AUDIO-ENTHUSIAST genau eine gewählte Spur je Teil mit durchgehender AAC-LC-Neukodierung; erkannte GPAC/MP4Box-Teile sind dafür gesperrt. QUICK AND COPY erhält bestätigte kompatible AAC-/AC-3-Paare ohne Neukodierung.

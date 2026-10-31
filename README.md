@@ -2,9 +2,9 @@
 
 Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Es verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codec-Pakete vorauszusetzen.
 
-**Stand 31.10.2026: CAN 1.0.2 Build 47 ist eingefroren und zur Veröffentlichung freigegeben.** App-Dateiversion **1.0.2.47**, Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64. Die Veröffentlichung läuft unter **v1.0.2-build47**; der frühere Release v1.0.2 mit Build 41 bleibt erhalten.
+**Stand 31.10.2026: CAN 1.0.2 Build 47 ist als stabile Latest-Version veröffentlicht.** App-Dateiversion **1.0.2.47**, Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64. [Release **v1.0.2-build47**](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47); der frühere Release v1.0.2 mit Build 41 bleibt erhalten.
 
-[Setup Build 47](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build47/CutAssistantNext-1.0.2-Build47-win-x64-Setup.exe) · [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build47/CutAssistantNext-1.0.2-Build47-win-x64.zip) · [CAN-Quellen](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build47/CutAssistantNext-1.0.2-Build47-source.zip) · [Release, passende Drittanbieterquellen und Prüfsummen](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47). Die Links werden mit Abschluss der freigegebenen Veröffentlichung verfügbar.
+[Setup Build 47](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build47/CutAssistantNext-1.0.2-Build47-win-x64-Setup.exe) · [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build47/CutAssistantNext-1.0.2-Build47-win-x64.zip) · [CAN-Quellen](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build47/CutAssistantNext-1.0.2-Build47-source.zip) · [Release, passende Drittanbieterquellen und Prüfsummen](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47). Alle acht Release-Dateien sind veröffentlicht und gegen die lokalen SHA-256-Digests geprüft.
 
 ## Klebecenter
 
@@ -171,7 +171,7 @@ Die Gesamtabnahme in Build 24 hat bei einer erzeugten Datei mit zwei gleichartig
 
 ## Für Anwender
 
-Vorgesehene Umgebung ist Windows 11 x64. Der freigegebene Paketsatz CAN 1.0.2 Build 47 bietet Setup und Portable-ZIP mit otr-can 0.1.6. Die .NET 10 Desktop Runtime muss separat installiert werden; die vier geprüften libmpv-DLLs sind enthalten. ffprobe, FFmpeg und MP4Box werden separat installiert und über die Einstellungen konfiguriert.
+Vorgesehene Umgebung ist Windows 11 x64. Der veröffentlichte Paketsatz CAN 1.0.2 Build 47 bietet Setup und Portable-ZIP mit otr-can 0.1.6. Die .NET 10 Desktop Runtime muss separat installiert werden; die vier geprüften libmpv-DLLs sind enthalten. ffprobe, FFmpeg und MP4Box werden separat installiert und über die Einstellungen konfiguriert.
 
 Die [Nutzeranleitung](docs/NUTZERANLEITUNG.md) erklärt die Einrichtung ohne Entwicklungswerkzeuge.
 

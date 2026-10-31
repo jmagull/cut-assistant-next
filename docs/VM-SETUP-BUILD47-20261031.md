@@ -1,4 +1,6 @@
-# VM-Setup Build 47 – laufende persönliche Prüfrunde
+# VM-Setup Build 47 – persönliche Prüfnachweise
+
+**Veröffentlichungsnachtrag 31.10.2026:** Der bestätigte Stand ist nach Nutzerfreigabe eingefroren, committet/gepusht und als [v1.0.2-build47 / Latest](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47) veröffentlicht. Die folgenden datierten Prüf-/Auftragsstände bleiben als Historie erhalten; nicht separat gemeldete persönliche Testschritte werden dadurch nicht ergänzt. [Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md).
 
 ## Freigabe zum Einfrieren und Veröffentlichen am 31.10.2026
 

@@ -1,12 +1,12 @@
 # Aktueller Projektstand
 
-**Stand 31.10.2026: CAN 1.0.2 Build 47 ist eingefroren und zur Veröffentlichung freigegeben.** App-Dateiversion **1.0.2.47**, Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64. Die Veröffentlichung läuft unter **v1.0.2-build47**; der frühere Release v1.0.2 mit Build 41 bleibt erhalten.
+**Stand 31.10.2026: CAN 1.0.2 Build 47 ist als stabile Latest-Version veröffentlicht.** App-Dateiversion **1.0.2.47**, Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64. [Release **v1.0.2-build47**](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47); der frühere Release v1.0.2 mit Build 41 bleibt erhalten.
 
 ## Versionen und Auslieferung
 
 | Bereich | Stand |
 |---|---|
-| Freigegebener Release | [CAN 1.0.2 Build 47 / v1.0.2-build47](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47), Veröffentlichung in Vorbereitung |
+| Stabile Latest-Version | [CAN 1.0.2 Build 47 / v1.0.2-build47](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47), veröffentlicht am 31.10.2026 |
 | App-Dateiversion / Buildzähler | 1.0.2.47 / 47 |
 | Schnittmotor / Wiedergabe | otr-can 0.1.6 / libmpv 0.41.0 |
 | Oberfläche / Plattform | .NET 10, WPF, Windows 11 x64 |
@@ -29,7 +29,7 @@ QUICK verwendet FFmpeg-Streamcopy für Video und bestätigte AAC-/AC-3-Spurpaare
 | Build-47-Portable in der VM | MP4Box-/otr-can-QUICK persönlich positiv, otr-can-AUDIO-ENTHUSIAST technisch erfolgreich; persönliche Kontrolle dieses letzten Laufs nicht separat zugeordnet |
 | Deinstallation Build 47 | Nicht separat bestätigt |
 | Aktuelle Arbeits-PC-Schnitte | Rocky Horror/50 fps/otr-can, Doc und Brilliant Minds/25 fps/MP4Box persönlich positiv – ausdrücklich Build-46-Setup |
-| Nutzerentscheidung 31.10.2026 | Stand einfrieren, Commit, Push und Veröffentlichung ausdrücklich freigegeben |
+| Git und Veröffentlichung | Release-Commit ae6cc93 und Tag gepusht; stabile Latest-Version veröffentlicht, acht Remote-Assets unverändert geprüft |
 
 [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md), [Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md), [Setup](VM-SETUP-BUILD47-20261031.md), [Portable](VM-PORTABLE-BUILD47-20261031.md), [Praxistests Build 46](PRAXISTESTS-20261031.md), [Anleitung](NUTZERANLEITUNG.md).
 

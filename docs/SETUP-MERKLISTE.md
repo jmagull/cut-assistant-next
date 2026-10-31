@@ -5,8 +5,8 @@
 - [x] Produktstand Build 47 eingefroren, Setup/Portable/Quellen und Prüfsummen technisch geprüft (1593 + 1321 Tests).
 - [x] Persönliche Setup-/Portable-Funktionsläufe und separate aktuelle Build-46-Arbeits-PC-Schnitte dokumentiert.
 - [x] Freeze, Commit, Push und Veröffentlichung ausdrücklich freigegeben; ältere Releases erhalten.
-- [ ] Release-Commit/Tag pushen, acht Assets zunächst als Entwurf hochladen und SHA-256 vergleichen, danach als stabile Latest-Version veröffentlichen.
-- [ ] Tatsächlichen Commit-/Tag-/Release-/Digestnachweis ergänzen.
+- [x] Release-Commit ae6cc93 und Tag gepusht, acht Assets als Entwurf hochgeladen und SHA-256 verglichen, anschließend als stabile Latest-Version veröffentlicht.
+- [x] Tatsächlichen Commit-/Tag-/Release-/Digestnachweis ergänzt; alter Build-41-Release samt Assets erhalten.
 
 [Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md). Die folgenden datierten Aufgaben bewahren ihren damaligen Stand.
 

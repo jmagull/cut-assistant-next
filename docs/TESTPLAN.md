@@ -1,6 +1,6 @@
 # Testplan – aktueller Funktionsstand
 
-**Stand 31.10.2026: geprüfter und eingefrorener Build 47 zur Veröffentlichung als v1.0.2-build47 freigegeben; frühere Releases/Pakete bleiben erhalten, Motor 0.1.6.** [Versionen](VERSIONEN.md), [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md).
+**Stand 31.10.2026: CAN 1.0.2 Build 47 als stabile Latest-Version v1.0.2-build47 veröffentlicht; frühere Releases/Pakete bleiben erhalten, Motor 0.1.6.** [Versionen](VERSIONEN.md), [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md).
 
 ## Freigabe zum Einfrieren und Veröffentlichen am 31.10.2026
 
@@ -30,7 +30,7 @@ MP4Box-Sperre für AUDIO-ENTHUSIAST persönlich bestätigt. QUICK AND COPY mit A
 
 ## Build-47-Paketprüfung
 
-1593 Pakettests und zusätzlich 1321 Tests gegen finale Produkt-DLLs (934 App/387 Media) positiv, keine übersprungen. 705 Quellenmanifest-Dateien/706 Quellen-ZIP-Dateien und 250 Portable-Nutzdateien vollständig geprüft, Release ohne Warnungen/Fehler, native Herkunfts-/Dialogprüfung und zwei Fenstergrößen positiv. Persönlicher John-Wick-MP4Box-Dialogcheck bestanden. Nächster Schritt: neue Setup-Installation, Portable-ZIP und VM-Funktionsprüfung getrennt bestätigen. Die neue Paketabnahme ist durch den Entwicklungsdialogcheck noch nicht abgeschlossen. [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md).
+1593 Pakettests und zusätzlich 1321 Tests gegen finale Produkt-DLLs (934 App/387 Media) positiv, keine übersprungen. 705 Quellenmanifest-Dateien/706 Quellen-ZIP-Dateien und 250 Portable-Nutzdateien vollständig geprüft, Release ohne Warnungen/Fehler, native Herkunfts-/Dialogprüfung und zwei Fenstergrößen positiv. Persönlicher John-Wick-MP4Box-Dialogcheck bestanden. Die tatsächlichen Setup-/Portable-Funktionsnachweise stehen oben getrennt dokumentiert. Zusätzliche persönliche Prüfvarianten, insbesondere eine gesonderte Deinstallation und die Portable-AUDIO-ENTHUSIAST-Hörkontrolle, bleiben offen; der Nutzer hat die Veröffentlichung dennoch ausdrücklich freigegeben. [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md).
 
 ## Entwicklungsbuild 47: MP4Box-Sperre für AUDIO-ENTHUSIAST
 

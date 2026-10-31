@@ -18,13 +18,13 @@
 | 1.0.2 | 44 | 0.1.6 | Lokale Menüvereinfachung: separate Tonspurkopie im Klebecenter ausgeblendet; Auswahl beim Zusammenfügen bleibt. Menü persönlich bestätigt; Setup/Portable/Quellen lokal technisch geprüft; persönliche neue Paketabnahme offen, nicht veröffentlicht |
 | 1.0.2 | 45 | 0.1.6 | Lokaler Hinweis am Tonspurpaar-Haken und Erklärung doppelter Zuordnung; nur XAML-Text/Textumbruch, persönlich bestätigt und eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt eingefroren; neue persönliche Paketabnahme offen, nicht veröffentlicht |
 | 1.0.2 | 46 | 0.1.6 | Bestätigtes pragmatisches QUICK mit Meckerecke eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt; Quellstand committet/gepusht, Veröffentlichung erst nach Ansage |
-| 1.0.2 | 47 | 0.1.6 | Eingefroren, geprüft und am 31.10.2026 zu Commit/Push und Veröffentlichung als v1.0.2-build47 freigegeben; MP4Box-Sperre, Setup-/Portable-Funktionsnachweise dokumentiert |
+| 1.0.2 | 47 | 0.1.6 | Stabile Latest-Version v1.0.2-build47, am 31.10.2026 veröffentlicht; MP4Box-Sperre, Setup-/Portable-Nachweise und acht identische Uploads dokumentiert |
 
-Bisher veröffentlichte App-Dateiversion **1.0.2.41**, neuer zur Veröffentlichung freigegebener Paketsatz **1.0.2.47** (technisch geprüft und schreibgeschützt; frühere Pakete einschließlich Build 46 erhalten), libmpv **0.41.0**, Framework **.NET 10**, Ziel **Windows 11 x64/WPF**. CAN 1.0.2 Build 41 wurde am 27.10.2026 nach ausdrücklicher Freigabe veröffentlicht. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
+Aktuell veröffentlichte App-Dateiversion **1.0.2.47**, als stabile Latest-Version **v1.0.2-build47** (technisch geprüft und schreibgeschützt; frühere Pakete einschließlich Build 46 erhalten), libmpv **0.41.0**, Framework **.NET 10**, Ziel **Windows 11 x64/WPF**. CAN 1.0.2 Build 41 wurde am 27.10.2026 nach ausdrücklicher Freigabe veröffentlicht. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
 
 ## Technische Nachweise
 
-- Build 47: 1593 Pakettests und zusätzlich 1321 Tests gegen finale DLLs, native MP4Box-/otr-can-Erkennung und zwei Dialoggrößen positiv. Persönlicher Dialogcheck bestanden, neue Paketabnahme offen. [Pakete und Prüfsummen](RELEASE-1.0.2-BUILD47-RESULT.md).
+- Build 47: 1593 Pakettests und zusätzlich 1321 Tests gegen finale DLLs, native MP4Box-/otr-can-Erkennung und zwei Dialoggrößen positiv. Setup-/Portable-Funktionsnachweise getrennt dokumentiert, Veröffentlichung nach ausdrücklicher Nutzerfreigabe erfolgt. [Pakete und Prüfsummen](RELEASE-1.0.2-BUILD47-RESULT.md), [Veröffentlichung](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md).
 
 - Build 46: 1576 Tests, 27 native QUICK- und 21 bisherige Fälle; neun bytegleiche Enthusiast-Ausgaben; drei reale Referenzen erfolgreich. [Ablauf und Grenzen](KLEBECENTER-QUICK-PRAGMATISCH-20261029.md).
 

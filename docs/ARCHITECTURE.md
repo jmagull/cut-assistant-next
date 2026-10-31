@@ -1,6 +1,6 @@
 # Architektur – Arbeitsstand
 
-**Arbeitsabgleich 31.10.2026: eingefroren und zur Veröffentlichung freigegeben CAN 1.0.2 Build 47; otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
+**Arbeitsabgleich 31.10.2026: CAN 1.0.2 Build 47 als stabile Latest-Version veröffentlicht; otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
 
 ## Klebecenter und Paketierung – umgesetzt
 

@@ -1,6 +1,6 @@
 # Cut Assistant Next 1.0.2 · Build 47
 
-**31.10.2026 – eingefroren und zur Veröffentlichung freigegeben als [v1.0.2-build47](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47).** App-Dateiversion **1.0.2.47**, unverändert otr-can **0.1.6** und libmpv **0.41.0**. Setup, Portable, passende CAN-/Motor-/libmpv-Quellen und Prüfsummen gehören zum technisch geprüften Paketsatz.
+**31.10.2026 – als stabile Latest-Version [v1.0.2-build47](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47) veröffentlicht.** App-Dateiversion **1.0.2.47**, unverändert otr-can **0.1.6** und libmpv **0.41.0**. Setup, Portable, passende CAN-/Motor-/libmpv-Quellen und Prüfsummen gehören zum technisch geprüften Paketsatz.
 
 ## Klebecenter
 
