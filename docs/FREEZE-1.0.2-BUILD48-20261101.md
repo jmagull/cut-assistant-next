@@ -25,3 +25,7 @@ Bewährter Build-47-Ablauf, separater Ausgabeordner **artifacts/release-1.0.2-bu
 Vor Freischaltung: vollständige Pakettests, zusätzliche Tests gegen finale Produktbibliotheken, 32 native/WPF-Kontrollen gegen finale Paketinhalte, vollständiger Quell-/ZIP-/Publish-/Setup-/Versions-/Prüfsummenvergleich. Keine Veröffentlichung bei fehlerhafter Prüfung oder abweichender Buildnummer. Die persönliche Ghosts-Abnahme der Entwicklungsfassung ersetzt keine behauptete neue Setup-/VM-Abnahme.
 
 [Analyse](KONTROLLPLAYER-TONSPUR-ABSTURZ-ANALYSE-20261101.md), [Korrektur und Entwicklungstests](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md), [Release Notes](RELEASE-NOTES-1.0.2.md), [unveränderter Vorgänger Build 47](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md).
+
+## Veröffentlichungsnachtrag
+
+Am 01.11.2026 erfolgreich als stabile Latest-Version veröffentlicht. Release-Commit und Tagziel **5afa5ff099d3b5e2f0586ce5899aafde6feabf58**, Release-ID **430808774**. 1634 Pakettests, zusätzlich 1362 Tests gegen finale Bibliotheken und 32 native/WPF-Kontrollen bestanden; alle acht serverseitigen Asset-Digests vor/nach Freigabe verifiziert. [Paketbericht](RELEASE-1.0.2-BUILD48-RESULT.md), [Veröffentlichung](RELEASE-1.0.2-BUILD48-PUBLISHED-20261101.md). Eingefrorene Quellen und Pakete bleiben beim Dokumentationsnachtrag unverändert.

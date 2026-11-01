@@ -1,5 +1,7 @@
 # Architektur – Arbeitsstand
 
+**01.11.2026 – CAN 1.0.2 Build 48 als stabile Latest-Version veröffentlicht.** Kontrollplayer-EOF-Absturz und Positionssprung korrigiert; 1634 Pakettests, 1362 finale DLL-Tests, 32 native/WPF-Kontrollen und persönliche Ghosts-Teil-1-/Teil-2-Abnahme. Build 47 und ältere datierte Nachweise bleiben erhalten. [Veröffentlichung](RELEASE-1.0.2-BUILD48-PUBLISHED-20261101.md), [Paketprüfung](RELEASE-1.0.2-BUILD48-RESULT.md). Die folgenden datierten Angaben bewahren ihren damaligen Stand.
+
 **Arbeitsabgleich 31.10.2026: CAN 1.0.2 Build 47 als stabile Latest-Version veröffentlicht; otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
 
 ## Klebecenter und Paketierung – umgesetzt

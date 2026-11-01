@@ -18,12 +18,14 @@
 | 1.0.2 | 44 | 0.1.6 | Lokale Menüvereinfachung: separate Tonspurkopie im Klebecenter ausgeblendet; Auswahl beim Zusammenfügen bleibt. Menü persönlich bestätigt; Setup/Portable/Quellen lokal technisch geprüft; persönliche neue Paketabnahme offen, nicht veröffentlicht |
 | 1.0.2 | 45 | 0.1.6 | Lokaler Hinweis am Tonspurpaar-Haken und Erklärung doppelter Zuordnung; nur XAML-Text/Textumbruch, persönlich bestätigt und eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt eingefroren; neue persönliche Paketabnahme offen, nicht veröffentlicht |
 | 1.0.2 | 46 | 0.1.6 | Bestätigtes pragmatisches QUICK mit Meckerecke eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt; Quellstand committet/gepusht, Veröffentlichung erst nach Ansage |
-| 1.0.2 | 48 | 0.1.6 | Kontrollplayer: EOF-Absturz und Positionssprung korrigiert; Veröffentlichung freigegeben, Paketprüfung läuft |
-| 1.0.2 | 47 | 0.1.6 | Stabile Latest-Version v1.0.2-build47, am 31.10.2026 veröffentlicht; MP4Box-Sperre, Setup-/Portable-Nachweise und acht identische Uploads dokumentiert |
+| 1.0.2 | 48 | 0.1.6 | Stabile Latest-Version v1.0.2-build48 vom 01.11.2026; Kontrollplayer-EOF und Positionserhalt korrigiert, 1634 Pakettests + 1362 finale DLL-Tests + 32 native Kontrollen |
+| 1.0.2 | 47 | 0.1.6 | Stabile Vorgängerversion v1.0.2-build47, am 31.10.2026 veröffentlicht; MP4Box-Sperre, Setup-/Portable-Nachweise und acht identische Uploads dokumentiert |
 
-Aktuell veröffentlichte App-Dateiversion **1.0.2.47**, als stabile Latest-Version **v1.0.2-build47** (technisch geprüft und schreibgeschützt; frühere Pakete einschließlich Build 46 erhalten), libmpv **0.41.0**, Framework **.NET 10**, Ziel **Windows 11 x64/WPF**. CAN 1.0.2 Build 41 wurde am 27.10.2026 nach ausdrücklicher Freigabe veröffentlicht. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).
+Aktuell veröffentlichte App-Dateiversion **1.0.2.48**, stabile Latest-Version **v1.0.2-build48**, libmpv **0.41.0**, otr-can **0.1.6**, .NET 10, Windows 11 x64/WPF. [Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD48-PUBLISHED-20261101.md). Build 47 bleibt unverändert erhalten.
 
 ## Technische Nachweise
+
+- Build 48: 1634 Pakettests, zusätzlich 1362 Tests gegen finale Produktbibliotheken, 32 native/WPF-Kontrollen in sechs Prozessen. Persönliche korrigierte Ghosts-Teil-1-/Teil-2-Abnahme bestätigt. [Pakete und Prüfsummen](RELEASE-1.0.2-BUILD48-RESULT.md).
 
 - Build 47: 1593 Pakettests und zusätzlich 1321 Tests gegen finale DLLs, native MP4Box-/otr-can-Erkennung und zwei Dialoggrößen positiv. Setup-/Portable-Funktionsnachweise getrennt dokumentiert, Veröffentlichung nach ausdrücklicher Nutzerfreigabe erfolgt. [Pakete und Prüfsummen](RELEASE-1.0.2-BUILD47-RESULT.md), [Veröffentlichung](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md).
 
@@ -42,7 +44,7 @@ Ein neuer CAN-Build bedeutet keinen neuen Motor. Historische 0.1.3-/0.1.4-/0.1.5
 
 ## Quellen und Pakete
 
-Aktuell **artifacts/release-1.0.2-build47**: Setup, Portable-ZIP, **CutAssistantNext-1.0.2-Build47-source.zip**, passende unveränderte Motor-/libmpv-Quellen, Relink und Prüfsummen. SOURCE-SNAPSHOT.json und SOURCE-FILES.sha256 nennen die exakten Eingaben. [Paketbericht 47](RELEASE-1.0.2-BUILD47-RESULT.md).
+Aktuell **artifacts/release-1.0.2-build48**: Setup, Portable-ZIP, **CutAssistantNext-1.0.2-Build48-source.zip**, passende unveränderte Motor-/libmpv-Quellen, Relink und Prüfsummen. SOURCE-SNAPSHOT.json und SOURCE-FILES.sha256 nennen die exakten Eingaben. [Paketbericht 48](RELEASE-1.0.2-BUILD48-RESULT.md).
 
 **artifacts/release-1.0.2-build40** mit **CutAssistantNext-1.0.2-Build40-source.zip**, SOURCE-SNAPSHOT.json/SOURCE-FILES.sha256. Passend dazu unverändert **otr-can-0.1.6-source.zip**, **CAN-libmpv-v0.41.0-pruefpaket-2026-09-26.zip**, Relink-Paket und SHA256SUMS.txt. Keine echten Filme im Repository.
 

@@ -1,6 +1,6 @@
 # Cut Assistant Next 1.0.2 · Build 48
 
-**01.11.2026 – stabile Veröffentlichung freigegeben; Paketprüfung läuft.** Vorgesehener Tag **v1.0.2-build48**, App-Dateiversion **1.0.2.48**. Build 47 bleibt unverändert erhalten. Motor **otr-can 0.1.6**, libmpv **0.41.0**, Windows 11 x64 und .NET 10/WPF unverändert.
+**01.11.2026 – als stabile [Latest-Version v1.0.2-build48](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build48) veröffentlicht.** Tag **v1.0.2-build48**, App-Dateiversion **1.0.2.48**. Build 47 bleibt unverändert erhalten. Motor **otr-can 0.1.6**, libmpv **0.41.0**, Windows 11 x64 und .NET 10/WPF unverändert.
 
 ## Fehlerbehebungen
 
@@ -12,7 +12,7 @@
 
 ## Qualitätssicherung und Praxis
 
-1634 Entwicklungstests und 32 native/WPF-Kontrollen in sechs separaten Prozessen erfolgreich; Build ohne Warnungen/Fehler. Persönliche Praxisabnahme der korrigierten Entwicklungsfassung mit den tatsächlichen Ghosts-Dateien Teil 1 und Teil 2 bestätigt: ursprünglicher EOF-Absturzfall, regulärer Tonspurwechsel und Navigation einwandfrei. Die abschließenden Paketprüfungen erfolgen gesondert; keine neue persönliche Setup-/VM-Abnahme behauptet.
+1634 Entwicklungstests und 32 native/WPF-Kontrollen in sechs separaten Prozessen erfolgreich; Build ohne Warnungen/Fehler. Persönliche Praxisabnahme der korrigierten Entwicklungsfassung mit den tatsächlichen Ghosts-Dateien Teil 1 und Teil 2 bestätigt: ursprünglicher EOF-Absturzfall, regulärer Tonspurwechsel und Navigation einwandfrei. Abschließende Paketprüfung: 1634 Tests plus 1362 Tests gegen finale Produktbibliotheken, 32 native/WPF-Kontrollen, 250 Portable-Dateien, 716 manifestierte Quellen / 717 Quellen-ZIP-Dateien und acht Assets vollständig verifiziert. Keine neue persönliche Setup-/VM-Abnahme behauptet.
 
 Vielen Dank an **sfonweb** für den präzisen und reproduzierbaren Fehlerbericht!
 

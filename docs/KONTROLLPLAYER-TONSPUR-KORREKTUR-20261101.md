@@ -109,3 +109,5 @@ Die beauftragte Implementierung und technische Prüfung sind abgeschlossen. Näc
 ## Nachtrag: persönliche Praxisabnahme und Releasefreigabe
 
 Der Nutzer bestätigt am 01.11.2026 die korrigierte Entwicklungsfassung mit **Ghosts – Weihnachtsgeister, Teil 1 (23.10.2026)** und **Teil 2 (26.10.2026)**: ursprünglicher EOF-Absturzfall, regulärer Tonspurwechsel und Prüfstellen-Navigation einwandfrei. Die zuvor offene persönliche Ghosts-Abnahme ist damit erfolgt. Neue Setup-/Portable-/VM-Abnahmen werden daraus nicht abgeleitet. Commit, Push, Paketierung, Tag **v1.0.2-build48** und stabile Latest-Veröffentlichung sind ausdrücklich freigegeben; abschließende Paketprüfung vor Veröffentlichung bleibt verbindlich. [Build-48-Freeze](FREEZE-1.0.2-BUILD48-20261101.md).
+
+**Veröffentlichungsnachtrag:** Die Korrekturen sind nach persönlicher Ghosts-Teil-1-/Teil-2-Abnahme, Releasefreigabe und vollständiger Paketprüfung als **CAN 1.0.2 Build 48 / Latest** veröffentlicht. [Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD48-PUBLISHED-20261101.md). Build 47 bleibt unverändert.

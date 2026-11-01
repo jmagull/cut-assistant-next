@@ -2,11 +2,13 @@
 
 Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Es verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codecs.
 
-**01.11.2026: CAN 1.0.2 Build 48 ist zur stabilen Veröffentlichung freigegeben; abschließende Paketprüfung läuft.** Bis zur vollständig verifizierten Veröffentlichung bleibt Build 47 Latest. Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64.
+**01.11.2026: CAN 1.0.2 Build 48 ist als stabile Latest-Version veröffentlicht.** [Release v1.0.2-build48](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build48), App-Dateiversion **1.0.2.48**. Build 47 bleibt unverändert als stabile Vorgängerversion erhalten. Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64.
 
 Der Kontrollplayer bleibt nach natürlichem Filmende und fehlgeschlagenem Tonspurwechsel navigierbar. Reguläre Tonspurwechsel erhalten Position und Play/Pause-Zustand; bewusste Prüfstellen-Navigation behält den Drei-Sekunden-Vorlauf. Native Property-Fehler sind auffangbar.
 
-Entwicklungsprüfung: **1634/1634 Tests**, **32/32 native/WPF-Kontrollen** in sechs Prozessen, Release-Build ohne Warnungen/Fehler. Der Nutzer bestätigt die korrigierte Entwicklungsfassung persönlich mit **Ghosts – Weihnachtsgeister, Teil 1 und Teil 2** für den ursprünglichen EOF-Absturzfall, Tonspurwechsel und Navigation. Neue Setup-/Portable-/VM-Abnahmen werden daraus nicht abgeleitet.
+Paketprüfung: **1634/1634 Tests**, zusätzlich **1362 Tests gegen finale Produktbibliotheken** und **32/32 native/WPF-Kontrollen** in sechs Prozessen; Release-Build ohne Warnungen/Fehler. Der Nutzer bestätigt die korrigierte Entwicklungsfassung persönlich mit **Ghosts – Weihnachtsgeister, Teil 1 und Teil 2** für den ursprünglichen EOF-Absturzfall, Tonspurwechsel und Navigation. Neue Setup-/Portable-/VM-Abnahmen werden daraus nicht abgeleitet.
+
+[Setup Build 48](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build48/CutAssistantNext-1.0.2-Build48-win-x64-Setup.exe) · [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build48/CutAssistantNext-1.0.2-Build48-win-x64.zip) · [Veröffentlichungsnachweis](docs/RELEASE-1.0.2-BUILD48-PUBLISHED-20261101.md)
 
 [Build-48-Freeze](docs/FREEZE-1.0.2-BUILD48-20261101.md) · [Korrektur und Nachweise](docs/KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md) · [Release Notes](docs/RELEASE-NOTES-1.0.2.md) · [Nutzeranleitung](docs/NUTZERANLEITUNG.md) · [Build 47 bleibt erhalten](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47)
 

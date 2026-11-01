@@ -1,8 +1,10 @@
 # Dokumentation – Cut Assistant Next
 
-**01.11.2026: Build 48 zur stabilen Veröffentlichung freigegeben; Paketprüfung läuft.** Build 47 bleibt bis zum verifizierten Abschluss Latest und anschließend unverändert als Vorgänger erhalten.
+**01.11.2026: CAN 1.0.2 Build 48 ist als stabile Latest-Version veröffentlicht.** [Release v1.0.2-build48](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build48), App-Dateiversion **1.0.2.48**. Build 47 bleibt unverändert als stabile Vorgängerversion erhalten.
 
 ## Aktuell lesen
+
+- [Build-48-Veröffentlichung](RELEASE-1.0.2-BUILD48-PUBLISHED-20261101.md) und [Paketbericht](RELEASE-1.0.2-BUILD48-RESULT.md): Commit, Tag, Tests, acht Assets und Prüfsummen.
 
 - [Build-48-Freeze](FREEZE-1.0.2-BUILD48-20261101.md): freigegebener Kontrollplayer-Stand und Releasegrenzen.
 - [Kontrollplayer-Korrektur](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md): EOF, Positionserhalt, Tests und Praxisabnahme.

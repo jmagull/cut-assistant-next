@@ -1,12 +1,12 @@
 # Nutzeranleitung – Cut Assistant Next
 
-**Stand 31.10.2026: CAN 1.0.2 Build 47 ist als stabile Latest-Version veröffentlicht; otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** [Release und Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47), [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md), [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md). Frühere Pakete bleiben erhalten.
+**01.11.2026: CAN 1.0.2 Build 48 ist als stabile Latest-Version veröffentlicht.** [Release v1.0.2-build48](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build48), App-Dateiversion **1.0.2.48**. Build 47 bleibt unverändert als stabile Vorgängerversion erhalten. Motor otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF unverändert.
 
-**Lokaler Nachfolgestand Build 48, 01.11.2026:** Tonspurwechsel im Kontrollplayer erhalten Position und Play/Pause; nach EOF wird nötigenfalls kontrolliert neu geladen. Die Veröffentlichung ist freigegeben, Paketprüfung läuft. [Korrekturbericht](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md).
+**Build 48, veröffentlicht am 01.11.2026:** Tonspurwechsel im Kontrollplayer erhalten Position und Play/Pause; nach EOF wird nötigenfalls kontrolliert neu geladen. 1634 Pakettests, 1362 finale DLL-Tests und 32 native/WPF-Kontrollen erfolgreich. [Korrekturbericht](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md).
 
 ## Klebecenter – zwei fertige Filmteile verbinden
 
-**Build 47 enthält beide Klebeverfahren und die Tonspurwahl im Kontrollplayer. QUICK arbeitet pragmatisch; für erkannte MP4Box-Filmteile ist AUDIO-ENTHUSIAST gesperrt.**
+**Beide Klebeverfahren und die Tonspurwahl im Kontrollplayer sind seit Build 47 enthalten. QUICK arbeitet pragmatisch; für erkannte MP4Box-Filmteile ist AUDIO-ENTHUSIAST gesperrt.**
 
 1. **Klebecenter → Filmteile zusammenfügen …** öffnen. Eine Datei muss nicht vorher im Hauptplayer geladen sein.
 2. Zwei bereits geschnittene MP4-Dateien wählen und ihre Reihenfolge festlegen. „Reihenfolge tauschen“ nimmt die Spurauswahl mit; die QUICK-Zuordnung danach erneut bestätigen.

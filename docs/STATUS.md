@@ -1,5 +1,7 @@
 # Projektstatus
 
+**01.11.2026 – CAN 1.0.2 Build 48 als stabile Latest-Version veröffentlicht.** Kontrollplayer-EOF-Absturz und Positionssprung korrigiert; 1634 Pakettests, 1362 finale DLL-Tests, 32 native/WPF-Kontrollen und persönliche Ghosts-Teil-1-/Teil-2-Abnahme. Build 47 und ältere datierte Nachweise bleiben erhalten. [Veröffentlichung](RELEASE-1.0.2-BUILD48-PUBLISHED-20261101.md), [Paketprüfung](RELEASE-1.0.2-BUILD48-RESULT.md). Die folgenden datierten Angaben bewahren ihren damaligen Stand.
+
 ## 31.10.2026 – Build 47 veröffentlicht, acht Uploads identisch geprüft
 
 Nutzerauftrag Freeze/Commit/Push/Veröffentlichung abgeschlossen. Release-Commit **ae6cc93d263a6d70eb16b3102960e3d094ab38f0** und annotierter Tag **v1.0.2-build47** gepusht; stabile Latest-Veröffentlichung am **2026-10-31T16:54:06Z**, Release-ID **430061255**. Acht Uploads vor und nach Freischaltung anhand Größe/SHA-256 identisch zu den eingefrorenen lokalen Dateien. Alter Release v1.0.2/Build 41 samt acht Assets unverändert erhalten. README, zentrale Dokumentation und Abnahmestände abgeglichen; Produktcode, Pakete, Buildnummer 47 und vier lokale Produktions-Lockänderungen erhalten. Abschließender Dokumentationsnachtrag wird separat auf main gesichert. [Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md).
