@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <CanAssemblyDirectory Condition="'$(CanAssemblyDirectory)' == ''">$(MSBuildThisFileDirectory)..\..\..\src\CutAssistantNext.App\bin\Release\net10.0-windows</CanAssemblyDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CutAssistantNext.App"><HintPath>$(CanAssemblyDirectory)\CutAssistantNext.App.dll</HintPath></Reference>
+    <Reference Include="CutAssistantNext.Core"><HintPath>$(CanAssemblyDirectory)\CutAssistantNext.Core.dll</HintPath></Reference>
+    <Reference Include="CutAssistantNext.Media"><HintPath>$(CanAssemblyDirectory)\CutAssistantNext.Media.dll</HintPath></Reference>
+    <None Include="$(CanAssemblyDirectory)\*.dll" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Target Name="RequirePreparedCan" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(CanAssemblyDirectory)\CutAssistantNext.App.dll') Or !Exists('$(CanAssemblyDirectory)\libmpv-2.dll')" Text="Zuerst den CAN-Entwicklungsstand samt libmpv bauen. Dieser Test baut CAN nicht neu." />
+  </Target>
+</Project>

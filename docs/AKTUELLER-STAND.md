@@ -1,41 +1,18 @@
 # Aktueller Projektstand
 
-**Stand 31.10.2026: CAN 1.0.2 Build 47 ist als stabile Latest-Version veröffentlicht.** App-Dateiversion **1.0.2.47**, Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64. [Release **v1.0.2-build47**](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47); der frühere Release v1.0.2 mit Build 41 bleibt erhalten.
+**01.11.2026: CAN 1.0.2 Build 48 ist zur stabilen Veröffentlichung freigegeben; abschließende Paketprüfung läuft.** Bis zur vollständig verifizierten Veröffentlichung bleibt Build 47 Latest. Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64.
 
-## Versionen und Auslieferung
+Der Kontrollplayer bleibt nach natürlichem Filmende und fehlgeschlagenem Tonspurwechsel navigierbar. Reguläre Tonspurwechsel erhalten Position und Play/Pause-Zustand; bewusste Prüfstellen-Navigation behält den Drei-Sekunden-Vorlauf. Native Property-Fehler sind auffangbar.
 
-| Bereich | Stand |
-|---|---|
-| Stabile Latest-Version | [CAN 1.0.2 Build 47 / v1.0.2-build47](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47), veröffentlicht am 31.10.2026 |
-| App-Dateiversion / Buildzähler | 1.0.2.47 / 47 |
-| Schnittmotor / Wiedergabe | otr-can 0.1.6 / libmpv 0.41.0 |
-| Oberfläche / Plattform | .NET 10, WPF, Windows 11 x64 |
-| Paketsatz | artifacts/release-1.0.2-build47: Setup, Portable, CAN-/Motor-/libmpv-Quellen, Relink, zwei Prüfsummenmanifeste |
-| Paketprüfung | 1593 Tests, zusätzlich 1321 Tests gegen finale DLLs; 0 Warnungen/Fehler |
-| Dateien | 250 Portable-Nutzdateien, 705 manifestierte Quellen / 706 Quellen-ZIP-Dateien; acht Auslieferungsdateien geprüft und schreibgeschützt |
-| Herkunft | Snapshot-Basis 3aa00a138565c043b34fcb959f2c28d937f83b0b plus 17 manifestierte Änderungen; alle 376 Produkt-/Testdateien seit Paketauftrag unverändert |
-| Lokale Nutzeränderungen | Vier Produktions-Lockänderungen erhalten und aus Quellenarchiv/Commit ausgeschlossen |
-| Vorheriger öffentlicher Release | v1.0.2 / Build 41 vom 27.10.2026 bleibt erhalten |
+Entwicklungsprüfung: **1634/1634 Tests**, **32/32 native/WPF-Kontrollen** in sechs Prozessen, Release-Build ohne Warnungen/Fehler. Der Nutzer bestätigt die korrigierte Entwicklungsfassung persönlich mit **Ghosts – Weihnachtsgeister, Teil 1 und Teil 2** für den ursprünglichen EOF-Absturzfall, Tonspurwechsel und Navigation. Neue Setup-/Portable-/VM-Abnahmen werden daraus nicht abgeleitet.
 
-## Klebecenter und bestätigte Nutzung
+[Build-48-Freeze](FREEZE-1.0.2-BUILD48-20261101.md) · [Korrektur und Nachweise](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md) · [Release Notes](RELEASE-NOTES-1.0.2.md) · [Nutzeranleitung](NUTZERANLEITUNG.md) · [Build 47 bleibt erhalten](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47)
 
-Erkannte GPAC/MP4Box-Filmteile sperren AUDIO-ENTHUSIAST samt Tonspurauswahl; ein dauerhaft sichtbarer Hinweis verweist auf QUICK. Erkennung unabhängig vom Dateinamen, bei gemischten Paaren, Tauschen und Ersetzen berücksichtigt. Der Dienst prüft nochmals vor Medienverarbeitung. Fehlende GPAC-Kennung erlaubt keine sichere Herkunftsaussage; die strengen Medienprüfungen bleiben aktiv.
+Klebecenter, MP4Box, otr-can, Cutlists und Namensmasken bleiben funktional unverändert. QUICK übernimmt bestätigte kompatible AAC-/AC-3-Spurpaare ohne Neukodierung; erkannte MP4Box-Filmteile sperren AUDIO-ENTHUSIAST. .NET 10 Desktop Runtime x64 und externe Werkzeuge bleiben separat einzurichten. AVI und die dokumentierten MP4Box-/Werbeblitzer-Grenzen bleiben bestehen.
 
-QUICK verwendet FFmpeg-Streamcopy für Video und bestätigte AAC-/AC-3-Spurpaare, mit technischen Hinweisen in der Meckerecke. AUDIO-ENTHUSIAST verbindet genau eine Spur je Teil per RF64 und einmaliger AAC-LC-Neukodierung bei unverändertem Video. QUICK-Prüfzeiten angenähert, Kontrollplayer mit Tonspurwahl und drei Sekunden Vorlauf. Keine automatische Verfahrensumschaltung.
+## Build 48: Quell- und Paketzuordnung
 
-| Persönlicher Nachweis | Stand |
-|---|---|
-| Build-47-VM-Setup | MP4Box → QUICK; otr-can → QUICK und AUDIO-ENTHUSIAST positiv, Sperr-/Dateiwechselchecks bestätigt |
-| Build-47-Portable in der VM | MP4Box-/otr-can-QUICK persönlich positiv, otr-can-AUDIO-ENTHUSIAST technisch erfolgreich; persönliche Kontrolle dieses letzten Laufs nicht separat zugeordnet |
-| Deinstallation Build 47 | Nicht separat bestätigt |
-| Aktuelle Arbeits-PC-Schnitte | Rocky Horror/50 fps/otr-can, Doc und Brilliant Minds/25 fps/MP4Box persönlich positiv – ausdrücklich Build-46-Setup |
-| Git und Veröffentlichung | Release-Commit ae6cc93 und Tag gepusht; stabile Latest-Version veröffentlicht, acht Remote-Assets unverändert geprüft |
-
-[Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md), [Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md), [Setup](VM-SETUP-BUILD47-20261031.md), [Portable](VM-PORTABLE-BUILD47-20261031.md), [Praxistests Build 46](PRAXISTESTS-20261031.md), [Anleitung](NUTZERANLEITUNG.md).
-
-## Grenzen und nächste Schritte
-
-Jede Ausgabe auf Bild, Ton, Synchronität und Schnitt-/Klebestellen prüfen. QUICK garantiert keine sampleidentische Tonwellenform. Herkunft ohne GPAC-Kennung bleibt unbekannt. AVI experimentell, MP4Box-/Werbeblitzer-Grenzen bleiben bestehen. Ursache früherer Furiosa-Rechnerstillstände ungeklärt; spätere Erfolge belegen keine gezielte Behebung. Weitere persönliche Prüfvarianten bleiben nachvollziehbar dokumentiert; die Veröffentlichung ist vom Nutzer freigegeben.
+Buildzähler wird über den vorhandenen vollständigen Build genau einmal von 47 auf 48 erhöht. Pakete entstehen anschließend aus einem unveränderten Git-Quellsnapshot mit explizitem CanBuildNumber=48. Vier vorbestehende lokale Produktions-Lockänderungen werden aus Commit und Quellarchiv ausgeschlossen. Paket- und Veröffentlichungsnachweise werden nach erfolgreicher Prüfung ergänzt.
 
 ## Datierte Entwicklungshistorie
 

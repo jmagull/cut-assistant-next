@@ -33,7 +33,7 @@
                 <TextBlock Text="Tonspur prüfen:" VerticalAlignment="Center" Margin="0,0,10,0" />
                 <ComboBox x:Name="ReviewAudio" Width="420" ItemsSource="{Binding AudioTracks}" DisplayMemberPath="Description"
                           SelectedItem="{Binding SelectedAudioTrack, Mode=OneWay}" SelectionChanged="ReviewAudio_SelectionChanged"
-                          AutomationProperties.Name="Tonspur im Kontrollplayer auswählen; Prüfstelle erneut abspielen" />
+                          AutomationProperties.Name="Tonspur im Kontrollplayer auswählen; Wiedergabeposition beibehalten" />
             </StackPanel>
             <StackPanel DataContext="{Binding Playback}">
                 <Slider x:Name="PositionSlider" Minimum="0" Maximum="{Binding DurationSeconds}"

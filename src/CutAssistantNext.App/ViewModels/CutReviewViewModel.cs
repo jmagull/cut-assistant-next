@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using CutAssistantNext.Media.Playback;
 using CutAssistantNext.Media.Analysis;
 using CutAssistantNext.Core.Cutting;
+using CutAssistantNext.Core.Logging;
 
 namespace CutAssistantNext.App.ViewModels;
 
@@ -13,6 +14,7 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
     private readonly IMediaPlayerService _player;
     private readonly Func<string, bool> _fileExists;
     private readonly TimeSpan _loadTimeout;
+    private readonly IAppLogger _logger;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private readonly CancellationTokenSource _lifetime = new();
     private readonly CancellationToken _token;
@@ -29,11 +31,12 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
     private Task? _closeTask;
 
     internal CutReviewViewModel(IMediaPlayerService player, Func<string, bool>? fileExists = null,
-        TimeSpan? loadTimeout = null)
+        TimeSpan? loadTimeout = null, IAppLogger? logger = null)
     {
         _player = player ?? throw new ArgumentNullException(nameof(player));
         _fileExists = fileExists ?? File.Exists;
         _loadTimeout = loadTimeout ?? TimeSpan.FromSeconds(20);
+        _logger = logger ?? NullAppLogger.Instance;
         _token = _lifetime.Token;
         Playback = new PlaybackViewModel(player);
     }
@@ -92,37 +95,24 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
 
             Playback.CancelSeek();
             var completionChanged = !ReferenceEquals(_completion, completion);
-            var needsReload = completionChanged ||
-                !string.Equals(_loadedPath, completion.OutputFilePath, StringComparison.OrdinalIgnoreCase) ||
-                _player.State is MediaPlayerState.Error or MediaPlayerState.Empty or MediaPlayerState.Ended;
-            if (completion.Result.Timeline.Identity is { } identity)
-                await CutOutputIdentityVerifier.ValidateAsync(completion.OutputFilePath, identity, needsReload, token);
+            var needsReload = completionChanged || NeedsReload(completion);
+            if (!needsReload && completion.Result.Timeline.Identity is { } identity)
+                await CutOutputIdentityVerifier.ValidateAsync(completion.OutputFilePath, identity, false, token);
+            var audioId = completionChanged ? null : _selectedAudioTrack?.Id;
             _completion = completion;
             _index = index;
             Notify();
             if (needsReload)
             {
-                _loadedPath = null;
-                await LoadReadyAsync(completion.OutputFilePath, token);
-                _loadedPath = completion.OutputFilePath;
+                await ReloadAsync(completion, audioId, token);
             }
             else
             {
                 await _player.PauseAsync(token);
+                if (NeedsReload(completion)) await ReloadAsync(completion, audioId, token);
             }
 
-            var duration = _player.Duration ?? throw new InvalidOperationException("Die Filmdauer ist nicht verfügbar.");
-            // Stay before EOF even if calculated output times differ from the actual file.
-            var latest = duration > TimeSpan.Zero ? duration - TimeSpan.FromTicks(1) : TimeSpan.Zero;
-            var point = completion.CheckPoints[index];
-            var requested = point.Kind switch
-            {
-                CutCompletionCheckPointKind.Beginning => TimeSpan.Zero,
-                CutCompletionCheckPointKind.End => duration - TimeSpan.FromSeconds(3),
-                _ => point.Position - TimeSpan.FromSeconds(3)
-            };
-            var position = requested < TimeSpan.Zero ? TimeSpan.Zero : requested > latest ? latest : requested;
-            await _player.SeekAsync(position, token);
+            await _player.SeekAsync(ReviewPosition(completion, index), token);
             token.ThrowIfCancellationRequested();
             await _player.PlayAsync(token);
         });
@@ -140,33 +130,112 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
     internal Task SeekAsync(TimeSpan position) => ExecuteAsync(async token =>
     {
         Playback.CancelSeek();
-        if (_player.State == MediaPlayerState.Ended && _completion is not null)
+        if (_completion is not null && NeedsReload(_completion))
         {
-            if (!_fileExists(_completion.OutputFilePath))
-                throw new FileNotFoundException("Die geschnittene Datei wurde nicht gefunden.", _completion.OutputFilePath);
-            _loadedPath = null;
-            await LoadReadyAsync(_completion.OutputFilePath, token);
-            _loadedPath = _completion.OutputFilePath;
+            await ReloadAsync(_completion, _selectedAudioTrack?.Id, token);
         }
         await Playback.SeekToAsync(position, token);
     });
     internal Task SelectAudioAsync(PlayerAudioTrack track) => ExecuteAsync(async token =>
     {
-        if (_player is not IAudioTrackSelection selection || !_audioTracks.Any(t => t.Id == track.Id) || _completion is null)
-            throw new ArgumentException("Diese Tonspur steht nicht zur Verfügung.", nameof(track));
-        await _player.PauseAsync(token);
-        await selection.SelectAudioTrackAsync(track.Id, token);
-        _selectedAudioTrack = _audioTracks.Single(t => t.Id == track.Id);
-        var point = _completion.CheckPoints[_index];
-        var position = point.Kind switch
+        ArgumentNullException.ThrowIfNull(track);
+        try
+        {
+            if (_player is not IAudioTrackSelection selection || _completion is null)
+                throw new ArgumentException("Diese Tonspur steht nicht zur Verfügung.", nameof(track));
+            Playback.CancelSeek();
+            var wasPlaying = _player.State == MediaPlayerState.Playing;
+            var reloaded = NeedsReload(_completion);
+            if (reloaded) await ReloadAsync(_completion, null, token);
+            await _player.PauseAsync(token);
+            await RefreshAudioAsync(token);
+            // EOF can arrive while Pause or the inventory query is in flight.
+            if (NeedsReload(_completion) || _audioTracks.Count == 0)
+            {
+                await ReloadAsync(_completion, null, token);
+                reloaded = true;
+            }
+            if (!_audioTracks.Any(t => t.Id == track.Id))
+                throw new ArgumentException("Diese Tonspur steht im geladenen Film nicht zur Verfügung.", nameof(track));
+            await selection.SelectAudioTrackAsync(track.Id, token);
+            await RefreshAudioAsync(token);
+            if (_selectedAudioTrack?.Id != track.Id)
+                throw new InvalidOperationException("Die gewählte Tonspur wurde vom Kontrollplayer nicht bestätigt.");
+            // A regular track change is not checkpoint navigation. Only an EOF recovery
+            // restarts the current checkpoint preview in the newly loaded media context.
+            if (reloaded) await _player.SeekAsync(ReviewPosition(_completion, _index), token);
+            token.ThrowIfCancellationRequested();
+            if (reloaded || wasPlaying) await _player.PlayAsync(token);
+        }
+        catch (Exception exception)
+        {
+            // Even a successful set followed by a failed seek must not leave a reusable load marker.
+            _loadedPath = null;
+            _selectedAudioTrack = null;
+            _audioTracks = [];
+            if (!token.IsCancellationRequested)
+            {
+                try { await RefreshAudioAsync(token); }
+                catch (Exception inventoryError)
+                {
+                    _logger.Warning($"Tonspurinventar nach Wechsel nicht lesbar: {inventoryError.Message}");
+                }
+                _logger.Error($"Kontrollplayer-Tonspurwechsel fehlgeschlagen: angefordert={track.Id}, " +
+                    $"bestätigt={_selectedAudioTrack?.Id.ToString() ?? "unbekannt"}, " +
+                    $"Spuren=[{string.Join(",", _audioTracks.Select(t => $"{t.Id}:{t.Selected}"))}], " +
+                    $"Zustand={_player.State}, Prüfstelle={_index} ({CurrentTransitionText}).", exception);
+            }
+            if (exception is ArgumentException or OperationCanceledException) throw;
+            throw new InvalidOperationException("Die Tonspur konnte nicht gewechselt werden. Bitte die Prüfstelle erneut aufrufen.", exception);
+        }
+    });
+
+    private bool NeedsReload(CutCompletionViewModel completion) =>
+        !string.Equals(_loadedPath, completion.OutputFilePath, StringComparison.OrdinalIgnoreCase) ||
+        _player.State is MediaPlayerState.Error or MediaPlayerState.Empty or MediaPlayerState.Ended;
+
+    private async Task ReloadAsync(CutCompletionViewModel completion, int? audioId, CancellationToken token)
+    {
+        _loadedPath = null;
+        _audioTracks = [];
+        _selectedAudioTrack = null;
+        if (!_fileExists(completion.OutputFilePath))
+            throw new FileNotFoundException("Die geschnittene Datei wurde nicht gefunden.", completion.OutputFilePath);
+        if (completion.Result.Timeline.Identity is { } identity)
+            await CutOutputIdentityVerifier.ValidateAsync(completion.OutputFilePath, identity, true, token);
+        await LoadReadyAsync(completion.OutputFilePath, token);
+        if (audioId is { } id && _selectedAudioTrack?.Id != id && _player is IAudioTrackSelection selection)
+        {
+            if (!_audioTracks.Any(t => t.Id == id))
+                throw new InvalidOperationException("Die bisher gewählte Tonspur steht im geladenen Film nicht zur Verfügung.");
+            await selection.SelectAudioTrackAsync(id, token);
+            await RefreshAudioAsync(token);
+            if (_selectedAudioTrack?.Id != id)
+                throw new InvalidOperationException("Die bisher gewählte Tonspur wurde vom Kontrollplayer nicht bestätigt.");
+        }
+        _loadedPath = completion.OutputFilePath;
+    }
+
+    private async Task RefreshAudioAsync(CancellationToken token)
+    {
+        var tracks = _player is IAudioTrackSelection audio ? await audio.GetAudioTracksAsync(token) : [];
+        _audioTracks = tracks;
+        _selectedAudioTrack = tracks.SingleOrDefault(t => t.Selected);
+    }
+
+    private TimeSpan ReviewPosition(CutCompletionViewModel completion, int index)
+    {
+        var duration = _player.Duration ?? throw new InvalidOperationException("Die Filmdauer ist nicht verfügbar.");
+        var latest = duration > TimeSpan.Zero ? duration - TimeSpan.FromTicks(1) : TimeSpan.Zero;
+        var point = completion.CheckPoints[index];
+        var requested = point.Kind switch
         {
             CutCompletionCheckPointKind.Beginning => TimeSpan.Zero,
-            CutCompletionCheckPointKind.End => (_player.Duration ?? TimeSpan.Zero) - TimeSpan.FromSeconds(3),
+            CutCompletionCheckPointKind.End => duration - TimeSpan.FromSeconds(3),
             _ => point.Position - TimeSpan.FromSeconds(3)
         };
-        await _player.SeekAsync(position < TimeSpan.Zero ? TimeSpan.Zero : position, token);
-        await _player.PlayAsync(token);
-    });
+        return requested < TimeSpan.Zero ? TimeSpan.Zero : requested > latest ? latest : requested;
+    }
 
     internal Task SetVolumeAsync(double volume) => ExecuteAsync(token => Playback.SetVolumeAsync(volume, token));
 
@@ -215,8 +284,7 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
             {
                 throw new InvalidOperationException("Die geschnittene Datei wurde nicht rechtzeitig geladen. Bitte erneut prüfen.", exception);
             }
-            _audioTracks = _player is IAudioTrackSelection audio ? await audio.GetAudioTracksAsync(token) : [];
-            _selectedAudioTrack = _audioTracks.FirstOrDefault(t => t.Selected);
+            await RefreshAudioAsync(token);
             Notify();
         }
         finally

@@ -336,12 +336,15 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
                 true,
                 cancellationToken);
 
+            bool stateChanged;
             lock (_syncRoot)
             {
                 _pauseRequested = true;
+                // Setting pause does not reload a file that has reached EOF.
+                stateChanged = _state == MediaPlayerState.Playing;
+                if (stateChanged) _state = MediaPlayerState.Paused;
             }
-
-            SetState(MediaPlayerState.Paused);
+            if (stateChanged) StateChanged?.Invoke(this, EventArgs.Empty);
 
             _logger.Information(
                 "Wiedergabe wurde pausiert.");

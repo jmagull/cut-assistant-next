@@ -4,7 +4,7 @@ using CutAssistantNext.Media.Playback;
 
 namespace CutAssistantNext.App.Tests.ViewModels;
 
-public sealed class CutReviewViewModelTests
+public sealed partial class CutReviewViewModelTests
 {
     private static CutCompletionViewModel Completion(string file = "cut.mp4", double first = 10)
     {
@@ -374,7 +374,7 @@ public sealed class CutReviewViewModelTests
     }
 
     [Fact]
-    public async Task ReviewAudioSelectionReplaysSameSpliceWithThreeSecondPreroll()
+    public async Task ReviewAudioSelectionKeepsCurrentSplicePreviewPosition()
     {
         var p = new Player { AudioTracks = [new(7, "AAC", true), new(11, "AC3", false)] };
         await using var model = new CutReviewViewModel(p, _ => true);
@@ -382,7 +382,8 @@ public sealed class CutReviewViewModelTests
         Assert.True(model.HasMultipleAudioTracks); Assert.Equal(7, model.SelectedAudioTrack!.Id);
         await model.SelectAudioAsync(model.AudioTracks[1]);
         Assert.Equal(11, model.SelectedAudioTrack!.Id);
-        Assert.Equal(new[] { "pause", "audio:11", "seek:7", "play" }, p.Commands.TakeLast(4));
+        Assert.Equal(new[] { "pause", "audio:11", "play" }, p.Commands.TakeLast(3));
+        Assert.Equal(TimeSpan.FromSeconds(7), p.Position);
         await Assert.ThrowsAsync<ArgumentException>(() => model.SelectAudioAsync(new(99, "not present", false)));
     }
 
@@ -398,13 +399,37 @@ public sealed class CutReviewViewModelTests
     private sealed class Player : IMediaPlayerService, IAudioTrackSelection
     {
         internal readonly List<string> Commands = [];
-        internal IReadOnlyList<PlayerAudioTrack> AudioTracks { get; init; } = [];
-        public Task<IReadOnlyList<PlayerAudioTrack>> GetAudioTracksAsync(CancellationToken token = default) => Task.FromResult(AudioTracks);
-        public Task SelectAudioTrackAsync(int id, CancellationToken token = default)
-        { token.ThrowIfCancellationRequested(); Commands.Add("audio:" + id); return Task.CompletedTask; }
+        internal IReadOnlyList<PlayerAudioTrack> AudioTracks { get; set; } = [];
+        internal Action<Player>? OnPause { get; set; }
+        internal Action<Player>? OnSelect { get; set; }
+        internal Exception? SelectException { get; set; }
+        internal Exception? SeekException { get; set; }
+        internal Exception? InventoryException { get; set; }
+        internal bool IgnoreSelection { get; set; }
+        internal bool FailAfterSelection { get; set; }
+        private bool _live;
+        internal void End() { _live = false; State = MediaPlayerState.Ended; StateChanged?.Invoke(this, EventArgs.Empty); }
+        public async Task<IReadOnlyList<PlayerAudioTrack>> GetAudioTracksAsync(CancellationToken token = default)
+        {
+            await Block("inventory", token);
+            token.ThrowIfCancellationRequested();
+            if (InventoryException is { } error) throw error;
+            return _live ? AudioTracks : [];
+        }
+        public async Task SelectAudioTrackAsync(int id, CancellationToken token = default)
+        {
+            Commands.Add("audio:" + id);
+            await Block("audio", token);
+            token.ThrowIfCancellationRequested();
+            OnSelect?.Invoke(this);
+            if (!_live || !AudioTracks.Any(t => t.Id == id)) throw new ArgumentException("Tonspur nicht verfügbar.", nameof(id));
+            if (!FailAfterSelection && SelectException is { } error) throw error;
+            if (!IgnoreSelection) AudioTracks = AudioTracks.Select(t => t with { Selected = t.Id == id }).ToArray();
+            if (FailAfterSelection && SelectException is { } after) throw after;
+        }
 
         internal bool DeferredLoad { get; set; }
-        internal string? BlockPhase { get; init; }
+        internal string? BlockPhase { get; set; }
         private bool _running;
         internal bool DisposedWhileCommandRunning { get; private set; }
         internal int DisposeCount { get; private set; }
@@ -434,7 +459,8 @@ public sealed class CutReviewViewModelTests
         public async Task InitializeAsync(nint h, CancellationToken t = default) { Commands.Add($"initialize:{h}"); await Block("initialize", t); }
         public async Task LoadAsync(string p, CancellationToken t = default)
         {
-            Commands.Add("load:" + p); State = MediaPlayerState.Loading; Duration = null; ErrorMessage = null;
+            Commands.Add("load:" + p); State = MediaPlayerState.Loading; Duration = null; ErrorMessage = null; _live = true;
+            if (AudioTracks.Count > 0) AudioTracks = AudioTracks.Select(t => t with { Selected = t.Id == AudioTracks[0].Id }).ToArray();
             StateChanged?.Invoke(this, EventArgs.Empty); await Block("load", t);
             if (!DeferredLoad) { ReadyDuration(); ReadyState(); }
         }
@@ -444,10 +470,12 @@ public sealed class CutReviewViewModelTests
         public async Task SeekAsync(TimeSpan p, CancellationToken t = default)
         {
             Commands.Add("seek:" + p.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
-            await Block("seek", t); Position = p; PositionChanged?.Invoke(this, EventArgs.Empty);
+            await Block("seek", t);
+            if (!_live || SeekException is not null) throw SeekException ?? new InvalidOperationException("Kein Medienkontext.");
+            Position = p; PositionChanged?.Invoke(this, EventArgs.Empty);
         }
         public Task PlayAsync(CancellationToken t = default) { Commands.Add("play"); State = MediaPlayerState.Playing; StateChanged?.Invoke(this, EventArgs.Empty); return Task.CompletedTask; }
-        public Task PauseAsync(CancellationToken t = default) { Commands.Add("pause"); State = MediaPlayerState.Paused; StateChanged?.Invoke(this, EventArgs.Empty); return Task.CompletedTask; }
+        public Task PauseAsync(CancellationToken t = default) { Commands.Add("pause"); OnPause?.Invoke(this); if (State == MediaPlayerState.Playing) State = MediaPlayerState.Paused; StateChanged?.Invoke(this, EventArgs.Empty); return Task.CompletedTask; }
         public Task SetVolumeAsync(double v, CancellationToken t = default) { Volume = v; VolumeChanged?.Invoke(this, EventArgs.Empty); return Task.CompletedTask; }
         public Task StopAsync(CancellationToken t = default) { Commands.Add("stop"); return Task.CompletedTask; }
         public Task StepForwardAsync(CancellationToken t = default) => Task.CompletedTask;

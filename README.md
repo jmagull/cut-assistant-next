@@ -1,39 +1,16 @@
 # Cut Assistant Next
 
-Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Es verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codec-Pakete vorauszusetzen.
+Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Es verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codecs.
 
-**Stand 31.10.2026: CAN 1.0.2 Build 47 ist als stabile Latest-Version veröffentlicht.** App-Dateiversion **1.0.2.47**, Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64. [Release **v1.0.2-build47**](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47); der frühere Release v1.0.2 mit Build 41 bleibt erhalten.
+**01.11.2026: CAN 1.0.2 Build 48 ist zur stabilen Veröffentlichung freigegeben; abschließende Paketprüfung läuft.** Bis zur vollständig verifizierten Veröffentlichung bleibt Build 47 Latest. Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64.
 
-[Setup Build 47](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build47/CutAssistantNext-1.0.2-Build47-win-x64-Setup.exe) · [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build47/CutAssistantNext-1.0.2-Build47-win-x64.zip) · [CAN-Quellen](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.2-build47/CutAssistantNext-1.0.2-Build47-source.zip) · [Release, passende Drittanbieterquellen und Prüfsummen](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47). Alle acht Release-Dateien sind veröffentlicht und gegen die lokalen SHA-256-Digests geprüft.
+Der Kontrollplayer bleibt nach natürlichem Filmende und fehlgeschlagenem Tonspurwechsel navigierbar. Reguläre Tonspurwechsel erhalten Position und Play/Pause-Zustand; bewusste Prüfstellen-Navigation behält den Drei-Sekunden-Vorlauf. Native Property-Fehler sind auffangbar.
 
-## Klebecenter
+Entwicklungsprüfung: **1634/1634 Tests**, **32/32 native/WPF-Kontrollen** in sechs Prozessen, Release-Build ohne Warnungen/Fehler. Der Nutzer bestätigt die korrigierte Entwicklungsfassung persönlich mit **Ghosts – Weihnachtsgeister, Teil 1 und Teil 2** für den ursprünglichen EOF-Absturzfall, Tonspurwechsel und Navigation. Neue Setup-/Portable-/VM-Abnahmen werden daraus nicht abgeleitet.
 
-Unter **Klebecenter → Filmteile zusammenfügen …** zwei fertig geschnittene MP4-Dateien wählen, Reihenfolge prüfen und das gewünschte Verfahren bewusst starten:
+[Build-48-Freeze](docs/FREEZE-1.0.2-BUILD48-20261101.md) · [Korrektur und Nachweise](docs/KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md) · [Release Notes](docs/RELEASE-NOTES-1.0.2.md) · [Nutzeranleitung](docs/NUTZERANLEITUNG.md) · [Build 47 bleibt erhalten](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47)
 
-| Filmteile | Verfahren |
-|---|---|
-| Erkannte GPAC/MP4Box-Ausgaben | **QUICK AND COPY**; AUDIO-ENTHUSIAST samt Tonspurauswahl gesperrt, Erklärung direkt bei den Startknöpfen |
-| Geeignete otr-can-Ausgaben | **QUICK AND COPY** oder **AUDIO-ENTHUSIAST** |
-
-QUICK übernimmt Video und bestätigte kompatible AAC-/AC-3-Spurpaare ohne Neukodierung. Hinweise und Werkzeugwarnungen stehen in der **Meckerecke**; es gibt keine samplegenaue Zusage und keine zusätzliche Vollprüfung. AUDIO-ENTHUSIAST verbindet genau eine gewählte Tonspur je Teil samplegenau und kodiert sie einmal durchgehend als AAC-LC. Das Bild bleibt bei beiden unverändert. Die GPAC-Erkennung nutzt eine Container-Kennung; bei fehlender Kennung gelten die bisherigen technischen Vorprüfungen. Keine automatische Verfahrensumschaltung.
-
-Nach Abschluss Anfang, Übergang und Ende mit drei Sekunden Vorlauf kontrollieren, bei mehreren Tonspuren jede erhaltene Spur auswählen. QUICK-Prüfzeiten sind angenähert. [Bedienung](docs/NUTZERANLEITUNG.md), [MP4Box-Sperre und Grenzen](docs/MP4BOX-AUDIO-ENTHUSIAST-SPERRE-20261031.md), [QUICK-Regeln](docs/KLEBECENTER-QUICK-PRAGMATISCH-20261029.md).
-
-## Prüfung und Herkunft
-
-**1593 Pakettests** und zusätzlich **1321 Tests gegen die finalen Produktbibliotheken** bestanden; Release-Build ohne Warnungen/Fehler. **250 Portable-Dateien**, **705 manifestierte Quelldateien / 706 Quellen-ZIP-Dateien** und alle acht Auslieferungsdateien vollständig geprüft. Der Paketsatz unter **artifacts/release-1.0.2-build47** bleibt unverändert und schreibgeschützt; vorbestehende lokale Paketlistenänderungen sind aus Quellenarchiv und Commit ausgeschlossen. [Paketbericht](docs/RELEASE-1.0.2-BUILD47-RESULT.md), [Veröffentlichungsnachweis](docs/RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md).
-
-Persönlich bestätigt sind im **Build-47-VM-Setup** die drei Wege MP4Box → QUICK, otr-can → QUICK und otr-can → AUDIO-ENTHUSIAST sowie Sperr-/Dateiwechselchecks. In der **Portable-ZIP** sind beide QUICK-Wege mit Bild/Ton/Schnitt-/Vorschaukontrolle positiv; der otr-can-AUDIO-ENTHUSIAST-Lauf ist technisch erfolgreich, seine persönliche Kontrolle nicht separat zugeordnet. Deinstallation ist für Build 47 nicht gesondert bestätigt. Die anschließende ausdrückliche Nutzerfreigabe zum Einfrieren, Commit/Push und Veröffentlichen ist am 31.10.2026 erteilt. [Setup-Nachweise](docs/VM-SETUP-BUILD47-20261031.md), [Portable-Nachweise](docs/VM-PORTABLE-BUILD47-20261031.md).
-
-Die aktuellen Arbeitsrechner-Praxistests **Rocky Horror (50 fps/otr-can), Doc und Brilliant Minds (25 fps/MP4Box)** sind persönlich positiv und gehören ausdrücklich zum **Build-46-Setup**, nicht zur Build-47-VM. [Praxisbericht](docs/PRAXISTESTS-20261031.md). Frühere Pakete und ihre datierten Abnahmen bleiben erhalten.
-
-## Einrichtung und bekannte Grenzen
-
-Setup und ZIP enthalten den geprüften libmpv-Stack und **tools/otr-can/otr_can.exe** in Version 0.1.6. **.NET 10 Desktop Runtime x64** und für otr-can die Visual-C++-x64-Laufzeit separat installieren. FFmpeg/ffprobe, MP4Box und FFMS2 werden separat eingerichtet. Nach Überinstallation den gespeicherten Motorpfad auf die mitgelieferte EXE prüfen. [Nutzeranleitung](docs/NUTZERANLEITUNG.md), [Versionen](docs/VERSIONEN.md), [Voraussetzungen](installer/HINWEIS-DOTNET-UND-WERKZEUGE.txt).
-
-AVI bleibt experimentell. MP4Box kann Schnittgrenzen verschieben und Werbeblitzer belassen; Prüfpositionen stellen fehlende Bilder nicht wieder her. Die Ursache früherer vollständiger Rechnerstillstände bei großen otr-can-Schnitten ist ungeklärt; spätere positive Läufe belegen keine gezielte Behebung. [Diagnosestand](docs/OTR-CAN-MAD-MAX-SYSTEMFREEZE-20261020.md).
-
-[Aktueller Projektstand](docs/AKTUELLER-STAND.md) · [Dokumentationsübersicht](docs/README.md) · [Release Notes](docs/RELEASE-NOTES-1.0.2.md) · [Testplan](docs/TESTPLAN.md)
+Klebecenter, MP4Box, otr-can, Cutlists und Namensmasken bleiben funktional unverändert. QUICK übernimmt bestätigte kompatible AAC-/AC-3-Spurpaare ohne Neukodierung; erkannte MP4Box-Filmteile sperren AUDIO-ENTHUSIAST. .NET 10 Desktop Runtime x64 und externe Werkzeuge bleiben separat einzurichten. AVI und die dokumentierten MP4Box-/Werbeblitzer-Grenzen bleiben bestehen.
 
 <details>
 <summary>Historische Entwicklungs-, Paket- und Abnahmestände bis Build 38</summary>

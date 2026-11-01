@@ -1,3 +1,28 @@
+# Cut Assistant Next 1.0.2 · Build 48
+
+**01.11.2026 – stabile Veröffentlichung freigegeben; Paketprüfung läuft.** Vorgesehener Tag **v1.0.2-build48**, App-Dateiversion **1.0.2.48**. Build 47 bleibt unverändert erhalten. Motor **otr-can 0.1.6**, libmpv **0.41.0**, Windows 11 x64 und .NET 10/WPF unverändert.
+
+## Fehlerbehebungen
+
+- Absturz nach natürlichem Filmende, fehlgeschlagenem Tonspurwechsel und anschließendem Zurückspringen im Kontrollplayer behoben.
+- Reguläre Tonspurwechsel erhalten die Wiedergabeposition und den bisherigen Play/Pause-Zustand.
+- Kontrollierter Wiederanlauf nach EOF und konsistente tatsächliche Tonspurauswahl.
+- Native libmpv-Property-Fehler werden am wartenden Task behandelt; laufende Property-Zugriffe sind gegen vorzeitiges Dispose geschützt.
+- Bewusste Prüfstellen-Navigation mit drei Sekunden Vorlauf bleibt erhalten. Schnittmotoren, Klebecenter, Cutlists und Namensmasken unverändert.
+
+## Qualitätssicherung und Praxis
+
+1634 Entwicklungstests und 32 native/WPF-Kontrollen in sechs separaten Prozessen erfolgreich; Build ohne Warnungen/Fehler. Persönliche Praxisabnahme der korrigierten Entwicklungsfassung mit den tatsächlichen Ghosts-Dateien Teil 1 und Teil 2 bestätigt: ursprünglicher EOF-Absturzfall, regulärer Tonspurwechsel und Navigation einwandfrei. Die abschließenden Paketprüfungen erfolgen gesondert; keine neue persönliche Setup-/VM-Abnahme behauptet.
+
+Vielen Dank an **sfonweb** für den präzisen und reproduzierbaren Fehlerbericht!
+
+.NET 10 Desktop Runtime x64 sowie für otr-can die Visual-C++-x64-Laufzeit separat erforderlich. FFmpeg/ffprobe, MP4Box und FFMS2 bleiben separat einzurichten. Keine neuen Produktionsabhängigkeiten. Bekannte AVI-/MP4Box-/Werbeblitzer-Grenzen und die ungeklärte Ursache früherer Rechnerstillstände bei großen otr-can-Schnitten bleiben dokumentiert.
+
+[Freeze](FREEZE-1.0.2-BUILD48-20261101.md), [Korrekturbericht](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md), [Anleitung](NUTZERANLEITUNG.md).
+
+<details>
+<summary>Historische Release Notes bis Build 47</summary>
+
 # Cut Assistant Next 1.0.2 · Build 47
 
 **31.10.2026 – als stabile Latest-Version [v1.0.2-build47](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47) veröffentlicht.** App-Dateiversion **1.0.2.47**, unverändert otr-can **0.1.6** und libmpv **0.41.0**. Setup, Portable, passende CAN-/Motor-/libmpv-Quellen und Prüfsummen gehören zum technisch geprüften Paketsatz.
@@ -115,5 +140,7 @@ Die beigelegten Quellenarchive gehören exakt zu den geprüften Binärpaketen un
 
 </details>
 
+
+</details>
 
 </details>

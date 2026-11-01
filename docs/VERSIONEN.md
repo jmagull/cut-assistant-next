@@ -1,6 +1,6 @@
 # Versionen und Nachweise
 
-**Stand 31.10.2026.** CAN-Anwendung, Buildnummer, Schnittmotor und Wiedergabebibliothek haben getrennte Versionen. [Aktueller Stand](AKTUELLER-STAND.md).
+**Stand 01.11.2026.** CAN-Anwendung, Buildnummer, Schnittmotor und Wiedergabebibliothek haben getrennte Versionen. [Aktueller Stand](AKTUELLER-STAND.md).
 
 | CAN | Build | otr-can | Einordnung |
 |---|---:|---|---|
@@ -18,6 +18,7 @@
 | 1.0.2 | 44 | 0.1.6 | Lokale Menüvereinfachung: separate Tonspurkopie im Klebecenter ausgeblendet; Auswahl beim Zusammenfügen bleibt. Menü persönlich bestätigt; Setup/Portable/Quellen lokal technisch geprüft; persönliche neue Paketabnahme offen, nicht veröffentlicht |
 | 1.0.2 | 45 | 0.1.6 | Lokaler Hinweis am Tonspurpaar-Haken und Erklärung doppelter Zuordnung; nur XAML-Text/Textumbruch, persönlich bestätigt und eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt eingefroren; neue persönliche Paketabnahme offen, nicht veröffentlicht |
 | 1.0.2 | 46 | 0.1.6 | Bestätigtes pragmatisches QUICK mit Meckerecke eingefroren; Setup/ZIP/Quellen technisch geprüft und schreibgeschützt; Quellstand committet/gepusht, Veröffentlichung erst nach Ansage |
+| 1.0.2 | 48 | 0.1.6 | Kontrollplayer: EOF-Absturz und Positionssprung korrigiert; Veröffentlichung freigegeben, Paketprüfung läuft |
 | 1.0.2 | 47 | 0.1.6 | Stabile Latest-Version v1.0.2-build47, am 31.10.2026 veröffentlicht; MP4Box-Sperre, Setup-/Portable-Nachweise und acht identische Uploads dokumentiert |
 
 Aktuell veröffentlichte App-Dateiversion **1.0.2.47**, als stabile Latest-Version **v1.0.2-build47** (technisch geprüft und schreibgeschützt; frühere Pakete einschließlich Build 46 erhalten), libmpv **0.41.0**, Framework **.NET 10**, Ziel **Windows 11 x64/WPF**. CAN 1.0.2 Build 41 wurde am 27.10.2026 nach ausdrücklicher Freigabe veröffentlicht. [Veröffentlichungsnachweis](RELEASE-1.0.2-PUBLISHED-20261027.md).

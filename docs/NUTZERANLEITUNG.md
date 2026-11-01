@@ -2,6 +2,8 @@
 
 **Stand 31.10.2026: CAN 1.0.2 Build 47 ist als stabile Latest-Version veröffentlicht; otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF.** [Release und Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47), [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md), [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md). Frühere Pakete bleiben erhalten.
 
+**Lokaler Nachfolgestand Build 48, 01.11.2026:** Tonspurwechsel im Kontrollplayer erhalten Position und Play/Pause; nach EOF wird nötigenfalls kontrolliert neu geladen. Die Veröffentlichung ist freigegeben, Paketprüfung läuft. [Korrekturbericht](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md).
+
 ## Klebecenter – zwei fertige Filmteile verbinden
 
 **Build 47 enthält beide Klebeverfahren und die Tonspurwahl im Kontrollplayer. QUICK arbeitet pragmatisch; für erkannte MP4Box-Filmteile ist AUDIO-ENTHUSIAST gesperrt.**
@@ -11,7 +13,7 @@
 3. Für **QUICK AND COPY** die vorgeschlagenen Tonspurpaare prüfen. Jede Quelltonspur darf nur einmal zugeordnet werden. Nicht benötigte Paare abwählen und die Zuordnung anschließend erneut bestätigen. Ab Entwicklungsbuild 45 erklärt der Haken zusätzlich: **„nur bei übereinstimmendem Tonformat“**. Eindeutig passende AAC- und AC-3-Spuren werden gemeinsam vorgeschlagen, etwa beide Furiosa-Spuren. Je Paar kann die passende Spur des zweiten Teils bewusst gewählt werden. Bei John Wick bleibt nur die gemeinsame AAC-Spur; die entfallende AC-3-Spur von Teil 1 wird genannt. Fehlende Spuren werden nicht ergänzt. Zuordnung und entfallende Spuren mit dem Bestätigungsfeld ausdrücklich bestätigen.
 4. Für **AUDIO-ENTHUSIAST – NEUKODIERUNG** stattdessen genau eine Tonspur je Teil wählen. Bei mehreren Spuren gibt es dafür keine Vorauswahl. Dieser bisherige Ablauf erlaubt auch unterschiedliche Quellcodecs wie AC-3/AAC, sofern Kanalbelegung und Abtastrate passen. **Ab Build 47:** Wird mindestens ein Filmteil anhand seiner GPAC-Kennung als MP4Box-Ausgabe erkannt, sind dieses Verfahren und seine Tonspurauswahl gesperrt. Der Hinweis bei den Startknöpfen erklärt den Grund; dann **QUICK AND COPY** wählen und dessen Tonspurzuordnung prüfen/bestätigen. Die vorhandenen Build-46-Pakete enthalten diese neue Sperre noch nicht. [Erkennung und Grenzen](MP4BOX-AUDIO-ENTHUSIAST-SPERRE-20261031.md).
 5. Die gewünschte Schaltfläche bewusst drücken und eine neue MP4-Ausgabedatei festlegen. Keine Verfahrensvoreinstellung, kein Enter-Standard, keine automatische Umschaltung bei Fehlern. Vorhandene Dateien werden nicht ersetzt.
-6. Nach Abschluss Anfang, **Übergang 1 → Prüfen** und Ende kontrollieren. Die Vorschau startet drei Sekunden vor der Übergangsposition; bei QUICK ist diese aus den Containerangaben angenähert. Bei mehreren erhaltenen Tonspuren im Kontrollfenster **Tonspur prüfen** umstellen; die gleiche Prüfstelle wird mit der gewählten Spur erneut abgespielt.
+6. Nach Abschluss Anfang, **Übergang 1 → Prüfen** und Ende kontrollieren. Die Vorschau startet drei Sekunden vor der Übergangsposition; bei QUICK ist diese aus den Containerangaben angenähert. Bei mehreren erhaltenen Tonspuren im Kontrollfenster **Tonspur prüfen** umstellen; ab Build 48 bleiben Position und Play/Pause erhalten. Mit Vorherige/Nächste Prüfstelle gezielt die Drei-Sekunden-Vorschau starten. Nach erforderlichem Neuladen am Filmende startet die aktuelle Prüfstelle erneut.
 
 **QUICK AND COPY (ab Build 46):** Zwei Filmteile mit FFmpeg concat und `-c copy` verbinden. Video und alle bestätigten kompatiblen AAC-/AC-3-Spurpaare werden ohne Neukodierung übernommen. Keine vollständige PCM-/Paketidentitätsprüfung oder obligatorische Vollvideodekodierung, keine samplegenaue Zusage. Kleine oder vorhandene Zeitstempelunregelmäßigkeiten, unterschiedliche H.264-Decoderparameter und zusätzliche Audiosamples sind allein keine Ablehnungsgründe. Alle vorhandenen technischen Hinweise und FFmpeg-Warnungen stehen im eigenen Protokollabschnitt **„Meckerecke – technische Hinweise“**; dafür werden keine zusätzlichen Vollprüfungen gestartet. Das Protokoll lässt sich im Abschlussdialog öffnen/kopieren. Echte Prozessfehler, unlesbare Ausgaben, falsche Spurzuordnung und gefährdete Originaldateien brechen weiterhin ab. Bitte Bild und Ton insbesondere an der Klebestelle selbst kontrollieren.
 
@@ -493,7 +495,7 @@ Bei experimenteller Vorbereitung geschieht Folgendes:
 
 Die Prüfungen sind keine vollständige Kontrolle aller Bildzeitstempel. Kontrolliere Anfang, Ende, Werbegrenzen und Ton-Synchronität der fertigen Datei.
 
-Enthält eine HD-Aufnahme mehrere Tonspuren, bleiben sie beim Schneiden mit MP4Box erhalten. Öffne die geschnittene Datei anschließend in deinem eigenen Player und wähle dort bei Bedarf die gewünschte Tonspur aus. CANs Player bietet derzeit keine Tonspurauswahl.
+Enthält eine HD-Aufnahme mehrere Tonspuren, bleiben sie beim Schneiden mit MP4Box erhalten. Öffne die geschnittene Datei anschließend in deinem eigenen Player und wähle dort bei Bedarf die gewünschte Tonspur aus. Der Hauptplayer bietet weiterhin keine Tonspurauswahl; im Kontrollplayer lassen sich die tatsächlich vorhandenen Spuren wählen.
 
 **Abbrechen** fordert den Abbruch an. Warte, bis er abgeschlossen ist. Nach einem Fehler bleibt das Fenster offen und zeigt den Grund direkt oberhalb des Protokolls.
 
@@ -509,7 +511,7 @@ Ab dem lokalen **Build 25** besitzen **Anfang, alle Übergänge und Ende** eine 
 
 CAN verwendet immer ein Kontrollfenster und übernimmt beim Wechsel die Datei und Übergänge des angeklickten Abschlussfensters. Nach dem Schließen kannst du es erneut öffnen. **Schließen** im Abschlussfenster beendet das Kontrollfenster nicht; beim Beenden von CAN wird es mit geschlossen. Originalplayer und Schnittliste bleiben für Korrekturen geöffnet. Die ursprüngliche Wiedergabe läuft gegebenenfalls weiter; zum getrennten Anhören kannst du sie selbst pausieren.
 
-Anfang und Ende lassen sich immer prüfen. Die Zeiten im Abschlussfenster bleiben berechnete Planwerte; für den Start der Endprüfung verwendet und zeigt der Kontrollplayer die tatsächliche geladene Dauer. Bitte Bild, Ton, Tonsynchronität und sämtliche Übergänge persönlich kontrollieren. Die Tonspurauswahl bleibt dem externen Player vorbehalten. Fehlende oder defekte Ausgaben werden im Kontrollfenster verständlich gemeldet. [Prüfbericht für Anfang/Ende und verbleibende Abnahme](KONTROLLPLAYER-ANFANG-ENDE-20261012.md).
+Anfang und Ende lassen sich immer prüfen. Die Zeiten im Abschlussfenster bleiben berechnete Planwerte; für den Start der Endprüfung verwendet und zeigt der Kontrollplayer die tatsächliche geladene Dauer. Bitte Bild, Ton, Tonsynchronität und sämtliche Übergänge persönlich kontrollieren. Im Kontrollplayer lassen sich mehrere vorhandene Tonspuren auswählen; ab Build 48 bleiben reguläre Position und Play/Pause erhalten. Fehlende oder defekte Ausgaben werden im Kontrollfenster verständlich gemeldet. [Prüfbericht für Anfang/Ende und verbleibende Abnahme](KONTROLLPLAYER-ANFANG-ENDE-20261012.md).
 
 ## 7. Cutlist auf den Server hochladen
 

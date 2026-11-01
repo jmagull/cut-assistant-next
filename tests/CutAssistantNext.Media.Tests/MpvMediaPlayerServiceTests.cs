@@ -8,6 +8,31 @@ namespace CutAssistantNext.Media.Tests;
 
 public sealed class MpvMediaPlayerServiceTests
 {
+    [Theory]
+    [InlineData(false, MediaPlayerState.Ended)]
+    [InlineData(true, MediaPlayerState.Error)]
+    public async Task PauseDoesNotMakeAnInactiveMediaContextReusable(bool error, MediaPlayerState expected)
+    {
+        var client = new StubLibMpvClient();
+        await using var service = new MpvMediaPlayerService(client);
+        await service.InitializeAsync(123);
+        client.Publish(new LibMpvEvent(error ? LibMpvEventKind.Error : LibMpvEventKind.EndFile, ErrorMessage: "Testfehler"));
+        await WaitUntilAsync(() => service.State == expected);
+        await service.PauseAsync();
+        Assert.Equal(expected, service.State);
+        Assert.Equal(("pause", true), Assert.Single(client.BooleanPropertyCalls));
+    }
+
+    [Fact]
+    public async Task PauseOnEmptyContextPreservesEmptyState()
+    {
+        var client = new StubLibMpvClient();
+        await using var service = new MpvMediaPlayerService(client);
+        await service.InitializeAsync(123);
+        await service.PauseAsync();
+        Assert.Equal(MediaPlayerState.Empty, service.State);
+    }
+
     [Fact]
     public async Task AudioTrackSelectionUsesRealMpvIdsAndVerifiesReadback()
     {
@@ -380,6 +405,9 @@ public sealed class MpvMediaPlayerServiceTests
             (_, _) => volumeChangedCount++;
 
         await service.InitializeAsync((nint)123);
+        // Pause can change playback state only when a media context is loaded.
+        client.Publish(new LibMpvEvent(LibMpvEventKind.FileLoaded));
+        await WaitUntilAsync(() => service.State == MediaPlayerState.Paused);
 
         await service.PauseAsync();
 

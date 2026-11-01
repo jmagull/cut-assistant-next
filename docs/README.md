@@ -1,8 +1,11 @@
 # Dokumentation – Cut Assistant Next
 
-**Stand 31.10.2026: CAN 1.0.2 Build 47 ist als stabile Latest-Version veröffentlicht.** App-Dateiversion **1.0.2.47**, Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64. [Release **v1.0.2-build47**](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47); der frühere Release v1.0.2 mit Build 41 bleibt erhalten.
+**01.11.2026: Build 48 zur stabilen Veröffentlichung freigegeben; Paketprüfung läuft.** Build 47 bleibt bis zum verifizierten Abschluss Latest und anschließend unverändert als Vorgänger erhalten.
 
 ## Aktuell lesen
+
+- [Build-48-Freeze](FREEZE-1.0.2-BUILD48-20261101.md): freigegebener Kontrollplayer-Stand und Releasegrenzen.
+- [Kontrollplayer-Korrektur](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md): EOF, Positionserhalt, Tests und Praxisabnahme.
 
 - [Projektstand](AKTUELLER-STAND.md): Version, Verfahren, Nachweise und Grenzen.
 - [Build-47-Veröffentlichung](RELEASE-1.0.2-BUILD47-PUBLISHED-20261031.md): Freigabe und anschließende Commit-/Tag-/Assetprüfung.

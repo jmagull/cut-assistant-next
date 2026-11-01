@@ -16,6 +16,8 @@ internal sealed class HanumanLibMpvClient : ILibMpvClient
             });
 
     private WindowedMpvContext? _context;
+    // Synchronous property calls must finish before their native context is disposed.
+    private readonly SemaphoreSlim _propertyGate = new(1, 1);
     private long _nextObservationId;
     private bool _disposed;
 
@@ -119,12 +121,10 @@ internal sealed class HanumanLibMpvClient : ILibMpvClient
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
         cancellationToken.ThrowIfCancellationRequested();
-        var context = GetContext();
         // The bundled wrapper's async getter throws on its event thread for unavailable optional
         // metadata. Use libmpv's synchronous getter off the UI thread and handle only that status.
-        return await Task.Run(() =>
+        return await AccessPropertyAsync(context =>
         {
-            cancellationToken.ThrowIfCancellationRequested();
             try { return context.GetPropertyString(propertyName); }
             catch (MpvException error) when (error.Code == (int)MpvError.PropertyUnavailable ||
                 error.Code == (int)MpvError.PropertyNotFound)
@@ -194,31 +194,28 @@ internal sealed class HanumanLibMpvClient : ILibMpvClient
             cancellationToken);
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        if (_disposed)
+        await _propertyGate.WaitAsync().ConfigureAwait(false);
+        try
         {
-            return ValueTask.CompletedTask;
+            if (_disposed) return;
+            _disposed = true;
+
+            var context = _context;
+            _context = null;
+            if (context is not null)
+            {
+                context.FileLoaded -= OnFileLoaded;
+                context.PlaybackRestart -= OnPlaybackRestarted;
+                context.EndFile -= OnEndFile;
+                context.PropertyChanged -= OnPropertyChanged;
+
+                context.Dispose();
+            }
+            _events.Writer.TryComplete();
         }
-
-        _disposed = true;
-
-        var context = _context;
-        _context = null;
-
-        if (context is not null)
-        {
-            context.FileLoaded -= OnFileLoaded;
-            context.PlaybackRestart -= OnPlaybackRestarted;
-            context.EndFile -= OnEndFile;
-            context.PropertyChanged -= OnPropertyChanged;
-
-            context.Dispose();
-        }
-
-        _events.Writer.TryComplete();
-
-        return ValueTask.CompletedTask;
+        finally { _propertyGate.Release(); }
     }
 
     private async Task SetPropertyAsync<T>(
@@ -226,29 +223,36 @@ internal sealed class HanumanLibMpvClient : ILibMpvClient
         T value,
         CancellationToken cancellationToken)
     {
-        var context = GetContext();
-
-        var options = new MpvAsyncOptions
-        {
-            WaitForResponse = true,
-            ThrowOnError = true,
-            ResponseTimeout = 5_000
-        };
-
         try
         {
-            await context
-                .SetPropertyAsync(
-                    propertyName,
-                    value,
-                    options)
-                .WaitAsync(cancellationToken);
+            // AsyncSetPropertyHandler in the pinned wrapper can throw on its event thread.
+            // A synchronous setter on a worker returns native errors through this Task instead.
+            await AccessPropertyAsync(context =>
+            {
+                context.SetProperty(propertyName, value);
+                return true;
+            }, cancellationToken).ConfigureAwait(false);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
         catch (Exception exception)
         {
             PublishError(exception.Message);
             throw;
         }
+    }
+
+    private async Task<T> AccessPropertyAsync<T>(Func<WindowedMpvContext, T> action,
+        CancellationToken cancellationToken)
+    {
+        await _propertyGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            // Do not cancel only the wait: a running native call still owns the context.
+            var result = await Task.Run(() => action(GetContext()), cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            return result;
+        }
+        finally { _propertyGate.Release(); }
     }
 
     private WindowedMpvContext GetContext()

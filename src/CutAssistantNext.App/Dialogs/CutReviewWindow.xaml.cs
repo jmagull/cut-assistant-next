@@ -4,6 +4,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Media.Playback;
+using CutAssistantNext.Core.Logging;
 
 namespace CutAssistantNext.App.Dialogs;
 
@@ -15,9 +16,9 @@ internal partial class CutReviewWindow : Window
     private bool _allowClose;
     private bool _sliderDragging;
 
-    internal CutReviewWindow(IMediaPlayerService player)
+    internal CutReviewWindow(IMediaPlayerService player, IAppLogger? logger = null)
     {
-        _viewModel = new CutReviewViewModel(player);
+        _viewModel = new CutReviewViewModel(player, logger: logger);
         InitializeComponent();
         DataContext = _viewModel;
         VideoHost.VideoWindowHandleCreated += VideoHost_HandleCreated;
