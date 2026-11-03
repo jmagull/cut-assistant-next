@@ -1,5 +1,43 @@
 # Projektstatus
 
+## 03.11.2026 – CAN 1.0.3 eingefroren, Commit und Push beauftragt
+
+Der Nutzer bestätigt die korrigierte Power-User-2-Darstellung mit geladenem Christmas-Cookbook-Film erneut positiv: **„Ich glaube das sieht sehr gut aus :-)“**. +10 Bilder und beide Keyframe-Buttons liegen auf gleicher Höhe. Danach ausdrücklicher Auftrag, README und Dokumentation abzugleichen, zu committen und zu pushen; **dieser Stand ist eingefroren, Veröffentlichung erst nach gesonderter Freigabe**. Version **1.0.3**, Buildzähler **48**, keine neuen Pakete. [Freeze, Prüfungen und Grenzen](FREEZE-1.0.3-20261103.md).
+
+## 03.11.2026 – Christmas Cookbook mit otr-can in Power-User 2 bestanden
+
+Vier Behalteintervalle, **121724 Videopakete**, **233710080 AAC-Samples**, rechnerisch **01:21:08.960**. Nutzer bestätigt **Ton, Bild, Schnitt und Drei-Sekunden-Vorschau** persönlich positiv. Danach Schließen von CAN und Wechsel in die separate Ausrichtungskorrektur angekündigt; deren persönliche Abnahme noch nicht daraus abgeleitet. [Praxisnachweis](CHRISTMAS-COOKBOOK-PRAXISTEST-20261103.md). Reiner Dokumentationsnachtrag; letzter technischer Stand 1728 bestandene Tests, Version 1.0.3 / Zähler 48.
+
+## 03.11.2026 – Playerbuttons in Power-User 2 auf gleicher Höhe
+
+Persönliche Sichtprüfung der neuen Ansicht und roten Vormerkung positiv; Nutzer testet weiter. Gemeldete um 4 DIP höher stehende Keyframe-Buttons gegenüber +10 Bildern nur in Power-User 2 korrigiert. Vier WPF-DPI-Fälle und nativer Test mit geladenem Film bestätigen gleiche Ober-/Unterkante. **1728 Tests bestanden**, Build ohne Warnungen/Fehler. Separate Korrekturfassung; laufende Nutzerfassung, Version 1.0.3 und Zähler 48 unverändert. [Nachtrag und Bildnachweis](POWER-USER-2-IMPLEMENTIERUNG-20261103.md#nachtrag-03112026--persönliche-sichtprüfung-und-buttonausrichtung).
+
+## 03.11.2026 – Power-User 2 implementiert und technisch geprüft
+
+Dritte dauerhafte Auswahl **Standard / Power-User 1 / Power-User 2** im bestehenden Darstellungsdialog. Gleiche Controls, kompakte Viererreihe unter dem Player, Suche daneben/darunter, fett rote/grüne Vormerkzeile und größere rechte Tabelle. Keine Umdeutung des Schnittplans beim Wechsel.
+
+**Release-Build 0 Warnungen/0 Fehler; 1724 Tests bestanden** (200 Core, 80 Cutlists, 390 Media, 1054 App). Zusätzlich zwölf native Prüffallgruppen mit synthetischem Film und zwei Tonspuren: HWND, Wiedergabe und Spur erhalten; beide Schnittmodi, echter Esc-Weg, Lupe, AVI-/MP4-Wechsel und WPF-DPI bis 200 % geprüft. Vier tatsächliche WPF-Bildnachweise im [Abschlussbericht](POWER-USER-2-IMPLEMENTIERUNG-20261103.md). Windows-Skalierung/Hochkontrast wurden nicht global umgestellt; physische Monitorwechsel und persönliche Bedienabnahme bleiben offen.
+
+Version **1.0.3**, Zähler **48**, Motoren und veröffentlichter 1.0.2-Build-48-Paketsatz unverändert; sechs Archive/Programme gegen SHA256SUMS bestätigt. Kein Commit/Push/Paket/Release. Entwicklungsbuild zur persönlichen Abnahme bereit.
+
+## 03.11.2026 – Santa Tell Me im grünen Modus positiv geprüft
+
+Vier Behaltebereiche, **01:21:24.120** geplante Ausgabe; grüner Editor und Bestätigungsdialog im Screenshot, gespeicherte Cutlist 1.0.3 und Servereintrag passend. MP4Box schließt vier Segmente, Zusammenfügen und Schnittstellenprüfung mit „Fertig.“ ab; otr-can 0.1.6 verifiziert **122103 Videopakete** und **234437760 AAC-Samples** (Stereo/48000 Hz). Nutzer bestätigt **Ton, Bild, Schnitt und Drei-Sekunden-Vorschau**. Persönliche Wiederaufnahme begonnener Arbeit bleibt getrennt offen. [Detaillierter Praxisnachweis](SANTA-TELL-ME-GRUENER-PRAXISTEST-20261103.md).
+
+Dieser Nachtrag aktualisiert die zuvor noch offene grüne Filmabnahme.
+
+## 03.11.2026 – CAN 1.0.3 lokal umgesetzt und dokumentiert
+
+**03.11.2026 – lokale Entwicklung CAN 1.0.3, Buildzähler 48.** Gemeinsame Server-/Lokal-Cutlist-Tabelle und die Schnittmodi Rot/Entfernen und Grün/Behalten mit dynamischer Vorschau sind umgesetzt. Release-Build ohne Warnungen/Fehler, **1.709/1.709 Tests** bestanden. Keine neue Paketierung oder Veröffentlichung. Öffentlich bleibt der dokumentierte stabile Stand **CAN 1.0.2 Build 48** vom 01.11.2026.
+
+[Entwicklungsnotizen 1.0.3](RELEASE-NOTES-1.0.3.md) · [Cutlist-Tabelle](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi und Vorschau](SCHNITTMODI-TIMELINE-20261103.md).
+
+Persönlich bestätigt: gemeinsame Tabelle und vereinheitlichte Daueranzeige mit NCIS Sydney; Chicago Fire mit otr-can 0.1.6 einschließlich Schnitt, Bild, Tonspur 1 und 2 sowie Drei-Sekunden-Vorschau. Die späteren Screenshots bestätigen die roten/grünen Markierungen und in beiden Modi dieselbe geplante Dauer **00:39:28.320**. Sie belegen keinen zusätzlichen Filmschnitt im grünen Modus und keine vollständige Wiederaufnahmeprüfung.
+
+Aktuell offen: persönliche Wiederaufnahme eines gespeicherten Zwischenstands sowie gegebenenfalls neue Paket-/VM-Prüfungen nach gesondertem Auftrag. Der grüne vollständige Filmschnitt ist inzwischen mit Santa Tell Me persönlich positiv gemeldet. Keine Fertig-/Unfertig-Erkennung aus Schnittanzahl oder Position.
+
+Die folgende Veröffentlichung und die datierten Einträge dokumentieren die unveränderten früheren Stände.
+
 **01.11.2026 – CAN 1.0.2 Build 48 als stabile Latest-Version veröffentlicht.** Kontrollplayer-EOF-Absturz und Positionssprung korrigiert; 1634 Pakettests, 1362 finale DLL-Tests, 32 native/WPF-Kontrollen und persönliche Ghosts-Teil-1-/Teil-2-Abnahme. Build 47 und ältere datierte Nachweise bleiben erhalten. [Veröffentlichung](RELEASE-1.0.2-BUILD48-PUBLISHED-20261101.md), [Paketprüfung](RELEASE-1.0.2-BUILD48-RESULT.md). Die folgenden datierten Angaben bewahren ihren damaligen Stand.
 
 ## 31.10.2026 – Build 47 veröffentlicht, acht Uploads identisch geprüft

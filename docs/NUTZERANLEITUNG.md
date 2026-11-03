@@ -1,5 +1,19 @@
 # Nutzeranleitung – Cut Assistant Next
 
+## Drei Ansichten in der lokalen 1.0.3 – 03.11.2026
+
+Unter **Einstellungen → Darstellung und Schnittbearbeitung … → Anordnung der Benutzeroberfläche** stehen **Standard**, **Power-User 1** (bisherige Anordnung) und **Power-User 2** zur Auswahl. **Übernehmen** wirkt sofort und speichert die Wahl. Laufender Film, Tonspur, Schnittpunkte und geladene Cutlist bleiben beim Ansichtswechsel erhalten. Die separate Rot-/Grün-Arbeitsweise gilt weiterhin erst für den nächsten Film.
+
+**Power-User 2:** Die vier Schnittbuttons stehen als kompakte Reihe unter der Playersteuerung. Die Halbierungssuche steht rechts daneben oder bei weniger Platz direkt darunter. Eine offene Markierung erscheint darunter als fett roter **SCHNITTANFANG VORGEMERKT** beziehungsweise grüner **BEHALTEANFANG VORGEMERKT**, mit fester Zeit und Frame-Lupe daneben. Slider/Framebewegungen ändern nur die bestehende Timeline-Vorschau. Gültiges Ende oder Esc beendet die Hervorhebung; ein ungültiges Ende erhält sie. Ohne offenen Anfang bleibt die Anzeige neutral. Rechts haben Schnittliste und vorhandene Aktionsgruppen mehr Platz.
+
+Bei zu schmalem Fenster verwendet CAN vorübergehend Standard und kehrt bei ausreichendem Platz zur gespeicherten Wunschansicht zurück. Alle vier Schnittbuttons bleiben in der neuen Ansicht zusammen. Bei geringer Höhe lässt sich die Arbeitsfläche scrollen. [Tatsächliche Ansichten und Prüfgrenzen](POWER-USER-2-IMPLEMENTIERUNG-20261103.md).
+
+## Geltungsstand – 03.11.2026
+
+**Stabil veröffentlicht: CAN 1.0.2 Build 48. Eingefrorener Entwicklungsstand: CAN 1.0.3 mit unverändertem Buildzähler 48; Veröffentlichung erst nach Freigabe.** Die nachfolgend mit **1.0.3** bezeichnete gemeinsame Cutlist-Tabelle und Rot-/Grün-Bedienung sind noch nicht in den veröffentlichten 1.0.2-Paketen enthalten. [Entwicklungsnotizen](RELEASE-NOTES-1.0.3.md), [Versionen](VERSIONEN.md), [Freeze](FREEZE-1.0.3-20261103.md).
+
+Für 1.0.3: Unter **Einstellungen → Darstellung und Schnittbearbeitung …** die Arbeitsweise wählen, übernehmen und den Film neu öffnen. Rot markiert zu entfernende, Grün zu behaltende Teile. Eine begonnene Markierung folgt dem Slider; **Esc** verwirft nur diesen offenen Anfang. Kapitel 3 bis 5 erläutern gemeinsame Cutlist-Auswahl und sicheres Speichern.
+
 **01.11.2026: CAN 1.0.2 Build 48 ist als stabile Latest-Version veröffentlicht.** [Release v1.0.2-build48](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build48), App-Dateiversion **1.0.2.48**. Build 47 bleibt unverändert als stabile Vorgängerversion erhalten. Motor otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF unverändert.
 
 **Build 48, veröffentlicht am 01.11.2026:** Tonspurwechsel im Kontrollplayer erhalten Position und Play/Pause; nach EOF wird nötigenfalls kontrolliert neu geladen. 1634 Pakettests, 1362 finale DLL-Tests und 32 native/WPF-Kontrollen erfolgreich. [Korrekturbericht](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md).
@@ -62,15 +76,15 @@ Bei geeigneten H.264-AVI-Dateien bietet **Schneiden otr-can** eine ausdrücklich
 
 Ein alter Motor wird für MP3-Aufträge mit einem Upgrade-Hinweis abgelehnt. Ungeeignete Zeitstrukturen und fehlende Samples werden nicht automatisch repariert. Bitte jede Tonspur und alle Übergänge kontrollieren. Die neue Teufelsbrigade-Datei wurde am 12.10.2026 persönlich positiv abgenommen: Anfang, Ende, alle Schnittübergänge sowie Ton und Bild. Eine bereits im vorherigen Ergebnis vorhandene Video-Zeitstempelauffälligkeit bleibt offen. [Prüfstand und Grenzen](AVI-OTR-CAN-MP3-20261012.md).
 
-Die folgenden Kapitel beschreiben **0.3.0 · Build 31 · RC3** mit Kontrollplayer, Halbierungssuche, MP4-Keyframes und Frame-Lupe. Für erkannte AVI-Container sind Keyframe-Navigation, Frame-Lupe und Hauptplayersuche eingeschränkt; der gelbe Hinweis erklärt dies. Ältere Ausgaben bleiben unverändert verfügbar. [Paketstand und Grenzen](RELEASE-BUILD31-RC3-RESULT.md).
+Die folgenden Bedienkapitel gelten für die heutigen Grundfunktionen; Ergänzungen der lokalen 1.0.3 sind ausdrücklich gekennzeichnet. Datierte Einführungsberichte oben und unten bewahren ihren damaligen Prüfstand. Für erkannte AVI-Container bleiben die Schutzsperren aktiv.
 
-Stand: 15.10.2026. Diese Anleitung beschreibt **0.3.0 · Build 31 · RC3** für Windows 11 x64. Die Vorbereitung von AVI und anderen Containern ist experimentell.
+Stand der Anleitung: **03.11.2026**, Windows 11 x64. Öffentliches Paket **1.0.2 Build 48**, lokale Weiterentwicklung **1.0.3, Buildzähler 48**. Die Vorbereitung von AVI und anderen Containern bleibt experimentell.
 
-Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer, bei einem Release-Kandidaten zusätzlich dessen Kennung, aktuell **Cut Assistant Next · 0.3.0 · Build 31 · RC3**. Die persönliche Produktiv-/VM-/Portable-/Deinstallationsabnahme gilt für die Vorgängerausgabe Build 29; für Build 31 sind inzwischen Setup in der VM, Deinstallation, Portable-ZIP in der VM und Videoschnitt mit MP4Box/otr-can persönlich bestätigt. Bitte die tatsächlich angezeigten Angaben bei Fehlermeldungen mit angeben.
+Im Fenstertitel und oben in der Oberfläche stehen Version und Buildnummer. Der lokale Entwicklungsstand zeigt **Cut Assistant Next · 1.0.3 · Build 48**; das veröffentlichte Setup/Portable bleibt **1.0.2 · Build 48**. Bitte diese Angaben und die verwendete Ausgabe bei Fehlermeldungen mit angeben. Neue Entwicklungsfunktionen bedeuten keine neue Setup-/Portable-Abnahme.
 
 ## 1. Einmalig einrichten
 
-Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE allein. Die [Build-31-RC3-Ausgabe](https://github.com/jmagull/cut-assistant-next/releases/tag/v0.3.0-build31-rc3) bietet Setup und Portable-ZIP mit libmpv und optionalem otr-can 0.1.5. Sie benötigt die separat installierte [.NET 10 Desktop Runtime für Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/10.0). FFmpeg/ffprobe, GPAC/MP4Box und bei Bedarf FFMS2 werden separat eingerichtet. Build 29 wurde technisch sowie durch Produktivinstallation, VM-Setup/Portable mit beiden Motoren und Setup-Deinstallation geprüft und auf Nutzerauftrag veröffentlicht. Installationstyp und frisches Portable-Profil nicht gesondert unterschieden. [Nachweis](RELEASE-PUBLICATION-BUILD29-RC3.md).
+Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE allein. Die veröffentlichte **1.0.2-Build-48-Ausgabe** bietet Setup und Portable-ZIP mit libmpv 0.41.0 und otr-can 0.1.6. Sie benötigt die separat installierte .NET 10 Desktop Runtime für Windows x64. FFmpeg/ffprobe, GPAC/MP4Box und bei Bedarf FFMS2 werden separat eingerichtet. [Paket- und Installationsnachweise](RELEASE-1.0.2-BUILD48-RESULT.md). Für die lokale 1.0.3 wurden keine neuen Installationspakete erstellt.
 
 Öffne die Einstellungen und hinterlege die benötigten Werkzeuge:
 
@@ -83,6 +97,7 @@ Starte CAN aus seinem vollständigen Ausgabeordner; kopiere nicht nur die EXE al
 | Einstellungen → Cutlist-Einstellungen … | Persönliche Server-URL | Cutlists suchen, herunterladen und hochladen |
 | Einstellungen → Cutlist-Einstellungen … | Standardautor und Kommentarbausteine | Neue Cutlists vorbereiten |
 | Einstellungen → Namensmaske … | Standard-Namensmaske | Namen der geschnittenen Ausgabe bilden |
+| Einstellungen → Darstellung und Schnittbearbeitung … (1.0.3) | Ansicht und Rot/Grün | Layout sofort wählen; Schnittarbeitsweise ab dem nächsten Film festlegen |
 
 Wähle jeweils die ausführbare Datei, nicht nur ihren Ordner. **Schnittanwendung …** richtet MP4Box ein. OTR-CAN hat eine eigene Auswahl; ein beliebiges anderes Programm wird durch Eintragen seines Pfades nicht zu einem unterstützten Schnittmotor.
 
@@ -92,7 +107,7 @@ Unter **Einstellungen → Cutlist-Einstellungen …** kannst du sechs Schnellbau
 
 ### OTR-CAN-Werkzeuge einrichten
 
-Unter **Einstellungen → OTR-CAN-Werkzeuge …** wählst du die OTR-CAN-Schnittmotor-EXE und `ffmsindex.exe` aus. Im veröffentlichten Build-16-RC3-Paket liegt der Motor bereits unter `tools/otr-can/otr_can.exe` im CAN-Ordner; wähle diese Datei aus. Die Motorquellen und Lizenztexte sind dort ebenfalls enthalten. FFMS2 / `ffmsindex.exe` einschließlich seiner DLLs bleibt separat zu installieren. Der Windows-Motor benötigt außerdem die Microsoft Visual C++ v14-Laufzeit für x64; bei fehlender `VCRUNTIME140.dll` das [aktuelle Microsoft-Paket](https://aka.ms/vc14/vc_redist.x64.exe) installieren. Den Motor wählst du für jeden Auftrag direkt unter der Schnittliste: **Schneiden MP4Box (schnell)** oder **Schneiden otr-can (framegenau, langsam)**. Der Werkzeugdialog hat keinen Auswahlhaken. Der reguläre Motor **0.1.5** enthält die korrigierte Frame-/Zeitstempelplanung und kodiert jede vollständige Tonspur neu. Bei AAC/AC-3 bleiben Codec, Kanallayout, Samplerate und Zielbitrate erhalten. MP3 wird nach PCM-Schnitt einmal nach AAC-LC kodiert (Stereo 192 kbit/s, Mono 96 kbit/s). Zusätzliche Kodierverluste und Laufzeit sind damit verbunden. 0.1.1 bleibt zur Schnittstelle kompatibel; die erhaltenen CAN-04- und 0.1.0-Referenzen unterstützen noch nicht die vollständige Werkzeugpfadübergabe.
+Unter **Einstellungen → OTR-CAN-Werkzeuge …** wählst du die OTR-CAN-Schnittmotor-EXE und `ffmsindex.exe` aus. Der veröffentlichte Build-48-Paketsatz enthält **otr-can 0.1.6** unter `tools/otr-can/otr_can.exe`, mit zugehörigen Quellen und Lizenztexten. FFMS2 / `ffmsindex.exe` einschließlich seiner DLLs bleibt separat einzurichten. Der Windows-Motor benötigt außerdem die Microsoft Visual C++ v14-Laufzeit für x64. Den Motor wählst du für jeden Auftrag unter der Schnittliste: **MP4Box (schnell)** oder **otr-can (framegenau)**. otr-can kopiert geeignete Videoteile und kodiert Schnittgrenzen sowie vollständige Tonspuren neu. AAC/AC-3 behalten Codec, Kanallayout, Samplerate und Zielbitrate; MP3 wird einmal nach AAC-LC kodiert. Zusätzliche Kodierverluste und Laufzeit sind damit verbunden. Die Schnittbearbeitungswahl Rot/Grün ändert den Motor nicht.
 
 FFMS2 kannst du aus dem [offiziellen Downloadbereich](https://github.com/ffms/ffms2/releases) beziehen. Entpacke das vollständige Windows-64-Bit-Paket mit seinen DLLs und wähle die darin enthaltene `ffmsindex.exe`. FFmpeg und ffprobe werden ebenfalls von dir installiert und bleiben unter **FFmpeg-Werkzeuge …** eingerichtet. Die Programme dürfen in unterschiedlichen Ordnern liegen; WSL und eine globale OTR-Konfiguration sind nicht erforderlich.
 
@@ -193,9 +208,9 @@ noch aus.
 
 ## 2. Video laden
 
-### Neu in der lokalen Prüffassung für CAN 1.0
+### Datei öffnen und Ansicht wählen
 
-Die folgenden Ergänzungen sind in der lokalen Weiterentwicklung enthalten; das veröffentlichte Build-31-Paket bleibt unverändert. Die Versionsanzeige wurde noch nicht erhöht. [Prüfstand und separater Startpfad](ZWEI-ANSICHTEN-START-DROP-20261015.md).
+Startparameter, Drag & Drop und beide Ansichten sind seit CAN 1.0.0 enthalten. 1.0.3 ergänzt im vorhandenen Einstellungsdialog die Schnittarbeitsweise; vorhandene Start- und Dateischutzregeln bleiben erhalten.
 
 **Startparameter:** CAN öffnet eine als Startparameter übergebene Videodatei automatisch. Die optionale PATH-Einrichtung und die PowerShell-Aufrufe mit und ohne PATH erklärt der folgende Abschnitt.
 
@@ -203,7 +218,7 @@ Die folgenden Ergänzungen sind in der lokalen Weiterentwicklung enthalten; das 
 
 **Schnittarbeit erhalten:** Bei einem Dateiwechsel mit vorhandenen Schnittbereichen, vorgemerktem Anfang oder geladener Cutlist fragt CAN vor dem Verwerfen nach. **Nein** erhält Video und Schnittliste. Bei Bedarf zuerst die aktuelle Cutlist speichern.
 
-**Ansicht wählen:** Unter **Einstellungen → Darstellung … → Anordnung der Benutzeroberfläche** zwischen **Standardansicht** (Player oben) und **Power-User-Ansicht** (großer Player links, alle Schnittfunktionen rechts) wählen und **Übernehmen** klicken. Die Auswahl wirkt sofort und wird für den nächsten Start gespeichert. Wiedergabeposition, Schnittpunkte und Einstellungen bleiben erhalten. Den Trennstreifen zwischen Player und Schnittspalte verschieben, um die Breite anzupassen.
+**Ansicht wählen:** Unter **Einstellungen → Darstellung und Schnittbearbeitung … → Anordnung der Benutzeroberfläche** zwischen **Standard** (Player oben), **Power-User 1** (Player links, Schnittfunktionen rechts) und **Power-User 2** (kompakte Schnittbuttons beim Player) wählen und **Übernehmen** klicken. Die Auswahl wirkt sofort und wird für den nächsten Start gespeichert. Wiedergabeposition, Schnittpunkte und Einstellungen bleiben erhalten. Den Trennstreifen zwischen Player und Schnittspalte verschieben, um die Breite anzupassen.
 
 Für Power User das Fenster möglichst maximieren. Unter 1100 DIP verfügbarer Inhaltsbreite verwendet CAN vorübergehend die Standardanordnung und zeigt einen Hinweis am Player. Beim Verbreitern kehrt die gewünschte Power-User-Ansicht zurück. Bei wenig Höhe lassen sich die Arbeitsfläche und der rechte Schnittbereich scrollen; die größere Videofläche bleibt nutzbar. Beide Ansichten bieten dieselben Funktionen und dieselben AVI-Sicherheitsregeln.
 
@@ -274,7 +289,7 @@ Erwartung: CAN startet, lädt die Aufnahme, führt die Medienanalyse aus und zei
 
 Setup und Portable-Version verändern den Windows-PATH nicht automatisch. Es gibt keine zusätzliche Installer-Option zur PATH-Verwaltung; die optionale Einrichtung erfolgt durch dich. Wenn du den Portable-Ordner später verschiebst, passe einen selbst angelegten PATH-Eintrag entsprechend an.
 
-### Rechte Werkzeuge in der Power-User-Ansicht
+### Rechte Werkzeuge in Power-User 1
 
 Ab der lokalen Prüffassung vom **16.10.2026** sind die Werkzeuge gemäß abgestimmter Skizze angeordnet:
 
@@ -299,14 +314,22 @@ Beim Laden wird noch nichts umgewandelt. Die Originaldatei bleibt Grundlage der 
 
 ## 3. Eine Cutlist wählen oder selbst beginnen
 
-Ist eine persönliche Server-URL eingerichtet, sucht CAN nach dem Laden automatisch mit dem unveränderten Originaldateinamen. Der Treffer-Dialog zeigt die verfügbaren Cutlists sowie Informationen zur Auswahl, darunter Autor, Bewertung, Format, vorgeschlagener Name und Kommentar.
+**Lokale 1.0.3:** Nach dem Laden stehen Server- und lokale Cutlists in einer gemeinsamen Übersicht, getrennt nach **Server** und **Lokal**, ohne Vorauswahl. Mit eingerichteter Server-URL sucht CAN weiterhin mit dem Originaldateinamen. Ohne Serverkonfiguration bleibt die lokale Suche möglich.
 
-- **Cutlist laden** übernimmt die ausgewählte Server-Cutlist.
-- **Ohne Cutlist fortfahren** schließt den Dialog. Du kannst eigene Schnittmarken setzen.
-- **Cutlist vom Server laden** in der Hauptoberfläche öffnet die Suche später erneut. So kannst du eine andere Cutlist ausprobieren, ohne das Video neu zu laden.
-- **Lokale Cutlist laden** öffnet eine bereits vorhandene `.cutlist`-Datei auf deinem Rechner.
+Lokal prüft CAN nur den exakten Namen **Originaldateiname einschließlich Endung + .cutlist**, etwa **Aufnahme.HQ.mp4.cutlist**, in genau zwei Verzeichnissen: dem eingerichteten Ordner **Eigene Cutlists** und dem Verzeichnis des geöffneten Films. Keine Unterordner oder ähnlich benannten Dateien. Bytegleiche lokale Treffer werden zusammengefasst; unterschiedliche Inhalte unter demselben Namen bleiben getrennte Einträge. Die Details zeigen den jeweiligen Pfad.
 
-Das Laden einer anderen Cutlist übernimmt deren Schnittplan. Sichere eigene Änderungen vorher mit „Cutlist erzeugen“, wenn du sie behalten möchtest.
+- **Cutlist laden** übernimmt die ausdrücklich ausgewählte lokale oder Server-Cutlist.
+- **Ohne Cutlist fortfahren** schließt die Übersicht, ohne eine Quelle zu übernehmen.
+- **Cutlist vom Server laden** öffnet in 1.0.3 die gemeinsame Übersicht später erneut.
+- **Lokale Cutlist laden** bleibt die manuelle Dateiauswahl, etwa für anders benannte oder an anderen Orten gespeicherte Dateien.
+
+Die Spalte **Dauer** verwendet für beide Quellen **HH:MM:SS.mmm**. **Downloads (reg.)** zeigt ausschließlich registrierte Downloads; die Gesamtzahl aller Downloads wird vom vorhandenen Suchabruf nicht geliefert. Lokale Dateien haben dort keinen Zähler. Der **Befund** ist eine technische Zuordnungshilfe, kein Fertigstellungsnachweis.
+
+Eine begonnene, technisch gültige Cutlist darf geladen und weiterbearbeitet werden. Der Bearbeitungsstand ist im klassischen Format nicht zuverlässig erkennbar; CAN zeigt deshalb kein unbelegtes „Unfertig“ an. Beschädigte oder nicht verarbeitbare Daten sind davon zu unterscheiden.
+
+Vor dem Ersetzen vorhandener aktueller Schnittarbeit fragt CAN nach. Eigene Änderungen bei Bedarf zuerst mit **Cutlist erzeugen** speichern. Serverwahl oder Ablehnung einer lokalen Cutlist ändert deren gespeicherte Datei nicht. Keine automatische Zusammenführung oder Quellenbevorzugung. Die spätere Speicherung unter einem vorhandenen Namen hat weiterhin eine eigene Überschreibentscheidung.
+
+Im veröffentlichten 1.0.2 bleibt die bisherige getrennte Serversuche und manuelle lokale Ladefunktion erhalten.
 
 ### Warnungen beim Einlesen
 
@@ -318,12 +341,17 @@ Leere Bereiche mit exakt null Dauer werden beim Import ignoriert. Die übrigen g
 
 ## 4. Schnittmarken bearbeiten
 
-CAN markiert **Bereiche, die entfernt werden sollen**. Die roten Abschnitte der Schnitt-Timeline stehen für Vorlauf, Werbung, Nachlauf oder andere unerwünschte Teile. Direkt hinter **Schnittliste** erklärt ein kleinerer, dezenter Klammertext die roten Bereiche und die Buttons **Schnittanfang setzen** und **Schnittende setzen**; bei schmalen Fenstern bricht der Text um.
+**Rot – „Das kann weg“** ist der Standard: Vorlauf, Werbung, Nachlauf oder andere unerwünschte Teile markieren. **Grün – „Das soll bleiben“** steht in der lokalen 1.0.3 zusätzlich zur Verfügung: die gewünschten Filmteile markieren. Timeline und Tabelle zeigen in beiden Fällen genau die markierten Bereiche.
 
-1. Gehe im Player an den Anfang eines zu entfernenden Abschnitts.
-2. Klicke **Schnittanfang setzen**.
-3. Gehe an das Ende dieses Abschnitts und klicke **Schnittende setzen**.
-4. Wiederhole das für weitere Abschnitte.
+Die Arbeitsweise unter **Einstellungen → Darstellung und Schnittbearbeitung …** wählen und übernehmen. Sie bleibt nach Neustart erhalten, gilt aber erst für den nächsten neu geöffneten Film. Der laufende Plan wird nicht umgedeutet; der Layoutwechsel wirkt weiterhin sofort.
+
+1. An den Anfang des gewünschten Bereichs gehen.
+2. **Schnittanfang setzen** (Rot) beziehungsweise **Behalteanfang setzen** (Grün) klicken.
+3. Den Slider bewegen oder mit der vorhandenen Frame-Navigation suchen. Eine halbtransparente Vorschau folgt der Position vorwärts und rückwärts; die Startlinie bleibt fest. Dadurch entstehen noch keine Schnittpunkte.
+4. Ein gültiges Ende nach dem Anfang mit **Schnittende setzen** beziehungsweise **Behalteende setzen** übernehmen. Erst jetzt erscheint ein fertiger Bereich in Tabelle und Timeline.
+5. Für weitere getrennte Bereiche wiederholen. **Esc** im Hauptfenster außerhalb einer Texteingabe verwirft ausschließlich den offenen Anfang und seine Vorschau.
+
+Rückwärtsziehen ist zur Orientierung möglich; ein Ende vor dem Anfang bleibt ungültig. Fertige Bereiche bleiben bei diesem Fehler und beim Abbruch erhalten. In 1.0.2 steht nur die bisherige rote Bedienung zur Verfügung.
 
 Mit **Videoanfang** bzw. **Videoende** kannst du die entsprechende Dateigrenze verwenden. Bestehende Bereiche lassen sich in der Tabelle oder Timeline auswählen und korrigieren. **Bereich löschen** entfernt die ausgewählte Markierung aus dem Schnittplan; es löscht keine Videodatei.
 
@@ -331,13 +359,15 @@ Ein Klick auf einen Schnittbereich wählt ihn aus und hebt ihn hervor. Ein erneu
 
 Ein Klick auf **Anfang** oder **Ende** springt zusätzlich weiterhin an die jeweilige Grenze im Original, auch wenn damit gerade abgewählt wird. Nach einer Abwahl ist keine Kante mehr für die Frame-Lupe ausgewählt. Klicke erneut auf die gewünschte Grenze, um sie wieder auszuwählen. Zeitkorrektur und Löschen verwenden wie bisher den aktuell ausgewählten Bereich.
 
-Ein Klick auf die Zeitleiste oder die farbige Schnitt-Timeline setzt die Wiedergabeposition und den Slider direkt auf die gewählte Stelle. Bei roten Bereichen wird zusätzlich wie bisher die Auswahl umgeschaltet. Das Ziehen des Reglers bleibt möglich.
+Ein Klick auf die Zeitleiste oder die farbige Schnitt-Timeline setzt die Wiedergabeposition und den Slider direkt auf die gewählte Stelle. Bei markierten roten oder grünen Bereichen wird zusätzlich die Auswahl umgeschaltet. Das Ziehen des Reglers bleibt möglich.
 
 Play/Pause, Zeitleiste, **−10 Bilder**, **Bild zurück**, **Bild vor** und **+10 Bilder** helfen bei der Positionierung. Einzelbildschritte sind im pausierten Zustand verfügbar. Tastatur: Leertaste für Play/Pause, Pfeil links/rechts für ein Bild, Strg+Pfeil links/rechts für zwanzig Bilder. Mit Strg verwenden auch die größeren Bildschritt-Buttons zwanzig Bilder.
 
-Die Anzeige **Geschnitten** ist eine Vorschau der geplanten Ausgabelaufzeit. Prüfe das tatsächliche Schnittergebnis im Player; Schnittmotor und Videostruktur können die exakten Grenzen beeinflussen.
+Die Anzeige **Geschnitten** ist eine Vorschau der geplanten Ausgabelaufzeit. Im grünen Modus zählt sie ausschließlich die markierten Behaltebereiche; noch unmarkierte Filmteile werden bei der Ausgabe weggelassen. Vor Speichern oder Schneiden nennt eine Rückfrage Anzahl und Dauer und verlangt die bewusste Bestätigung dieser Auswahl. Prüfe das tatsächliche Schnittergebnis im Player; Schnittmotor und Videostruktur können die exakten Grenzen beeinflussen.
 
 ### Schnittkanten vor dem Schneiden prüfen
+
+**Grüner Modus in 1.0.3:** Die Rechtsklick-Prüfstelle liegt innerhalb des Behaltebereichs, drei Sekunden nach seinem Anfang beziehungsweise vor seinem Ende, bei kurzen Bereichen entsprechend begrenzt. Die folgende Grafik und das Beispiel beschreiben den roten Modus.
 
 Ab Build 22 kannst du die Filmszenen vor und nach einem roten Schnittbereich schnell im Originalplayer kontrollieren:
 
@@ -356,7 +386,7 @@ Rechtsklick auf Anfang: 3 Sekunden zurück. Rechtsklick auf Ende: 3 Sekunden vor
 
 ### Keyframes im Hauptfenster – ab Build 30 RC3
 
-Nach dem Laden einer MP4 analysiert CAN Keyframes im Hintergrund. Bei langen Aufnahmen kann das einige Zeit dauern; die normale Wiedergabe bleibt verfügbar. **◀ K** und **K ▶** neben den Bildschritten sind bis zum Abschluss deaktiviert; ihr Tooltip zeigt den Zustand. Anschließend springen sie zum vorherigen/nächsten analysierten Keyframe und pausieren die Wiedergabe. Die blauen Bereiche am oberen Rand der Schnitt-Timeline markieren diese Positionen; die roten Entfernbereiche bleiben erhalten. Mehrere Keyframes können bei langen Filmen in derselben Bildspalte liegen.
+Nach dem Laden einer MP4 analysiert CAN Keyframes im Hintergrund. Bei langen Aufnahmen kann das einige Zeit dauern; die normale Wiedergabe bleibt verfügbar. **◀ K** und **K ▶** neben den Bildschritten sind bis zum Abschluss deaktiviert; ihr Tooltip zeigt den Zustand. Anschließend springen sie zum vorherigen/nächsten analysierten Keyframe und pausieren die Wiedergabe. Die blauen Bereiche am oberen Rand der Schnitt-Timeline markieren diese Positionen; die roten Entfernungs- beziehungsweise grünen Behaltebereiche bleiben erhalten. Mehrere Keyframes können bei langen Filmen in derselben Bildspalte liegen.
 
 **(K)** neben der Framenummer erscheint nur auf einem zugeordneten Keyframe im pausierten Zustand. Nach einem Bildschritt oder während eines Sprungs verschwindet es. Die Navigation verändert keine Schnittmarken. Fehlende oder unsichere Zeitinformationen geben keine Keyframe-Navigation frei.
 
@@ -405,6 +435,8 @@ Die Wahl einer genauen Schnittzeit garantiert nicht, dass jeder Schnittmotor sie
 
 ## 5. Nur eine Cutlist erstellen
 
+Ein offener Schnittanfang verhindert das Speichern in beiden Modi mit **„Schnitt noch nicht abgeschlossen“**. Zuerst ein gültiges Ende setzen oder die offene Markierung mit Esc verwerfen. Der Film muss nicht vollständig bearbeitet sein. Im grünen Modus vorab bestätigen, dass nur die markierten Bereiche gespeichert werden.
+
 Mit **Cutlist erzeugen** öffnest du den Erstellungsdialog. Prüfe Metadaten, vorgeschlagenen Filmnamen, Bewertung und Kommentar. **Cutlist speichern** schreibt die Datei direkt in den eingestellten Ordner **Eigene Cutlists**. Ein zusätzlicher Dateispeicherdialog erscheint nicht. Im Dialog wählst du auch den vorgesehenen Schnittmotor: mit Haken otr-can, ohne Haken MP4Box. CAN schlägt den zuletzt erfolgreich für diese Aufnahme verwendeten Motor vor, sonst den Motor der geladenen Cutlist; die Wahl bleibt änderbar. Für otr-can liest CAN die Version aus der konfigurierten EXE. Wenn die Versionsabfrage scheitert, bleibt das Versionsfeld leer.
 
 Der Cutlist-Dateiname wird fest aus dem vollständigen Originaldateinamen und der Endung **.cutlist** gebildet, beispielsweise **Aufnahme.HQ.mp4.cutlist**. Ein manuell geänderter Name für den geschnittenen Film verändert diesen Cutlist-Dateinamen nicht.
@@ -413,7 +445,7 @@ Fehlt der Cutlist-Ordner oder ist er nicht nutzbar, erscheint **Cutlist konnte n
 
 Dafür muss das Video nicht geschnitten oder nach MP4 vorbereitet werden. CAN kann somit auch ausschließlich zum Erstellen und Korrigieren von Cutlists verwendet werden.
 
-Das klassische Cutlist-Format beschreibt die zu behaltenden Abschnitte. CAN rechnet seine Entfernbereiche beim Erzeugen entsprechend um. Der Bezug zur Originaldatei bleibt bestehen.
+Das klassische Cutlist-Format beschreibt die zu behaltenden Abschnitte. CAN rechnet rote Entfernbereiche beim Erzeugen entsprechend um; im grünen Modus bleibt die markierte Behalteauswahl erhalten. Vollständige Intervalle lassen sich später wieder laden und bearbeiten. Offene Anfänge oder ein zusätzlicher Fertigstellungsstatus werden nicht gespeichert. Der Bezug zur Originaldatei bleibt bestehen.
 
 ### Fremde Cutlists als Vorlage verwenden
 
@@ -429,7 +461,7 @@ Prüfe Schnittpunkte, Filmnamen, Bewertung und Kommentar vor dem Speichern. Wenn
 
 ## 6. Video schneiden
 
-Klicke **Schneiden** in der Hauptoberfläche.
+Wähle unter der Schnittliste bewusst **MP4Box (schnell)** oder **otr-can (framegenau)**. Im grünen Modus werden ausschließlich markierte Behaltebereiche ausgegeben; vor dem Öffnen des Ausgabevorgangs ist diese Auswahl zu bestätigen. Eine leere grüne Auswahl ist kein Auftrag zum Behalten des gesamten Films.
 
 ### Wenn bereits MP4-Inhalt vorliegt
 

@@ -1,10 +1,64 @@
 # Aktueller Projektstand
 
+## 03.11.2026 – CAN 1.0.3 eingefroren, Commit und Push beauftragt
+
+Der Nutzer bestätigt die korrigierte Power-User-2-Darstellung mit geladenem Christmas-Cookbook-Film erneut positiv: **„Ich glaube das sieht sehr gut aus :-)“**. +10 Bilder und beide Keyframe-Buttons liegen auf gleicher Höhe. Danach ausdrücklicher Auftrag, README und Dokumentation abzugleichen, zu committen und zu pushen; **dieser Stand ist eingefroren, Veröffentlichung erst nach gesonderter Freigabe**. Version **1.0.3**, Buildzähler **48**, keine neuen Pakete. [Freeze, Prüfungen und Grenzen](FREEZE-1.0.3-20261103.md).
+
+## 03.11.2026 – Christmas Cookbook mit otr-can in Power-User 2 bestanden
+
+Vier Behalteintervalle, **121724 Videopakete**, **233710080 AAC-Samples**, rechnerisch **01:21:08.960**. Nutzer bestätigt **Ton, Bild, Schnitt und Drei-Sekunden-Vorschau** persönlich positiv. Danach Schließen von CAN und Wechsel in die separate Ausrichtungskorrektur angekündigt; deren persönliche Abnahme noch nicht daraus abgeleitet. [Praxisnachweis](CHRISTMAS-COOKBOOK-PRAXISTEST-20261103.md). Reiner Dokumentationsnachtrag; letzter technischer Stand 1728 bestandene Tests, Version 1.0.3 / Zähler 48.
+
+## 03.11.2026 – Playerbuttons in Power-User 2 auf gleicher Höhe
+
+Persönliche Sichtprüfung der neuen Ansicht und roten Vormerkung positiv; Nutzer testet weiter. Gemeldete um 4 DIP höher stehende Keyframe-Buttons gegenüber +10 Bildern nur in Power-User 2 korrigiert. Vier WPF-DPI-Fälle und nativer Test mit geladenem Film bestätigen gleiche Ober-/Unterkante. **1728 Tests bestanden**, Build ohne Warnungen/Fehler. Separate Korrekturfassung; laufende Nutzerfassung, Version 1.0.3 und Zähler 48 unverändert. [Nachtrag und Bildnachweis](POWER-USER-2-IMPLEMENTIERUNG-20261103.md#nachtrag-03112026--persönliche-sichtprüfung-und-buttonausrichtung).
+
+## 03.11.2026 – Power-User 2 implementiert und technisch geprüft
+
+Dritte dauerhafte Auswahl **Standard / Power-User 1 / Power-User 2** im bestehenden Darstellungsdialog. Gleiche Controls, kompakte Viererreihe unter dem Player, Suche daneben/darunter, fett rote/grüne Vormerkzeile und größere rechte Tabelle. Keine Umdeutung des Schnittplans beim Wechsel.
+
+**Release-Build 0 Warnungen/0 Fehler; 1724 Tests bestanden** (200 Core, 80 Cutlists, 390 Media, 1054 App). Zusätzlich zwölf native Prüffallgruppen mit synthetischem Film und zwei Tonspuren: HWND, Wiedergabe und Spur erhalten; beide Schnittmodi, echter Esc-Weg, Lupe, AVI-/MP4-Wechsel und WPF-DPI bis 200 % geprüft. Vier tatsächliche WPF-Bildnachweise im [Abschlussbericht](POWER-USER-2-IMPLEMENTIERUNG-20261103.md). Windows-Skalierung/Hochkontrast wurden nicht global umgestellt; physische Monitorwechsel und persönliche Bedienabnahme bleiben offen.
+
+Version **1.0.3**, Zähler **48**, Motoren und veröffentlichter 1.0.2-Build-48-Paketsatz unverändert; sechs Archive/Programme gegen SHA256SUMS bestätigt. Kein Commit/Push/Paket/Release. Entwicklungsbuild zur persönlichen Abnahme bereit.
+
+## 03.11.2026 – Santa Tell Me im grünen Modus positiv geprüft
+
+Vier Behaltebereiche, **01:21:24.120** geplante Ausgabe; grüner Editor und Bestätigungsdialog im Screenshot, gespeicherte Cutlist 1.0.3 und Servereintrag passend. MP4Box schließt vier Segmente, Zusammenfügen und Schnittstellenprüfung mit „Fertig.“ ab; otr-can 0.1.6 verifiziert **122103 Videopakete** und **234437760 AAC-Samples** (Stereo/48000 Hz). Nutzer bestätigt **Ton, Bild, Schnitt und Drei-Sekunden-Vorschau**. Persönliche Wiederaufnahme begonnener Arbeit bleibt getrennt offen. [Detaillierter Praxisnachweis](SANTA-TELL-ME-GRUENER-PRAXISTEST-20261103.md).
+
+Dieser Nachtrag aktualisiert die zuvor noch offene grüne Filmabnahme.
+
+## 03.11.2026 – CAN 1.0.3 lokal umgesetzt und dokumentiert
+
+**03.11.2026 – lokale Entwicklung CAN 1.0.3, Buildzähler 48.** Gemeinsame Server-/Lokal-Cutlist-Tabelle und die Schnittmodi Rot/Entfernen und Grün/Behalten mit dynamischer Vorschau sind umgesetzt. Release-Build ohne Warnungen/Fehler, **1.709/1.709 Tests** bestanden. Keine neue Paketierung oder Veröffentlichung. Öffentlich bleibt der dokumentierte stabile Stand **CAN 1.0.2 Build 48** vom 01.11.2026.
+
+[Entwicklungsnotizen 1.0.3](RELEASE-NOTES-1.0.3.md) · [Cutlist-Tabelle](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi und Vorschau](SCHNITTMODI-TIMELINE-20261103.md).
+
+Persönlich bestätigt: gemeinsame Tabelle und vereinheitlichte Daueranzeige mit NCIS Sydney; Chicago Fire mit otr-can 0.1.6 einschließlich Schnitt, Bild, Tonspur 1 und 2 sowie Drei-Sekunden-Vorschau. Die späteren Screenshots bestätigen die roten/grünen Markierungen und in beiden Modi dieselbe geplante Dauer **00:39:28.320**. Sie belegen keinen zusätzlichen Filmschnitt im grünen Modus und keine vollständige Wiederaufnahmeprüfung.
+
+Aktuell offen: persönliche Wiederaufnahme eines gespeicherten Zwischenstands sowie gegebenenfalls neue Paket-/VM-Prüfungen nach gesondertem Auftrag. Der grüne vollständige Filmschnitt ist inzwischen mit Santa Tell Me persönlich positiv gemeldet. Keine Fertig-/Unfertig-Erkennung aus Schnittanzahl oder Position.
+
+Die folgende Veröffentlichung und die datierten Einträge dokumentieren die unveränderten früheren Stände.
+
 **01.11.2026: CAN 1.0.2 Build 48 ist als stabile Latest-Version veröffentlicht.** [Release v1.0.2-build48](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build48), App-Dateiversion **1.0.2.48**. Build 47 bleibt unverändert als stabile Vorgängerversion erhalten. Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64.
 
 Der Kontrollplayer bleibt nach natürlichem Filmende und fehlgeschlagenem Tonspurwechsel navigierbar. Reguläre Tonspurwechsel erhalten Position und Play/Pause-Zustand; bewusste Prüfstellen-Navigation behält den Drei-Sekunden-Vorlauf. Native Property-Fehler sind auffangbar.
 
 Paketprüfung: **1634/1634 Tests**, zusätzlich **1362 Tests gegen finale Produktbibliotheken** und **32/32 native/WPF-Kontrollen** in sechs Prozessen; Release-Build ohne Warnungen/Fehler. Der Nutzer bestätigt die korrigierte Entwicklungsfassung persönlich mit **Ghosts – Weihnachtsgeister, Teil 1 und Teil 2** für den ursprünglichen EOF-Absturzfall, Tonspurwechsel und Navigation. Neue Setup-/Portable-/VM-Abnahmen werden daraus nicht abgeleitet.
+
+**Persönlicher Setup-Nachtrag 01.11.2026:** Veröffentlichtes Build-48-Setup installiert und mit der comedy-Testdatei geprüft; Nutzer bestätigt **„alles bestens :-)“**. Damit liegt zusätzlich eine positive persönliche Setup-Prüfung vor. [Nachweis und genauer Umfang](RELEASE-1.0.2-BUILD48-RESULT.md#nachtrag-01112026--setup-persönlich-positiv-geprüft).
+
+**02.11.2026 – AVI-Altfall mit Setup Build 48 auf dem Arbeitsrechner positiv:** „A ’90s Christmas – Eine weihnachtliche Zeitreise“, H.264/MP3, 25 fps. AVI → MP4-Arbeitsdatei → MP4Box mit vier Behaltebereichen und abgeschlossener Schnittstellenprüfung. Ton/Bild/Schnitt/3-Sekunden-Check persönlich bestanden. FFmpeg-Zeitstempelwarnungen dokumentiert; keine allgemeine AVI-Reparatur abgeleitet. [Praxisnachweis](RELEASE-1.0.2-BUILD48-RESULT.md#nachtrag-02112026--avi-altfall-auf-dem-arbeitsrechner-positiv-geprüft).
+
+**02.11.2026 – derselbe AVI-Altfall auch mit otr-can bestanden:** Setup auf dem Arbeitsrechner, Build 48 aus der laufenden Prüfrunde. otr-can 0.1.6 bestätigt 181220 eindeutige, aufsteigende Quellbildzeiten, 119713 Ausgabepakete und 229848960 decodierte Tonsamples; MP3 einmal nach AAC-LC kodiert. Nutzer bestätigt Ton/Bild/Schnitt/Drei-Sekunden-Vorschau. „A ’90s Christmas“ damit mit beiden Schnittmotoren positiv geprüft. [otr-can-Nachweis](RELEASE-1.0.2-BUILD48-RESULT.md#nachtrag-02112026--derselbe-avi-altfall-auch-mit-otr-can-bestanden).
+
+**02.11.2026 – Venom: The Last Dance mit MP4Box positiv:** sechs Behaltebereiche, beide Tonspuren, Bild/Schnitt und Drei-Sekunden-Vorschau persönlich bestanden; **Tonwechsel auch am Videoende bestätigt**. Setup Build 48 auf dem Arbeitsrechner aus der laufenden Prüfrunde fortgeführt. Schnittstellenprüfung bis „Fertig.“; Zusatzprüfungen wegen gleicher Bildzeiten an Übergängen 1, 3, 4 und 5 dokumentiert. [Mehrspur-Praxisnachweis](RELEASE-1.0.2-BUILD48-RESULT.md#nachtrag-02112026--venom-mit-zwei-tonspuren-und-tonwechsel-am-videoende-bestanden).
+
+**02.11.2026 – Venom auch mit otr-can positiv:** sechs Behaltebereiche, 132191 Videopakete und je 253806720 decodierte Samples für beide Stereotonspuren (AAC/AC-3, 48000 Hz) verifiziert. Schnitt/Bild/beide Tonspuren, **Tonwechsel auch am Videoende** und Drei-Sekunden-Vorschau persönlich bestanden. Setup Build 48 auf dem Arbeitsrechner aus der laufenden Prüfrunde fortgeführt; damit beide Motorwege für Venom positiv. [otr-can-Mehrspurnachweis](RELEASE-1.0.2-BUILD48-RESULT.md#nachtrag-02112026--venom-auch-mit-otr-can-und-beiden-tonspuren-bestanden).
+
+**02.11.2026 – Navy CIS mit MP4Box positiv:** 5plus-HD-Aufnahme vom 01.11.2026, zwei Behaltebereiche, Zusammenfügen und Schnittstellenprüfung bis „Fertig.“. Schnitt/Bild/Ton/Drei-Sekunden-Vorschau persönlich bestanden. Setup Build 48 auf dem Arbeitsrechner aus der laufenden Prüfrunde fortgeführt. [Praxisnachweis](RELEASE-1.0.2-BUILD48-RESULT.md#nachtrag-02112026--navy-cis-mit-mp4box-bestanden).
+
+**02.11.2026 – Navy CIS auch mit otr-can positiv:** zwei Behaltebereiche, 61483 Videopakete und je 118047360 decodierte Samples für AAC und AC-3 (Stereo/48000 Hz) laut Motor verifiziert. Ton einschließlich Tonspurwechsel, Schnitt und Drei-Sekunden-Vorschau persönlich bestanden. Setup Build 48 auf dem Arbeitsrechner aus der laufenden Prüfrunde fortgeführt. [otr-can-Nachweis](RELEASE-1.0.2-BUILD48-RESULT.md#nachtrag-02112026--navy-cis-auch-mit-otr-can-und-tonspurwechsel-bestanden).
+
+**Navy-CIS-Cutlist am 02.11.2026 zugeordnet:** **S23E18 „Die Edna-Dateien“**, 25 fps, zwei Behaltebereiche, vorgesehener Motor otr-can 0.1.6. Berechnete 61483 Bilder und 118047360 Samples je Spur stimmen mit dem otr-can-Protokoll überein; MP4Box-Aufrufenden jeweils 40 ms früher. [Cutlist-Abgleich](RELEASE-1.0.2-BUILD48-RESULT.md#nachtrag-02112026--navy-cis-cutlist-abgeglichen).
 
 [Build-48-Freeze](FREEZE-1.0.2-BUILD48-20261101.md) · [Korrektur und Nachweise](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md) · [Release Notes](RELEASE-NOTES-1.0.2.md) · [Nutzeranleitung](NUTZERANLEITUNG.md) · [Build 47 bleibt erhalten](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47)
 

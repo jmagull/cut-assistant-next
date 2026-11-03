@@ -1,5 +1,7 @@
 # Entwicklungsrunde nach Build 16 RC3 – Reihenfolge und technische Bestandsaufnahme
 
+**Nachtrag 03.11.2026:** Der Wunsch nach deutlicher Anzeige vorgemerkter Schnittanfänge ist in der lokalen 1.0.3 mit fester Anfangslinie, dynamischer farbiger Vorschau und Esc-Abbruch umgesetzt. Dazu kommen die dauerhafte Rot-/Grün-Arbeitsweise und die gemeinsame Cutlist-Tabelle. [Aktueller Umsetzungsbericht](SCHNITTMODI-TIMELINE-20261103.md), [Entwicklungsnotizen](RELEASE-NOTES-1.0.3.md). Der nachfolgende Plan bewahrt seine damalige Reihenfolge und die damaligen Befunde.
+
 Stand: 12.10.2026. Ausgangsbasis: veröffentlichte CAN 0.2.1 Build 16 RC3 mit otr-can 0.1.5; CAN-main a3b586af871ce867fd999f0cf5804596dbb51267.
 
 Auftrag: die gesammelten Änderungswünsche ordnen und anhand der bestehenden Implementierung einen konkreten Ansatz festlegen. Die anfängliche Bestandsaufnahme enthält Planung und Codeanalyse. Anschließend wurden Schritte 1 bis 7 auf ausdrücklichen Auftrag umgesetzt; siehe Umsetzungsstand. Schritt 8 wurde technisch geprüft; offener Werkzeugbefund und persönliche Abnahme sind unten ausgewiesen. Kein Paketbau oder Release. Die zuvor verlangten Vorschläge für Namensmasken und Kontrollplayer sind unten enthalten.

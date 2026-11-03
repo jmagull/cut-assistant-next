@@ -2,7 +2,7 @@
         x:ClassModifier="internal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Cutlists auf dem Server"
+        Title="Cutlists für diesen Film"
         Width="1180"
         Height="620"
         MinWidth="1000"
@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterOwner"
         Background="#F4F6F8">
 
-    <Grid Margin="24">
+    <Grid Margin="18">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -21,23 +21,23 @@
             <TextBlock FontSize="24"
                        FontWeight="SemiBold"
                        Foreground="#111827"
-                       Text="Passende Cutlists auf dem Server" />
+                       Text="Cutlists für diesen Film" />
 
             <TextBlock Margin="0,6,0,8"
                        Foreground="#6B7280"
                        TextWrapping="Wrap"
-                       Text="Wähle eine passende Schnittliste aus. Neuere Serverfassungen werden zuerst angezeigt." />
+                       Text="Server und lokale Cutlists – wähle selbst. Es wird nichts automatisch übernommen." />
 
             <TextBox MinHeight="32"
                      Padding="8,4"
                      IsReadOnly="True"
                      Background="#F9FAFB"
                      BorderBrush="#D9DEE5"
-                     Text="{Binding MovieFileName, Mode=OneWay}" />
+                     Text="{Binding Model.MovieFileName, Mode=OneWay}" />
         </StackPanel>
 
         <Grid Grid.Row="1"
-              Margin="0,18,0,0">
+              Margin="0,10,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
@@ -57,10 +57,28 @@
                           CanUserResizeColumns="True"
                           HeadersVisibility="Column"
                           IsReadOnly="True"
-                          ItemsSource="{Binding Results}"
+                          ItemsSource="{Binding ResultsView}"
+                          SelectedItem="{Binding Model.SelectedResult, Mode=TwoWay}"
+                          IsSynchronizedWithCurrentItem="False"
+                          VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                          Sorting="ResultsGrid_Sorting"
                           SelectionMode="Single"
                           SelectionUnit="FullRow">
 
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow"><Setter Property="ToolTip" Value="{Binding Details}" /></Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border Background="#E5EDF5" Padding="10,6">
+                                        <TextBlock FontWeight="SemiBold"><Run Text="{Binding Name, Mode=OneWay}" /><Run Text=" · " /><Run Text="{Binding ItemCount, Mode=OneWay}" /></TextBlock>
+                                    </Border>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </DataGrid.GroupStyle>
                     <DataGrid.Columns>
                         <DataGridTextColumn Width="2*"
                                             Header="Cutlist"
@@ -94,70 +112,46 @@
                                             Header="Dauer"
                                             Binding="{Binding Duration}" />
 
-                        <DataGridTextColumn Width="90"
-                                            Header="Downloads"
-                                            Binding="{Binding DownloadCount}" />
+                        <DataGridTextColumn Width="110"
+                                            Header="Downloads (reg.)"
+                                            Binding="{Binding DownloadCount}">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="ToolTip" Value="Registrierte Downloads. Die Gesamtzahl aller Downloads wird von der Serversuche nicht mitgeliefert." />
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                        </DataGridTextColumn>
+                    <DataGridTextColumn Width="130" Header="Befund" Binding="{Binding Finding}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
 
-            <Border Grid.Row="1"
-                    Margin="0,14,0,0"
-                    Padding="16"
-                    Background="White"
-                    BorderBrush="#D9DEE5"
-                    BorderThickness="1"
-                    CornerRadius="8">
+            <Border Grid.Row="1" Margin="0,8,0,0" Padding="8" Background="White"
+                    BorderBrush="#D9DEE5" BorderThickness="1" CornerRadius="8">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock FontWeight="SemiBold"
-                               Foreground="#374151"
-                               Text="Vorgeschlagener Name" />
-
-                    <TextBox Grid.Row="1"
-                             MinHeight="32"
-                             Margin="0,5,0,12"
-                             Padding="8,4"
-                             IsReadOnly="True"
-                             Text="{Binding SelectedItem.SuggestedMovieName,
-                                            ElementName=ResultsGrid,
-                                            Mode=OneWay}" />
-
-                    <TextBlock Grid.Row="2"
-                               FontWeight="SemiBold"
-                               Foreground="#374151"
-                               Text="Kommentar" />
-
-                    <TextBox Grid.Row="3"
-                             MinHeight="72"
-                             MaxHeight="120"
-                             Margin="0,5,0,0"
-                             Padding="8"
-                             AcceptsReturn="True"
-                             IsReadOnly="True"
-                             TextWrapping="Wrap"
-                             VerticalScrollBarVisibility="Auto"
-                             Text="{Binding SelectedItem.UserComment,
-                                            ElementName=ResultsGrid,
-                                            Mode=OneWay}" />
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="2*" /></Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                    <TextBlock FontWeight="SemiBold" Foreground="#374151" Text="Vorgeschlagener Name" />
+                    <TextBlock Grid.Column="1" Margin="12,0,0,0" FontWeight="SemiBold" Foreground="#374151" Text="Kommentar" />
+                    <TextBox Grid.Row="1" Margin="0,5,0,0" Padding="6,4" MinHeight="32" MaxHeight="48" IsReadOnly="True"
+                             TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                             Text="{Binding SelectedItem.SuggestedMovieName, ElementName=ResultsGrid, Mode=OneWay}" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Margin="12,5,0,0" Padding="6,4" MinHeight="32" MaxHeight="48"
+                             IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                             Text="{Binding SelectedItem.UserComment, ElementName=ResultsGrid, Mode=OneWay}" />
+                    <TextBox Grid.Row="2" Grid.ColumnSpan="2" Margin="0,8,0,0" Padding="6" IsReadOnly="True"
+                             MinHeight="30" MaxHeight="44" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                             Text="{Binding SelectedItem.Details, ElementName=ResultsGrid, Mode=OneWay}" />
                 </Grid>
             </Border>
 
-            <TextBlock Grid.Row="2"
-                       Margin="2,8,0,0"
-                       FontSize="12"
-                       Foreground="#6B7280"
-                       Text="Die Cutlist-ID wird nur intern zur Sortierung verwendet und nicht angezeigt." />
+            <TextBlock Grid.Row="2" Margin="2,8,0,0" FontSize="12" Foreground="#6B7280"
+                       TextTrimming="CharacterEllipsis" Text="{Binding Model.Summary, Mode=OneWay}"
+                       ToolTip="{Binding Model.Summary, Mode=OneWay}" />
         </Grid>
 
         <StackPanel Grid.Row="2"
-                    Margin="0,18,0,0"
+                    Margin="0,10,0,0"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
 
@@ -165,6 +159,8 @@
                     Height="36"
                     Margin="0,0,10,0"
                     Padding="14,0"
+                    x:Name="LoadSelectedButton"
+                    IsEnabled="{Binding Model.CanLoad}"
                     Click="LoadButton_Click"
                     Content="Cutlist laden" />
 

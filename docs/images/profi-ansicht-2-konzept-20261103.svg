@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1110" viewBox="0 0 1600 1110" role="img" aria-labelledby="title desc"><title id="title">Profi-Ansicht 2 – Layoutkonzept</title><desc id="desc">Player links, vier Schnittbuttons unter der Playersteuerung, Halbierungssuche daneben, farbiger vorgemerkter Anfang darunter. Rechts eine größere Schnittliste und die vorhandenen Funktionsblöcke.</desc><g font-family="Segoe UI, Arial, sans-serif"><rect x="0" y="0" width="1600" height="1110" rx="0" fill="#edf2f7" stroke="none"/>
+<text x="26" y="35" font-size="25" fill="#172033" font-weight="650" text-anchor="start">Profi-Ansicht 2</text>
+<text x="26" y="61" font-size="14" fill="#526174" font-weight="400" text-anchor="start">Layoutvorschlag zur Freigabe · eigenständige Skizze, keine produktive Oberfläche</text>
+<rect x="20" y="82" width="1560" height="840" rx="10" fill="#f7f9fc" stroke="#cad4df"/>
+<text x="38" y="116" font-size="22" fill="#172033" font-weight="650" text-anchor="start">Cut Assistant Next</text>
+<text x="252" y="116" font-size="15" fill="#526174" font-weight="400" text-anchor="start">1.0.3 · Profi-Ansicht 2</text>
+<rect x="1390" y="96" width="170" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1475" y="116" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Videodatei laden</text>
+<rect x="36" y="135" width="1528" height="24" rx="4" fill="#eaf1ff" stroke="#d1dfff"/>
+<text x="48" y="152" font-size="12" fill="#315887" font-weight="400" text-anchor="start">Film geladen · bestehende Analyse und Hinweise bleiben erhalten</text>
+<rect x="36" y="170" width="1082" height="732" rx="6" fill="#fff" stroke="#d7dee8"/>
+<rect x="1130" y="170" width="434" height="732" rx="6" fill="#fff" stroke="#d7dee8"/>
+<text x="50" y="199" font-size="17" fill="#172033" font-weight="650" text-anchor="start">Player</text>
+<rect x="50" y="211" width="1054" height="445" rx="3" fill="#111a28" stroke="#111a28"/>
+<text x="577" y="420" font-size="23" fill="#718095" font-weight="400" text-anchor="middle">Videobild</text>
+<text x="577" y="446" font-size="14" fill="#718095" font-weight="400" text-anchor="middle">Skizze ohne Filmaufnahme</text>
+<rect x="50" y="668" width="1054" height="5" rx="2" fill="#d7dee8" stroke="none"/>
+<rect x="50" y="681" width="1054" height="10" rx="2" fill="#e2e8ef" stroke="none"/>
+<rect x="128.38" y="681" width="161.23" height="10" fill="#4ade80"/>
+<rect x="352.07" y="681" width="132.29" height="10" fill="#4ade80"/>
+<rect x="540.17" y="681" width="211.79" height="10" fill="#4ade80"/>
+<rect x="820.35" y="681" width="154.98" height="10" fill="#4ade80"/>
+<rect x="329.90" y="662" width="9" height="18" rx="1" fill="#f4f6f8" stroke="#9caabc"/>
+<rect x="50" y="704" width="85" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="92.5" y="724" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Play/Pause</text>
+<rect x="139" y="704" width="82" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="180" y="724" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">−10 Bilder</text>
+<rect x="225" y="704" width="83" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="266.5" y="724" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Bild zurück</text>
+<rect x="312" y="704" width="71" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="347.5" y="724" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Bild vor</text>
+<rect x="387" y="704" width="82" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="428" y="724" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">+10 Bilder</text>
+<rect x="473" y="704" width="45" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="495.5" y="724" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">◀ K</text>
+<rect x="522" y="704" width="45" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="544.5" y="724" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">K ▶</text>
+<text x="691" y="717" font-size="12" fill="#526174" font-weight="400" text-anchor="start">Lautstärke</text>
+<rect x="756" y="712" width="120" height="4" rx="2" fill="#cbd5e1" stroke="none"/>
+<rect x="837" y="707" width="8" height="14" rx="1" fill="#eef2f6" stroke="#94a3b8"/>
+<text x="1102" y="718" font-size="12" fill="#172033" font-weight="600" text-anchor="end">Position 00:35:00 / 02:09:56</text>
+<text x="1102" y="733" font-size="12" fill="#526174" font-weight="400" text-anchor="end">Geschnitten 01:21:24.120</text>
+<rect x="50" y="748" width="94" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="97" y="768" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Videoanfang</text>
+<rect x="148" y="748" width="147" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="221.5" y="768" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Behalteanfang setzen</text>
+<rect x="299" y="748" width="147" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="372.5" y="768" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Behalteende setzen</text>
+<rect x="450" y="748" width="87" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="493.5" y="768" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Videoende</text>
+<text x="590" y="768" font-size="12" fill="#526174" font-weight="600" text-anchor="start">Halbierungssuche</text>
+<rect x="695" y="748" width="127" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="758.5" y="768" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">← 2.000 Frames</text>
+<rect x="826" y="748" width="127" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="889.5" y="768" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">2.000 Frames →</text>
+<rect x="957" y="748" width="147" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1030.5" y="768" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Zurücksetzen</text>
+<rect x="314.24" y="681" width="19.66" height="10" fill="#22c55e" fill-opacity="0.35"/><line x1="314.24" y1="679" x2="314.24" y2="693" stroke="#166534" stroke-width="2"/><rect x="50" y="791" width="1054" height="47" rx="5" fill="#ecfdf3" stroke="#bbe8ca"/>
+<text x="63" y="821" font-size="17" fill="#166534" font-weight="700" text-anchor="start">BEHALTEANFANG VORGEMERKT: 00:32:34.560</text>
+<rect x="971" y="799" width="120" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1031" y="819" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Frame-Lupe</text>
+<text x="50" y="862" font-size="13" fill="#526174" font-weight="400" text-anchor="start">Vier Schnittfunktionen in einer Reihe · bei weniger Breite rückt die Suche direkt darunter.</text>
+<text x="50" y="882" font-size="13" fill="#526174" font-weight="400" text-anchor="start">Die Vormerkzeit bleibt fest; die vorhandene Timeline-Vorschau folgt dem Slider.</text>
+<text x="1144" y="199" font-size="17" fill="#172033" font-weight="650" text-anchor="start">Schnittliste</text>
+<text x="1144" y="222" font-size="12" fill="#526174" font-weight="400" text-anchor="start">Das soll bleiben: Grün markierte Bereiche behalten.</text>
+<rect x="1144" y="238" width="406" height="384" rx="0" fill="#fff" stroke="#cbd5e1"/>
+<rect x="1144" y="238" width="406" height="28" rx="0" fill="#eef3f8" stroke="#cbd5e1"/>
+<text x="1154" y="257" font-size="12" fill="#334155" font-weight="600" text-anchor="start">Anfang</text>
+<text x="1291" y="257" font-size="12" fill="#334155" font-weight="600" text-anchor="start">Ende</text>
+<text x="1422" y="257" font-size="12" fill="#334155" font-weight="600" text-anchor="start">Dauer</text>
+<rect x="1144" y="266" width="406" height="26" rx="0" fill="#fff" stroke="#e2e8f0"/>
+<text x="1154" y="284" font-size="12" fill="#172033" font-weight="400" text-anchor="start">00:09:39.760</text>
+<text x="1288" y="284" font-size="12" fill="#172033" font-weight="400" text-anchor="start">00:29:32.360</text>
+<text x="1422" y="284" font-size="12" fill="#172033" font-weight="400" text-anchor="start">00:19:52.600</text>
+<rect x="1144" y="292" width="406" height="26" rx="0" fill="#e8f1ff" stroke="#e2e8f0"/>
+<text x="1154" y="310" font-size="12" fill="#172033" font-weight="400" text-anchor="start">00:37:14.360</text>
+<text x="1288" y="310" font-size="12" fill="#172033" font-weight="400" text-anchor="start">00:53:32.920</text>
+<text x="1422" y="310" font-size="12" fill="#172033" font-weight="400" text-anchor="start">00:16:18.560</text>
+<rect x="1144" y="318" width="406" height="26" rx="0" fill="#fff" stroke="#e2e8f0"/>
+<text x="1154" y="336" font-size="12" fill="#172033" font-weight="400" text-anchor="start">01:00:25.680</text>
+<text x="1288" y="336" font-size="12" fill="#172033" font-weight="400" text-anchor="start">01:26:32.280</text>
+<text x="1422" y="336" font-size="12" fill="#172033" font-weight="400" text-anchor="start">00:26:06.600</text>
+<rect x="1144" y="344" width="406" height="26" rx="0" fill="#fff" stroke="#e2e8f0"/>
+<text x="1154" y="362" font-size="12" fill="#172033" font-weight="400" text-anchor="start">01:34:58.200</text>
+<text x="1288" y="362" font-size="12" fill="#172033" font-weight="400" text-anchor="start">01:54:04.560</text>
+<text x="1422" y="362" font-size="12" fill="#172033" font-weight="400" text-anchor="start">00:19:06.360</text>
+<line x1="1278" y1="238" x2="1278" y2="622" stroke="#e2e8f0"/><line x1="1412" y1="238" x2="1412" y2="622" stroke="#e2e8f0"/>
+<text x="1347" y="500" font-size="15" fill="#76869a" font-weight="400" text-anchor="middle">Mehr Höhe für Schnittbereiche</text>
+<text x="1347" y="523" font-size="12" fill="#76869a" font-weight="400" text-anchor="middle">eigener Tabellen-Bildlauf</text>
+<rect x="1426" y="634" width="124" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1488" y="654" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Bereich löschen</text>
+<line x1="1144" y1="677" x2="1550" y2="677" stroke="#dce4ed"/>
+<text x="1144" y="701" font-size="13" fill="#172033" font-weight="650" text-anchor="start">Film schneiden</text>
+<rect x="1144" y="710" width="201" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1244.5" y="730" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">MP4Box (schnell)</text>
+<rect x="1349" y="710" width="201" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1449.5" y="730" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">otr-can (framegenau)</text>
+<text x="1144" y="764" font-size="13" fill="#172033" font-weight="650" text-anchor="start">Cutlists</text>
+<rect x="1144" y="773" width="201" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1244.5" y="793" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Lokale Cutlist laden</text>
+<rect x="1349" y="773" width="201" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1449.5" y="793" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Cutlist vom Server laden</text>
+<rect x="1144" y="807" width="201" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1244.5" y="827" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Cutlist erzeugen</text>
+<rect x="1349" y="807" width="201" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1449.5" y="827" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Cutlist auf Server hochladen</text>
+<rect x="1144" y="853" width="406" height="30" rx="4" fill="#f1f4f8" stroke="#c3cedb"/>
+<text x="1347" y="873" font-size="12" fill="#172033" font-weight="400" text-anchor="middle">Namensmaske</text>
+<text x="26" y="958" font-size="18" fill="#172033" font-weight="650" text-anchor="start">Vormerkzustand: Text und Farbe tragen dieselbe Bedeutung</text>
+<rect x="26" y="978" width="758" height="45" rx="6" fill="#fff1f2" stroke="#fecdd3"/>
+<text x="40" y="1007" font-size="17" fill="#b91c1c" font-weight="700" text-anchor="start">SCHNITTANFANG VORGEMERKT: 00:12:34.560</text>
+<rect x="800" y="978" width="774" height="45" rx="6" fill="#172033" stroke="#334155"/>
+<text x="814" y="1007" font-size="17" fill="#86efac" font-weight="700" text-anchor="start">BEHALTEANFANG VORGEMERKT: 00:12:34.560</text>
+<text x="26" y="1052" font-size="14" fill="#526174" font-weight="400" text-anchor="start">Ohne offenen Anfang: „Vorgemerkter Anfang: –“ in ruhiger Standardfarbe. Kein Blinken, keine zusätzlichen Dialoge.</text>
+<text x="26" y="1083" font-size="13" fill="#526174" font-weight="400" text-anchor="start">Referenzskizze · Maße und Umbruchregeln werden erst nach Freigabe im echten WPF-Layout geprüft.</text></g></svg>

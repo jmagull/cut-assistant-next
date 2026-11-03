@@ -1,5 +1,23 @@
 # Architektur – Arbeitsstand
 
+## Power-User 2 – UI-Erweiterung 03.11.2026
+
+Drei eindeutige gewünschte/aktive Layoutzustände ersetzen die bisherige boolesche UI-Unterscheidung. Dieselben Controls werden zwischen vorhandenen Hosts und dem neuen `Power2EditingDock` mit ausdrücklichem Schnittplan-DataContext versetzt. `CutToolStripPanel` misst nur die Marker-/Suchgruppen und ordnet die vorhandene Suche daneben oder darunter an. `MainWindow.PowerUser2` sichert/restauriert Darstellungswerte und gestaltet den bestehenden Vormerkzustand; kein neues Schnittmodell und keine neue Command-Schicht. [Umsetzung und Prüfungen](POWER-USER-2-IMPLEMENTIERUNG-20261103.md).
+
+## Lokale Erweiterung 1.0.3 – 03.11.2026
+
+**03.11.2026 – eingefrorener Entwicklungsstand CAN 1.0.3, Buildzähler 48.** Gemeinsame Server-/Lokal-Cutlist-Tabelle, Rot/Entfernen und Grün/Behalten mit dynamischer Vorschau sowie Standard / Power-User 1 / Power-User 2 einschließlich Buttonausrichtung sind umgesetzt. Letzter technischer Stand: **1.728/1.728 Tests**, Release-Build ohne Warnungen/Fehler. Quellstand und Dokumentation werden auf Nutzerauftrag committet und gepusht; keine neuen Pakete und keine Veröffentlichung ohne gesonderte Freigabe. Öffentlich bleibt der dokumentierte stabile Stand **CAN 1.0.2 Build 48**. [Freeze und Prüfgrenzen](FREEZE-1.0.3-20261103.md).
+
+[Entwicklungsnotizen 1.0.3](RELEASE-NOTES-1.0.3.md) · [Cutlist-Tabelle](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi und Vorschau](SCHNITTMODI-TIMELINE-20261103.md).
+
+**Cutlist-Auswahl:** `MainWindow.CutlistSearch` verbindet Serversuche und `LocalCutlistDiscoveryService` in `CutlistSearchResultsViewModel`/`CutlistResultRow`. `CutlistFileName` erzeugt den gemeinsamen exakten Originalnamen. Die lokale Suche prüft nur zwei vollständige Pfade, begrenzt Größe/Anzahl und behandelt Fehler pro Quelle. Bytegleiche lokale Treffer werden zusammengefasst, unterschiedliche Inhalte erhalten. `CutlistSelectionReader` prüft lokale Inhalte vor Übernahme erneut; Medienkontext-/Generationsprüfungen schützen vor veralteten Suchergebnissen. Beide Quellen benutzen den bestehenden fachlichen Import und die vorhandenen Ersetzungs-/Metadatenentscheidungen.
+
+**Editor:** `CutEditingMode` wird beim Filmöffnen aus `AppearanceSettingsStore` erfasst. `CutPlanViewModel.MarkedSegments` enthält modeabhängig Entfernen oder Behalten; der private vorhandene Intervallcontainer prüft Grenzen. `LoadCutPlan` passt nur die Darstellung an, `CreateCutPlanSnapshot` exportiert immer einen unabhängigen kanonischen Entfernungsplan. Vorhandene `CutlistKeepSegmentBuilder`/`CutlistRemoveSegmentBuilder` bilden das Komplement; keine zweite Schnittlogik im Motor. Die alte Eigenschaft `RemoveSegments` ist im Editor eine kompatible Bindung und darf im grünen Modus nicht direkt als Ausgabeplan verwendet werden.
+
+**Vorschau und Schutz:** `CutTimelineTrack` zeichnet offene Fläche und feste Anfangslinie in einem separaten `DrawingVisual`; Sliderbewegungen ändern keine Intervalle und zeichnen die statischen Keyframes nicht erneut. Tabelle und Timeline verwenden dieselbe markierte Kollektion. `CutlistSaveGuard` sperrt offene Anfänge, `MainWindow.CutEditing` bestätigt die grüne Ausgabeauswahl mit Anzahl/Dauer. Das klassische Format, Core-/Media-Schnittmodelle, Motoren, Klebecenter und Kontrollplayer bleiben unverändert.
+
+[Detailbericht und WPF-Nachweise](SCHNITTMODI-TIMELINE-20261103.md), [Quellenschutz und Suchgrenzen](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md). Die folgenden datierten Abschnitte beschreiben die vorhandene Grundarchitektur und frühere Ausbaustufen.
+
 **01.11.2026 – CAN 1.0.2 Build 48 als stabile Latest-Version veröffentlicht.** Kontrollplayer-EOF-Absturz und Positionssprung korrigiert; 1634 Pakettests, 1362 finale DLL-Tests, 32 native/WPF-Kontrollen und persönliche Ghosts-Teil-1-/Teil-2-Abnahme. Build 47 und ältere datierte Nachweise bleiben erhalten. [Veröffentlichung](RELEASE-1.0.2-BUILD48-PUBLISHED-20261101.md), [Paketprüfung](RELEASE-1.0.2-BUILD48-RESULT.md). Die folgenden datierten Angaben bewahren ihren damaligen Stand.
 
 **Arbeitsabgleich 31.10.2026: CAN 1.0.2 Build 47 als stabile Latest-Version veröffentlicht; otr-can 0.1.6, libmpv 0.41.0.** [Versionen](VERSIONEN.md), [Projektstand](AKTUELLER-STAND.md).
@@ -106,7 +124,7 @@ Die libmpv-Render-API bleibt eine spätere Alternative, falls HWND-Einbettung, W
 
 - `RemoveSegment` in `CutAssistantNext.Core` beschreibt einen Bereich, der entfernt werden soll.
 - `CutPlan` verwaltet Mediendauer und Entfernungsbereiche, sortiert sie chronologisch und verhindert ungültige Überschneidungen.
-- `CutPlanViewModel` bildet Erfassung, Auswahl, Korrektur und Löschen für die WPF-Oberfläche ab.
+- `CutPlanViewModel` bildet Erfassung, Auswahl, Korrektur und Löschen für die WPF-Oberfläche ab; ab lokaler 1.0.3 enthalten die markierten Editorintervalle je nach Modus Entfernen oder Behalten. Erst der exportierte Snapshot ist stets ein echter Entfernungsplan.
 - `CutTimelineTrack` visualisiert die Schnittbereiche, enthält aber keine fachliche Schnittlogik.
 - Tabelle und Schnitt-Timeline verwenden dieselbe Auswahl.
 - Die Benutzeroberfläche arbeitet bewusst mit Remove-Bereichen.

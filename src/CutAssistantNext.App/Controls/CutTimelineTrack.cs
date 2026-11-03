@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using CutAssistantNext.Core.Editing;
+using CutAssistantNext.App.ViewModels;
 
 namespace CutAssistantNext.App.Controls;
 
@@ -13,26 +14,62 @@ public sealed class TimelineSeekRequestedEventArgs(TimeSpan position) : EventArg
 
 public sealed class CutTimelineTrack : FrameworkElement
 {
-    private static readonly Brush TrackBrush =
-        new SolidColorBrush(
-            Color.FromRgb(
-                217,
-                222,
-                229));
+    private readonly DrawingVisual _pendingVisual = new();
+    private static readonly Brush KeepSegmentBrush = FrozenBrush(Color.FromRgb(74, 222, 128));
+    private static readonly Brush SelectedKeepSegmentBrush = FrozenBrush(Color.FromRgb(22, 101, 52));
+    private static readonly Brush PendingRemoveBrush = FrozenBrush(Color.FromArgb(85, 239, 68, 68));
+    private static readonly Brush PendingKeepBrush = FrozenBrush(Color.FromArgb(85, 34, 197, 94));
 
-    private static readonly Brush RemoveSegmentBrush =
-        new SolidColorBrush(
-            Color.FromRgb(
-                248,
-                113,
-                113));
+    public CutTimelineTrack() { AddVisualChild(_pendingVisual); ClipToBounds = true; }
+    protected override int VisualChildrenCount => 1;
+    protected override Visual GetVisualChild(int index) => index == 0 ? _pendingVisual : throw new ArgumentOutOfRangeException(nameof(index));
 
-    private static readonly Brush SelectedRemoveSegmentBrush =
-        new SolidColorBrush(
-            Color.FromRgb(
-                153,
-                27,
-                27));
+    public static readonly DependencyProperty EditingModeProperty = DependencyProperty.Register(
+        nameof(EditingMode), typeof(CutEditingMode), typeof(CutTimelineTrack),
+        new FrameworkPropertyMetadata(CutEditingMode.Remove, FrameworkPropertyMetadataOptions.AffectsRender, OnPreviewChanged));
+    public static readonly DependencyProperty PendingStartProperty = DependencyProperty.Register(
+        nameof(PendingStart), typeof(TimeSpan?), typeof(CutTimelineTrack), new PropertyMetadata(null, OnPreviewChanged));
+    public static readonly DependencyProperty CurrentPositionSecondsProperty = DependencyProperty.Register(
+        nameof(CurrentPositionSeconds), typeof(double), typeof(CutTimelineTrack), new PropertyMetadata(0d, OnPreviewChanged));
+
+    public CutEditingMode EditingMode { get => (CutEditingMode)GetValue(EditingModeProperty); set => SetValue(EditingModeProperty, value); }
+    public TimeSpan? PendingStart { get => (TimeSpan?)GetValue(PendingStartProperty); set => SetValue(PendingStartProperty, value); }
+    public double CurrentPositionSeconds { get => (double)GetValue(CurrentPositionSecondsProperty); set => SetValue(CurrentPositionSecondsProperty, value); }
+
+    private static void OnPreviewChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args) =>
+        ((CutTimelineTrack)sender).DrawPending();
+
+    private void DrawPending()
+    {
+        using var drawing = _pendingVisual.RenderOpen();
+        if (MediaDuration is not { } duration || duration <= TimeSpan.Zero || PendingStart is not { } start ||
+            start < TimeSpan.Zero || start > duration || ActualWidth <= 0 || ActualHeight <= 0) return;
+        var startX = Math.Clamp(start.TotalSeconds / duration.TotalSeconds, 0, 1) * ActualWidth;
+        var current = double.IsFinite(CurrentPositionSeconds) ? CurrentPositionSeconds : start.TotalSeconds;
+        var currentX = Math.Clamp(current / duration.TotalSeconds, 0, 1) * ActualWidth;
+        var keep = EditingMode == CutEditingMode.Keep;
+        if (currentX != startX)
+            drawing.DrawRectangle(keep ? PendingKeepBrush : PendingRemoveBrush, null,
+                new Rect(Math.Min(startX, currentX), 0, Math.Max(1, Math.Abs(currentX - startX)), ActualHeight));
+        var pen = new Pen(keep ? SelectedKeepSegmentBrush : SelectedRemoveSegmentBrush, 2);
+        var markerX = Math.Clamp(startX, 1, Math.Max(1, ActualWidth - 1));
+        drawing.DrawLine(pen, new Point(markerX, 0), new Point(markerX, ActualHeight));
+    }
+
+    protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+    {
+        base.OnRenderSizeChanged(sizeInfo);
+        DrawPending();
+    }
+    private static Brush FrozenBrush(Color color)
+    {
+        var brush = new SolidColorBrush(color);
+        brush.Freeze();
+        return brush;
+    }
+    private static readonly Brush TrackBrush = FrozenBrush(Color.FromRgb(217, 222, 229));
+    private static readonly Brush RemoveSegmentBrush = FrozenBrush(Color.FromRgb(248, 113, 113));
+    private static readonly Brush SelectedRemoveSegmentBrush = FrozenBrush(Color.FromRgb(153, 27, 27));
 
     public static readonly DependencyProperty MediaDurationProperty =
         DependencyProperty.Register(
@@ -114,6 +151,7 @@ public sealed class CutTimelineTrack : FrameworkElement
         DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);
+        DrawPending();
 
         if (ActualWidth <= 0 ||
             ActualHeight <= 0)
@@ -154,8 +192,8 @@ public sealed class CutTimelineTrack : FrameworkElement
                 ReferenceEquals(
                     segment,
                     SelectedRemoveSegment)
-                    ? SelectedRemoveSegmentBrush
-                    : RemoveSegmentBrush;
+                    ? EditingMode == CutEditingMode.Keep ? SelectedKeepSegmentBrush : SelectedRemoveSegmentBrush
+                    : EditingMode == CutEditingMode.Keep ? KeepSegmentBrush : RemoveSegmentBrush;
 
             drawingContext.DrawRectangle(
                 brush,

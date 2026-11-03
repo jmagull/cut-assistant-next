@@ -58,7 +58,7 @@
         <Menu Grid.Row="0"
               Background="White">
             <MenuItem Header="Einstellungen">
-                <MenuItem Header="Darstellung …" Click="AppearanceSettingsMenuItem_Click" />
+                <MenuItem Header="Darstellung und Schnittbearbeitung …" Click="AppearanceSettingsMenuItem_Click" />
                 <MenuItem Header="Standardordner …"
                           Click="VideoFolderSettingsMenuItem_Click" />
 
@@ -245,6 +245,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition x:Name="VideoRow" Height="350" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Margin="0,0,0,8"
@@ -300,10 +301,13 @@
                                                    Height="12"
                                                    Margin="0,0,0,10"
                                                    Cursor="Hand"
-                                                   ToolTip="Klicken setzt die Wiedergabeposition; rote Bereiche bleiben auswählbar."
+                                                   ToolTip="{Binding MarkingHelp}"
                                                    SeekRequested="CutTimelineTrack_SeekRequested"
                                                    MediaDuration="{Binding MediaDuration}"
-                                                   RemoveSegments="{Binding RemoveSegments}"
+                                                   RemoveSegments="{Binding MarkedSegments}"
+                                                   EditingMode="{Binding EditingMode}"
+                                                   PendingStart="{Binding PendingStart}"
+                                                   CurrentPositionSeconds="{Binding Value, ElementName=TimelineSlider}"
                                                    KeyframePositions="{Binding DataContext.Positions, ElementName=KeyframeButtons}"
                                                    SelectedRemoveSegment="{Binding SelectedRemoveSegment, Mode=TwoWay}" />
                     </StackPanel>
@@ -460,6 +464,36 @@
                                 Height="32" Padding="10,0" Margin="0,0,0,4" Click="ResetPlayerSearch_Click" />
                     </WrapPanel>
                 </Grid>
+                <Grid x:Name="Power2EditingDock" Grid.Row="3" Margin="0,6,0,0" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <controls:CutToolStripPanel x:Name="Power2ToolStrip" ClipToBounds="True">
+                        <Grid x:Name="Power2MarkersGrid" Grid.IsSharedSizeScope="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Power2Boundary" />
+                                <ColumnDefinition Width="4" />
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Power2Marker" />
+                                <ColumnDefinition Width="4" />
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Power2Marker" />
+                                <ColumnDefinition Width="4" />
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Power2Boundary" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </controls:CutToolStripPanel>
+                    <Border x:Name="Power2PendingBorder" Grid.Row="1" Margin="0,4,0,0" Padding="8,4"
+                            CornerRadius="4" BorderThickness="1"
+                            BorderBrush="#D9DEE5" Background="White">
+                        <Grid x:Name="Power2PendingGrid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <WrapPanel x:Name="Power2PendingText" VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </Grid>
             </Grid>
         </Border>
 
@@ -488,7 +522,7 @@
                     <Run FontSize="13"
                          FontWeight="Normal"
                          Foreground="#6B7280"
-                         Text="(Rot markierte Bereiche werden entfernt. Mit ‚Schnittanfang setzen‘ und ‚Schnittende setzen‘ legst Du diese Bereiche fest.)" />
+                         Text="{Binding MarkingHelp, Mode=OneWay}" />
                 </TextBlock>
 
                 <WrapPanel x:Name="CutMarkersPanel" Grid.Row="1">
@@ -505,7 +539,7 @@
                             Padding="14,0"
                             IsEnabled="{Binding CanSetStart}"
                             Click="SetCutStartButton_Click"
-                            Content="Schnittanfang setzen" />
+                            Content="{Binding StartButtonText}" />
 
                     <Button x:Name="CutEndButton" MinWidth="170"
                             Height="36"
@@ -513,7 +547,7 @@
                             Padding="14,0"
                             IsEnabled="{Binding CanSetEnd}"
                             Click="SetCutEndButton_Click"
-                            Content="Schnittende setzen" />
+                            Content="{Binding EndButtonText}" />
 
                     <Button x:Name="VideoEndButton" MinWidth="110"
                             Height="36"
@@ -528,7 +562,7 @@
                                    VerticalAlignment="Center"
                                    FontWeight="SemiBold"
                                    Foreground="#4B5563"
-                                   Text="Vorgemerkter Anfang:" />
+                                   Text="Vorgemerkter Anfang:" ToolTip="Esc verwirft den offenen Anfang samt Vorschau." />
 
                         <!-- Reserve space even for nine-digit total hours; keep the button stationary. -->
                         <TextBlock x:Name="PendingStartTime" Width="150"
@@ -551,9 +585,9 @@
 
                 <StackPanel x:Name="PowerCutHeader" Grid.Row="0" Margin="0,0,0,12" Visibility="Collapsed">
                     <TextBlock Text="Schnittliste" FontSize="18" FontWeight="SemiBold" Foreground="#1F2937" />
-                    <TextBlock Text="Rot markierte Bereiche werden entfernt." Margin="0,8,0,0"
+                    <TextBlock Text="{Binding EditingDescription}" Margin="0,8,0,0"
                                Foreground="#6B7280" TextWrapping="Wrap"
-                               ToolTip="Mit ‚Schnittanfang setzen‘ und ‚Schnittende setzen‘ legst Du die zu entfernenden Bereiche fest." />
+                               ToolTip="{Binding MarkingHelp}" />
                 </StackPanel>
                 <!-- Only the existing tools move into these grids; no duplicated commands or player. -->
                 <Grid x:Name="PowerCutMarkersGrid" Grid.Row="1" Visibility="Collapsed">
@@ -585,7 +619,7 @@
                           PreviewMouseLeftButtonDown="RemoveSegmentsDataGrid_PreviewMouseLeftButtonDown"
                           PreviewMouseRightButtonDown="RemoveSegmentsDataGrid_PreviewMouseRightButtonDown"
                           SelectedItem="{Binding SelectedRemoveSegment, Mode=TwoWay}"
-                          ItemsSource="{Binding RemoveSegments}">
+                          ItemsSource="{Binding MarkedSegments}">
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="RemoveSegmentStartColumn"
                                             Header="Anfang"

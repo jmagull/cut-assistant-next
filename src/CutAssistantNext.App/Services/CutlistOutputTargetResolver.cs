@@ -1,5 +1,6 @@
 using System.IO;
 using CutAssistantNext.App.Settings;
+using CutAssistantNext.Cutlists.IO;
 
 namespace CutAssistantNext.App.Services;
 
@@ -14,22 +15,7 @@ internal static class CutlistOutputTargetResolver
     internal static CutlistOutputTarget Resolve(string? configuredDirectory, string originalFileName)
     {
         var directory = ConfiguredOutputDirectory.Require(configuredDirectory, DirectoryHelp);
-        ArgumentException.ThrowIfNullOrWhiteSpace(originalFileName);
-
-        var fileName = Path.GetFileName(originalFileName);
-        if (string.IsNullOrWhiteSpace(fileName))
-        {
-            throw new ArgumentException("Der Originaldateiname für die Cutlist fehlt.", nameof(originalFileName));
-        }
-
-        fileName += ".cutlist";
-        if (fileName.Length > 255 || fileName.Any(Path.GetInvalidFileNameChars().Contains))
-        {
-            throw new ArgumentException(
-                "Aus dem Originaldateinamen kann kein gültiger Cutlist-Dateiname erzeugt werden. " +
-                "Der Name einschließlich .cutlist darf höchstens 255 Zeichen enthalten.",
-                nameof(originalFileName));
-        }
+        var fileName = CutlistFileName.FromOriginal(originalFileName);
 
         var outputPath = Path.Combine(directory, fileName);
         bool exists;

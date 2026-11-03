@@ -15,6 +15,7 @@ public sealed class AppearanceSettingsStoreTests : IDisposable
     [Theory]
     [InlineData(0)]
     [InlineData(1)]
+    [InlineData(2)]
     public void LayoutRoundTrips(int value)
     {
         var layout = (InterfaceLayout)value;

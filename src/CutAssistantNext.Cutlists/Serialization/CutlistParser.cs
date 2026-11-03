@@ -7,8 +7,11 @@ namespace CutAssistantNext.Cutlists.Serialization;
 
 public static class CutlistParser
 {
+    public static CutlistDocument Parse(string content) => Parse(content, null);
+
     public static CutlistDocument Parse(
-        string content)
+        string content,
+        int? maximumCuts)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
             content);
@@ -34,6 +37,9 @@ public static class CutlistParser
             throw new FormatException(
                 "NoOfCuts darf nicht negativ sein.");
         }
+
+        if (maximumCuts.HasValue && numberOfCuts > maximumCuts.Value)
+            throw new FormatException("Die Cutlist enthält zu viele Bereiche für die automatische Suche.");
 
         var cuts =
             new List<CutlistKeepSegment>(

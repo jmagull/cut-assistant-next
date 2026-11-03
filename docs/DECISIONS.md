@@ -1,5 +1,25 @@
 # Architekturentscheidungen
 
+## Einordnung 03.11.2026
+
+Lokale **CAN 1.0.3, Buildzähler 48**, öffentlich weiterhin der dokumentierte **1.0.2-Build-48**-Stand. Die neuen ADR-020/021 erweitern die bisherige lokale/serverseitige Auswahl und die Editorbedienung; Motorverträge und Dateiformat bleiben erhalten. Frühere ADRs bewahren ihre damalige Begründung.
+
+## ADR-021 – Markierte Editorintervalle, kanonischer Ausgabeplan
+
+**Status:** lokal umgesetzt am 03.11.2026; ergänzt ADR-006/007.
+
+Rot/Remove bleibt Standard, Grün/Keep ist eine dauerhaft gespeicherte alternative Bedienweise. Eine Änderung gilt erst beim nächsten neu geöffneten Film. Der Editor hält ausschließlich die sichtbaren Markierungen; eine Änderung der Einstellung deutet keinen aktiven Plan um. Import und Ausgabe verwenden die bestehenden Komplement-Helfer. `CreateCutPlanSnapshot` liefert unabhängig vom Editor stets einen echten Entfernungsplan für den bisherigen Cutlist-/Motorpfad.
+
+Der offene Anfang ist ein eigener vorläufiger Zustand. Ein separates Timeline-Visual zeigt die Vorschau ohne Planmutation oder erneute Keyframe-Enumeration. Erst ein gültiges Ende übernimmt den Bereich; Esc verwirft nur die offene Markierung. Offene Anfänge verhindern das Speichern. Vor grüner Ausgabe bestätigt der Anwender Anzahl/Dauer der Behaltebereiche und das Weglassen aller unmarkierten Teile. Kein neues Arbeitsstandsformat und keine Fertigstellungserkennung. [Umsetzung und Tests](SCHNITTMODI-TIMELINE-20261103.md).
+
+## ADR-020 – Gemeinsame Cutlist-Auswahl ohne Quellenbevorzugung
+
+**Status:** lokal umgesetzt am 03.11.2026; erweitert den bisherigen Serverdialog.
+
+Die gemeinsame Namensfunktion liefert Originaldateiname einschließlich Endung plus `.cutlist`. Nur der konfigurierte Cutlist-Ordner und das Originalfilmverzeichnis werden gezielt geprüft. Keine rekursive oder unscharfe Suche. Lokale Treffer gleicher Bytes zusammenfassen; abweichende Inhalte getrennt erhalten. Server und Lokal gemeinsam gruppiert und ohne Vorauswahl anbieten.
+
+Ein gültiger Zwischenstand bleibt ladbar. Keine automatische Quellenwahl, Zusammenführung oder Änderung gespeicherter Dateien durch Auswahl/Ablehnung. Medien-/Inhaltsprüfungen vor Übernahme, Bestätigung vor Ersetzen aktueller Arbeit und gesonderte spätere Überschreibentscheidung bleiben verbindlich. Fertigstellungszustand nicht aus Schnitten erfinden. [Umsetzung und Grenzen](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md).
+
 **Einordnung 27.10.2026:** veröffentlichter Stand CAN 1.0.2 Build 41 mit Motor 0.1.6. Frühere ADR-Statusangaben gelten für ihren damaligen Schritt. [Versionen](VERSIONEN.md).
 
 ## ADR-019 – Bewusste Tonspurauswahl und kontrolliertes Klebecenter
@@ -145,7 +165,7 @@ Metadaten werden über ffprobe strukturiert ausgelesen und anhand anonymisierter
 
 ## ADR-006 – Schnittbearbeitung verwendet Remove-Bereiche
 
-**Status:** entschieden
+**Status:** als ursprünglicher Standard entschieden; für den Editor am 03.11.2026 durch ADR-021 erweitert.
 
 Die Benutzeroberfläche beschreibt Schnittbereiche als Abschnitte, die aus dem Video entfernt werden sollen.
 
@@ -166,7 +186,7 @@ Die von Cut Assistant Next erzeugten Cutlists orientieren sich nicht nur an eine
 
 Begründung und Regeln:
 
-- Das interne Schnittmodell der Benutzeroberfläche verwendet weiterhin Remove-Bereiche gemäß ADR-006.
+- Der kanonische Ausgabeplan verwendet weiterhin Remove-Bereiche. Seit ADR-021 kann die Oberfläche alternativ Keep-Markierungen halten; der Snapshot rechnet sie vor der Ausgabe mit vorhandenen Helfern um.
 - Für die Cutlist-Ausgabe werden daraus ausschließlich positive Keep-Bereiche mit `Start` und `Duration` in Sekunden erzeugt.
 - `NoOfCuts` entspricht der tatsächlichen Anzahl dieser Keep-Bereiche.
 - Bereiche mit einer Dauer von `0` oder einer negativen Dauer werden von Cut Assistant Next nicht erzeugt. Solche Werte wurden zwar in historischen Bestandsdateien gefunden, werden aber als Artefakte älterer Werkzeuge betrachtet und nicht nachgebildet.

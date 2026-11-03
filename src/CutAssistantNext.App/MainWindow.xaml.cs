@@ -108,6 +108,7 @@ public partial class MainWindow : Window
         KeyframeIndicator.DataContext = _keyframeNavigation;
         CutPlanSection.DataContext = _cutPlanViewModel;
         CutTimelineTrack.DataContext = _cutPlanViewModel;
+        Power2EditingDock.DataContext = _cutPlanViewModel;
 
         VideoHost.VideoWindowHandleCreated +=
             VideoHost_VideoWindowHandleCreated;
@@ -417,6 +418,14 @@ public partial class MainWindow : Window
         object sender,
         KeyEventArgs e)
     {
+        if (e.Key == Key.Escape && Keyboard.Modifiers == ModifierKeys.None &&
+            !_mediaLoadInProgress && !_isClosed && IsEnabled &&
+            e.OriginalSource is not TextBoxBase && _cutPlanViewModel.PendingStart.HasValue)
+        {
+            _cutPlanViewModel.CancelPendingStart();
+            e.Handled = true;
+            return;
+        }
         if (_playerFrameSearch.IsNavigating) return;
 
         var modifiers = Keyboard.Modifiers;
@@ -1005,7 +1014,7 @@ public partial class MainWindow : Window
             var settings = new FrameLoupeSettingsStore().Load();
             var viewModel = new FrameLoupeViewModel(path, analysis.VideoStreams[0].Index,
                 target.MediaDuration, target.Position, target.Side,
-                (decimal)(analysis.StartTimeSeconds ?? 0), settings.InitialSearchFrames, frameAnalysis, preview, analysis.FormatName);
+                (decimal)(analysis.StartTimeSeconds ?? 0), settings.InitialSearchFrames, frameAnalysis, preview, analysis.FormatName, _cutPlanViewModel.EditingMode);
             Action<FrameLoupeSelection>? applySelection = null;
             if (target.Side is CutEdgeSide edgeSide && target.Segment is { } edgeSegment)
             {
@@ -1306,6 +1315,8 @@ public partial class MainWindow : Window
 
             return;
         }
+
+        if (!ConfirmKeepSelection()) return;
 
         OtrCanSettings selection;
         _cutOutputOpening = true;
@@ -1619,218 +1630,6 @@ public partial class MainWindow : Window
         await SearchCutlistsForCurrentMediaAsync();
     }
 
-    private async Task SearchCutlistsForCurrentMediaAsync(
-        bool skipIfNotConfigured = false)
-    {
-        if (_cutlistSearchInProgress)
-        {
-            return;
-        }
-
-        _cutlistSearchInProgress = true;
-        LoadServerCutlistButton.IsEnabled = false;
-
-        try
-        {
-            await SearchCutlistsForCurrentMediaCoreAsync(skipIfNotConfigured);
-        }
-        finally
-        {
-            _cutlistSearchInProgress = false;
-            LoadServerCutlistButton.IsEnabled = true;
-        }
-    }
-
-    private async Task SearchCutlistsForCurrentMediaCoreAsync(
-        bool skipIfNotConfigured = false)
-    {
-        if (_viewModel.AnalysisResult is null)
-        {
-            MessageBox.Show(
-                this,
-                "Bitte zuerst eine Mediendatei auswählen und erfolgreich analysieren.",
-                "Cutlist-Server",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-
-            return;
-        }
-
-        var mediaDuration =
-            _viewModel.MediaDuration;
-
-        if (!mediaDuration.HasValue ||
-            mediaDuration.Value <= TimeSpan.Zero)
-        {
-            MessageBox.Show(
-                this,
-                "Die Laufzeit der geladenen Mediendatei konnte nicht ermittelt werden.",
-                "Cutlist-Server",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-
-            return;
-        }
-
-        var serverSettings =
-            new CutlistServerSettingsStore().Load();
-
-        if (serverSettings is null ||
-            string.IsNullOrWhiteSpace(
-                serverSettings.PersonalServerUrl))
-        {
-            if (skipIfNotConfigured)
-            {
-                return;
-            }
-
-            MessageBox.Show(
-                this,
-                "Bitte zuerst unter Cutlist-Einstellungen die persönliche Server-URL eintragen.",
-                "Cutlist-Server",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-
-            return;
-        }
-
-        if (!CutlistServerSettingsValidator.TryValidatePersonalServerUrl(
-                serverSettings.PersonalServerUrl,
-                out var errorMessage))
-        {
-            MessageBox.Show(
-                this,
-                errorMessage,
-                "Cutlist-Server",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
-
-            return;
-        }
-
-        try
-        {
-            using var httpClient =
-                new HttpClient
-                {
-                    Timeout =
-                        TimeSpan.FromSeconds(15)
-                };
-
-            var client =
-                new CutlistServerClient(
-                    httpClient);
-
-            var results =
-                await client.SearchAsync(
-                    serverSettings.PersonalServerUrl,
-                    _viewModel.FileName);
-
-            _logger.Information(
-                $"Cutlist-Serversuche abgeschlossen: {_viewModel.FileName} | " +
-                $"Treffer: {results.Count}");
-
-            if (results.Count == 0)
-            {
-                MessageBox.Show(
-                    this,
-                    $"Für {_viewModel.FileName} wurde keine Cutlist gefunden.",
-                    "Cutlist-Server",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
-
-                return;
-            }
-
-            var dialog =
-                new CutlistSearchResultsDialog(
-                    _viewModel.FileName,
-                    results)
-                {
-                    Owner =
-                        this
-                };
-
-            var dialogResult =
-                dialog.ShowDialog();
-
-            if (dialogResult == true &&
-                dialog.SelectedResult is not null)
-            {
-                var selectedResult =
-                    dialog.SelectedResult;
-
-                _logger.Information(
-                    $"Cutlist auf Server ausgewählt: " +
-                    $"{selectedResult.CutlistFileName} | " +
-                    $"ID: {selectedResult.Id}");
-
-                var cutlistBytes =
-                    await client.DownloadBytesAsync(
-                        serverSettings.PersonalServerUrl,
-                        selectedResult.Id);
-
-                var temporaryCutlistFileName =
-                    Path.Combine(
-                        Path.GetTempPath(),
-                        $"{Guid.NewGuid():N}.cutlist");
-
-                try
-                {
-                    await File.WriteAllBytesAsync(
-                        temporaryCutlistFileName,
-                        cutlistBytes);
-
-                    LoadCutlistFromFile(
-                        temporaryCutlistFileName,
-                        mediaDuration.Value,
-                        rememberAsUploadCandidate: false);
-                }
-                finally
-                {
-                    if (File.Exists(
-                            temporaryCutlistFileName))
-                    {
-                        File.Delete(
-                            temporaryCutlistFileName);
-                    }
-                }
-            }
-        }
-        catch (HttpRequestException)
-        {
-            MessageBox.Show(
-                this,
-                "Die Anfrage an den Cutlist-Server ist fehlgeschlagen.",
-                "Cutlist-Server",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
-        }
-        catch (TaskCanceledException)
-        {
-            MessageBox.Show(
-                this,
-                "Der Cutlist-Server hat nicht rechtzeitig geantwortet.",
-                "Cutlist-Server",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
-        }
-        catch (Exception exception)
-        {
-            _logger.Error(
-                $"Cutlist-Serverfehler: {exception}");
-
-            MessageBox.Show(
-                this,
-                $"Die Cutlist-Serversuche ist fehlgeschlagen:" +
-                $"{Environment.NewLine}{Environment.NewLine}" +
-                exception.Message,
-                "Cutlist-Server",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
-        }
-    }
-
     private async void LoadCutlistButton_Click(
         object sender,
         RoutedEventArgs e)
@@ -1889,17 +1688,23 @@ public partial class MainWindow : Window
             mediaDuration.Value,
             rememberAsUploadCandidate: true);
     }
-    private void LoadCutlistFromFile(
-        string fileName,
-        TimeSpan mediaDuration,
-        bool rememberAsUploadCandidate)
+    private void LoadCutlistFromFile(string fileName, TimeSpan mediaDuration, bool rememberAsUploadCandidate)
     {
         try
         {
-            var document =
-                CutlistFileReader.Read(
-                    fileName);
+            LoadCutlistDocument(CutlistFileReader.Read(fileName), mediaDuration,
+                rememberAsUploadCandidate ? Path.GetFullPath(fileName) : null);
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(this, exception.Message, "Cutlist konnte nicht geladen werden", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
 
+    private void LoadCutlistDocument(CutlistDocument document, TimeSpan mediaDuration, string? uploadCandidatePath)
+    {
+        try
+        {
             var fileSizeMismatch =
                 CutlistFileSizeCompatibilityDetector.FindMismatch(
                     document.General.OriginalFileSizeBytes,
@@ -1983,8 +1788,8 @@ public partial class MainWindow : Window
                         mediaDuration);
             }
 
-            _cutPlanViewModel.LoadCutPlan(
-                cutPlan);
+            if (!ConfirmCutlistReplacement()) return;
+            var namingState = _cutNamingState;
 
             var suggestedMovieName =
                 document.Info.SuggestedMovieName;
@@ -1995,24 +1800,21 @@ public partial class MainWindow : Window
                 var namingSettings =
                     new NamingSettingsLoader().Load();
 
-                _cutNamingState ??=
+                namingState ??=
                     new CutNamingState(
                         namingSettings.DefaultNameTemplate,
                         NameTemplateContextFactory.Create(
                             _viewModel.FileName));
 
-                _cutNamingState =
-                    _cutNamingState.UseSuggestedMovieName(
+                namingState =
+                    namingState.UseSuggestedMovieName(
                         suggestedMovieName,
                         preserveSuggestedMovieName: true);
             }
 
-            if (rememberAsUploadCandidate)
-            {
-                _lastSavedCutlistFilePath =
-                    Path.GetFullPath(
-                        fileName);
-            }
+            _cutPlanViewModel.LoadCutPlan(cutPlan);
+            _cutNamingState = namingState;
+            _lastSavedCutlistFilePath = uploadCandidatePath;
 
             _loadedCutlistAuthor =
                 document.Info.Author;
@@ -2020,7 +1822,7 @@ public partial class MainWindow : Window
                 document.General.IntendedCutApplicationName;
 
             _logger.Information(
-                $"Cutlist wurde geladen: {fileName}");
+                $"Cutlist wurde geladen: {document.General.ApplyToFile}");
 
             MessageBox.Show(
                 this,
@@ -2099,8 +1901,15 @@ public partial class MainWindow : Window
                 _lastSuccessfulCutMediaPath,
                 _lastSuccessfulCutEngine) == CutEngineKind.OtrCan;
 
-        var cutPlan =
-            _cutPlanViewModel.CreateCutPlanSnapshot();
+        CutPlan cutPlan;
+        try { cutPlan = CutlistSaveGuard.CreateSnapshot(_cutPlanViewModel); }
+        catch (InvalidOperationException error) when (_cutPlanViewModel.PendingStart.HasValue)
+        {
+            MessageBox.Show(this, error.Message, CutlistSaveGuard.Title, MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        if (!ConfirmKeepSelection()) return;
 
         var dialog =
             new CutlistGenerationDialog(
@@ -2485,6 +2294,9 @@ public partial class MainWindow : Window
 
     private async Task LoadMediaFileCoreAsync(string mediaPath)
     {
+        var editingSettings = await Task.Run(() => new AppearanceSettingsStore().Load(), _mediaInputCancellation.Token);
+        if (_isClosed || _mediaInputCancellation.IsCancellationRequested) return;
+        ++_cutlistMediaGeneration;
         _logger.Information($"Mediendatei wurde ausgewählt: {mediaPath}");
 
         _playerFrameSearch.SetMedia(null);
@@ -2506,7 +2318,7 @@ public partial class MainWindow : Window
             _viewModel.MediaDuration.Value > TimeSpan.Zero)
         {
             _cutPlanViewModel.Initialize(
-                _viewModel.MediaDuration.Value);
+                _viewModel.MediaDuration.Value, editingSettings.CutEditing);
         }
 
         try

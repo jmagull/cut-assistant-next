@@ -1,72 +1,49 @@
+using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using CutAssistantNext.App.Services;
+using CutAssistantNext.App.ViewModels;
 
 namespace CutAssistantNext.App.Dialogs;
 
-internal partial class CutlistSearchResultsDialog
-    : Window
+internal partial class CutlistSearchResultsDialog : Window
 {
-    internal CutlistSearchResultsDialog(
-        string movieFileName,
-        IReadOnlyList<CutlistSearchResult> results)
+    internal CutlistSearchResultsDialog(CutlistSearchResultsViewModel model)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(
-            movieFileName);
-
-        ArgumentNullException.ThrowIfNull(
-            results);
-
-        MovieFileName =
-            movieFileName;
-
-        Results =
-            results;
-
+        Model = model;
+        ResultsView = new ListCollectionView(model.Results);
+        ResultsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(CutlistResultRow.Source)));
+        ResultsView.SortDescriptions.Add(new SortDescription(nameof(CutlistResultRow.SourceOrder), ListSortDirection.Ascending));
+        ResultsView.SortDescriptions.Add(new SortDescription(nameof(CutlistResultRow.ServerOrder), ListSortDirection.Descending));
         InitializeComponent();
-
-        DataContext =
-            this;
-
-        if (Results.Count > 0)
-        {
-            ResultsGrid.SelectedIndex =
-                0;
-        }
+        DataContext = this;
     }
 
-    public string MovieFileName { get; }
+    public CutlistSearchResultsViewModel Model { get; }
+    public ListCollectionView ResultsView { get; }
+    internal CutlistResultRow? SelectedResult => Model.SelectedResult;
 
-    public IReadOnlyList<CutlistSearchResult> Results { get; }
-
-    internal CutlistSearchResult? SelectedResult =>
-        ResultsGrid.SelectedItem
-            as CutlistSearchResult;
-
-    private void LoadButton_Click(
-        object sender,
-        RoutedEventArgs e)
+    private void ResultsGrid_Sorting(object sender, DataGridSortingEventArgs e)
     {
-        if (SelectedResult is null)
+        e.Handled = true;
+        var direction = e.Column.SortDirection == ListSortDirection.Ascending
+            ? ListSortDirection.Descending : ListSortDirection.Ascending;
+        using (ResultsView.DeferRefresh())
         {
-            MessageBox.Show(
-                this,
-                "Bitte zuerst eine Cutlist auswählen.",
-                "Cutlist-Server",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
-
-            return;
+            ResultsView.SortDescriptions.Clear();
+            ResultsView.SortDescriptions.Add(new SortDescription(nameof(CutlistResultRow.SourceOrder), ListSortDirection.Ascending));
+            ResultsView.SortDescriptions.Add(new SortDescription(e.Column.SortMemberPath, direction));
+            ResultsView.SortDescriptions.Add(new SortDescription(nameof(CutlistResultRow.ServerOrder), ListSortDirection.Descending));
         }
-
-        DialogResult =
-            true;
+        foreach (var column in ResultsGrid.Columns) column.SortDirection = null;
+        e.Column.SortDirection = direction;
     }
 
-    private void ContinueButton_Click(
-        object sender,
-        RoutedEventArgs e)
+    private void LoadButton_Click(object sender, RoutedEventArgs e)
     {
-        DialogResult =
-            false;
+        if (Model.CanLoad) DialogResult = true;
     }
+
+    private void ContinueButton_Click(object sender, RoutedEventArgs e) => DialogResult = false;
 }

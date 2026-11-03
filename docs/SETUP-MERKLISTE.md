@@ -1,5 +1,37 @@
 # Setup-Merkliste
 
+## Power-User 2 – 03.11.2026
+
+- [x] Dritte dauerhafte Layoutoption, kompatible Werte 0/1/2 und sichtbare Namen Standard / Power-User 1 / Power-User 2.
+- [x] Vorhandene Schnittbuttons und Suche beim Player anordnen; rote/grüne Vormerkung und kompakte rechte Gruppen.
+- [x] Rückwechsel, Bindungen, Tabellen-/Kantenauswahl und ursprüngliche Darstellungswerte erhalten.
+- [x] Build ohne Warnungen/Fehler, 1728 Tests nach Buttonkorrektur; zwölf ursprüngliche native Gruppen und gezielte Ausrichtungsprüfung, tatsächliche WPF-Aufnahmen gesichert.
+- [x] Version 1.0.3 / Zähler 48 und vorhandene Release-Artefakte erhalten.
+- [x] Persönliche Sichtprüfung beider Modi und der korrigierten Buttonausrichtung; Christmas Cookbook in Power-User 2 für Ton, Bild, Schnitt und Drei-Sekunden-Vorschau bestätigt.
+- [ ] Echte Windows-/Mehrmonitor-/Hochkontrastwechsel nach Bedarf zusätzlich prüfen; WPF-Root-DPI bis 200 % und Farbzweigtests bereits bestanden.
+
+[Abschlussbericht](POWER-USER-2-IMPLEMENTIERUNG-20261103.md). Kein Paket- oder Veröffentlichungsauftrag.
+
+## Entwicklungsstand 03.11.2026 – CAN 1.0.3
+
+**03.11.2026 – eingefrorener Entwicklungsstand CAN 1.0.3, Buildzähler 48.** Gemeinsame Server-/Lokal-Cutlist-Tabelle, Rot/Entfernen und Grün/Behalten mit dynamischer Vorschau sowie Standard / Power-User 1 / Power-User 2 einschließlich Buttonausrichtung sind umgesetzt. Letzter technischer Stand: **1.728/1.728 Tests**, Release-Build ohne Warnungen/Fehler. Quellstand und Dokumentation werden auf Nutzerauftrag committet und gepusht; keine neuen Pakete und keine Veröffentlichung ohne gesonderte Freigabe. Öffentlich bleibt der dokumentierte stabile Stand **CAN 1.0.2 Build 48**. [Freeze und Prüfgrenzen](FREEZE-1.0.3-20261103.md).
+
+[Entwicklungsnotizen 1.0.3](RELEASE-NOTES-1.0.3.md) · [Cutlist-Tabelle](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi und Vorschau](SCHNITTMODI-TIMELINE-20261103.md).
+
+- [x] Lokale Suche nach Originaldateiname + `.cutlist` in genau zwei Verzeichnissen; Server und Lokal gemeinsam ohne Vorauswahl anzeigen.
+- [x] Gleichnamige Dateien nach Inhalt vergleichen, Unterschiede erhalten; Dauer vereinheitlichen, registrierte Downloads eindeutig benennen.
+- [x] Gültige begonnene Cutlists zulassen; keine unbelegte Anzeige „Unfertig“. Lokale Datei bei Serverwahl und Ablehnung schützen.
+- [x] Offene Schnittanfänge beim Speichern schützen.
+- [x] Rot/Entfernen und Grün/Behalten dauerhaft einstellen, erst beim nächsten Film anwenden.
+- [x] Vorgemerkten Anfang mit fester Linie und beweglicher halbtransparenter Vorschau sichtbar machen; Esc-Abbruch. Damit ist der Wunsch nach deutlicheren offenen Schnittmarkierungen technisch umgesetzt.
+- [x] Build/1709 Tests und WPF-Prüfungen; persönliche Tabellen-/Dauer-/Downloadbeschriftungs- und Rot-/Grün-Anzeigeprüfung dokumentieren.
+- [x] Chicago-Fire-otr-can-Prüfung mit Bild, Schnitt, beiden Tonspuren und Drei-Sekunden-Vorschau getrennt vom späteren grünen Modus festhalten.
+- [x] Vollständiger grüner Filmschnitt mit Santa Tell Me persönlich für Ton/Bild/Schnitt/Drei-Sekunden-Vorschau positiv gemeldet; vier Keep-Bereiche, beide Motorprotokolle, gespeicherte Cutlist und Servereintrag belegt. [Praxisnachweis](SANTA-TELL-ME-GRUENER-PRAXISTEST-20261103.md).
+- [ ] Gespeicherte begonnene Arbeit persönlich erneut laden und fortsetzen; technische Roundtrip-Tests bestehen bereits.
+- [ ] Neue Setup-/Portable-/VM-Prüfungen nur für einen gesondert beauftragten neuen Paketsatz planen.
+
+Kein Auftrag für Commit, Push, neue Version/Buildnummer, Paketbau oder Veröffentlichung. Die folgenden datierten Listen bleiben als Historie erhalten.
+
 ## Veröffentlichungsauftrag 31.10.2026 – Build 47
 
 - [x] Produktstand Build 47 eingefroren, Setup/Portable/Quellen und Prüfsummen technisch geprüft (1593 + 1321 Tests).
@@ -159,11 +191,11 @@ Zusätzliche Werkzeug-Downloadlinks unter Hilfe sind für dieses Konzept nicht v
 
   „Cut Assistant Next entstand mit Unterstützung von ChatGPT/Codex unter Einsatz von GPT-5.6 Sol (Denkaufwand: hoch) und GPT-6 Astra (Denkaufwand: mittel). Die abschließende Entscheidung über Vorschläge, Änderungen und deren Übernahme lag stets beim Nutzer und Projektverantwortlichen Jörg.“
 
-## Nächster Schritt
+## Historischer nächster Schritt vom 27.10.2026
 
 Am 27.10.2026 die CAN-Integration des Klebecenters auf Basis des persönlich bestätigten John-Wick-Referenzfalls beginnen. Vorhandene Dateien schützen, passende Tonspuren bewusst wählen und die fertige Bild-/Tonzeitachse prüfen. Separate neue Portable-/VM-/Deinstallationsprüfungen für den aktuellen Paketsatz bleiben offen. Veröffentlichung nur nach ausdrücklicher Freigabe.
 
-## Weitere Planung
+## Historische weitere Planung vom 27.10.2026
 
 - **Klebecenter (experimentell):** Teile auswählen, Tonspuren auswählen und zusammenfügen. Nächster Praxisfall am 27.10.2026: John Wick Kapitel 4, Teil 1 und Teil 2; siehe den Eintrag vom 26.10.2026 oben.
 - Schnittbereiche beim Schneiden gemäß den Hinweisen von chrisdude feinabstimmen; konkrete Regeln vor der Umsetzung festlegen.

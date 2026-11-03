@@ -1,5 +1,46 @@
 # Testplan – aktueller Funktionsstand
 
+**Nachtrag 03.11.2026:** Buttonausrichtung +10 / ◀ K / K ▶ vorab bei vier DPI-Stufen mit 4 DIP Versatz reproduziert, danach ohne Versatz bestanden; Rückwechsel stellt Gruppenmaße wieder her. Nativer Test mit geladenem Film bestätigt 0 DIP Differenz an beiden Kanten. Gesamt **1728 Tests** (200 Core, 80 Cutlists, 390 Media, 1058 App). Die folgende ursprüngliche Power-User-2-Abnahme mit 1724 Fällen bleibt als vorheriger Stand erhalten. [Nachweis](POWER-USER-2-IMPLEMENTIERUNG-20261103.md#nachtrag-03112026--persönliche-sichtprüfung-und-buttonausrichtung).
+
+## Power-User 2 – technischer Abschluss 03.11.2026
+
+**1724 bestandene Tests**: 200 Core, 80 Cutlists, 390 Media, 1054 App; 15 neue Fälle gegenüber 1709. Zusätzlich zwölf native Prüffallgruppen: alle drei Layouts mit gleichem HWND/Player-/Tonspur-/Schnittzustand, Rot/Grün, Esc, Suchumbruch/Rückfall, vier WPF-DPI-Stufen, 40 Bereiche, echte Halbierungssuche und Frame-Lupen-Dialog sowie AVI-/MP4-Schutz. Keine Bindungsfehler. [Einzelheiten und tatsächliche WPF-Aufnahmen](POWER-USER-2-IMPLEMENTIERUNG-20261103.md).
+
+Persönliche Sicht-/Bedienrückmeldungen liegen inzwischen vor: Santa Tell Me und rote feste Vormerkung positiv, Christmas-Cookbook-Schnitt einschließlich Ton/Bild/Drei-Sekunden-Vorschau bestätigt; abschließend korrigierte Buttonausrichtung positiv gezeigt. [Praxisnachweis](CHRISTMAS-COOKBOOK-PRAXISTEST-20261103.md). Die persönliche Wiederaufnahme begonnener Arbeit bleibt offen. Globale Windows-DPI-/Hochkontrastumschaltung und physischer Monitorwechsel sind von der erfolgten WPF-Root-DPI-/Farbzweigprüfung zu unterscheiden. Frühere Filmabnahmen sind keine nachträgliche Abnahme dieser Ansicht.
+
+## Aktuelle Entwicklung 03.11.2026 – CAN 1.0.3
+
+**03.11.2026 – eingefrorener Entwicklungsstand CAN 1.0.3, Buildzähler 48.** Gemeinsame Server-/Lokal-Cutlist-Tabelle, Rot/Entfernen und Grün/Behalten mit dynamischer Vorschau sowie Standard / Power-User 1 / Power-User 2 einschließlich Buttonausrichtung sind umgesetzt. Letzter technischer Stand: **1.728/1.728 Tests**, Release-Build ohne Warnungen/Fehler. Quellstand und Dokumentation werden auf Nutzerauftrag committet und gepusht; keine neuen Pakete und keine Veröffentlichung ohne gesonderte Freigabe. Öffentlich bleibt der dokumentierte stabile Stand **CAN 1.0.2 Build 48**. [Freeze und Prüfgrenzen](FREEZE-1.0.3-20261103.md).
+
+[Entwicklungsnotizen 1.0.3](RELEASE-NOTES-1.0.3.md) · [Cutlist-Tabelle](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi und Vorschau](SCHNITTMODI-TIMELINE-20261103.md).
+
+Automatisierter Abschluss: **200 Core + 80 Cutlists + 390 Media + 1.039 App = 1.709 bestandene Tests**, keine übersprungen. Die gemeinsame Tabelle erreichte zuvor 1.685; Schnittmodi/Vorschau ergänzen 24 Fälle. [Konkrete Nachweise](SCHNITTMODI-TIMELINE-20261103.md#build-und-automatisierte-regression).
+
+| Prüfbereich | Nachweis/Stand |
+| --- | --- |
+| Exakter lokaler Name, genau zwei Pfade, kein ähnlicher Name/Unterordner | Automatisiert bestanden. |
+| Gleichnamige Dateien: bytegleich zusammenfassen, Unterschiede erhalten | Automatisiert bestanden. |
+| Server und Lokal gemeinsam, keine Vorauswahl/Bevorzugung, explizites Laden oder Ablehnen | Automatisierte Dienst-/WPF-Prüfung; Anzeige persönlich mit NCIS Sydney bestätigt. |
+| Datei-/Kontextwechsel, geänderte lokale Datei, beschädigte Daten, Quellenfehler | Automatisiert geprüft; gespeicherte lokale Datei bleibt geschützt. |
+| Begonnene gültige Arbeit speichern/laden/weiterbearbeiten | Technische Roundtrip- und Quellenwahltests bestanden; persönliche Wiederaufnahme noch offen. |
+| Offener Anfang sperrt Speichern in Rot und Grün; Abbruch erhält fertige Bereiche | Automatisiert bestanden. |
+| Rot/Grün: Grenzen, kurze Bereiche, mehrere Bereiche, Korrektur, Löschen, gleicher Motorauftrag/Export | Automatisiert bestanden. |
+| Einstellung speichern, alte Werte, Neustart über neue Store-Instanz, erst nächster Film | Automatisierte Modell- und tatsächliche Einstellungsdialogprüfung bestanden; kein vollständiger App-Neustart aus dem Store-Test abgeleitet. |
+| Vorschau vorwärts/rückwärts, fester Anfang, keine Planmutation, Übernahme/Abbruch | Echte WPF-Controls in Rot/Grün auf hellem/dunklem Hintergrund geprüft. |
+| Sliderleistung | Je WPF-Fall 10.000 Keyframes und 200 Positionsänderungen ohne erneute statische Enumeration; kein allgemeiner Hardware-Benchmark. |
+| Hauptfenster-Bindungen, beide Layouts, Frame-Lupe, Kontrollplayer/3-Sekunden-Weg | Neue und vorhandene Regressionen bestehen; persönliche Ansicht Rot/Grün mit gleicher geplanter Dauer bestätigt. |
+| Chicago Fire, otr-can 0.1.6, AAC Stereo und AC-3 6-Kanal | Vorherige 1.0.3-Prüffassung: Schnitt/Bild/beide Tonspuren/Drei-Sekunden-Vorschau persönlich bestanden. |
+| Vollständiger neuer Filmschnitt im grünen Modus | Santa Tell Me: vier Keep-Bereiche, beide Motorprotokolle abgeschlossen, Ton/Bild/Schnitt/Drei-Sekunden-Vorschau persönlich positiv gemeldet; Cutlist und Servereintrag vorhanden. [Nachweis](SANTA-TELL-ME-GRUENER-PRAXISTEST-20261103.md). |
+
+### Nächste persönliche Prüffälle
+
+1. Im grünen Modus mehrere gewünschte Teile markieren, Vorschau vorwärts/rückwärts und mit Einzelbildschritten prüfen; offene Markierung abbrechen beziehungsweise abschließen.
+2. Gültigen Zwischenstand speichern, Film später erneut öffnen, eigene lokale Cutlist trotz zugleich vorhandenem Servertreffer bewusst laden und Schnittpunkte weiterbearbeiten. Einen zweiten Versuch mit Serverwahl und einen ohne Cutlist getrennt prüfen; eigene Datei erhalten.
+3. Grüner Filmschnitt ist mit Santa Tell Me persönlich positiv gemeldet. Weitere Referenzen nach Bedarf ergänzen; die persönliche Wiederaufnahmeprüfung aus Punkt 2 bleibt offen.
+4. Neue Setup-/Portable-/VM-Abnahme erst nach gesondertem Paketauftrag; keine solche Abnahme aus Entwicklungsfenstern ableiten.
+
+Die folgenden datierten Prüfpläne und Freigaben gelten für ihre früheren Stände, nicht als Auftrag für ein 1.0.3-Release.
+
 **Stand 31.10.2026: CAN 1.0.2 Build 47 als stabile Latest-Version v1.0.2-build47 veröffentlicht; frühere Releases/Pakete bleiben erhalten, Motor 0.1.6.** [Versionen](VERSIONEN.md), [Paketbericht](RELEASE-1.0.2-BUILD47-RESULT.md).
 
 ## Freigabe zum Einfrieren und Veröffentlichen am 31.10.2026

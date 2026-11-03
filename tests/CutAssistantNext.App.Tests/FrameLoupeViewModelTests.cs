@@ -7,6 +7,25 @@ namespace CutAssistantNext.App.Tests;
 
 public sealed class FrameLoupeViewModelTests
 {
+    [Theory]
+    [InlineData(CutEdgeSide.Start)]
+    [InlineData(CutEdgeSide.End)]
+    public async Task KeepModeExplainsTheSameHalfOpenFrameBoundaryWithoutOffset(CutEdgeSide side)
+    {
+        var red = new FrameLoupeViewModel("video.mp4", 1, TimeSpan.FromSeconds(160), TimeSpan.FromSeconds(100),
+            side, 0, 2000, new FakeAnalysis(), new FakePreview());
+        var green = new FrameLoupeViewModel("video.mp4", 1, TimeSpan.FromSeconds(160), TimeSpan.FromSeconds(100),
+            side, 0, 2000, new FakeAnalysis(), new FakePreview(), editingMode: CutEditingMode.Keep);
+        await red.InitializeAsync(); await green.InitializeAsync();
+        Assert.Equal(red.SelectedCutPosition, green.SelectedCutPosition);
+        Assert.True(green.CanApply);
+        Assert.Equal(side == CutEdgeSide.Start
+            ? "Dieses Bild ist das erste Bild des zu behaltenden Bereichs."
+            : "Dieses Bild gehört nicht mehr zum Behaltebereich; der Bereich endet davor.", green.EdgeMeaningText);
+        await red.StepAsync(1); await green.StepAsync(1);
+        Assert.Equal(red.SelectedCutPosition, green.SelectedCutPosition);
+    }
+
     [Fact]
     public async Task SearchExpandsIntervalAndJumps2000RealFramesThenHalves()
     {

@@ -2,6 +2,20 @@
 
 Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Es verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codecs.
 
+## Eingefrorener Entwicklungsstand – 03.11.2026
+
+**CAN 1.0.3, Buildzähler unverändert 48; auf Nutzerauftrag eingefroren.** Quellstand und Dokumentation werden per Commit und Push gesichert. **Veröffentlichung erst nach gesonderter Freigabe; keine neuen Pakete.** [Freeze und Prüfgrenzen](docs/FREEZE-1.0.3-20261103.md). Beim Öffnen eines Films bietet eine gemeinsame Tabelle Server- und lokale Cutlists ohne Vorauswahl an. Lokal wird ausschließlich der exakte Name **Originaldateiname einschließlich Endung + `.cutlist`** im eingerichteten Cutlist-Verzeichnis und im Filmverzeichnis geprüft. Gültige begonnene Cutlists bleiben verwendbar; unterschiedliche gleichnamige Dateien werden getrennt angeboten.
+
+Unter **Einstellungen → Darstellung und Schnittbearbeitung …** dauerhaft zwischen **Rot: Das kann weg** und **Grün: Das soll bleiben** wählen. Die Arbeitsweise gilt ab dem nächsten geöffneten Film. Eine halbtransparente Vorschau folgt zwischen festem Anfang und Sliderposition; **Esc** verwirft die offene Markierung. Vor grüner Ausgabe wird bestätigt, dass nur markierte Bereiche erhalten bleiben. Offene Anfänge verhindern das Speichern.
+
+**Geprüft: 1.728/1.728 Tests, Build ohne Warnungen/Fehler**, echte WPF-Kontrollen und persönliche Anzeigeprüfung beider Modi. Der persönliche Chicago-Fire-otr-can-Lauf mit beiden Tonspuren und Drei-Sekunden-Vorschau stammt aus der vorherigen 1.0.3-Prüffassung. **Santa Tell Me** ist anschließend im grünen Modus mit vier Behaltebereichen (**01:21:24.120**) persönlich für Ton, Bild, Schnitt und Drei-Sekunden-Vorschau positiv gemeldet; beide Motorprotokolle und die gespeicherte/serverseitig sichtbare Cutlist liegen vor. [Praxisnachweis](docs/SANTA-TELL-ME-GRUENER-PRAXISTEST-20261103.md). **The Christmas Cookbook** ist in Power-User 2 mit otr-can persönlich für Ton, Bild, Schnitt und Drei-Sekunden-Vorschau bestätigt (**01:21:08.960**); nach dem Versionswechsel zeigt die letzte positive Sichtprüfung auch die gleich hohen Playerbuttons. [Praxisnachweis](docs/CHRISTMAS-COOKBOOK-PRAXISTEST-20261103.md). Die persönliche Wiederaufnahmeprüfung bleibt offen.
+
+[Entwicklungsnotizen 1.0.3](docs/RELEASE-NOTES-1.0.3.md) · [Cutlist-Tabelle](docs/CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi und Vorschau](docs/SCHNITTMODI-TIMELINE-20261103.md) · [Projektstand](docs/AKTUELLER-STAND.md)
+
+**Neu: Power-User 2** ist als dritte dauerhafte Auswahl unter **Einstellungen → Darstellung und Schnittbearbeitung …** verfügbar; die bisherigen Ansichten heißen **Standard** und **Power-User 1**. Vier kompakte Schnittbuttons und die Halbierungssuche liegen beim Player, die Vormerkung erscheint fett rot/grün, rechts wächst die Schnittliste. Zwölf native Prüffallgruppen einschließlich geladenem Film, Tonspurerhalt und WPF-Skalierungen bis 200 % bestanden. [Umsetzung und tatsächliche WPF-Aufnahmen](docs/POWER-USER-2-IMPLEMENTIERUNG-20261103.md).
+
+## Veröffentlichte stabile Version
+
 **01.11.2026: CAN 1.0.2 Build 48 ist als stabile Latest-Version veröffentlicht.** [Release v1.0.2-build48](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build48), App-Dateiversion **1.0.2.48**. Build 47 bleibt unverändert als stabile Vorgängerversion erhalten. Motor **otr-can 0.1.6**, Wiedergabe **libmpv 0.41.0**, .NET 10/WPF für Windows 11 x64.
 
 Der Kontrollplayer bleibt nach natürlichem Filmende und fehlgeschlagenem Tonspurwechsel navigierbar. Reguläre Tonspurwechsel erhalten Position und Play/Pause-Zustand; bewusste Prüfstellen-Navigation behält den Drei-Sekunden-Vorlauf. Native Property-Fehler sind auffangbar.
@@ -12,7 +26,7 @@ Paketprüfung: **1634/1634 Tests**, zusätzlich **1362 Tests gegen finale Produk
 
 [Build-48-Freeze](docs/FREEZE-1.0.2-BUILD48-20261101.md) · [Korrektur und Nachweise](docs/KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md) · [Release Notes](docs/RELEASE-NOTES-1.0.2.md) · [Nutzeranleitung](docs/NUTZERANLEITUNG.md) · [Build 47 bleibt erhalten](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build47)
 
-Klebecenter, MP4Box, otr-can, Cutlists und Namensmasken bleiben funktional unverändert. QUICK übernimmt bestätigte kompatible AAC-/AC-3-Spurpaare ohne Neukodierung; erkannte MP4Box-Filmteile sperren AUDIO-ENTHUSIAST. .NET 10 Desktop Runtime x64 und externe Werkzeuge bleiben separat einzurichten. AVI und die dokumentierten MP4Box-/Werbeblitzer-Grenzen bleiben bestehen.
+Für den veröffentlichten Build-48-Paketsatz bleiben Klebecenter, MP4Box, otr-can, Cutlists und Namensmasken gegenüber seinem Freeze unverändert. QUICK übernimmt bestätigte kompatible AAC-/AC-3-Spurpaare ohne Neukodierung; erkannte MP4Box-Filmteile sperren AUDIO-ENTHUSIAST. .NET 10 Desktop Runtime x64 und externe Werkzeuge bleiben separat einzurichten. AVI und die dokumentierten MP4Box-/Werbeblitzer-Grenzen bleiben bestehen.
 
 <details>
 <summary>Historische Entwicklungs-, Paket- und Abnahmestände bis Build 38</summary>
@@ -99,12 +113,12 @@ CAN baut auf Ideen und Arbeit vieler Menschen und Projekte auf. Die [Danksagung]
 
 - Videos laden, mit ffprobe analysieren und mit mpv wiedergeben.
 - Play/Pause, Seeking, Einzelbildschritte und Lautstärkeregelung.
-- Zu entfernende Bereiche markieren, auswählen, korrigieren und löschen.
+- Bereiche markieren, auswählen, korrigieren und löschen; ab lokaler 1.0.3 wahlweise Rot/Entfernen oder Grün/Behalten mit dynamischer Vorschau.
 - Frame-Lupe über den sichtbaren Button oder Umschalt+F öffnen: ausgewählte Schnittkante bearbeiten oder ohne Kante die aktuelle Playerposition untersuchen. Nur im Kantenmodus ist eine Übernahme möglich.
 - Bei MP4 Keyframes im bestehenden Schnittstreifen anzeigen und zum vorherigen/nächsten Keyframe springen; AVI ist davon ausdrücklich ausgenommen.
 - Zusätzlich zur Navigation mit ±1/±10 Frames mit halbierten Suchsprüngen navigieren: standardmäßig 2000, 1000, 500 … bis 1 Frame, mit einstellbarem Startwert und Neustart.
 - Cutlists lokal laden, erzeugen und speichern.
-- Passende Server-Cutlists automatisch suchen und die Suche erneut per Button öffnen.
+- Passende Server-Cutlists automatisch suchen; ab lokaler 1.0.3 gemeinsam mit exakt benannten lokalen Dateien anbieten und die Suche erneut per Button öffnen.
 - Lokal gespeicherte Cutlists nach Bestätigung auf den konfigurierten Server hochladen.
 - Fremde Cutlists als Vorlage verwenden, deren Namensvorschlag bewusst beibehalten oder neu erzeugen und die Herkunft bei abweichendem Autor im Kommentar dokumentieren.
 - Schnittzeiten einheitlich anzeigen und die Namensvorschau markieren und kopieren.
@@ -112,8 +126,8 @@ CAN baut auf Ideen und Arbeit vieler Menschen und Projekte auf. Die [Danksagung]
 - MP4-Inhalte direkt mit MP4Box schneiden, auch bei abweichender Dateiendung.
 - Andere Container nach Bestätigung experimentell mit FFmpeg verlustfrei nach MP4 umpacken und anschließend mit MP4Box schneiden.
 - Optional mit OTR-CAN aus geeigneten MP4-Dateien oder experimentell vorbereiteten H.264-AVI-Dateien schneiden, FFMS2 einmal indexieren und unterstützte Tonspuren übernehmen; CPU-Encoding an Video-Schnittgrenzen und vollständige Audio-Neukodierung, bei MP3 einmal nach AAC-LC.
-- **Lokale 1.0.2:** Bei passender otr-can-Tonstörung nach bewusster Bestätigung mit streng geprüfter AAC-Spur erneut schneiden.
-- **Lokale 1.0.2:** Zusätzliche MP4-Kopie mit einer bewusst gewählten AAC-/AC-3-Spur für weitere bereits geschnittene Filmteile speichern; ohne Neukodierung und ohne Anwenden der Schnittliste.
+- Bei passender otr-can-Tonstörung nach bewusster Bestätigung mit streng geprüfter AAC-Spur erneut schneiden.
+- Zwei fertige Filmteile im Klebecenter mit bewusster Tonspurzuordnung verbinden: QUICK AND COPY oder, bei geeigneter Herkunft, AUDIO-ENTHUSIAST.
 - Fortschritt und Protokoll anzeigen, kopieren und den Vorgang abbrechen.
 - Hauptfenster und die vier Schnittdialoge (Schneiden, Fortschritt/Protokoll, Abschluss, Cutlist erzeugen) merken Größe und Maximierung; die Player-Lautstärke wird ebenfalls gespeichert. Inhalte bleiben bei kleinen Fenstern scrollbar.
 
@@ -125,7 +139,7 @@ Ab dem lokalen Build 22 kannst du im Originalplayer die Umgebung einer Schnittka
 
 ![Schnittkontrolle: vor dem Schnittanfang und nach dem Schnittende jeweils drei Sekunden im Original prüfen](docs/images/schnittkontrolle-3sek.svg)
 
-Rechtsklick auf Anfang: 3 Sekunden zurück. Rechtsklick auf Ende: 3 Sekunden vorwärts. So lassen sich die Filmszenen unmittelbar vor und nach einem Schnittbereich kontrollieren.
+Im roten Modus: Rechtsklick auf Anfang drei Sekunden zurück, auf Ende drei Sekunden vorwärts. Im grünen Modus der lokalen 1.0.3 liegt die Prüfstelle innerhalb des Behaltebereichs: drei Sekunden nach seinem Anfang beziehungsweise vor seinem Ende. Sehr kurze Bereiche begrenzen den Sprung.
 
 Dateigrenzen und sehr kurze angrenzende Filmabschnitte begrenzen den Sprung. Auswahl und Schnittwerte bleiben erhalten; die Wiedergabe startet nicht automatisch. Anschließend kannst du die vorhandene Frame-Lupe zur Korrektur verwenden.
 
@@ -140,7 +154,7 @@ Ab dem lokalen Build 25 öffnet **Prüfen** neben Anfang, jedem Übergang und En
 
 MP4 ist ein Container, keine Bezeichnung für einen bestimmten Videocodec. Ob sich ein anderes Format verlustfrei vorbereiten lässt, hängt von seinen Streams ab. Die MP4Box-Vorbereitung verwendet Stream-Copy. Der optionale OTR-CAN-Motor kopiert geeignete IDR-Abschnitte, kodiert Video-Schnittgrenzen und jede vollständige Tonspur auf der CPU neu. Ungeeignete Dateien oder deutliche Abweichungen werden mit einer Fehlermeldung gestoppt.
 
-Die allgemeine Container-Vorbereitung prüft Medienstruktur und Zeitverhältnisse. Beim AAC-Notfallweg und bei der manuellen Tonspurkopie werden zusätzlich sämtliche übernommenen Bild-/Tonpakete und Wiedergabezeiten exakt verglichen. Diese technischen Prüfungen ersetzen nicht die persönliche Kontrolle der Schnittstellen und Tonsynchronität. OTR-CANs Video-Smart-Rendering und Audio-Neukodierung sind synthetisch und mit Pines geprüft; Stapelverarbeitung und integrierte mehrteilige Aufnahmen sind noch nicht umgesetzt.
+Die allgemeine Container-Vorbereitung prüft Medienstruktur und Zeitverhältnisse. Beim AAC-Notfallweg und bei der manuellen Tonspurkopie werden zusätzlich sämtliche übernommenen Bild-/Tonpakete und Wiedergabezeiten exakt verglichen. Diese technischen Prüfungen ersetzen nicht die persönliche Kontrolle der Schnittstellen und Tonsynchronität. OTR-CANs Video-Smart-Rendering und Audio-Neukodierung sind synthetisch und mit Pines geprüft; Stapelverarbeitung bleibt offen; zwei bereits geschnittene Filmteile lassen sich im Klebecenter verbinden.
 
 Insbesondere bei historischen AVI-Dateien können bereits im Original Probleme mit Zeitstempeln, Bildaktualisierung oder Ton-Synchronität auftreten. Eine irreführende Dateiendung wie `.avi.mp4` ändert nichts am tatsächlich erkannten Container. CAN zeigt bei tatsächlich erkanntem AVI bereits nach dem Laden einen gelben Hinweis auf mögliche Probleme im Original; eine abweichende Dateiendung wird zusätzlich erklärt. Weitere Praxistests erfolgen mit geeigneten neuen Aufnahmen.
 
@@ -150,7 +164,7 @@ Die Gesamtabnahme in Build 24 hat bei einer erzeugten Datei mit zwei gleichartig
 
 ## Für Anwender
 
-Vorgesehene Umgebung ist Windows 11 x64. Der veröffentlichte Paketsatz CAN 1.0.2 Build 47 bietet Setup und Portable-ZIP mit otr-can 0.1.6. Die .NET 10 Desktop Runtime muss separat installiert werden; die vier geprüften libmpv-DLLs sind enthalten. ffprobe, FFmpeg und MP4Box werden separat installiert und über die Einstellungen konfiguriert.
+Vorgesehene Umgebung ist Windows 11 x64. Der veröffentlichte Paketsatz CAN 1.0.2 Build 48 bietet Setup und Portable-ZIP mit otr-can 0.1.6. Die .NET 10 Desktop Runtime muss separat installiert werden; die vier geprüften libmpv-DLLs sind enthalten. ffprobe, FFmpeg und MP4Box werden separat installiert und über die Einstellungen konfiguriert.
 
 Die [Nutzeranleitung](docs/NUTZERANLEITUNG.md) erklärt die Einrichtung ohne Entwicklungswerkzeuge.
 

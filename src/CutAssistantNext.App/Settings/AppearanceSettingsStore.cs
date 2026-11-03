@@ -2,12 +2,14 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using CutAssistantNext.Core;
+using CutAssistantNext.App.ViewModels;
 
 namespace CutAssistantNext.App.Settings;
 
-internal enum InterfaceLayout { Standard, PowerUser }
+internal enum InterfaceLayout { Standard = 0, PowerUser = 1, PowerUser2 = 2 }
 
-internal sealed record AppearanceSettings(InterfaceLayout Layout = InterfaceLayout.Standard);
+internal sealed record AppearanceSettings(InterfaceLayout Layout = InterfaceLayout.Standard,
+    CutEditingMode CutEditing = CutEditingMode.Remove);
 
 internal sealed class AppearanceSettingsStore
 {
@@ -25,7 +27,9 @@ internal sealed class AppearanceSettingsStore
         try
         {
             var settings = JsonSerializer.Deserialize<AppearanceSettings>(File.ReadAllText(_path));
-            return settings is not null && Enum.IsDefined(settings.Layout) ? settings : new();
+            return settings is not null && Enum.IsDefined(settings.Layout)
+                ? settings with { CutEditing = Enum.IsDefined(settings.CutEditing) ? settings.CutEditing : CutEditingMode.Remove }
+                : new();
         }
         catch { return new(); }
     }
@@ -34,6 +38,7 @@ internal sealed class AppearanceSettingsStore
     {
         ArgumentNullException.ThrowIfNull(settings);
         if (!Enum.IsDefined(settings.Layout)) throw new ArgumentOutOfRangeException(nameof(settings));
+        if (!Enum.IsDefined(settings.CutEditing)) throw new ArgumentOutOfRangeException(nameof(settings));
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_path)!);

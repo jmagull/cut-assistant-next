@@ -2,14 +2,17 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CutAssistantNext.Core.Editing;
+using CutAssistantNext.Cutlists.Editing;
 
 namespace CutAssistantNext.App.ViewModels;
+
+public enum CutEditingMode { Remove, Keep }
 
 public sealed class CutPlanViewModel : INotifyPropertyChanged
 {
     private readonly ObservableCollection<RemoveSegment> _removeSegments = [];
 
-    private CutPlan? _cutPlan;
+    private CutPlan? _markedPlan;
     private RemoveSegment? _selectedRemoveSegment;
     private TimeSpan? _pendingStart;
 
@@ -22,26 +25,38 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    public CutEditingMode EditingMode { get; private set; }
+    public bool IsKeepMode => EditingMode == CutEditingMode.Keep;
+    public ReadOnlyObservableCollection<RemoveSegment> MarkedSegments => RemoveSegments;
+    public string EditingDescription => IsKeepMode
+        ? "Das soll bleiben: Grün markierte Bereiche werden behalten. Nur diese Bereiche werden ausgegeben; unmarkierte Teile werden weggelassen."
+        : "Das kann weg: Rot markierte Bereiche werden entfernt.";
+    public string MarkingHelp => EditingDescription + " Schnittanfang und Schnittende setzen; Esc verwirft einen offenen Anfang.";
+    public string StartButtonText => IsKeepMode ? "Behalteanfang setzen" : "Schnittanfang setzen";
+    public string EndButtonText => IsKeepMode ? "Behalteende setzen" : "Schnittende setzen";
+    public string KeepResultConfirmation =>
+        $"Nur die {MarkedSegments.Count} grün markierten Behaltebereiche werden verwendet. " +
+        $"Die geplante Ausgabe dauert {EstimatedOutputDurationText}.\n\n" +
+        "Alle unmarkierten Filmteile werden weggelassen, auch wenn sie noch nicht bearbeitet wurden. Diese Auswahl verwenden?";
+
     public TimeSpan? MediaDuration =>
-        _cutPlan?.MediaDuration;
+        _markedPlan?.MediaDuration;
 
     public TimeSpan? EstimatedOutputDuration
     {
         get
         {
-            if (_cutPlan is null)
+            if (_markedPlan is null)
             {
                 return null;
             }
 
-            var removedDuration =
+            var markedDuration =
                 TimeSpan.FromTicks(
-                    _cutPlan.RemoveSegments.Sum(
+                    _markedPlan.RemoveSegments.Sum(
                         segment => segment.Duration.Ticks));
 
-            return
-                _cutPlan.MediaDuration -
-                removedDuration;
+            return IsKeepMode ? markedDuration : _markedPlan.MediaDuration - markedDuration;
         }
     }
 
@@ -52,10 +67,10 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             : "–";
 
     public bool CanSetStart =>
-        _cutPlan is not null;
+        _markedPlan is not null;
 
     public bool CanSetEnd =>
-        _cutPlan is not null &&
+        _markedPlan is not null &&
         (
             PendingStart.HasValue ||
             SelectedRemoveSegment is not null
@@ -105,8 +120,16 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         }
     }
 
-    public TimeSpan? GetEdgeReviewPosition(RemoveSegment segment, CutEdgeSide side) =>
-        CutEdgeReviewPositionCalculator.Calculate(GetInitializedCutPlan(), segment, side);
+    public TimeSpan? GetEdgeReviewPosition(RemoveSegment segment, CutEdgeSide side)
+    {
+        if (!IsKeepMode) return CutEdgeReviewPositionCalculator.Calculate(GetInitializedMarkedPlan(), segment, side);
+        ArgumentNullException.ThrowIfNull(segment);
+        if (!Enum.IsDefined(side)) throw new ArgumentOutOfRangeException(nameof(side));
+        if (!GetInitializedMarkedPlan().RemoveSegments.Contains(segment))
+            throw new InvalidOperationException("Die Schnittkante gehört nicht zum aktuellen Schnittplan.");
+        var offset = Math.Min(3 * TimeSpan.TicksPerSecond, segment.Duration.Ticks - 1);
+        return TimeSpan.FromTicks(side == CutEdgeSide.Start ? segment.Start.Ticks + offset : segment.End.Ticks - Math.Min(3 * TimeSpan.TicksPerSecond, segment.Duration.Ticks));
+    }
 
     public void ToggleSegmentSelection(RemoveSegment segment, CutEdgeSide? side = null)
     {
@@ -116,7 +139,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             throw new ArgumentOutOfRangeException(nameof(side));
         }
 
-        if (!GetInitializedCutPlan().RemoveSegments.Contains(segment))
+        if (!GetInitializedMarkedPlan().RemoveSegments.Contains(segment))
         {
             throw new InvalidOperationException("Der ausgewählte Schnittbereich gehört nicht zum aktuellen Schnittplan.");
         }
@@ -143,7 +166,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             throw new ArgumentOutOfRangeException(nameof(side));
         }
 
-        if (!GetInitializedCutPlan().RemoveSegments.Contains(segment))
+        if (!GetInitializedMarkedPlan().RemoveSegments.Contains(segment))
         {
             throw new InvalidOperationException(
                 "Die ausgewählte Schnittkante gehört nicht zum aktuellen Schnittplan.");
@@ -169,7 +192,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             throw new ArgumentOutOfRangeException(nameof(side));
         }
 
-        var cutPlan = GetInitializedCutPlan();
+        var cutPlan = GetInitializedMarkedPlan();
         if (!ReferenceEquals(SelectedRemoveSegment, expectedSegment) || SelectedEdgeSide != side ||
             !cutPlan.RemoveSegments.Contains(expectedSegment))
         {
@@ -212,12 +235,19 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             ? FormatTime(PendingStart.Value)
             : "–";
 
+    public void CancelPendingStart() => PendingStart = null;
+
+    // Legacy binding/API name. These are marked editor intervals; use CreateCutPlanSnapshot for actual removals.
     public ReadOnlyObservableCollection<RemoveSegment> RemoveSegments { get; }
 
     public void Initialize(
-        TimeSpan mediaDuration)
+        TimeSpan mediaDuration, CutEditingMode editingMode = CutEditingMode.Remove)
     {
-        _cutPlan = new CutPlan(mediaDuration);
+        if (!Enum.IsDefined(editingMode)) throw new ArgumentOutOfRangeException(nameof(editingMode));
+        var markedPlan = new CutPlan(mediaDuration);
+        EditingMode = editingMode;
+        // This private plan validates marked intervals; only CreateCutPlanSnapshot exports a removal plan.
+        _markedPlan = markedPlan;
         PendingStart = null;
         SelectedRemoveSegment = null;
         _removeSegments.Clear();
@@ -230,6 +260,12 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             nameof(EstimatedOutputDurationText));
         OnPropertyChanged(nameof(CanSetStart));
         OnPropertyChanged(nameof(CanSetEnd));
+        OnPropertyChanged(nameof(EditingMode));
+        OnPropertyChanged(nameof(IsKeepMode));
+        OnPropertyChanged(nameof(EditingDescription));
+        OnPropertyChanged(nameof(MarkingHelp));
+        OnPropertyChanged(nameof(StartButtonText));
+        OnPropertyChanged(nameof(EndButtonText));
     }
 
     public void LoadCutPlan(
@@ -242,7 +278,10 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             new CutPlan(
                 cutPlan.MediaDuration);
 
-        foreach (var segment in cutPlan.RemoveSegments)
+        var markedSegments = IsKeepMode
+            ? CutlistKeepSegmentBuilder.Build(cutPlan).Select(segment => new RemoveSegment(segment.Start, segment.End))
+            : cutPlan.RemoveSegments;
+        foreach (var segment in markedSegments)
         {
             importedPlan.Add(
                 new RemoveSegment(
@@ -250,7 +289,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
                     segment.End));
         }
 
-        _cutPlan =
+        _markedPlan =
             importedPlan;
 
         PendingStart = null;
@@ -269,7 +308,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     }
     public void Reset()
     {
-        _cutPlan = null;
+        _markedPlan = null;
         PendingStart = null;
         SelectedRemoveSegment = null;
         _removeSegments.Clear();
@@ -287,7 +326,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public void SetStart(
         TimeSpan position)
     {
-        var cutPlan = GetInitializedCutPlan();
+        var cutPlan = GetInitializedMarkedPlan();
 
         ValidatePosition(
             position,
@@ -312,7 +351,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public void SetEnd(
         TimeSpan position)
     {
-        var cutPlan = GetInitializedCutPlan();
+        var cutPlan = GetInitializedMarkedPlan();
 
         ValidatePosition(
             position,
@@ -351,7 +390,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public bool Remove(
         RemoveSegment segment)
     {
-        var cutPlan = GetInitializedCutPlan();
+        var cutPlan = GetInitializedMarkedPlan();
 
         var removed =
             cutPlan.Remove(segment);
@@ -376,7 +415,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         TimeSpan start,
         TimeSpan end)
     {
-        var cutPlan = GetInitializedCutPlan();
+        var cutPlan = GetInitializedMarkedPlan();
 
         ValidatePosition(
             start,
@@ -402,12 +441,16 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public CutPlan CreateCutPlanSnapshot()
     {
         var cutPlan =
-            GetInitializedCutPlan();
+            GetInitializedMarkedPlan();
 
         var snapshot =
             new CutPlan(cutPlan.MediaDuration);
 
-        foreach (var segment in cutPlan.RemoveSegments)
+        var removeSegments = IsKeepMode
+            ? CutlistRemoveSegmentBuilder.Build(cutPlan.MediaDuration,
+                cutPlan.RemoveSegments.Select(segment => new CutlistKeepSegment(segment.Start, segment.Duration)).ToArray())
+            : cutPlan.RemoveSegments;
+        foreach (var segment in removeSegments)
         {
             snapshot.Add(
                 new RemoveSegment(
@@ -418,9 +461,9 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         return snapshot;
     }
 
-    private CutPlan GetInitializedCutPlan()
+    private CutPlan GetInitializedMarkedPlan()
     {
-        return _cutPlan
+        return _markedPlan
             ?? throw new InvalidOperationException(
                 "Es wurde noch keine Mediendatei für den Schnittplan initialisiert.");
     }
@@ -442,7 +485,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     {
         _removeSegments.Clear();
 
-        foreach (var segment in GetInitializedCutPlan().RemoveSegments)
+        foreach (var segment in GetInitializedMarkedPlan().RemoveSegments)
         {
             _removeSegments.Add(segment);
         }

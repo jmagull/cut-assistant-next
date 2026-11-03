@@ -30,6 +30,68 @@ Der Nutzer bestätigt die korrigierte Entwicklungsfassung mit diesen Originaldat
 
 Ursprünglicher EOF-Absturzfall, regulärer Tonspurwechsel und Prüfstellen-Navigation einwandfrei. Diese persönliche Bestätigung gilt der korrigierten Entwicklungsfassung. Keine neue persönliche Setup-/Portable-/Windows-11-VM-/Deinstallationsabnahme behauptet; die Paketinhalte sind separat technisch geprüft.
 
+### Nachtrag 01.11.2026 – Setup persönlich positiv geprüft
+
+Nach der Veröffentlichung bestätigt der Nutzer: **„setup installiert und mit der commedy-Testdatei geprüft, alles bestens :-)“**. Damit sind die Installation des veröffentlichten **CAN 1.0.2 Build 48** und die anschließende Nutzung mit der comedy-Testdatei persönlich positiv bestätigt. Diese Rückmeldung ergänzt die frühere Abnahme der Entwicklungsfassung um einen tatsächlichen Setup-Nachweis. Eine genaue Dateizuordnung, VM-, Portable- oder Deinstallationsprüfung wurde dabei nicht gesondert genannt.
+
+### Nachtrag 02.11.2026 – AVI-Altfall auf dem Arbeitsrechner positiv geprüft
+
+**CAN 1.0.2 Build 48, Setup auf dem Arbeitsrechner**, vom Nutzer ausdrücklich zugeordnet. Original: **A_90s_Christmas_Eine_weihnachtliche_Zeitreise_25.12.06_20-15_srtl_105_TVOON_DE.mpg.HQ.avi** (A ’90s Christmas – Eine weihnachtliche Zeitreise). Laut übermitteltem Protokoll AVI mit H.264 High, 720×576, 16:9, **25 fps**, MP3-Stereo mit **48000 Hz**, Quelldauer **02:00:48.800**.
+
+Das Protokoll belegt die verlustfreie Vorbereitung einer MP4-Arbeitsdatei durch FFmpeg mit Video- und Audiostreamcopy. FFmpeg meldet dabei **„Timestamps are unset in a packet for stream 0“** und wiederholt **„pts has no value“**. Die anschließende CAN-Prüfung bestätigt die vollständige, exakte Videopaketanzahl sowie Stream-, Bildraten- und Laufzeitprüfung. Das belegt keine allgemeine Reparatur der AVI-Zeitstempel.
+
+Anschließend vier MP4Box-Behaltebereiche in Sekunden: **323,92–2221,48**, **2640,12–3513,72**, **3921,88–5116,16** und **5504,32–6327,24**. Alle vier Segmente werden zusammengefügt; die Schnittstellenprüfung durchläuft Abschnitt 1 bis 4 und endet mit **„Fertig.“**. Die MP4Box-Version ist im übermittelten Protokoll nicht ausgewiesen.
+
+Der Nutzer bestätigt **Ton, Bild, Schnitt und 3-Sekunden-Check** persönlich als bestanden. Damit liegt ein weiterer positiver Praxisfall des veröffentlichten Build-48-Setups vor. Der Nachweis gilt für diesen MP4Box-Lauf; daraus folgt keine otr-can-, VM- oder Portable-Abnahme. Reine Dokumentation der Nutzerprüfung, kein eigener neuer Medienlauf; bekannte AVI-Grenzen bleiben bestehen.
+
+### Nachtrag 02.11.2026 – derselbe AVI-Altfall auch mit otr-can bestanden
+
+Derselbe Originalfilm **A_90s_Christmas_Eine_weihnachtliche_Zeitreise_25.12.06_20-15_srtl_105_TVOON_DE.mpg.HQ.avi** jetzt in einem eigenen Lauf mit **otr-can 0.1.6**. Nutzer bestätigt ausdrücklich **„Ton Bild Schnitt 3 Sekunden vorschau check setup arbeitsrechner alt-fall check :-)“**. Damit sind Ton, Bild, Schnitt und Drei-Sekunden-Vorschau persönlich bestanden; **Setup auf dem Arbeitsrechner**, Build 48 gemäß der unmittelbar zuvor ausdrücklich genannten und hier fortgeführten Prüfumgebung.
+
+Das neue Protokoll zeigt erneut FFmpeg-Streamcopy in eine MP4-Arbeitsdatei mit denselben Warnungen zu fehlenden AVI-Zeitstempeln. CAN bestätigt anschließend Stream-, Videopaket-, Bildraten- und Laufzeitprüfung. FFMS2 indexiert **181220 Frames**; die CAN-Vorprüfung bestätigt eindeutige, aufsteigende Bildzeiten und eine passende 25/50-fps-Zeitstruktur.
+
+otr-can schneidet vier Behaltebereiche mit CPU-Neukodierung der erforderlichen Randbereiche und Kopieren der übrigen Videobereiche. Der Motor verifiziert **119713 Videopakete samt PTS/DTS**. Die MP3-Stereospur (48000 Hz) wird nach PCM-Schnitt einmal vollständig nach **AAC-LC, 192000 bit/s** kodiert; **229848960 decodierte Samples** und kontinuierliche Audio-PTS sind laut Protokoll bestätigt. Abschließende MP4-/Paketprüfung erfolgreich, Motorarbeitsordnersperre freigegeben, **„OTR-CAN-Schnitt abgeschlossen.“**
+
+Damit ist dieser AVI-Altfall in der laufenden Build-48-Setup-Prüfrunde **mit MP4Box und otr-can jeweils technisch und persönlich positiv** belegt. Die konkreten Bereichsenden des otr-can-Protokolls liegen jeweils 40 ms nach den zuvor protokollierten MP4Box-Aufrufwerten; daraus wird keine identische Ausgabedauer beider Motoren behauptet. Bekannte allgemeine AVI-Grenzen bleiben bestehen. Nur Nutzerprotokoll und persönliche Rückmeldung ausgewertet, kein eigener Medienlauf und keine neue VM-/Portable-Abnahme.
+
+### Nachtrag 02.11.2026 – Venom mit zwei Tonspuren und Tonwechsel am Videoende bestanden
+
+**Venom: The Last Dance**, Original **Venom__The_Last_Dance_26.11.01_20-15_4plus_150_TVOON_DE.HD.mp4**. Zuordnung **CAN 1.0.2 Build 48 / Setup / Arbeitsrechner** aus der laufenden, zuletzt ausdrücklich genannten Prüfumgebung fortgeführt; im übermittelten Protokoll selbst keine CAN-Buildanzeige.
+
+Das Protokoll belegt sechs MP4Box-Schnitte mit den Bereichen (Sekunden) **587,12–2251,96**, **3124,08–3943,08**, **4798,72–5409,04**, **5690,64–6409,76**, **7208,44–8176,12** und **9018,52–9524,96**, anschließend Zusammenfügen aller sechs Segmente. Für das erste Segment werden eine Video- und zwei Tonspuren im Ziel angelegt. Die Schnittstellenprüfung durchläuft alle sechs Abschnitte und endet mit **„Fertig.“**. An den Übergängen **1, 3, 4 und 5** meldet CAN gleiche Bildzeiten und prüft jeweils den dekodierten neuen Anfang; die Hinweise bleiben dokumentiert. Audio-Codecs, Sprachen und MP4Box-Version sind darin nicht ausgewiesen.
+
+Der Nutzer bestätigt **Schnitt, Bild, Tonspur 1 und Tonspur 2, Tonwechsel auch am Videoende sowie Drei-Sekunden-Vorschau** persönlich als bestanden. Damit liegt ein weiterer positiver Mehrspur-Praxisnachweis einschließlich des für Build 48 relevanten Tonwechsels am Videoende vor. Ein bereits eingetretenes natürliches EOF wird in dieser Rückmeldung nicht gesondert beschrieben. Nur Nutzerprotokoll und persönliche Prüfung dokumentiert, kein eigener neuer Medienlauf.
+
+### Nachtrag 02.11.2026 – Venom auch mit otr-can und beiden Tonspuren bestanden
+
+Derselbe Originalfilm **Venom__The_Last_Dance_26.11.01_20-15_4plus_150_TVOON_DE.HD.mp4** jetzt mit **otr-can 0.1.6**, sechs Behaltebereiche. **Setup Build 48 auf dem Arbeitsrechner** aus der laufenden Prüfumgebung fortgeführt; das Protokoll selbst enthält keine CAN-Buildanzeige. FFMS2 und CAN bestätigen **307482 eindeutige, aufsteigende Quellbildzeiten** und eine passende 25/50-fps-Zeitstruktur.
+
+Der Motor kodiert die erforderlichen Videoränder auf der CPU neu und kopiert die übrigen Bereiche. **132191 Videopakete samt rohen PTS/DTS** verifiziert. Beide Tonspuren werden nach dem PCM-Schnitt jeweils einmal vollständig kodiert: **Ton 1 AAC, Zielbitrate 160526 bit/s; Ton 2 AC-3, Zielbitrate 384000 bit/s**, jeweils Stereo/48000 Hz. Für **jede Spur 253806720 decodierte Samples** und kontinuierliche rohe PTS bestätigt. Finale MP4 einschließlich aller Video-/Audiopakete, Zeitstempel, Padding und Decoderkonfigurationen laut Motor erfolgreich verifiziert; Sperre freigegeben, **„OTR-CAN-Schnitt abgeschlossen.“** Die optionale vollständige Videodekodierung ist durch die allgemeine Protokollzeile nicht gesondert belegt.
+
+Der Nutzer bestätigt auch für diesen Lauf **Schnitt, Bild, Ton 1 und Ton 2, Tonwechsel auch am Videoende und Drei-Sekunden-Vorschau** persönlich als bestanden. Damit ist „Venom: The Last Dance“ **mit MP4Box und otr-can jeweils technisch und persönlich positiv** geprüft, einschließlich beider Tonspuren und Tonwechsel am Videoende. Ein bereits eingetretenes natürliches EOF wird nicht separat beschrieben. Die otr-can-Bereichsenden liegen im Protokoll jeweils 40 ms nach den vorherigen MP4Box-Aufrufwerten; keine identischen Ausgabedauern behauptet. Reine Dokumentation des übermittelten Protokolls und der persönlichen Rückmeldung, kein eigener Medienlauf.
+
+### Nachtrag 02.11.2026 – Navy CIS mit MP4Box bestanden
+
+Original **Navy_CIS_26.11.01_20-15_5plus_50_TVOON_DE.HD.mp4**, 5plus-HD-Aufnahme vom 01.11.2026. **CAN 1.0.2 Build 48 / Setup / Arbeitsrechner** aus der laufenden Prüfumgebung fortgeführt. Das übermittelte Protokoll belegt zwei MP4Box-Behaltebereiche in Sekunden: **577,84–1861,32** und **2605,68–3781,44**, anschließendes Zusammenfügen sowie die Schnittstellenprüfung beider Abschnitte bis **„Fertig.“**. Beim Anlegen der Zielspuren erscheinen eine Video- und zwei Tonspuren; Codecs, Sprachen und MP4Box-Version werden darin nicht ausgewiesen.
+
+Der Nutzer bestätigt **Schnitt, Bild, Ton und Drei-Sekunden-Vorschau** persönlich als bestanden. Eine getrennte Prüfung beider Tonspuren oder ein Tonwechsel am Videoende wird für diesen Fall nicht gesondert genannt. Nur Nutzerprotokoll und persönliche Rückmeldung dokumentiert, kein eigener Medienlauf.
+
+### Nachtrag 02.11.2026 – Navy CIS auch mit otr-can und Tonspurwechsel bestanden
+
+Derselbe Originalfilm **Navy_CIS_26.11.01_20-15_5plus_50_TVOON_DE.HD.mp4**, jetzt mit **otr-can 0.1.6** und zwei Behaltebereichen. **Setup Build 48 auf dem Arbeitsrechner** aus der laufenden Prüfumgebung fortgeführt. FFMS2 und CAN bestätigen **157431 eindeutige, aufsteigende Quellbildzeiten** und eine passende 25/50-fps-Zeitstruktur. Erforderliche Videoränder werden auf der CPU neu kodiert, die übrigen Bereiche kopiert; **61483 Videopakete samt rohen PTS/DTS** verifiziert.
+
+Beide Tonspuren werden nach PCM-Schnitt jeweils einmal vollständig kodiert: **Ton 1 AAC, Zielbitrate 160276 bit/s; Ton 2 AC-3, Zielbitrate 384000 bit/s**, jeweils Stereo/48000 Hz. Für **jede Spur 118047360 decodierte Samples** und kontinuierliche rohe PTS bestätigt. Finale MP4 mit allen Video-/Audiopaketen, Zeitstempeln, Padding und Decoderkonfigurationen laut Motor verifiziert; Sperre freigegeben, **„OTR-CAN-Schnitt abgeschlossen.“**
+
+Der Nutzer bestätigt **Ton einschließlich Tonspurwechsel, Schnitt und Drei-Sekunden-Vorschau** persönlich als bestanden. Damit liegen für Navy CIS positive Praxisnachweise für beide Motorwege vor; der Umfang der früheren MP4Box-Bestätigung und dieser otr-can-Bestätigung bleibt jeweils separat beschrieben. Ein Tonwechsel am Videoende oder eine neue ausdrückliche Bildbestätigung wird in dieser Rückmeldung nicht gesondert genannt. Nur Protokoll und persönliche Rückmeldung dokumentiert, kein eigener Medienlauf.
+
+### Nachtrag 02.11.2026 – Navy-CIS-Cutlist abgeglichen
+
+Die vom Nutzer benannte **Navy_CIS_26.11.01_20-15_5plus_50_TVOON_DE.HD.mp4.cutlist** nur lesend geprüft. Vorgeschlagener Filmname: **Navy CIS S23E18 Die Edna-Dateien [01.11.2026]**. Metadaten: CAN 1.0.2, **25 fps**, 16:9, Originaldateigröße **2093275829 Bytes**, vorgesehener Motor **otr-can 0.1.6**, zwei Behaltebereiche.
+
+Cutlist-Planwerte: **Start 577,84 s / Dauer 1283,52 s / Ende 1861,36 s** und **Start 2605,68 s / Dauer 1175,80 s / Ende 3781,48 s**. Geplante Gesamtdauer **2459,32 s = 00:40:59.320**; bei 25 fps **61483 Bilder** und bei 48000 Hz **118047360 Samples je Tonspur**. Diese berechneten Planwerte stimmen mit der Videopaketanzahl und den verifizierten Audio-Samplezahlen des otr-can-Protokolls überein. Die früheren MP4Box-Aufrufenden liegen jeweils **40 ms** vor diesen Cutlist-Endwerten; keine Gleichheit der tatsächlichen Ausgabedauern beider Motoren daraus abgeleitet.
+
+Der Cutlist-Kommentar vermerkt vollständig entfernte Werbung, framegenauen otr-can-Schnitt und alternativ MP4Box aus GPAC **Version 26.07**. Dies sind Angaben der Cutlist; das frühere MP4Box-Protokoll selbst weist keine Versionsnummer aus. Die persönlichen Prüfbestätigungen bleiben wie oben dokumentiert. Cutlist unverändert; nur ergänzender Metadaten- und Zahlenabgleich, kein neuer Schnitt oder eigener Bild-/Tontest.
+
 ## Auslieferungsdateien
 
 Lokaler eingefrorener Paketsatz: **artifacts/release-1.0.2-build48**. Genau die folgenden acht Dateien sind veröffentlicht. SHA256SUMS.txt prüft die sechs Archive/Programme; PUBLISH-FILES.sha256 alle 250 Portable-Nutzdateien.

@@ -33,6 +33,7 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
     private readonly decimal _initialTarget;
     private readonly TimeSpan _mediaDuration;
     private readonly CutEdgeSide? _side;
+    private readonly CutEditingMode _editingMode;
     private readonly HalvingFrameSearch _search;
     private VideoFrameWindow? _window;
     private decimal _probeStart;
@@ -43,11 +44,13 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
         string mediaFilePath, int streamIndex, TimeSpan mediaDuration,
         TimeSpan cutPosition, CutEdgeSide? side, decimal sourceStart,
         int initialSearchFrames, IFrameAnalysisRunner analysis, IFramePreviewRunner preview,
-        string? formatName = null)
+        string? formatName = null, CutEditingMode editingMode = CutEditingMode.Remove)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(mediaFilePath);
         ArgumentNullException.ThrowIfNull(analysis);
         ArgumentNullException.ThrowIfNull(preview);
+        if (!Enum.IsDefined(editingMode)) throw new ArgumentOutOfRangeException(nameof(editingMode));
+        _editingMode = editingMode;
         if (streamIndex < 0 || mediaDuration <= TimeSpan.Zero ||
             cutPosition < TimeSpan.Zero || cutPosition > mediaDuration || (side.HasValue && !Enum.IsDefined(side.Value)))
         {
@@ -114,6 +117,10 @@ internal sealed class FrameLoupeViewModel : INotifyPropertyChanged
         : "Übernahme erst mit bestätigtem Bild innerhalb der Datei möglich.";
     public string EdgeMeaningText => IsInspectionMode
         ? "Untersuchungsmodus: Die Schnittliste bleibt unverändert. Eine Kantenübernahme ist nicht möglich."
+        : _editingMode == CutEditingMode.Keep
+        ? _side == CutEdgeSide.Start
+            ? "Dieses Bild ist das erste Bild des zu behaltenden Bereichs."
+            : "Dieses Bild gehört nicht mehr zum Behaltebereich; der Bereich endet davor."
         : _side == CutEdgeSide.Start
         ? "Dieses Bild ist das erste Bild des zu entfernenden Bereichs."
         : "Dieses Bild bleibt erhalten; der entfernte Bereich endet davor.";

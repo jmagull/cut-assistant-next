@@ -1,9 +1,10 @@
 # Versionen und Nachweise
 
-**Stand 01.11.2026.** CAN-Anwendung, Buildnummer, Schnittmotor und Wiedergabebibliothek haben getrennte Versionen. [Aktueller Stand](AKTUELLER-STAND.md).
+**Stand 03.11.2026.** CAN-Anwendung, Buildnummer, Schnittmotor und Wiedergabebibliothek haben getrennte Versionen. [Aktueller Stand](AKTUELLER-STAND.md).
 
 | CAN | Build | otr-can | Einordnung |
 |---|---:|---|---|
+| 1.0.3 | 48 (Zähler fortgeführt) | 0.1.6 | Eingefroren am 03.11.2026: gemeinsame Cutlist-Tabelle, Rot/Grün und dynamische Vorschau, Power-User 2 mit Buttonkorrektur; 1728 Tests, Commit/Push beauftragt; Veröffentlichung erst nach Freigabe |
 | 1.0.0 | 32 | 0.1.5 | Früherer stabiler Stand |
 | 1.0.1 | 34 | 0.1.6 | Veröffentlichung zurückgenommen; datierter Nachweis |
 | 1.0.2 | 35 | 0.1.6 | MP4Box-Übergangszuordnung |
@@ -23,7 +24,11 @@
 
 Aktuell veröffentlichte App-Dateiversion **1.0.2.48**, stabile Latest-Version **v1.0.2-build48**, libmpv **0.41.0**, otr-can **0.1.6**, .NET 10, Windows 11 x64/WPF. [Veröffentlichungsnachweis](RELEASE-1.0.2-BUILD48-PUBLISHED-20261101.md). Build 47 bleibt unverändert erhalten.
 
+Lokale Entwicklungs-Dateiversion **1.0.3.48**; die gleiche Buildzählerzahl bedeutet keine Identität mit dem veröffentlichten **1.0.2.48**-Paketsatz. Keine neue Buildnummer vergeben. [Entwicklungsnotizen](RELEASE-NOTES-1.0.3.md), [Freeze](FREEZE-1.0.3-20261103.md).
+
 ## Technische Nachweise
+
+- Entwicklung 1.0.3: **1728/1728 Tests** (200 Core, 80 Cutlists, 390 Media, 1058 App), Release-Build ohne Warnungen/Fehler. Reale WPF-Controls, persönliche Anzeigeprüfung und anschließend vollständiger grüner Santa-Tell-Me-Filmschnitt positiv gemeldet. [Praxisnachweis](SANTA-TELL-ME-GRUENER-PRAXISTEST-20261103.md). [Schnittmodi](SCHNITTMODI-TIMELINE-20261103.md), [Cutlist-Tabelle und Chicago-Fire-Praxis](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md).
 
 - Build 48: 1634 Pakettests, zusätzlich 1362 Tests gegen finale Produktbibliotheken, 32 native/WPF-Kontrollen in sechs Prozessen. Persönliche korrigierte Ghosts-Teil-1-/Teil-2-Abnahme bestätigt. [Pakete und Prüfsummen](RELEASE-1.0.2-BUILD48-RESULT.md).
 
@@ -41,6 +46,8 @@ Aktuell veröffentlichte App-Dateiversion **1.0.2.48**, stabile Latest-Version *
 - Persönlich: John Wick AC-3/AAC und AAC/AAC mit Bild/Ton/Übergang bestätigt. Nach Umstieg auf Setup Build 40 auch beide Furiosa-otr-can-Schnitte und Klebecenter samt allen Prüfstellen positiv. Screenshot bestätigt Hinweis 0.1.6. Arbeits-PC-Funktionslauf der Setup-Prüfrunde positiv; zusätzliche Portable-/VM-/Deinstallationsvarianten bleiben offen. [Furiosa-Praxisbericht](FURIOSA-KLEBECENTER-PRAXIS-20261027.md).
 
 Ein neuer CAN-Build bedeutet keinen neuen Motor. Historische 0.1.3-/0.1.4-/0.1.5-Angaben werden nicht auf 0.1.6 umgeschrieben. „MP3-Unterstützung ab 0.1.5“ bleibt richtig.
+
+Power-User 2 ist zusätzlich lokal implementiert: zwölf native Prüffallgruppen mit geladenem Film und WPF-DPI 100/125/150/200 %. [Bericht und WPF-Aufnahmen](POWER-USER-2-IMPLEMENTIERUNG-20261103.md). Die Buildzählerzahl bleibt 48; dies ist keine neue Build-48-Paketveröffentlichung.
 
 ## Quellen und Pakete
 

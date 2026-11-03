@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
+using CutAssistantNext.App.Controls;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Media.Playback;
 
@@ -11,6 +12,24 @@ namespace CutAssistantNext.App.Tests;
 
 public sealed class CutToolLayoutTests
 {
+    [Fact]
+    public void KeepModeLabelsAndSharedTableBindingsSurviveLayoutChanges() => OnUiThread(window =>
+    {
+        var plan = Field<CutPlanViewModel>(window, "_cutPlanViewModel");
+        plan.Initialize(TimeSpan.FromSeconds(100), CutEditingMode.Keep);
+        plan.SetStart(TimeSpan.FromSeconds(10)); plan.SetEnd(TimeSpan.FromSeconds(20));
+        foreach (var power in new[] { false, true, false })
+        {
+            window.ApplyCutToolLayout(power); Pump();
+            Assert.Equal("Behalteanfang setzen", Get<Button>(window, "CutStartButton").Content);
+            Assert.Equal("Behalteende setzen", Get<Button>(window, "CutEndButton").Content);
+            Assert.Same(plan.MarkedSegments, Get<DataGrid>(window, "RemoveSegmentsGrid").ItemsSource);
+            Assert.Same(plan.MarkedSegments, Get<CutTimelineTrack>(window, "CutTimelineTrack").RemoveSegments);
+            Assert.Equal(CutEditingMode.Keep, Get<CutTimelineTrack>(window, "CutTimelineTrack").EditingMode);
+            Assert.True(BindingOperations.IsDataBound(Get<Button>(window, "CutStartButton"), ContentControl.ContentProperty));
+        }
+    });
+
     [Fact]
     public void PowerUserToolsUseTheRequestedOrderAndKeepTheSameButtons() => OnUiThread(window =>
     {

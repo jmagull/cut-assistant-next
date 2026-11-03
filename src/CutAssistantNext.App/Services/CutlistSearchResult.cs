@@ -34,6 +34,7 @@ internal sealed class CutlistSearchResult
     public string Duration { get; init; } =
         string.Empty;
 
+    // Registered downloads; the legacy XML response does not supply the total download count.
     public string DownloadCount { get; init; } =
         string.Empty;
 

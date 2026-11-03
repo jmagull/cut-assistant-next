@@ -60,4 +60,21 @@ public static class CutlistFileReader
         return Encoding.GetEncoding(
             1252);
     }
+
+    /// <summary>Decodes an already read snapshot, using the same BOM and legacy encoding rules as Read.</summary>
+    public static CutlistDocument ReadBytes(byte[] bytes, int? maximumCuts = null)
+    {
+        ArgumentNullException.ThrowIfNull(bytes);
+        string content;
+        try { content = Decode(bytes, Utf8WithoutBom); }
+        catch (DecoderFallbackException) { content = Decode(bytes, Windows1252); }
+        return CutlistParser.Parse(content, maximumCuts);
+    }
+
+    private static string Decode(byte[] bytes, Encoding encoding)
+    {
+        using var stream = new MemoryStream(bytes, writable: false);
+        using var reader = new StreamReader(stream, encoding, detectEncodingFromByteOrderMarks: true);
+        return reader.ReadToEnd();
+    }
 }

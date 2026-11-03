@@ -1,5 +1,22 @@
 # Anforderungen
 
+## Ergänzte Anforderungen – lokale Entwicklung 1.0.3, 03.11.2026
+
+**03.11.2026 – eingefrorener Entwicklungsstand CAN 1.0.3, Buildzähler 48.** Gemeinsame Server-/Lokal-Cutlist-Tabelle, Rot/Entfernen und Grün/Behalten mit dynamischer Vorschau sowie Standard / Power-User 1 / Power-User 2 einschließlich Buttonausrichtung sind umgesetzt. Letzter technischer Stand: **1.728/1.728 Tests**, Release-Build ohne Warnungen/Fehler. Quellstand und Dokumentation werden auf Nutzerauftrag committet und gepusht; keine neuen Pakete und keine Veröffentlichung ohne gesonderte Freigabe. Öffentlich bleibt der dokumentierte stabile Stand **CAN 1.0.2 Build 48**. [Freeze und Prüfgrenzen](FREEZE-1.0.3-20261103.md).
+
+[Entwicklungsnotizen 1.0.3](RELEASE-NOTES-1.0.3.md) · [Cutlist-Tabelle](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi und Vorschau](SCHNITTMODI-TIMELINE-20261103.md).
+
+- Erwarteten lokalen Cutlist-Namen aus der gemeinsamen vorhandenen Namensregel bilden: vollständiger Originaldateiname plus `.cutlist`. Ausschließlich eingerichtetes Cutlist-Verzeichnis und Filmverzeichnis prüfen; keine Rekursion oder Ähnlichkeitssuche.
+- Alle Server- und lokalen Treffer in einer Tabelle ohne Vorauswahl anbieten. Gleicher Name bedeutet nicht gleicher Inhalt; bytegleiche lokale Treffer zusammenfassen, Unterschiede getrennt sichtbar halten.
+- Fertige gültige und begonnene gültige Cutlists verwendbar halten; technische Beschädigung gesondert prüfen. Fertigstellung nicht aus Anzahl oder Lage von Schnitten ableiten.
+- Eigene lokale Datei durch Quellenwahl, Ablehnung und Download unverändert lassen. Bestehende aktuelle Arbeit vor Ersetzen bestätigen; spätere Dateiüberschreibung gesondert entscheiden. Keine Quellmischung oder automatische Bevorzugung.
+- Rot/Entfernen als Standard und Grün/Behalten als dauerhafte alternative Editorbedienung; Einstellung gilt erst für den nächsten Film.
+- Offenen Anfang fest anzeigen, Vorschau zwischen Anfang und aktueller Sliderposition ohne Planänderung aktualisieren; gültiges Ende übernimmt, Esc verwirft nur die offene Markierung.
+- Unmarkierte grüne Bereiche nicht im Editor ergänzen. Vor Speichern/Schneiden nur grüne Ausgabe mit Anzahl/Dauer und Weglassen unmarkierter Teile bestätigen. Offener Anfang verhindert Speichern in beiden Modi.
+- Bestehende Tabellen-/Kanten-/Lupenfunktionen wiederverwenden. Kanonische Entfernungspläne, Motoren, Klebecenter und Cutlist-Dateiformat erhalten; keine zusätzliche Projektdatei.
+
+Umsetzung und Grenzen: [gemeinsame Tabelle](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md), [Schnittmodi](SCHNITTMODI-TIMELINE-20261103.md). Die folgenden POC- und früheren Anforderungen bleiben als Grundlage erhalten.
+
 **Umsetzungsstand 27.10.2026: CAN 1.0.2 Build 41.** Die nachfolgenden POC-0.1-Anforderungen sind die ursprüngliche Grundlage, keine aktuelle Versionsbezeichnung. [Projektstand](AKTUELLER-STAND.md).
 
 ## Ergänzte Anforderungen
