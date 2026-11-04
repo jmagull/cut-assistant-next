@@ -105,6 +105,7 @@ internal sealed class OtrCanCutService : ICutEngine
             }
             token.ThrowIfCancellationRequested();
             Report(CutProgressKind.Status, "OTR-CAN schneidet mit CPU-Encoding …");
+            Report(CutProgressKind.Output, "Verwendeter otr-can-Motor: " + _tools.Engine);
             try
             {
                 await _runner.RunAsync(_tools.Engine,
@@ -113,10 +114,13 @@ internal sealed class OtrCanCutService : ICutEngine
                         "--ffmpeg", _tools.Ffmpeg, "--ffprobe", _tools.Ffprobe],
                     new OtrCanProgressReporter(progress, request.KeepSegments.Count, indexing: false), token).ConfigureAwait(false);
             }
-            catch (InvalidOperationException error) when (_retainedAudioStreamIndex is null &&
+            catch (InvalidOperationException error) when (
                 OtrCanAudioFailureException.IsAudioFailure(error.Message))
             {
-                throw new OtrCanAudioFailureException(original, source, error);
+                var diagnostic = OtrCanAudioDiagnostic.Read(work, source, request);
+                var failure = new OtrCanAudioFailureException(original, source, error, diagnostic,
+                    allowAacEmergency: _retainedAudioStreamIndex is null);
+                throw failure;
             }
             if (!File.Exists(pending) || new FileInfo(pending).Length == 0)
                 throw new InvalidOperationException("OTR-CAN hat keine Ausgabedatei erzeugt.");

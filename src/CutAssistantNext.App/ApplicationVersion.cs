@@ -16,6 +16,7 @@ public static class ApplicationVersion
             ?.Value;
 
     public static string NumericVersion => FileVersion.ToString(3);
+    internal static string? CandidateName => Candidate;
 
     public static string DisplayName =>
         $"Cut Assistant Next · {NumericVersion} · Build {FileVersion.Revision}" +

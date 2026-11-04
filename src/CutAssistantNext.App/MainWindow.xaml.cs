@@ -1486,6 +1486,19 @@ public partial class MainWindow : Window
                                         if (audioDialog.IsVisible) audioDialog.Close();
                                     })));
                                 return audioDialog.ShowDialog() == true ? audioDialog.SelectedChoice : null;
+                            }, System.Windows.Threading.DispatcherPriority.Normal, token).Task,
+                            confirmMp4BoxFallback: (failure, token) => Dispatcher.InvokeAsync(() =>
+                            {
+                                token.ThrowIfCancellationRequested();
+                                var fallbackDialog = new AudioMp4BoxFallbackDialog(failure)
+                                {
+                                    Owner = (Window?)progressDialog ?? this
+                                };
+                                using var registration = token.Register(() => Dispatcher.BeginInvoke(new Action(() =>
+                                {
+                                    if (fallbackDialog.IsVisible) fallbackDialog.Close();
+                                })));
+                                return fallbackDialog.ShowDialog() == true;
                             }, System.Windows.Threading.DispatcherPriority.Normal, token).Task);
 
                     dialog.IsEnabled = false;
@@ -1539,8 +1552,10 @@ public partial class MainWindow : Window
 
                         cutSucceeded = true;
                         _lastSuccessfulCutMediaPath = originalFilePath;
-                        _lastSuccessfulCutEngine = engineKind;
-                        _lastCutAudioNotice = cutResult.Notice?.StartsWith("Notfallausgabe:", StringComparison.Ordinal) == true
+                        _lastSuccessfulCutEngine = cutEngine is OtrCanMp4BoxFallbackCutService { UsedMp4Box: true }
+                            ? CutEngineKind.Mp4Box : engineKind;
+                        _lastCutAudioNotice = cutResult.Notice?.StartsWith("Notfallausgabe:", StringComparison.Ordinal) == true ||
+                            cutResult.Notice?.StartsWith("MP4Box-Fallback:", StringComparison.Ordinal) == true
                             ? cutResult.Notice : null;
 
                         progress.Flush();

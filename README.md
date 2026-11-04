@@ -1,5 +1,9 @@
 # Cut Assistant Next
 
+## Lokale Audio-Prüffassung – 04.11.2026
+
+**CAN 1.0.3 · Build 50 · Audio-Diagnose-Entwicklung**, Branch codex/audio-diagnostics-fallback auf der unveränderten Spotlight-Integration. Präzisere otr-can-Audiobefunde und ausdrücklich bestätigter vollständiger MP4Box-Neustart; strenge Sampleprüfung bleibt erhalten. Der eigene mitgelieferte Diagnosemotor 0.1.6-audio-diag.1 wird nur in dieser gekennzeichneten Prüffassung verwendet, ohne gespeicherte Motorpfade umzustellen. Keine Veröffentlichung und keine produktive neue Audioreparatur. [Umsetzung, Bedienung und Prüfstand](docs/AUDIO-FALLBACK-PAKET1-20261104.md) · [Paket-2-Konzept](docs/AUDIO-FEHLERBEHANDLUNG-PAKET2-KONZEPT-20261104.md).
+
 Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Es verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codecs.
 
 ## Entwicklungsbranch: Spotlight-CAN – 04.11.2026

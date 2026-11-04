@@ -34,13 +34,23 @@ internal sealed record AacEmergencyOffer(MediaAnalysisResult Original, MediaAnal
 }
 
 internal sealed class OtrCanAudioFailureException(
-    MediaAnalysisResult original, MediaAnalysisResult source, Exception inner)
-    : InvalidOperationException(inner.Message, inner)
+    MediaAnalysisResult original, MediaAnalysisResult source, Exception inner,
+    OtrCanAudioDiagnostic? diagnostic = null, bool allowAacEmergency = true)
+    : InvalidOperationException(diagnostic?.Description ??
+        "otr-can konnte den Ton nicht sicher verarbeiten. Die strenge Audioverarbeitung wurde abgebrochen. " +
+        "Die Ursache ist nicht eindeutig als reparierbare Zeitlücke nachgewiesen. Technische Einzelheiten stehen im Protokoll.", inner)
 {
-    internal AacEmergencyOffer? Offer { get; } = AacEmergencyOffer.Create(original, source);
-    internal static bool IsAudioFailure(string message) =>
+    internal OtrCanAudioDiagnostic? Diagnostic { get; } = diagnostic;
+    internal AacEmergencyOffer? Offer { get; } = allowAacEmergency && IsLegacyProcessingFailure(inner.Message)
+        ? AacEmergencyOffer.Create(original, source) : null;
+    internal static bool IsLegacyProcessingFailure(string message) =>
         message.Contains("PCM assembly emitted warnings; cut rejected", StringComparison.Ordinal) ||
         message.Contains("PCM assembly failed:", StringComparison.Ordinal);
+    internal static bool IsAudioFailure(string message) =>
+        IsLegacyProcessingFailure(message) ||
+        message.Contains("[audio-processing-failure-v1]", StringComparison.Ordinal) ||
+        message.Contains("[audio-diagnostic-v1]", StringComparison.Ordinal) ||
+        message.Contains("PCM count differs for audio stream ", StringComparison.Ordinal);
 }
 
 internal interface IAacEmergencySource
@@ -99,8 +109,17 @@ internal sealed class OtrCanAacEmergencyCutService(
             Directory.CreateDirectory(work);
             try
             {
-                var prepared = await preparation.PrepareAsync(request, offer, choice, work, progress, cancellationToken)
-                    .ConfigureAwait(false);
+                string prepared;
+                try
+                {
+                    prepared = await preparation.PrepareAsync(request, offer, choice, work, progress, cancellationToken)
+                        .ConfigureAwait(false);
+                }
+                catch (Exception error) when (error is InvalidDataException or InvalidOperationException)
+                {
+                    progress?.Report(new(CutProgressKind.Output, "Die bestätigte AAC-Alternative konnte nicht sicher vorbereitet werden: " + error.Message));
+                    throw new OtrCanAudioFailureException(offer.Original, offer.Source, error, allowAacEmergency: false);
+                }
                 var result = await selectedEngine(choice.Original.Index)
                     .RunWithResultAsync(request.WithSourceFilePath(prepared), progress, cancellationToken).ConfigureAwait(false);
                 return new(result.OutputFilePath, result.Timeline, result.TimingKind,
