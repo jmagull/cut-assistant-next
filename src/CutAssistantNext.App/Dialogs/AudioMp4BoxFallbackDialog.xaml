@@ -15,7 +15,7 @@
             <StackPanel>
                 <TextBlock x:Name="DiagnosisText" TextWrapping="Wrap" Margin="0,0,0,14" />
                 <TextBlock TextWrapping="Wrap" Margin="0,0,0,12"
-                           Text="Du kannst den vollständigen Schnitt mit MP4Box erneut starten. CAN verwendet dieselben Schnittbereiche und prüft zuerst, ob MP4Box verfügbar ist. Falls nötig, wird das Video zuvor ohne Neukodierung in eine MP4-Arbeitskopie umgepackt." />
+                           Text="Du kannst den vollständigen Schnitt mit MP4Box erneut starten. CAN verwendet die MP4Box-Konfiguration aus Deinen Einstellungen und dieselben Schnittbereiche. Falls nötig, wird das Video zuvor ohne Neukodierung in eine MP4-Arbeitskopie umgepackt." />
                 <TextBlock TextWrapping="Wrap" FontWeight="SemiBold"
                            Text="MP4Box ist eine alternative Schnittmethode. Ein erfolgreicher Durchlauf beweist keine Audioreparatur oder korrekte Synchronität. Bitte anschließend Bild, Ton und alle Übergänge persönlich kontrollieren." />
             </StackPanel>

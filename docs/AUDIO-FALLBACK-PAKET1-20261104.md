@@ -107,3 +107,11 @@ Beim synthetischen MP4Box-Fallback konnte die vorhandene Ausgabeanalyse verworfe
 Eine neue persönliche Abnahme von vollständiger NCIS-Auswahl, Rückfragedialog und MP4Box-Ergebnis steht aus. Ebenso werden keine neue Setup-/VM-/Portable-Installationsabnahme oder Lösung des früheren Mad-Max-/Furiosa-Systemstillstands behauptet. Die Prüffassung ist ein lokaler Ordner/ZIP, kein neuer öffentlicher Paketsatz.
 
 Nächster Schritt: Diese Fassung mit der vorhandenen NCIS-Cutlist persönlich prüfen, einmal Abbrechen testen und anschließend ausdrücklich MP4Box wählen; danach Anfang, Ende, Übergänge und Bild/Ton kontrollieren. Erst danach über die getrennten Labor-/Implementierungsfreigaben aus Paket 2 entscheiden.
+
+## Persönlicher Rückfalltest und Textkorrektur nach Build 50
+
+Der Anwender zeigt die neue Diagnose für die vollständige Drei-Keep-Auswahl: Behaltebereich 3, Originalzeit 01:04:18.645, 512 fehlende Samples, Soll 115580160/Ist 115579648. Anschließend bestätigt er den MP4Box-Neustart mit „funktioniert“. Damit sind die tatsächliche Diagnoseanzeige und der bewusst gewählte Rückfall persönlich bestätigt. Eine gesonderte vollständige Bild-/Ton-/Übergangskontrolle und ein persönlicher Abbruchtest werden daraus nicht zusätzlich abgeleitet.
+
+Auf seinen Hinweis nennt die Rückfrage nun ausdrücklich die **MP4Box-Konfiguration aus den Einstellungen**. Der bisherige Satz zur Verfügbarkeit entfällt aus diesem Erklärungstext. Die begrenzte Start-/Versionsprüfung verwendet weiterhin genau diese konfigurierte Programmdatei. Keine neue Konfiguration und keine erneute Pfadauswahl. Die ausgelieferte Build-50-Prüfkopie bleibt unverändert; die Textkorrektur ist für den nächsten Entwicklungsbuild vorgesehen.
+
+Textkorrektur als lokaler Entwicklungsbuild 51 gebaut: 0 Warnungen, 0 Fehler; sämtliche 1795 Solution-Tests bestanden, keine ausgelassen. Keine neue Paketierung oder Veröffentlichung.
