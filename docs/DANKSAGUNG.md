@@ -51,3 +51,7 @@ Und falls ich jemanden übersehen habe: Bitte meldet euch – diese Danksagung d
 Jörg
 
 Die rechtlichen Hinweise zu mitgelieferten Komponenten stehen in den [Third-Party-Notices](libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) und der [.NET-/NuGet-Bestandsaufnahme](DOTNET-LICENSING.md).
+
+## Spotlight-CAN
+
+Die ursprüngliche Idee der visuellen Werbesuche und der AutoIt-Cutfinder stammen von Martin. Spotlight-CAN ist eine eigenständige C#-Umsetzung; Martins Originalquellen und Bildressourcen wurden nicht übernommen. Integration nach ausdrücklicher persönlicher Freigabe am 04.11.2026.

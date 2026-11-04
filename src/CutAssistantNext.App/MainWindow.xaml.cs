@@ -212,6 +212,7 @@ public partial class MainWindow : Window
 
         PreviewKeyUp -= MainWindow_PreviewKeyUp;
 
+        await CloseSpotlightSafelyAsync();
         await _cutReviewController.CloseAsync();
         _playerFrameSearch.Dispose();
         _keyframeNavigation.Dispose();

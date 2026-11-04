@@ -10,6 +10,7 @@ using CutAssistantNext.Media.Analysis;
 
 namespace CutAssistantNext.App.Tests.Services.Cutting;
 
+[Collection("WpfUi")]
 public sealed class JoinDialogAvailabilityTests
 {
     [Theory]

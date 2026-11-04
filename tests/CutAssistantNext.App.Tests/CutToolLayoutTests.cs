@@ -10,6 +10,7 @@ using CutAssistantNext.Media.Playback;
 
 namespace CutAssistantNext.App.Tests;
 
+[Collection("WpfUi")]
 public sealed class CutToolLayoutTests
 {
     [Fact]

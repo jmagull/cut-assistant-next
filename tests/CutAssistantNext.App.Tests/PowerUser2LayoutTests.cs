@@ -16,6 +16,7 @@ using CutAssistantNext.Media.Playback;
 
 namespace CutAssistantNext.App.Tests;
 
+[Collection("WpfUi")]
 public sealed class PowerUser2LayoutTests
 {
     private const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Instance;

@@ -92,6 +92,10 @@
                           ToolTip="Zwei bereits geschnittene MP4-Filmteile mit bewusst gewählten Tonspuren zusammenfügen." />
             </MenuItem>
 
+            <MenuItem Header="Werkzeuge">
+                <MenuItem x:Name="SpotlightMenuItem" Header="Spotlight-CAN – Visuelle Werbesuche" Click="SpotlightMenuItem_Click" />
+            </MenuItem>
+
             <MenuItem Header="Hilfe">
                 <MenuItem Header="Nutzeranleitung (GitHub)"
                           Click="UserGuideMenuItem_Click" />

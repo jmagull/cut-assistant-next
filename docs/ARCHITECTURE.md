@@ -1,5 +1,9 @@
 # Architektur – Arbeitsstand
 
+## Spotlight-CAN im Entwicklungsbranch – 04.11.2026
+
+Gemeinsame UI-/Medienbibliotheken über die fest versionierte Spotlight-Git-Komponente; CAN adaptiert nur vorhandene Mediendaten, Werkzeugverwaltung und direkten RemoveSegment-Ersatz. Keine Zwischen-Cutlist, kein zweiter Player oder Prozess. [Architektur, Dateisperre, atomare Übernahme und Prüfergebnisse](SPOTLIGHT-INTEGRATION-20261104.md).
+
 ## Power-User 2 – UI-Erweiterung 03.11.2026
 
 Drei eindeutige gewünschte/aktive Layoutzustände ersetzen die bisherige boolesche UI-Unterscheidung. Dieselben Controls werden zwischen vorhandenen Hosts und dem neuen `Power2EditingDock` mit ausdrücklichem Schnittplan-DataContext versetzt. `CutToolStripPanel` misst nur die Marker-/Suchgruppen und ordnet die vorhandene Suche daneben oder darunter an. `MainWindow.PowerUser2` sichert/restauriert Darstellungswerte und gestaltet den bestehenden Vormerkzustand; kein neues Schnittmodell und keine neue Command-Schicht. [Umsetzung und Prüfungen](POWER-USER-2-IMPLEMENTIERUNG-20261103.md).

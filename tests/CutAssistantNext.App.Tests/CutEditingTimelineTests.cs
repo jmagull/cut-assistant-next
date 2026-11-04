@@ -13,6 +13,7 @@ using CutAssistantNext.App.ViewModels;
 
 namespace CutAssistantNext.App.Tests;
 
+[Collection("WpfUi")]
 public sealed class CutEditingTimelineTests
 {
     [Theory]

@@ -1,0 +1,3 @@
+[submodule "external/spotlight-can"]
+	path = external/spotlight-can
+	url = https://github.com/jmagull/spotlight-can.git

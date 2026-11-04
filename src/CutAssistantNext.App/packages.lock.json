@@ -35,14 +35,30 @@
       "cutassistantnext.cutlists": {
         "type": "Project",
         "dependencies": {
-          "CutAssistantNext.Core": "[0.2.1, )"
+          "CutAssistantNext.Core": "[1.0.3, )"
         }
       },
       "cutassistantnext.media": {
         "type": "Project",
         "dependencies": {
-          "CutAssistantNext.Core": "[0.2.1, )",
+          "CutAssistantNext.Core": "[1.0.3, )",
           "HanumanInstitute.LibMpv": "[0.10.1, )"
+        }
+      },
+      "spotlightcan.core": {
+        "type": "Project"
+      },
+      "spotlightcan.media": {
+        "type": "Project",
+        "dependencies": {
+          "SpotlightCan.Core": "[1.0.0, )"
+        }
+      },
+      "spotlightcan.wpf": {
+        "type": "Project",
+        "dependencies": {
+          "SpotlightCan.Core": "[1.0.0, )",
+          "SpotlightCan.Media": "[1.0.0, )"
         }
       }
     },

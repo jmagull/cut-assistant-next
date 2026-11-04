@@ -3,6 +3,7 @@ using CutAssistantNext.App.Settings;
 
 namespace CutAssistantNext.App.Tests.Settings;
 
+[Collection("WpfUi")]
 public sealed class DialogWindowSettingsTests
 {
     [Fact]

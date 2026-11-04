@@ -12,7 +12,7 @@ public partial class MainWindow
     private readonly CancellationTokenSource _mediaInputCancellation = new();
 
     private bool CanOpenMedia => !_isClosed && !_shutdownStarted && !_mediaLoadInProgress &&
-        !_cutlistSearchInProgress && !_cutlistUploadInProgress && !_frameLoupeOpening &&
+        !_spotlightInProgress && !_cutlistSearchInProgress && !_cutlistUploadInProgress && !_frameLoupeOpening &&
         !_cutOutputOpening && !_audioTrackCopyInProgress && !_joinInProgress && !_playerFrameSearch.IsNavigating && !_keyframeNavigation.IsNavigating && IsEnabled;
 
     private void InitializeMediaInput(string[] arguments, string startupDirectory)
