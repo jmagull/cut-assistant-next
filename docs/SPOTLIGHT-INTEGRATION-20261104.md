@@ -10,6 +10,14 @@ Die drei angeforderten Bereiche ergeben zusammen **00:41:07.800**. Die fertige M
 
 Im regulären otr-can-Lauf prüfte FFMS2 die Bildzeiten von 172.486 Quellframes. Der Motor bestätigte **61.698 Bilder** im Ergebnis und je **118.460.160 dekodierte Samples** für AAC und AC-3. Beide Tonspuren sind Stereo mit 48 kHz. Die abschließende MP4-Prüfung meldete Erfolg. Die fertige Datei misst laut ffprobe **00:41:07.920** für Video und beide Tonspuren. Joerg bestätigte ausdrücklich auch die Wiedergabe beider Tonspuren.
 
+## Praxistest mit Duchess vom 05.11.2026
+
+Joerg suchte die Werbeblöcke von **Duchess** grob mit Spotlight und prüfte die Schnitte mit MP4Box und otr-can persönlich. Bei beiden Ausgaben bestätigte er Bild, Ton, Schnitt und Drei-Sekunden-Vorschau als einwandfrei. Die nachgereichte Cutlist enthält sechs Behaltebereiche bei 25 Bildern pro Sekunde mit zusammen **01:49:14.920**.
+
+Das MP4Box-Protokoll dokumentiert alle sechs geschnittenen und zusammengefügten Bereiche. CAN prüfte an allen fünf Übergängen den dekodierten Anfang des neuen Abschnitts und meldete „Fertig.“ Für diesen Motor stützt sich der Nachweis auf das Protokoll und die persönliche Rückmeldung.
+
+Im regulären otr-can-Lauf der Build-51-Prüffassung bestätigte die Vorprüfung die Bildzeiten von 314.997 Quellframes. Der Motor verifizierte **163.873 Ausgabebilder**, **314.636.160 dekodierte Samples** der AAC-Stereospur bei 48 kHz sowie den abschließenden MP4-Mux. Die Ausgabedatei misst laut ffprobe **01:49:14.920** für Bild und Ton und stimmt damit mit der Cutlist-Laufzeit überein.
+
 ## Freigabe und Grenzen
 
 Die persönliche Prüfung der eigenständigen visuellen Werbesuche ist vom Nutzer positiv bestätigt; die Integration ist ausdrücklich freigegeben. Zusätzlich beauftragt: dynamische Anzeige von Original-, Entfernen- und verbleibender Laufzeit in beiden Hosts. Keine Veröffentlichung oder Änderung des stabilen Release-Stands. Entwicklung im getrennten Checkout auf **codex/spotlight-integration**, Ausgangscommit **22f4042**. Vorhandene Dokumentations- und Lockdateiänderungen im ursprünglichen CAN-main bleiben unangetastet.
