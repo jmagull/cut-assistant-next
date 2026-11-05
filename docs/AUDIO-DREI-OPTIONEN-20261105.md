@@ -18,6 +18,12 @@ Das persönliche Protokoll enthält die Arbeitsschritte ohne Zeitstempel. Es zei
 
 Für eine Beschleunigung bietet sich eine gemeinsame Dekodierung für Bildfolge und Pixelvergleich an. Vor einer Übernahme sind die gleichen Prüfwerte, dieselbe Ausgabedatei und das Ablehnungsverhalten an fehlerhaften Eingaben nachzuweisen. Dieser Nachtrag dokumentiert die persönliche NCIS-Abnahme von Build 51. Die Produktivfreigabe ist separat.
 
+## Praxistest mit Ein Weihnachtsbaum für Zwei
+
+Am 05.11.2026 bestätigte Joerg für den regulären otr-can-Schnitt aus der Build-51-Prüffassung einwandfreies Bild, Ton, Schnitt und Drei-Sekunden-Vorschau. Der Motor prüfte die Zeitstruktur von 195.004 Quellbildern und bestätigte **123.435 Ausgabebilder** sowie **236.995.200 dekodierte Samples** der AAC-Stereospur bei 48 kHz. Video und Ton laufen in der fertigen MP4 jeweils **01:22:17.400**.
+
+Das separat vorgelegte MP4Box-Protokoll zur gleichen Aufnahme dokumentiert fünf zusammengefügte Behaltebereiche und eine abgeschlossene Übergangsprüfung. Die fertige MP4Box-Datei misst laut ffprobe **01:22:17.362** und enthält 123.434 H.264-Bilder sowie eine AAC-Stereospur bei 48 kHz. Die persönliche Rückmeldung zum otr-can-Schnitt und der technische MP4Box-Nachweis sind getrennt erfasst.
+
 ## Bedienung im bestehenden Schnittfenster
 
 Beim Schneiden mit otr-can öffnet der vorhandene, dem Schnittfortschritt zugeordnete Fehlerdialog **„otr-can – Audioproblem erkannt“**. Bei nachgewiesener AAC-Reparierbarkeit nennt er Spur, betroffene Quellstellen, fehlende Samples und Dauer. Das Beispiel mit einer Lücke zeigt AAC-LC/Stereo/48 kHz, 512 Samples und 10,67 ms.
