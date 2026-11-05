@@ -1,5 +1,13 @@
 # Spotlight-CAN in CAN – Entwicklungsstand vom 04.11.2026
 
+## Persönlicher Praxistest vom 05.11.2026
+
+Bei **Fire Country S03E16 – Schmutzige Deals** ermittelte Joerg die Werbeblöcke grob in Spotlight, verfeinerte die Schnittgrenzen in CAN und schnitt mit MP4Box. Er bestätigte Bild, Ton, Schnitt und Drei-Sekunden-Vorschau als einwandfrei. Damit ist der Ablauf von der visuellen Werbesuche bis zur Wiedergabekontrolle an dieser Aufnahme persönlich geprüft.
+
+Das Schnittprotokoll belegt drei MP4Box-Behaltebereiche von 1093,96–1829,28 s, 2124,00–3469,00 s und 4331,92–4719,40 s. CAN prüfte an beiden Übergängen den dekodierten Anfang des jeweils neuen Abschnitts, da am Wechsel gleiche Bildzeiten vorlagen. Die Prüfung endete mit „Fertig.“
+
+Die drei angeforderten Bereiche ergeben zusammen **00:41:07.800**. Die fertige MP4 misst laut ffprobe **00:41:07.360** und enthält H.264-Video sowie je eine AAC- und AC-3-Tonspur. Die Spurdaten stammen aus der Dateiprüfung. Die persönliche Rückmeldung gilt dem oben genannten Ablauf und der Wiedergabe.
+
 ## Freigabe und Grenzen
 
 Die persönliche Prüfung der eigenständigen visuellen Werbesuche ist vom Nutzer positiv bestätigt; die Integration ist ausdrücklich freigegeben. Zusätzlich beauftragt: dynamische Anzeige von Original-, Entfernen- und verbleibender Laufzeit in beiden Hosts. Keine Veröffentlichung oder Änderung des stabilen Release-Stands. Entwicklung im getrennten Checkout auf **codex/spotlight-integration**, Ausgangscommit **22f4042**. Vorhandene Dokumentations- und Lockdateiänderungen im ursprünglichen CAN-main bleiben unangetastet.
