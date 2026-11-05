@@ -84,6 +84,19 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
     internal async Task<Mp4BoxCutService> CreateCheckedAsync(IProgress<CutProgressUpdate>? progress,
         CancellationToken token, IToolProbeRunner? probe = null)
     {
+        var path = await ResolveAvailableAsync(token, probe).ConfigureAwait(false);
+        progress?.Report(new(CutProgressKind.Output, "MP4Box ist verfügbar; der bestätigte neue Schnitt wird gestartet."));
+        return new Mp4BoxCutService(_runnerFactory(path, progress), new ConfiguredCutOutputAnalyzer());
+    }
+    internal async Task<(bool Available, string? Reason)> CheckAvailabilityAsync(CancellationToken token)
+    {
+        try { await ResolveAvailableAsync(token).ConfigureAwait(false); return (true, null); }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException or System.ComponentModel.Win32Exception or TimeoutException)
+        { return (false, e.Message); }
+    }
+
+    private async Task<string> ResolveAvailableAsync(CancellationToken token, IToolProbeRunner? probe = null)
+    {
         token.ThrowIfCancellationRequested();
         var settings = _settingsProvider() ?? CutApplicationSettings.CreateDefault();
         var path = _toolPathResolver.Resolve(BundledToolKind.Mp4Box, settings.ExecutablePath);
@@ -93,7 +106,6 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
         var result = await (probe ?? new ToolProbeRunner()).RunAsync(path, ["-version"], token).ConfigureAwait(false);
         if (result.ExitCode != 0 || !(result.StandardOutput + result.StandardError).Contains("MP4Box", StringComparison.OrdinalIgnoreCase))
             throw new InvalidOperationException("MP4Box konnte nicht erfolgreich gestartet und erkannt werden. Bitte Installation und Werkzeugpfad prüfen.");
-        progress?.Report(new(CutProgressKind.Output, "MP4Box ist verfügbar; der bestätigte neue Schnitt wird gestartet."));
-        return new Mp4BoxCutService(_runnerFactory(path, progress), new ConfiguredCutOutputAnalyzer());
+        return path;
     }
 }

@@ -1499,7 +1499,18 @@ public partial class MainWindow : Window
                                     if (fallbackDialog.IsVisible) fallbackDialog.Close();
                                 })));
                                 return fallbackDialog.ShowDialog() == true;
-                            }, System.Windows.Threading.DispatcherPriority.Normal, token).Task);
+                            }, System.Windows.Threading.DispatcherPriority.Normal, token).Task,
+                            chooseAudioRecovery: ApplicationVersion.CandidateName == AudioDevelopmentEngine.RecoveryCandidateName
+                                ? (offer, token) => Dispatcher.InvokeAsync(() =>
+                                {
+                                    token.ThrowIfCancellationRequested();
+                                    var choices = new AudioMp4BoxFallbackDialog(offer) { Owner = (Window?)progressDialog ?? this };
+                                    using var registration = token.Register(() => Dispatcher.BeginInvoke(new Action(() =>
+                                    {
+                                        if (choices.IsVisible) choices.Close();
+                                    })));
+                                    return choices.ShowDialog() == true ? choices.SelectedChoice : AudioRecoveryChoice.Cancel;
+                                }, System.Windows.Threading.DispatcherPriority.Normal, token).Task : null);
 
                     dialog.IsEnabled = false;
                     var cutEngine = await Task.Run(() => cutEngineFactory.Create(engineKind, selection, progress));
@@ -1555,7 +1566,8 @@ public partial class MainWindow : Window
                         _lastSuccessfulCutEngine = cutEngine is OtrCanMp4BoxFallbackCutService { UsedMp4Box: true }
                             ? CutEngineKind.Mp4Box : engineKind;
                         _lastCutAudioNotice = cutResult.Notice?.StartsWith("Notfallausgabe:", StringComparison.Ordinal) == true ||
-                            cutResult.Notice?.StartsWith("MP4Box-Fallback:", StringComparison.Ordinal) == true
+                            cutResult.Notice?.StartsWith("MP4Box-Fallback:", StringComparison.Ordinal) == true ||
+                            cutResult.Notice?.StartsWith("Experimentelle AAC-Zeitlückenreparatur:", StringComparison.Ordinal) == true
                             ? cutResult.Notice : null;
 
                         progress.Flush();

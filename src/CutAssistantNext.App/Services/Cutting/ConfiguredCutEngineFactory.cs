@@ -11,15 +11,19 @@ internal sealed class ConfiguredCutEngineFactory
     private readonly Func<OtrCanSettings, ICutEngine> _otrCanFactory;
     private readonly Func<OtrCanAudioFailureException, CancellationToken, Task<bool>>? _confirmMp4BoxFallback;
 
+    private readonly Func<AudioRecoveryOffer, CancellationToken, Task<AudioRecoveryChoice>>? _chooseAudioRecovery;
+
     public ConfiguredCutEngineFactory(ConfiguredMp4BoxCutServiceFactory mp4BoxFactory,
         Func<OtrCanSettings, ICutEngine>? otrCanFactory = null,
         Func<AacEmergencyOffer, CancellationToken, Task<AacEmergencyChoice?>>? confirmAudioFallback = null,
-        Func<OtrCanAudioFailureException, CancellationToken, Task<bool>>? confirmMp4BoxFallback = null)
+        Func<OtrCanAudioFailureException, CancellationToken, Task<bool>>? confirmMp4BoxFallback = null,
+        Func<AudioRecoveryOffer, CancellationToken, Task<AudioRecoveryChoice>>? chooseAudioRecovery = null)
     {
         ArgumentNullException.ThrowIfNull(mp4BoxFactory);
         _mp4BoxFactory = mp4BoxFactory;
-        _otrCanFactory = otrCanFactory ?? (native => CreateOtrCan(native, confirmAudioFallback));
+        _otrCanFactory = otrCanFactory ?? (native => CreateOtrCan(native, chooseAudioRecovery is null ? confirmAudioFallback : null));
         _confirmMp4BoxFallback = confirmMp4BoxFallback;
+        _chooseAudioRecovery = chooseAudioRecovery;
     }
 
     public ICutEngine Create(IProgress<CutProgressUpdate>? progress = null) =>
@@ -36,8 +40,8 @@ internal sealed class ConfiguredCutEngineFactory
     private ICutEngine CreateNativeWithFallback(OtrCanSettings settings, IProgress<CutProgressUpdate>? progress)
     {
         var normal = _otrCanFactory(settings);
-        if (_confirmMp4BoxFallback is null) return normal;
-        return new OtrCanMp4BoxFallbackCutService(normal, async (reporter, token) =>
+        if (_confirmMp4BoxFallback is null && _chooseAudioRecovery is null) return normal;
+        async Task<ICutEngine> Alternative(IProgress<CutProgressUpdate>? reporter, CancellationToken token)
         {
             var alternative = await _mp4BoxFactory.CreateCheckedAsync(reporter, token).ConfigureAwait(false);
             var ffmpeg = new FfmpegSettingsStore().Load() ?? FfmpegSettings.CreateDefault();
@@ -47,7 +51,11 @@ internal sealed class ConfiguredCutEngineFactory
             return new Mp4BoxFallbackPreparation(alternative, new FfprobeRunner(ffprobePath).RunAsync,
                 (input, output, analysis, updates, cancellation) => VideoPreparation.PrepareAsync(
                     input, output, analysis, ffmpegPath, ffprobePath, updates ?? new Progress<CutProgressUpdate>(), cancellation));
-        }, _confirmMp4BoxFallback);
+        }
+        if (_chooseAudioRecovery is not null)
+            return new OtrCanMp4BoxFallbackCutService(normal, Alternative, _chooseAudioRecovery,
+                new AacGapRepairService(ResolveNative(settings).Paths), _mp4BoxFactory.CheckAvailabilityAsync);
+        return new OtrCanMp4BoxFallbackCutService(normal, Alternative, _confirmMp4BoxFallback!);
     }
 
     internal static bool RequiresPreparation(CutEngineKind kind, Core.Media.MediaAnalysisResult analysis) =>
@@ -57,8 +65,7 @@ internal sealed class ConfiguredCutEngineFactory
         analysis.VideoStreams.Count == 1 && analysis.VideoStreams[0].Index == 0 &&
         analysis.VideoStreams[0].CodecName == "h264";
 
-    private static ICutEngine CreateOtrCan(OtrCanSettings native,
-        Func<AacEmergencyOffer, CancellationToken, Task<AacEmergencyChoice?>>? confirm)
+    private static (OtrCanSettings Settings, FfmpegSettings Ffmpeg, OtrCanToolPaths Paths) ResolveNative(OtrCanSettings native)
     {
         native = AudioDevelopmentEngine.Resolve(native, AppContext.BaseDirectory, ApplicationVersion.CandidateName);
         var ffmpeg = new FfmpegSettingsStore().Load() ?? FfmpegSettings.CreateDefault();
@@ -66,6 +73,13 @@ internal sealed class ConfiguredCutEngineFactory
         var paths = new OtrCanToolPaths(native.ExecutablePath, native.FfmsIndexExecutablePath,
             resolver.Resolve(BundledToolKind.Ffmpeg, ffmpeg.FfmpegExecutablePath),
             resolver.Resolve(BundledToolKind.Ffprobe, ffmpeg.FfprobeExecutablePath));
+        return (native, ffmpeg, paths);
+    }
+
+    private static ICutEngine CreateOtrCan(OtrCanSettings settings,
+        Func<AacEmergencyOffer, CancellationToken, Task<AacEmergencyChoice?>>? confirm)
+    {
+        var (native, ffmpeg, paths) = ResolveNative(settings);
         ICutEngine Create(int? selected) => new OtrCanCutService(paths, checkTools: async (requireMp3, token) =>
         {
             var results = await new OtrCanToolChecker().CheckAsync(native, ffmpeg, token, requireMp3).ConfigureAwait(false);
