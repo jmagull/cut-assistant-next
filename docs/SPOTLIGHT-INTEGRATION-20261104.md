@@ -2,11 +2,13 @@
 
 ## Persönlicher Praxistest vom 05.11.2026
 
-Bei **Fire Country S03E16 – Schmutzige Deals** ermittelte Joerg die Werbeblöcke grob in Spotlight, verfeinerte die Schnittgrenzen in CAN und schnitt mit MP4Box. Er bestätigte Bild, Ton, Schnitt und Drei-Sekunden-Vorschau als einwandfrei. Damit ist der Ablauf von der visuellen Werbesuche bis zur Wiedergabekontrolle an dieser Aufnahme persönlich geprüft.
+Bei **Fire Country S03E16 – Schmutzige Deals** ermittelte Joerg die Werbeblöcke grob in Spotlight, verfeinerte die Schnittgrenzen in CAN und schnitt mit MP4Box. Er bestätigte Bild, Ton, Schnitt und Drei-Sekunden-Vorschau als einwandfrei. An derselben Aufnahme bestätigte er anschließend auch den regulären otr-can-Schnitt. Bei beiden Ausgaben prüfte er Bild, Ton, Schnitt und Drei-Sekunden-Vorschau persönlich. Beide Durchläufe liefen mit **CAN 1.0.3 Build 51**.
 
 Das Schnittprotokoll belegt drei MP4Box-Behaltebereiche von 1093,96–1829,28 s, 2124,00–3469,00 s und 4331,92–4719,40 s. CAN prüfte an beiden Übergängen den dekodierten Anfang des jeweils neuen Abschnitts, da am Wechsel gleiche Bildzeiten vorlagen. Die Prüfung endete mit „Fertig.“
 
 Die drei angeforderten Bereiche ergeben zusammen **00:41:07.800**. Die fertige MP4 misst laut ffprobe **00:41:07.360** und enthält H.264-Video sowie je eine AAC- und AC-3-Tonspur. Die Spurdaten stammen aus der Dateiprüfung. Die persönliche Rückmeldung gilt dem oben genannten Ablauf und der Wiedergabe.
+
+Im regulären otr-can-Lauf prüfte FFMS2 die Bildzeiten von 172.486 Quellframes. Der Motor bestätigte **61.698 Bilder** im Ergebnis und je **118.460.160 dekodierte Samples** für AAC und AC-3. Beide Tonspuren sind Stereo mit 48 kHz. Die abschließende MP4-Prüfung meldete Erfolg. Die fertige Datei misst laut ffprobe **00:41:07.920** für Video und beide Tonspuren. Joerg bestätigte ausdrücklich auch die Wiedergabe beider Tonspuren.
 
 ## Freigabe und Grenzen
 
