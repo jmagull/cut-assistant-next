@@ -8,6 +8,16 @@ C:/Users/joerg/Documents/GitHub/cut-assistant-next-aac/artifacts/CAN-Audio-Fehle
 
 Den Ordner zusammenhalten. .NET 10 Desktop Runtime x64 und die bereits eingerichteten externen Werkzeuge werden benötigt. Nur die entsprechend benannte Prüffassung verwendet ihren beiliegenden Motor unter runtime/otr-can. Einstellungen und insbesondere die bestehende MP4Box-Konfiguration werden weiterverwendet und durch die Paketwahl nicht geändert. Der Motor bleibt als Entwicklungsausgabe von 0.1.6-audio-diag.1 mit zusätzlichem aac-gap-repair-v1 gekennzeichnet.
 
+## Persönliche Abnahme des vollständigen CAN-Schnitts
+
+Am 05.11.2026 bestätigte Joerg den vollständigen NCIS-Schnitt aus CAN Build 51 nach Auswahl der experimentellen AAC-Reparatur. Bild, Ton, Schnitt, Übergänge und Drei-Sekunden-Vorschau waren störungsfrei. Er meldete eine lange Wartezeit.
+
+Die nachgereichte Cutlist enthält drei Behaltebereiche ab 430,76 s, 1916,04 s und 3449,52 s mit 992,28 s, 1006,48 s und 409,16 s Dauer. Die Summe ergibt **00:40:07.920**. Ihr MP4Box-Eintrag stammt aus den Cutlist-Metadaten. Das persönliche Schnittprotokoll belegt den tatsächlich ausgeführten otr-can-Reparaturlauf. Die fertige persönliche Ausgabe ist mit dem technisch geprüften Referenzfilm bytegleich. Beide haben den SHA-256 `90948259c6823edc23c1e4af5b6778e5a7ba654c16109cab9f226d020a3fea0a`.
+
+Das persönliche Protokoll enthält die Arbeitsschritte ohne Zeitstempel. Es zeigt den strengen Erstversuch, die erneute Indexierung und Vorprüfung sowie den vollständigen bestätigten Neustart. Im separaten Referenzlauf dauerten die vollständige Dekodierung des Quellbilds rund 4:18 min, die Dekodierung des Ausgabebilds 2:22 min und der erneute Pixelvergleich 2:23 min. Damit entfielen rund neun Minuten auf diese drei Bildprüfungen. Die Zeitstempel belegen den Referenzlauf. Die Dauer des persönlichen Laufs lässt sich aus den vorliegenden Daten nicht beziffern.
+
+Für eine Beschleunigung bietet sich eine gemeinsame Dekodierung für Bildfolge und Pixelvergleich an. Vor einer Übernahme sind die gleichen Prüfwerte, dieselbe Ausgabedatei und das Ablehnungsverhalten an fehlerhaften Eingaben nachzuweisen. Dieser Nachtrag dokumentiert die persönliche NCIS-Abnahme von Build 51. Die Produktivfreigabe ist separat.
+
 ## Bedienung im bestehenden Schnittfenster
 
 Beim Schneiden mit otr-can öffnet der vorhandene, dem Schnittfortschritt zugeordnete Fehlerdialog **„otr-can – Audioproblem erkannt“**. Bei nachgewiesener AAC-Reparierbarkeit nennt er Spur, betroffene Quellstellen, fehlende Samples und Dauer. Das Beispiel mit einer Lücke zeigt AAC-LC/Stereo/48 kHz, 512 Samples und 10,67 ms.
@@ -68,4 +78,4 @@ Die experimentelle Option ist bewusst auf genau eine nachgewiesene AAC-LC-Stereo
 
 Rust-Commit **1979a7f897b95d3fab4020129b8b5e634ea569ac**, Branch codex/aac-gap-rust. CAN-Entwicklungszweig codex/audio-three-options auf dem bestätigten Paket-1-Commit ba1c482; der endgültige CAN-Commit und die Prüfsummen stehen in der lokalen Paket-Provenienz. Spotlight-Modul unverändert **6973b37591e9b581b20b5a6f2117369b6df0f159**. Hauptarbeitskopien und deren vorhandene Nutzeränderungen sind erhalten. Keine Tags, kein Push.
 
-Die persönliche Kontrolle der korrigierten Labor-MP4 und der neuen CAN-Entwicklungsfassung in Bild und Ton bleibt Voraussetzung vor einer gesonderten Produktivfreigabe. Die positive MPC-HC-Einzelbildrückmeldung an 00:33:18.760 ist kein vollständiger Wiedergabe- oder Freigabenachweis. Nach Bereitstellung wird angehalten.
+Die persönliche Abnahme des vollständigen NCIS-Schnitts mit Build 51 ist im Nachtrag oben dokumentiert. Für die separate Labor-MP4 liegt die positive MPC-HC-Rückmeldung zum Einzelbild bei 00:33:18.760 vor. Eine Produktivfreigabe erfolgt gesondert.
