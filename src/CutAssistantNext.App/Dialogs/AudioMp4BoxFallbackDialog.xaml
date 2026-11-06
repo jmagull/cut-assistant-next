@@ -14,19 +14,21 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="440">
             <StackPanel>
                 <TextBlock x:Name="DiagnosisText" TextWrapping="Wrap" Margin="0,0,0,14" />
+                <TextBlock x:Name="TrackStatusText" Visibility="Collapsed" TextWrapping="Wrap" Margin="0,0,0,12" />
                 <TextBlock x:Name="RepairStatusText" Visibility="Collapsed" TextWrapping="Wrap" Margin="0,0,0,12" />
                 <TextBlock x:Name="RepairHintText" TextWrapping="Wrap" Margin="0,0,0,12" Visibility="Collapsed"
                     Text="Nachgewiesene Audiolücken werden gezielt mit Stille überbrückt. Vorhandener Ton bleibt zeitlich unverändert. Der Schnitt wird anschließend vollständig überprüft. Die ursprünglichen fehlenden Audiodaten können nicht wiederhergestellt werden." />
                 <TextBlock x:Name="Mp4BoxStatusText" TextWrapping="Wrap" Margin="0,0,0,12"
                            Text="Du kannst den vollständigen Schnitt mit MP4Box erneut starten. CAN verwendet die MP4Box-Konfiguration aus Deinen Einstellungen und dieselben Schnittbereiche. Falls nötig, wird das Video zuvor ohne Neukodierung in eine MP4-Arbeitskopie umgepackt." />
                 <TextBlock TextWrapping="Wrap" FontWeight="SemiBold"
-                           Text="MP4Box ist eine alternative Schnittmethode. Ein erfolgreicher Durchlauf beweist keine Audioreparatur oder korrekte Synchronität. Bitte anschließend Bild, Ton und alle Übergänge persönlich kontrollieren." />
+                           Text="MP4Box ist eine alternative Schnittmethode. Fehlende oder zerstörte Audiodaten werden dadurch nicht wiederhergestellt. Bitte anschließend Bild, Ton, Synchronität und alle Übergänge persönlich kontrollieren." />
             </StackPanel>
         </ScrollViewer>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
             <Button Content="Abbrechen" Padding="12,8" Margin="0,0,10,0" IsCancel="True" IsDefault="True" />
             <Button x:Name="RetryButton" Content="Mit MP4Box erneut schneiden" Padding="12,8" Click="RetryClick" />
             <Button x:Name="RepairButton" Content="AAC-Zeitlücken reparieren (experimentell)" Padding="12,8" Margin="10,0,0,0" Visibility="Collapsed" Click="RepairClick" />
+            <Button x:Name="TrackButton" Content="Mit intakter Tonspur erneut schneiden" Padding="12,8" Margin="10,0,0,0" Visibility="Collapsed" Click="TrackClick" />
         </StackPanel>
     </Grid>
 </Window>

@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$EngineExecutablePath,
-    [Parameter(Mandatory = $true)][string]$ScratchDirectory
+    [Parameter(Mandatory = $true)][string]$ScratchDirectory,
+    [switch]$AudioCandidate
 )
 
 # Exercise the actual packaging block, without restoring, publishing or running Inno Setup.
@@ -9,6 +10,9 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $engine = (Resolve-Path -LiteralPath $EngineExecutablePath).Path
+$expectedVersion = if ($AudioCandidate) { '0.1.6-audio-diag.1' } else { '0.1.6' }
+$sourceFile = "sources/otr-can-$expectedVersion-source.zip"
+$engineDirectory = if ($AudioCandidate) { 'runtime/otr-can' } else { 'tools/otr-can' }
 $root = [IO.Path]::GetFullPath($ScratchDirectory)
 if (Test-Path -LiteralPath $root) { throw 'Test scratch directory must be new.' }
 [IO.Directory]::CreateDirectory($root) | Out-Null
@@ -54,16 +58,18 @@ function Write-Manifest($package) {
 function New-Fixture($caseDirectory) {
     $package = Join-Path $caseDirectory 'motor package'
     [IO.Directory]::CreateDirectory((Join-Path $package 'sources')) | Out-Null
-    Copy-Item -LiteralPath $engine -Destination (Join-Path $package 'otr_can.exe')
+    $fixtureExe = Join-Path $package 'otr_can.exe'
+    Copy-Item -LiteralPath $engine -Destination $fixtureExe
+    (Get-Item -LiteralPath $fixtureExe).IsReadOnly = $false
     foreach ($name in @('LICENSE', 'THIRD-PARTY-NOTICES.md')) {
         [IO.File]::WriteAllText((Join-Path $package $name), 'Synthetic test fixture, not a distribution package.', $utf8)
     }
     # A source checksum fixture; no real sources/release archives are prepared here.
-    [IO.File]::WriteAllText((Join-Path $package 'sources/otr-can-0.1.6-source.zip'), 'source checksum fixture', $utf8)
+    [IO.File]::WriteAllText((Join-Path $package $sourceFile), 'source checksum fixture', $utf8)
     $provenance = [PSCustomObject]@{
-        Version = '0.1.6'
+        Version = $expectedVersion
         ExecutableSha256 = (Get-FileHash -LiteralPath (Join-Path $package 'otr_can.exe') -Algorithm SHA256).Hash
-        SourceArchiveSha256 = (Get-FileHash -LiteralPath (Join-Path $package 'sources/otr-can-0.1.6-source.zip') -Algorithm SHA256).Hash
+        SourceArchiveSha256 = (Get-FileHash -LiteralPath (Join-Path $package $sourceFile) -Algorithm SHA256).Hash
     }
     Write-Provenance $package $provenance
     Write-Manifest $package
@@ -71,6 +77,7 @@ function New-Fixture($caseDirectory) {
 }
 
 $cases = @('no-motor', 'valid', 'old-snapshot', 'old-provenance', 'missing-source', 'changed-exe', 'wrong-source-hash', 'escape-manifest', 'missing-capability', 'missing-overlap-capability', 'wrong-cli-version')
+if ($AudioCandidate) { $cases += 'missing-diagnostic-capability', 'missing-repair-capability' }
 $results = @()
 foreach ($case in $cases) {
     $caseDirectory = Join-Path $root $case
@@ -79,7 +86,8 @@ foreach ($case in $cases) {
     $publish = Join-Path $caseDirectory 'publish'
     [IO.Directory]::CreateDirectory($logs) | Out-Null
     [IO.Directory]::CreateDirectory($publish) | Out-Null
-    $snapshot = [PSCustomObject]@{ OtrCanVersion = '0.1.6' }
+    $snapshot = [PSCustomObject]@{ OtrCanVersion = $expectedVersion }
+    [IO.File]::WriteAllText((Join-Path $publish 'VORAUSSETZUNGEN.txt'), "Optionaler Schnittmotor otr-can ${expectedVersion}:", $utf8)
     $OtrCanPackageDirectory = if ($case -eq 'no-motor') { '' } else { New-Fixture $caseDirectory }
     $script:CapabilityOverride = $null
     $script:VersionOverride = $null
@@ -94,7 +102,7 @@ foreach ($case in $cases) {
             $expectedError = 'Unexpected motor package version'
         }
         'missing-source' {
-            Remove-Item -LiteralPath (Join-Path $OtrCanPackageDirectory 'sources/otr-can-0.1.6-source.zip')
+            Remove-Item -LiteralPath (Join-Path $OtrCanPackageDirectory $sourceFile)
             $expectedError = 'Missing motor package file'
         }
         'changed-exe' {
@@ -114,6 +122,8 @@ foreach ($case in $cases) {
         }
         'missing-capability' { $script:CapabilityOverride = 'not-mp3-aac-v1'; $expectedError = 'does not report the required MP3-to-AAC capability' }
         'missing-overlap-capability' { $script:CapabilityOverride = 'mp3-aac-v1'; $expectedError = 'does not report the required AAC-overlap capability' }
+        'missing-diagnostic-capability' { $script:CapabilityOverride = 'mp3-aac-v1 aac-overlap-v1 aac-gap-repair-v1'; $expectedError = 'required AAC diagnostics and repair capabilities' }
+        'missing-repair-capability' { $script:CapabilityOverride = 'mp3-aac-v1 aac-overlap-v1 audio-diagnostic-v1'; $expectedError = 'required AAC diagnostics and repair capabilities' }
         'wrong-cli-version' { $script:VersionOverride = 'otr_can 0.1.5'; $expectedError = 'Bundled motor version check failed' }
     }
     $errorMessage = $null
@@ -125,13 +135,13 @@ foreach ($case in $cases) {
     if ($case -eq 'valid') {
         foreach ($file in (Get-ChildItem -LiteralPath $OtrCanPackageDirectory -File -Recurse)) {
             $relative = $file.FullName.Substring($OtrCanPackageDirectory.Length + 1)
-            $copy = Join-Path (Join-Path $publish 'tools/otr-can') $relative
+            $copy = Join-Path (Join-Path $publish $engineDirectory) $relative
             if ((Get-FileHash -LiteralPath $copy -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash) { throw 'Copy changed fixture contents.' }
         }
         if (@((Get-Content -LiteralPath (Join-Path $logs 'motor-capabilities.log') -Raw) -split '\s+') -notcontains 'mp3-aac-v1') { throw 'Real capability probe failed.' }
         if (@((Get-Content -LiteralPath (Join-Path $logs 'motor-capabilities.log') -Raw) -split '\s+') -notcontains 'aac-overlap-v1') { throw 'Real AAC-overlap capability probe failed.' }
     }
-    if ($case -eq 'no-motor' -and ((Test-Path -LiteralPath (Join-Path $publish 'tools/otr-can')) -or @(Get-ChildItem -LiteralPath $logs).Count)) { throw 'Optional motor was unexpectedly used.' }
+    if ($case -eq 'no-motor' -and ((Test-Path -LiteralPath (Join-Path $publish $engineDirectory)) -or @(Get-ChildItem -LiteralPath $logs).Count)) { throw 'Optional motor was unexpectedly used.' }
     $results += [PSCustomObject]@{ Case = $case; Passed = $true; ExpectedRejection = [bool]$expectedError; Message = $errorMessage }
     Write-Host "PASS $case"
 }

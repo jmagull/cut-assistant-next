@@ -1,5 +1,19 @@
 # Nutzeranleitung – Cut Assistant Next
 
+## Cut Assistant Next 1.0.3 Build 52
+
+Setup, Portable-ZIP und Quellen gehören zum eingefrorenen lokalen Paketsatz. Beide Programmvarianten benötigen die .NET 10 Desktop Runtime x64 und verwenden die CAN-Benutzereinstellungen. [Pakete und Voraussetzungen](FREEZE-1.0.3-BUILD52.md)
+
+### Tonspur-Abwahl
+
+Wenn otr-can bei einer Mehrspurdatei abbricht, prüft CAN die Spuren einzeln. Sobald die beschädigte Spur eindeutig feststeht und alle übrigen Spuren die Behaltebereiche vollständig abdecken, zeigt der Dialog, welche Spur entfällt und welche bleiben. **Mit intakter Tonspur erneut schneiden** startet den kompletten Schnitt nach deiner Bestätigung. Die experimentelle AAC-Reparatur und MP4Box bleiben als eigene Optionen im selben Dialog. [Voraussetzungen](AUDIO-SPURABWAHL-BUILD52.md)
+
+## Hinweise zur lokalen Audio-Prüffassung Build 51
+
+Mit **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** kannst du Werbeblöcke grob markieren und zur Feinarbeit an CAN übergeben. Unter **Schnittbereiche** zeigt Spotlight-CAN Originaldauer, Dauer der vollständigen Entfernen-Bereiche und die geschätzte Filmlaufzeit. Die Anzeige berücksichtigt Überschneidungen einmal und wird beim Bearbeiten sofort neu berechnet. Prüfe anschließend die Schnittübergänge im Film.
+
+Wenn otr-can einen Tonfehler meldet, bietet CAN Abbrechen und einen vollständigen Neustart mit dem konfigurierten MP4Box an. Bei einer nachgewiesenen geeigneten AAC-Zeitlücke ist zusätzlich **AAC-Zeitlücken reparieren (experimentell)** verfügbar. Diese Option füllt die Lücke mit Stille, prüft den gesamten Schnitt erneut und kann entsprechend länger dauern. Kontrolliere Bild, alle Tonspuren und die Schnittübergänge. Die beiliegende `VORAUSSETZUNGEN.txt` nennt die für Build 51 benötigten Werkzeuge.
+
 ## Drei Ansichten in der lokalen 1.0.3 – 03.11.2026
 
 Unter **Einstellungen → Darstellung und Schnittbearbeitung … → Anordnung der Benutzeroberfläche** stehen **Standard**, **Power-User 1** (bisherige Anordnung) und **Power-User 2** zur Auswahl. **Übernehmen** wirkt sofort und speichert die Wahl. Laufender Film, Tonspur, Schnittpunkte und geladene Cutlist bleiben beim Ansichtswechsel erhalten. Die separate Rot-/Grün-Arbeitsweise gilt weiterhin erst für den nächsten Film.

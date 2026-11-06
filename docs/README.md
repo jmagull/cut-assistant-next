@@ -1,5 +1,11 @@
 # Dokumentation – Cut Assistant Next
 
+## Aktueller eingefrorener Paketsatz
+
+**Cut Assistant Next 1.0.3 Build 52** enthält die wiederhergestellte Tonspur-Abwahl, den AAC-Reparaturweg und integriertes Spotlight-CAN. [Setup, Portable-ZIP und Quellpakete](FREEZE-1.0.3-BUILD52.md) · [Tonspur-Abwahl](AUDIO-SPURABWAHL-BUILD52.md) · [Spotlight-Integration](SPOTLIGHT-INTEGRATION-20261104.md)
+
+## Stand vom 03.11.2026
+
 **03.11.2026 – eingefrorener Entwicklungsstand CAN 1.0.3, Buildzähler 48.** Gemeinsame Server-/Lokal-Cutlist-Tabelle, Rot/Entfernen und Grün/Behalten mit dynamischer Vorschau sowie Standard / Power-User 1 / Power-User 2 einschließlich Buttonausrichtung sind umgesetzt. Letzter technischer Stand: **1.728/1.728 Tests**, Release-Build ohne Warnungen/Fehler. Quellstand und Dokumentation werden auf Nutzerauftrag committet und gepusht; keine neuen Pakete und keine Veröffentlichung ohne gesonderte Freigabe. Öffentlich bleibt der dokumentierte stabile Stand **CAN 1.0.2 Build 48**. [Freeze und Prüfgrenzen](FREEZE-1.0.3-20261103.md).
 
 [Entwicklungsnotizen 1.0.3](RELEASE-NOTES-1.0.3.md) · [Cutlist-Tabelle](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi und Vorschau](SCHNITTMODI-TIMELINE-20261103.md).

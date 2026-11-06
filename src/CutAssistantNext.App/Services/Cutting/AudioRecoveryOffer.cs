@@ -1,7 +1,7 @@
 using CutAssistantNext.Core.Cutting;
 namespace CutAssistantNext.App.Services.Cutting;
 
-internal enum AudioRecoveryChoice { Cancel, Mp4Box, RepairAacGaps }
+internal enum AudioRecoveryChoice { Cancel, Mp4Box, RepairAacGaps, RetainVerifiedTracks }
 internal interface IAacGapRepair
 {
     Task<AacGapRepairOffer> AssessAsync(CutRequest request, OtrCanAudioFailureException failure, IProgress<CutProgressUpdate>? progress, CancellationToken token);
@@ -23,8 +23,13 @@ internal sealed class AacGapRepairOffer(string description,
     public ValueTask DisposeAsync() => dispose?.Invoke() ?? ValueTask.CompletedTask;
 }
 internal sealed record AudioRecoveryOffer(OtrCanAudioFailureException Failure, AacGapRepairOffer Repair,
- bool Mp4BoxAvailable = true, string? Mp4BoxReason = null, string? RepairFailure = null)
+ bool Mp4BoxAvailable = true, string? Mp4BoxReason = null, string? RepairFailure = null,
+ AudioTrackRecoveryOffer? TrackRecovery = null, string? TrackRecoveryFailure = null)
 {
-    internal string Diagnosis => RepairFailure is null ? Failure.Message :
-     "Auch die experimentelle AAC-Reparatur wurde sicher abgebrochen. Es wurde keine geprüfte Ausgabe übernommen. " + RepairFailure;
+    internal string Diagnosis => (RepairFailure, TrackRecoveryFailure) switch
+    {
+        (string repair, _) => "Auch die experimentelle AAC-Reparatur wurde sicher abgebrochen. Es wurde keine geprüfte Ausgabe übernommen. " + repair,
+        (_, string tracks) => "Der Schnitt mit den geprüften Resttonspuren wurde abgebrochen. Es wurde keine geprüfte Ausgabe übernommen. " + tracks,
+        _ => Failure.Message
+    };
 }

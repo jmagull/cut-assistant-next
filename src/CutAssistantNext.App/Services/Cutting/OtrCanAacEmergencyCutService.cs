@@ -41,6 +41,7 @@ internal sealed class OtrCanAudioFailureException(
         "Die Ursache ist nicht eindeutig als reparierbare Zeitlücke nachgewiesen. Technische Einzelheiten stehen im Protokoll.", inner)
 {
     internal OtrCanAudioDiagnostic? Diagnostic { get; } = diagnostic;
+    internal int SourceAudioTrackCount { get; } = source.AudioStreams.Count;
     internal AacEmergencyOffer? Offer { get; } = allowAacEmergency && IsLegacyProcessingFailure(inner.Message)
         ? AacEmergencyOffer.Create(original, source) : null;
     internal static bool IsLegacyProcessingFailure(string message) =>
@@ -102,17 +103,11 @@ internal sealed class OtrCanAacEmergencyCutService(
             if (choice is null) throw;
             if (!offer.Choices.Contains(choice)) throw new ArgumentException("Ungültige AAC-Tonspurauswahl.");
             var notice = offer.Notice(choice);
-            progress?.Report(new(CutProgressKind.Output, "Ausdrücklich bestätigt: " + notice));
-            var parent = Path.GetDirectoryName(request.OutputFilePath)!;
-            var name = ".can-aac-" + Guid.NewGuid().ToString("N");
-            var work = Path.Combine(parent, name);
-            Directory.CreateDirectory(work);
-            try
+            return await RetryWithPreparedSourceAsync(request, notice, async work =>
             {
-                string prepared;
                 try
                 {
-                    prepared = await preparation.PrepareAsync(request, offer, choice, work, progress, cancellationToken)
+                    return await preparation.PrepareAsync(request, offer, choice, work, progress, cancellationToken)
                         .ConfigureAwait(false);
                 }
                 catch (Exception error) when (error is InvalidDataException or InvalidOperationException)
@@ -120,25 +115,42 @@ internal sealed class OtrCanAacEmergencyCutService(
                     progress?.Report(new(CutProgressKind.Output, "Die bestätigte AAC-Alternative konnte nicht sicher vorbereitet werden: " + error.Message));
                     throw new OtrCanAudioFailureException(offer.Original, offer.Source, error, allowAacEmergency: false);
                 }
-                var result = await selectedEngine(choice.Original.Index)
-                    .RunWithResultAsync(request.WithSourceFilePath(prepared), progress, cancellationToken).ConfigureAwait(false);
-                return new(result.OutputFilePath, result.Timeline, result.TimingKind,
-                    notice + (string.IsNullOrWhiteSpace(result.Notice) ? "" : " " + result.Notice));
-            }
-            finally
+            }, () => selectedEngine(choice.Original.Index), progress, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    internal static async Task<CutResult> RetryWithPreparedSourceAsync(CutRequest request, string notice,
+        Func<string, Task<string>> prepare, Func<ICutEngine> createEngine,
+        IProgress<CutProgressUpdate>? progress, CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
+        progress?.Report(new(CutProgressKind.Output, "Ausdrücklich bestätigt: " + notice));
+        var parent = Path.GetDirectoryName(request.OutputFilePath)!;
+        var name = ".can-aac-" + Guid.NewGuid().ToString("N");
+        var work = Path.Combine(parent, name);
+        if (Directory.Exists(work) || File.Exists(work)) throw new IOException("Der AAC-Arbeitsbereich existiert bereits.");
+        Directory.CreateDirectory(work);
+        try
+        {
+            var prepared = await prepare(work).ConfigureAwait(false);
+            token.ThrowIfCancellationRequested();
+            var result = await createEngine().RunWithResultAsync(request.WithSourceFilePath(prepared), progress, token).ConfigureAwait(false);
+            return new(result.OutputFilePath, result.Timeline, result.TimingKind,
+                notice + (string.IsNullOrWhiteSpace(result.Notice) ? "" : " " + result.Notice));
+        }
+        finally
+        {
+            try
             {
-                try
-                {
-                    var resolved = Path.GetFullPath(work);
-                    if (Path.GetDirectoryName(resolved) != parent || Path.GetFileName(resolved) != name ||
-                        new DirectoryInfo(resolved).LinkTarget is not null)
-                        throw new IOException("Der AAC-Arbeitsbereich hat sich verändert.");
-                    Directory.Delete(resolved, recursive: true);
-                }
-                catch (Exception error) when (error is IOException or UnauthorizedAccessException)
-                {
-                    progress?.Report(new(CutProgressKind.Output, $"AAC-Arbeitsbereich konnte nicht gelöscht werden: {error.Message}"));
-                }
+                var resolved = Path.GetFullPath(work);
+                if (Path.GetDirectoryName(resolved) != parent || Path.GetFileName(resolved) != name ||
+                    new DirectoryInfo(resolved).LinkTarget is not null)
+                    throw new IOException("Der AAC-Arbeitsbereich hat sich verändert.");
+                Directory.Delete(resolved, recursive: true);
+            }
+            catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+            {
+                progress?.Report(new(CutProgressKind.Output, $"AAC-Arbeitsbereich konnte nicht gelöscht werden: {error.Message}"));
             }
         }
     }

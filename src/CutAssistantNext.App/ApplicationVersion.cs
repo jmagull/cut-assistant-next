@@ -5,6 +5,8 @@ namespace CutAssistantNext.App;
 
 public static class ApplicationVersion
 {
+    internal const string AudioRecoveryCandidateName = "Audio-Fehlerbehandlung-Entwicklung";
+
     private static readonly Version FileVersion = new(
         typeof(ApplicationVersion).Assembly
             .GetCustomAttribute<AssemblyFileVersionAttribute>()!.Version);
@@ -20,5 +22,7 @@ public static class ApplicationVersion
 
     public static string DisplayName =>
         $"Cut Assistant Next · {NumericVersion} · Build {FileVersion.Revision}" +
-        (string.IsNullOrWhiteSpace(Candidate) ? string.Empty : $" · {Candidate}");
+        (string.IsNullOrWhiteSpace(Candidate) || Candidate == AudioRecoveryCandidateName
+            ? string.Empty
+            : $" · {Candidate}");
 }

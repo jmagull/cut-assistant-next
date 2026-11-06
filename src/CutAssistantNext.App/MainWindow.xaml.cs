@@ -1500,7 +1500,7 @@ public partial class MainWindow : Window
                                 })));
                                 return fallbackDialog.ShowDialog() == true;
                             }, System.Windows.Threading.DispatcherPriority.Normal, token).Task,
-                            chooseAudioRecovery: ApplicationVersion.CandidateName == AudioDevelopmentEngine.RecoveryCandidateName
+                            chooseAudioRecovery: ApplicationVersion.CandidateName == ApplicationVersion.AudioRecoveryCandidateName
                                 ? (offer, token) => Dispatcher.InvokeAsync(() =>
                                 {
                                     token.ThrowIfCancellationRequested();

@@ -7,7 +7,7 @@ Die synthetischen Quellen erzeugt can-engine/tests/aac_gap_media.py im passenden
 ~~~powershell
 dotnet build tools/prototypes/AudioRecoveryChecks/AudioRecoveryChecks.csproj -c Release -p:CanAssemblyDirectory=PAKETORDNER
 # Die EXE aus ihrem Build-Ordner starten:
-CutAssistantNext.App.Tests.exe ENGINE FFMSINDEX FFMPEG FFPROBE MP4BOX FIXTURE-DIR NEW-RESULT-DIR [NCIS-INPUT]
+CutAssistantNext.App.Tests.exe ENGINE FFMSINDEX FFMPEG FFPROBE MP4BOX FIXTURE-DIR NEW-RESULT-DIR [NCIS-INPUT [JOHN-WICK-INPUT]]
 ~~~
 
-Der optionale Realtest prüft bewusst nur zwei Frames rund um die belegte NCIS-Lücke, führt aber alle strengen Quellen- und Ausgabeprüfungen aus. Der vollständige Referenzschnitt wird getrennt im Motor nachgewiesen.
+Der optionale Realtest prüft bewusst nur zwei Frames rund um die belegte NCIS-Lücke, führt aber alle strengen Quellen- und Ausgabeprüfungen aus. Mit `CAN_AUDIO_RECOVERY_CASE=ncis-real-full` wird der vollständige Referenzschnitt aus CAN ausgeführt und sein Ausgabehash geprüft. Der zusätzliche John-Wick-Pfad verwendet die historischen zwei Behaltebereiche und prüft den vollständigen bestätigten Neustart mit AAC. Die optionalen synthetischen Mehrspurquellen heißen `healthy-two-tracks.mp4`, `ac3-damaged.mp4`, `aac-damaged.mp4`, `aac-damaged-aligned-ac3.mp4` und `two-damaged.mp4`.

@@ -1,5 +1,22 @@
 # Entwicklungsnotizen – CAN 1.0.3
 
+## Build 52 · eingefrorener lokaler Paketsatz vom 05.11.2026
+
+Der gemeinsame otr-can-Fehlerdialog bietet nach Nachweis einer beschädigten Spur und verwendbarer Restspuren den bestätigten vollständigen Neustart mit den geprüften Spuren. [Bedienung und technische Grenzen](AUDIO-SPURABWAHL-BUILD52.md)
+
+Die persönliche Prüfung bestätigte den John-Wick-Dialog, den NCIS-Praxistest und beide Klebecenter-Verfahren. Der Paketsatz trägt den Namen **Cut Assistant Next** und enthält Setup, Portable-ZIP sowie CAN-, Spotlight-CAN-, Motor- und libmpv-Quellen. [Freeze und Nachweise](FREEZE-1.0.3-BUILD52.md)
+
+## Build 51 · lokale Audio-Prüffassung vom 05.11.2026
+
+- **Spotlight-CAN:** Grobe Entfernen-Bereiche an CAN übergeben und dort präzisieren. Die dynamische Anzeige zeigt Original-, Entfernen- und Restlaufzeit im Format HH:MM:SS.mmm. Abgeschlossene Bereiche zählen, Überlappungen werden einmal berücksichtigt.
+- **otr-can:** Nach einem Tonfehler stehen Abbrechen, ein vollständiger Neustart mit dem eingerichteten MP4Box und bei geeigneten AAC-Lücken die ausdrücklich bestätigte experimentelle Reparatur zur Wahl.
+- **Praxis:** Die vollständige NCIS-Sydney-AAC-Reparatur und reguläre Schnitte wurden persönlich geprüft. Die vollständige Bildprüfung kann den Reparaturlauf deutlich verlängern.
+- **Pakete:** Setup unter dem gewohnten Namen Cut Assistant Next, Portable-ZIP und Quellen einschließlich Spotlight-CAN. Beide Programmpakete enthalten den für diese Fassung vorgesehenen Motor 0.1.6-audio-diag.1.
+
+[Paketübersicht](PAKETE-BUILD51-20261105.md) · [Audioablauf und Prüfergebnisse](AUDIO-DREI-OPTIONEN-20261105.md) · [Spotlight-CAN](SPOTLIGHT-INTEGRATION-20261104.md)
+
+## Build 48 · eingefrorener Stand vom 03.11.2026
+
 Stand: 03.11.2026. **Auf Nutzerauftrag eingefrorener Entwicklungsstand, nicht veröffentlicht.** Der Buildzähler bleibt 48, lokale Dateiversion 1.0.3.48. Der dokumentierte stabile öffentliche Paketsatz bleibt CAN 1.0.2 Build 48 (1.0.2.48). Commit und Push von Quellstand und Dokumentation sind beauftragt. Keine neuen Setup-/Portable-/Quellpakete; Veröffentlichung erst nach gesonderter Freigabe. [Freeze und Nachweise](FREEZE-1.0.3-20261103.md).
 
 ## Gemeinsame Cutlist-Auswahl

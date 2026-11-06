@@ -14,6 +14,7 @@ internal sealed class OtrCanCutService : ICutEngine
 {
     private readonly OtrCanToolPaths _tools;
     private readonly int? _retainedAudioStreamIndex;
+    private readonly IReadOnlyList<int>? _verifiedAudioStreamIndices;
     private readonly ICutToolRunner _runner;
     private readonly Func<string, CancellationToken, Task<MediaAnalysisResult>> _analyze;
     private readonly Func<bool, CancellationToken, Task> _checkTools;
@@ -21,10 +22,11 @@ internal sealed class OtrCanCutService : ICutEngine
     internal OtrCanCutService(OtrCanToolPaths tools, ICutToolRunner? runner = null,
         Func<string, CancellationToken, Task<MediaAnalysisResult>>? analyze = null,
         Func<bool, CancellationToken, Task>? checkTools = null,
-        int? retainedAudioStreamIndex = null)
+        int? retainedAudioStreamIndex = null, IReadOnlyList<int>? verifiedAudioStreamIndices = null)
     {
         _tools = tools;
         _retainedAudioStreamIndex = retainedAudioStreamIndex;
+        _verifiedAudioStreamIndices = verifiedAudioStreamIndices?.ToArray();
         _runner = runner ?? new CutToolRunner();
         _analyze = analyze ?? new FfprobeRunner(tools.Ffprobe).RunAsync;
         _checkTools = checkTools ?? ((_, _) => Task.CompletedTask);
@@ -53,11 +55,13 @@ internal sealed class OtrCanCutService : ICutEngine
         if (!File.Exists(request.SourceFilePath)) throw new FileNotFoundException("Die Schnittquelle fehlt.", request.SourceFilePath);
         Report(CutProgressKind.Status, "OTR-CAN-Werkzeuge werden geprüft …");
         var original = await _analyze(request.OriginalFilePath, token).ConfigureAwait(false);
-        var expectedOriginal = ExpectedOriginal(original, _retainedAudioStreamIndex);
+        var expectedOriginal = _verifiedAudioStreamIndices is null
+            ? ExpectedOriginal(original, _retainedAudioStreamIndex)
+            : ExpectedVerifiedTracks(original, _verifiedAudioStreamIndices);
         await _checkTools(original.AudioStreams.Any(s => s.CodecName == "mp3"), token).ConfigureAwait(false);
         var source = string.Equals(request.SourceFilePath, request.OriginalFilePath, StringComparison.OrdinalIgnoreCase)
             ? original : await _analyze(request.SourceFilePath, token).ConfigureAwait(false);
-        if (_retainedAudioStreamIndex is not null ||
+        if (_retainedAudioStreamIndex is not null || _verifiedAudioStreamIndices is not null ||
             !string.Equals(request.SourceFilePath, request.OriginalFilePath, StringComparison.OrdinalIgnoreCase))
             ValidateOutput(expectedOriginal, source, allowMp3Conversion: false);
         if (source.VideoStreams.Count != 1 || source.VideoStreams[0].Index != 0)
@@ -119,7 +123,7 @@ internal sealed class OtrCanCutService : ICutEngine
             {
                 var diagnostic = OtrCanAudioDiagnostic.Read(work, source, request);
                 var failure = new OtrCanAudioFailureException(original, source, error, diagnostic,
-                    allowAacEmergency: _retainedAudioStreamIndex is null);
+                    allowAacEmergency: _retainedAudioStreamIndex is null && _verifiedAudioStreamIndices is null);
                 throw failure;
             }
             if (!File.Exists(pending) || new FileInfo(pending).Length == 0)
@@ -162,6 +166,16 @@ internal sealed class OtrCanCutService : ICutEngine
         if (original.AudioStreams.Count < 2 || track?.CodecName != "aac")
             throw new ArgumentException("Die freigegebene AAC-Tonspur ist nicht vorhanden.");
         return original with { AudioStreams = [track] };
+    }
+
+    internal static MediaAnalysisResult ExpectedVerifiedTracks(MediaAnalysisResult original, IReadOnlyList<int> retained)
+    {
+        var tracks = original.AudioStreams.Where(track => retained.Contains(track.Index)).ToArray();
+        if (tracks.Length == 0 || tracks.Length >= original.AudioStreams.Count ||
+            !tracks.Select(track => track.Index).SequenceEqual(retained) ||
+            tracks.Any(track => track.CodecName is not ("aac" or "ac3")))
+            throw new ArgumentException("Die bestätigten Resttonspuren sind nicht verfügbar.");
+        return original with { AudioStreams = tracks };
     }
 
     internal static string BuildCutlist(CutRequest request)

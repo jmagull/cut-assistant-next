@@ -1,9 +1,11 @@
 # Versionen und Nachweise
 
-**Stand 03.11.2026.** CAN-Anwendung, Buildnummer, Schnittmotor und Wiedergabebibliothek haben getrennte Versionen. [Aktueller Stand](AKTUELLER-STAND.md).
+**Stand 05.11.2026.** CAN-Anwendung, Buildnummer, Schnittmotor und Wiedergabebibliothek haben getrennte Versionen. [Aktueller Stand](AKTUELLER-STAND.md).
 
 | CAN | Build | otr-can | Einordnung |
 |---|---:|---|---|
+| 1.0.3 | 52 | 0.1.6-audio-diag.1 | [Eingefrorener lokaler Paketsatz](FREEZE-1.0.3-BUILD52.md) mit bestätigter Tonspur-Abwahl, AAC-Reparatur und Spotlight-CAN |
+| 1.0.3 | 51 | 0.1.6-audio-diag.1 | Lokale Audio-Fehlerbehandlung-Entwicklung mit Spotlight-CAN und [Setup, Portable-ZIP und Quellen](PAKETE-BUILD51-20261105.md) |
 | 1.0.3 | 48 (Zähler fortgeführt) | 0.1.6 | Eingefroren am 03.11.2026: gemeinsame Cutlist-Tabelle, Rot/Grün und dynamische Vorschau, Power-User 2 mit Buttonkorrektur; 1728 Tests, Commit/Push beauftragt; Veröffentlichung erst nach Freigabe |
 | 1.0.0 | 32 | 0.1.5 | Früherer stabiler Stand |
 | 1.0.1 | 34 | 0.1.6 | Veröffentlichung zurückgenommen; datierter Nachweis |

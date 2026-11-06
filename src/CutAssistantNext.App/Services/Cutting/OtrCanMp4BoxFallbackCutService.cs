@@ -10,12 +10,17 @@ internal sealed class OtrCanMp4BoxFallbackCutService : ICutEngine
     private readonly Func<OtrCanAudioFailureException, CancellationToken, Task<bool>>? confirm;
     private readonly Func<AudioRecoveryOffer, CancellationToken, Task<AudioRecoveryChoice>>? choose;
     private readonly IAacGapRepair? repair;
+    private readonly IAudioTrackRecovery? trackRecovery;
     private readonly Func<CancellationToken, Task<(bool Available, string? Reason)>>? availability;
     internal bool UsedAacRepair { get; private set; }
     internal OtrCanMp4BoxFallbackCutService(ICutEngine normal, Func<IProgress<CutProgressUpdate>?, CancellationToken, Task<ICutEngine>> alternative, Func<OtrCanAudioFailureException, CancellationToken, Task<bool>> confirm)
     { this.normal = normal; this.alternative = alternative; this.confirm = confirm; }
-    internal OtrCanMp4BoxFallbackCutService(ICutEngine normal, Func<IProgress<CutProgressUpdate>?, CancellationToken, Task<ICutEngine>> alternative, Func<AudioRecoveryOffer, CancellationToken, Task<AudioRecoveryChoice>> choose, IAacGapRepair repair, Func<CancellationToken, Task<(bool Available, string? Reason)>> availability)
-    { this.normal = normal; this.alternative = alternative; this.choose = choose; this.repair = repair; this.availability = availability; }
+    internal OtrCanMp4BoxFallbackCutService(ICutEngine normal, Func<IProgress<CutProgressUpdate>?, CancellationToken, Task<ICutEngine>> alternative, Func<AudioRecoveryOffer, CancellationToken, Task<AudioRecoveryChoice>> choose, IAacGapRepair repair, Func<CancellationToken, Task<(bool Available, string? Reason)>> availability,
+        IAudioTrackRecovery? trackRecovery = null)
+    {
+        this.normal = normal; this.alternative = alternative; this.choose = choose;
+        this.repair = repair; this.availability = availability; this.trackRecovery = trackRecovery;
+    }
     internal const string Notice = "MP4Box-Fallback: Nach dem otr-can-Tonfehler ausdrücklich gewählte alternative Schnittmethode. " +
         "Dies ist keine nachgewiesene Audioreparatur. Bitte Bild, Ton, Tonsynchronität und alle Schnittübergänge persönlich kontrollieren.";
     internal bool UsedMp4Box { get; private set; }
@@ -38,8 +43,10 @@ internal sealed class OtrCanMp4BoxFallbackCutService : ICutEngine
             {
                 // Normal cleanup has ended before any preflight, decision or restart.
                 await using var assessment = await repair!.AssessAsync(request, failure, progress, cancellationToken).ConfigureAwait(false);
+                using var tracks = trackRecovery is null ? null :
+                    await trackRecovery.AssessAsync(request, failure, progress, cancellationToken).ConfigureAwait(false);
                 var mp4 = await availability!(cancellationToken).ConfigureAwait(false);
-                var offer = new AudioRecoveryOffer(failure, assessment, mp4.Available, mp4.Reason);
+                var offer = new AudioRecoveryOffer(failure, assessment, mp4.Available, mp4.Reason, TrackRecovery: tracks);
                 var choice = await choose(offer, cancellationToken).ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
                 if (choice == AudioRecoveryChoice.RepairAacGaps)
@@ -57,6 +64,23 @@ internal sealed class OtrCanMp4BoxFallbackCutService : ICutEngine
                         progress?.Report(new(CutProgressKind.Output, "AAC-Reparatur fehlgeschlagen; keine erfolgreiche Ausgabe: " + error));
                         var unavailable = new AacGapRepairOffer("Der bestätigte Reparaturversuch ist fehlgeschlagen. Kein weiterer Reparaturversuch für diesen Auftrag.");
                         choice = await choose(offer with { Repair = unavailable, RepairFailure = error.Message }, cancellationToken).ConfigureAwait(false);
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+                }
+                else if (choice == AudioRecoveryChoice.RetainVerifiedTracks)
+                {
+                    var restart = tracks?.Restart ??
+                        throw new InvalidOperationException("Für diesen Auftrag wurde keine sichere Spur-Abwahl angeboten.");
+                    try
+                    {
+                        return await restart(cancellationToken).ConfigureAwait(false);
+                    }
+                    catch (Exception error) when (error is not OperationCanceledException)
+                    {
+                        progress?.Report(new(CutProgressKind.Output, "Bestätigter Schnitt mit Resttonspuren fehlgeschlagen: " + error));
+                        var unavailable = new AudioTrackRecoveryOffer("Der bestätigte Neustart ist fehlgeschlagen. Ein weiterer Versuch ist für diesen Auftrag gesperrt.");
+                        choice = await choose(offer with { TrackRecovery = unavailable, TrackRecoveryFailure = error.Message },
+                            cancellationToken).ConfigureAwait(false);
                         cancellationToken.ThrowIfCancellationRequested();
                     }
                 }

@@ -18,6 +18,20 @@ Das persönliche Protokoll enthält die Arbeitsschritte ohne Zeitstempel. Es zei
 
 Für eine Beschleunigung bietet sich eine gemeinsame Dekodierung für Bildfolge und Pixelvergleich an. Vor einer Übernahme sind die gleichen Prüfwerte, dieselbe Ausgabedatei und das Ablehnungsverhalten an fehlerhaften Eingaben nachzuweisen. Dieser Nachtrag dokumentiert die persönliche NCIS-Abnahme von Build 51. Die Produktivfreigabe ist separat.
 
+## Persönlicher Test nach Setup-Installation
+
+Am 05.11.2026 bestätigte Joerg die beiden Schnitte mit dem per Setup installierten **Cut Assistant Next 1.0.3 Build 51** anhand von **NCIS Sydney – Breathless**. Bei MP4Box und bei der experimentellen AAC-Reparatur waren Bild, Ton, Schnitt und Drei-Sekunden-Vorschau einwandfrei.
+
+- **MP4Box** schnitt die drei Behaltebereiche, fügte sie zusammen und prüfte beide Übergänge. Das Protokoll endet mit „Fertig.“
+- **otr-can** lief aus dem installierten Programmordner. Der strenge Erstversuch brach wegen einer inneren AAC-Lücke von 512 Samples bei 48 kHz ab. Nach der ausdrücklichen Auswahl von „AAC-Zeitlücken reparieren (experimentell)“ prüfte der Motor den Schnitt vollständig und bestätigte 115.580.160 Nutzsamples und 512 positionsgenau ergänzte Stillevektoren. Die im Protokoll gemeldete SHA-256-Prüfsumme entspricht der des oben dokumentierten Referenzfilms.
+- **Laufzeit** laut persönlicher Rückmeldung über 13 Minuten für den otr-can-Lauf mit AAC-Reparatur. Das Protokoll enthält keine Zeitstempel für die einzelnen Prüfschritte.
+
+## John Wick – Kapitel 4 mit installiertem Build 51
+
+Der reguläre otr-can-Schnitt der Aufnahme mit Teil 1 und 2 lief über sechs Behaltebereiche. Der installierte Motor verifizierte **176.424 Videopakete** und jeweils **338.734.080 dekodierte Samples** der beiden Stereospuren AAC und AC-3 bei 48 kHz. Das entspricht **01:57:36.960** pro Tonspur. Die abschließende MP4-Prüfung war erfolgreich.
+
+Joerg bestätigte Bild, Ton, Schnitt und Drei-Sekunden-Vorschau für otr-can und meldete auch den MP4Box-Schnitt als einwandfrei. Die technischen Werte stammen aus dem otr-can-Protokoll.
+
 ## Praxistest mit Ein Weihnachtsbaum für Zwei
 
 Am 05.11.2026 bestätigte Joerg für den regulären otr-can-Schnitt aus der Build-51-Prüffassung einwandfreies Bild, Ton, Schnitt und Drei-Sekunden-Vorschau. Der Motor prüfte die Zeitstruktur von 195.004 Quellbildern und bestätigte **123.435 Ausgabebilder** sowie **236.995.200 dekodierte Samples** der AAC-Stereospur bei 48 kHz. Video und Ton laufen in der fertigen MP4 jeweils **01:22:17.400**.

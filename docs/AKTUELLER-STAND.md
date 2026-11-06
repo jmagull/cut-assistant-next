@@ -1,5 +1,13 @@
 # Aktueller Projektstand
 
+## 05.11.2026 – Cut Assistant Next 1.0.3 Build 52 eingefroren
+
+Build 52 verbindet die bestätigte Tonspur-Abwahl mit dem experimentellen AAC-Reparaturweg. Persönlich bestätigt sind der John-Wick-Dialog, der NCIS-Praxistest und beide Klebeverfahren. Der lokale Paketsatz enthält Setup, Portable-ZIP und Quellen. [Freeze, Voraussetzungen und Nachweise](FREEZE-1.0.3-BUILD52.md)
+
+## 05.11.2026 – CAN 1.0.3 Build 51
+
+Die lokale Prüffassung enthält Spotlight-CAN mit dynamischer Laufzeit und die drei Entscheidungen nach einem otr-can-Tonfehler. Der vollständige AAC-Reparaturlauf mit NCIS Sydney sowie reguläre Filmschnitte wurden persönlich geprüft. Setup, Portable-ZIP und Quellen gehören zum lokalen Paketsatz dieser Fassung. [Paketübersicht](PAKETE-BUILD51-20261105.md) · [Praxisprotokoll](AUDIO-DREI-OPTIONEN-20261105.md)
+
 ## 03.11.2026 – CAN 1.0.3 eingefroren, Commit und Push beauftragt
 
 Der Nutzer bestätigt die korrigierte Power-User-2-Darstellung mit geladenem Christmas-Cookbook-Film erneut positiv: **„Ich glaube das sieht sehr gut aus :-)“**. +10 Bilder und beide Keyframe-Buttons liegen auf gleicher Höhe. Danach ausdrücklicher Auftrag, README und Dokumentation abzugleichen, zu committen und zu pushen; **dieser Stand ist eingefroren, Veröffentlichung erst nach gesonderter Freigabe**. Version **1.0.3**, Buildzähler **48**, keine neuen Pakete. [Freeze, Prüfungen und Grenzen](FREEZE-1.0.3-20261103.md).

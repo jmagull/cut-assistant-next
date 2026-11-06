@@ -1,5 +1,13 @@
 # Setup-Merkliste
 
+## Cut Assistant Next 1.0.3 Build 52 – eingefrorener Paketsatz
+
+Das x64-Setup verwendet den gewohnten Namen, Programmordner und die bisherige Installationskennung. Für die Portable-Variante die ZIP vollständig in einen eigenen Ordner entpacken. Der lokale Paketsatz enthält die geprüften Build-52-Programmdateien und die aktuelle Dokumentation. [Pakete und Voraussetzungen](FREEZE-1.0.3-BUILD52.md)
+
+## CAN 1.0.3 Build 51 – lokale Audio-Prüffassung
+
+Das x64-Setup heißt Cut Assistant Next und verwendet den bisherigen Programmordner und die bestehende Installationskennung. Portable-Nutzer entpacken die ZIP in einen eigenen Ordner. Beide Varianten greifen auf die bestehenden CAN-Einstellungen zurück. Die .NET 10 Desktop Runtime x64 und die Werkzeuge des gewählten Motors werden separat eingerichtet. [Dateien, Voraussetzungen und Prüfung](PAKETE-BUILD51-20261105.md)
+
 ## Power-User 2 – 03.11.2026
 
 - [x] Dritte dauerhafte Layoutoption, kompatible Werte 0/1/2 und sichtbare Namen Standard / Power-User 1 / Power-User 2.

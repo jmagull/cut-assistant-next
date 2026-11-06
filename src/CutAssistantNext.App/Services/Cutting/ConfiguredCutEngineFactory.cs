@@ -53,8 +53,12 @@ internal sealed class ConfiguredCutEngineFactory
                     input, output, analysis, ffmpegPath, ffprobePath, updates ?? new Progress<CutProgressUpdate>(), cancellation));
         }
         if (_chooseAudioRecovery is not null)
+        {
+            var (native, ffmpeg, paths) = ResolveNative(settings);
             return new OtrCanMp4BoxFallbackCutService(normal, Alternative, _chooseAudioRecovery,
-                new AacGapRepairService(ResolveNative(settings).Paths), _mp4BoxFactory.CheckAvailabilityAsync);
+                new AacGapRepairService(paths), _mp4BoxFactory.CheckAvailabilityAsync,
+                new OtrCanAudioTrackRecovery(paths, indices => CreateCheckedOtrCan(native, ffmpeg, paths, verifiedIndices: indices)));
+        }
         return new OtrCanMp4BoxFallbackCutService(normal, Alternative, _confirmMp4BoxFallback!);
     }
 
@@ -80,15 +84,19 @@ internal sealed class ConfiguredCutEngineFactory
         Func<AacEmergencyOffer, CancellationToken, Task<AacEmergencyChoice?>>? confirm)
     {
         var (native, ffmpeg, paths) = ResolveNative(settings);
-        ICutEngine Create(int? selected) => new OtrCanCutService(paths, checkTools: async (requireMp3, token) =>
+        var normal = CreateCheckedOtrCan(native, ffmpeg, paths);
+        return confirm is null ? normal : new OtrCanAacEmergencyCutService(normal,
+            selected => CreateCheckedOtrCan(native, ffmpeg, paths, legacyIndex: selected),
+            new AacEmergencySource(paths), confirm);
+    }
+
+    private static OtrCanCutService CreateCheckedOtrCan(OtrCanSettings native, FfmpegSettings ffmpeg, OtrCanToolPaths paths,
+        int? legacyIndex = null, IReadOnlyList<int>? verifiedIndices = null) =>
+        new(paths, checkTools: async (requireMp3, token) =>
         {
             var results = await new OtrCanToolChecker().CheckAsync(native, ffmpeg, token, requireMp3).ConfigureAwait(false);
             if (results.Any(r => !r.IsAvailable))
                 throw new InvalidOperationException(string.Join(Environment.NewLine,
                     results.Where(r => !r.IsAvailable).Select(r => $"{r.Name}: {r.Message}")));
-        }, retainedAudioStreamIndex: selected);
-        var normal = Create(null);
-        return confirm is null ? normal : new OtrCanAacEmergencyCutService(
-            normal, selected => Create(selected), new AacEmergencySource(paths), confirm);
-    }
+        }, retainedAudioStreamIndex: legacyIndex, verifiedAudioStreamIndices: verifiedIndices);
 }

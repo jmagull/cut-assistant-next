@@ -1,0 +1,9 @@
+# CAN 1.0.3 Build 52 – Tonspur-Abwahl
+
+Build 52 stellt den im John-Wick-Praxisfall bewährten Spur-Ausschluss im gemeinsamen Dialog **otr-can – Audioproblem erkannt** wieder bereit. Der normale Schnitt beginnt mit allen Spuren. Erst nach einem Tonabbruch prüft CAN jede Spur getrennt auf Decoderfehler und auf exakte Abdeckung der Behaltebereiche. [Früherer John-Wick-Nachweis](OTR-CAN-AAC-NOTFALLWEG-20261026.md)
+
+Wenn genau eine beschädigte Spur nachgewiesen ist und sämtliche übrigen Spuren verwendbar sind, nennt der Dialog die entfallende und die erhaltenen Spuren. **Mit intakter Tonspur erneut schneiden** bestätigt den Neustart. CAN erstellt eine Arbeitskopie per Streamcopy, vergleicht die Video- und Audiopakete samt Zeitstempeln und schneidet die unveränderten Behaltebereiche erneut mit otr-can. Die fertige Ausgabe wird gegen die erwarteten Spuren geprüft. Der Abschluss nennt die entfallene Spur.
+
+Die Spur-Abwahl ist für originale MP4-Dateien mit einer H.264-Videospur, AAC-LC oder AC-3 in Mono oder Stereo und auf 40 ms ausgerichteten Behaltebereichen geprüft. Für AC-3 müssen die ursprüngliche Spurlaufzeit und die geplante Ausgabelänge auf ganze 1536-Sample-Blöcke passen. Fehlt ein eindeutiger Nachweis, erklärt der Dialog den Grund. Die experimentelle AAC-Zeitlückenreparatur verwendet weiterhin den strengen Prüfweg für eine einzelne geeignete AAC-Spur. MP4Box verwendet den Pfad aus den CAN-Einstellungen. Abbrechen ist auch mit Esc die Standardaktion. [AAC-Verfahren und Nachweise](AUDIO-DREI-OPTIONEN-20261105.md)
+
+Der [eingefrorene lokale Windows-x64-Paketsatz](FREEZE-1.0.3-BUILD52.md) enthält Setup, Portable-ZIP, CAN-Quellen einschließlich Spotlight-CAN sowie die zum Motor und zur Wiedergabebibliothek gehörenden Quellen. Die Prüffassung kann direkt über `CutAssistantNext.App.exe` aus dem vollständigen Programmordner gestartet werden. Sie benötigt die .NET 10 Desktop Runtime x64 sowie die in CAN eingerichteten Werkzeuge.

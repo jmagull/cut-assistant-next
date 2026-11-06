@@ -15,11 +15,13 @@
   #error CanCandidate is required
 #endif
 
+#define ShowCandidate (CanCandidate != "" && CanCandidate != "Audio-Fehlerbehandlung-Entwicklung")
+
 [Setup]
 AppId={{cdcdaf11-d631-4f81-b1d0-b50ea6ac606d}
 AppName=Cut Assistant Next
 AppVersion={#CanVersion}
-#if CanCandidate != ""
+#if ShowCandidate
 AppVerName=Cut Assistant Next {#CanVersion} (Build {#CanBuildNumber}, {#CanCandidate})
 #else
 AppVerName=Cut Assistant Next {#CanVersion} (Build {#CanBuildNumber})
@@ -32,7 +34,7 @@ WizardStyle=modern dynamic
 WizardSizePercent=150,150
 SetupIconFile=..\assets\can.ico
 OutputDir={#CanOutputDir}
-#if CanCandidate != ""
+#if ShowCandidate
 OutputBaseFilename=CutAssistantNext-{#CanVersion}-Build{#CanBuildNumber}-win-x64-Setup-{#CanCandidate}
 #else
 OutputBaseFilename=CutAssistantNext-{#CanVersion}-Build{#CanBuildNumber}-win-x64-Setup

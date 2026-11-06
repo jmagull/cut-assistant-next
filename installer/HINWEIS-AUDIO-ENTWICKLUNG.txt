@@ -1,0 +1,28 @@
+Cut Assistant Next – lokale Audio-Prüffassung
+
+Diese lokale Prüffassung benötigt die .NET 10 Desktop Runtime für Windows x64.
+https://dotnet.microsoft.com/en-us/download/dotnet/10.0
+
+FFmpeg und ffprobe sind separat erhältlich:
+https://ffmpeg.org/download.html
+In CAN unter Einstellungen > FFmpeg-Werkzeuge mit „Prüfen“ kontrollieren.
+
+GPAC/MP4Box ist separat erhältlich:
+https://gpac.io/downloads/gpac-nightly-builds/
+Die stabile Windows-x64-Version verwenden. CAN verwendet den Pfad unter
+Einstellungen > Schnittanwendung auch beim bestätigten MP4Box-Neustart.
+
+Optionaler Schnittmotor otr-can 0.1.6-audio-diag.1:
+Der in dieser Prüffassung automatisch ausgewählte Motor liegt unter
+runtime\otr-can\otr_can.exe. Quellen und Lizenzhinweise liegen daneben.
+Für den Motor das vollständige Windows-x64-Paket von FFMS2 entpacken:
+https://github.com/ffms/ffms2/releases
+ffmsindex.exe unter Einstellungen > OTR-CAN-Werkzeuge konfigurieren.
+Falls dem Motor die Microsoft Visual C++ v14-Laufzeit fehlt, das x64-Paket
+von Microsoft installieren: https://aka.ms/vc14/vc_redist.x64.exe
+
+Setup und Portable-ZIP verwenden die bestehenden CAN-Einstellungen.
+MP4Box bleibt die Standard-Schnittmethode. Eine experimentelle AAC-Reparatur
+ist bei geeigneten Zeitlücken nach ausdrücklicher Wahl verfügbar. Sie ergänzt
+Stille und kann wegen der vollständigen Prüfung deutlich länger dauern.
+Bitte Bild, alle Tonspuren und Schnittübergänge persönlich kontrollieren.

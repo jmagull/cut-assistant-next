@@ -24,7 +24,9 @@ if ($snapshot.BuildNumber -ne $BuildNumber) { throw 'Build number differs from t
 $version = [string]$versionXml.Project.PropertyGroup.Version
 if ($snapshot.Version -ne $version) { throw 'Version differs from the source snapshot.' }
 if ($snapshot.Candidate -ne $Candidate) { throw 'Candidate differs from the source snapshot.' }
-$candidateSuffix = if ($Candidate) { "-$Candidate" } else { '' }
+$audioCandidate = $Candidate -ceq 'Audio-Fehlerbehandlung-Entwicklung'
+$candidateSuffix = if ($Candidate -and -not $audioCandidate) { "-$Candidate" } else { '' }
+if ($audioCandidate -and -not $OtrCanPackageDirectory) { throw 'The audio development candidate requires its bundled motor.' }
 $releaseNotes = Join-Path $repo "docs\RELEASE-NOTES-$version.md"
 if (-not (Test-Path -LiteralPath $releaseNotes -PathType Leaf)) { throw "Missing release notes for version $version." }
 
@@ -93,14 +95,15 @@ $fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $
 if ($fileVersion -ne "$version.$BuildNumber") { throw "Unexpected file version: $fileVersion" }
 Copy-Item -LiteralPath (Join-Path $repo 'docs\NUTZERANLEITUNG.md') -Destination (Join-Path $publish 'NUTZERANLEITUNG.md')
 Copy-Item -LiteralPath $releaseNotes -Destination (Join-Path $publish 'RELEASE-NOTES.md')
-Copy-Item -LiteralPath (Join-Path $repo 'installer\HINWEIS-DOTNET-UND-WERKZEUGE.txt') -Destination (Join-Path $publish 'VORAUSSETZUNGEN.txt')
+$prerequisiteFile = if ($audioCandidate) { 'HINWEIS-AUDIO-ENTWICKLUNG.txt' } else { 'HINWEIS-DOTNET-UND-WERKZEUGE.txt' }
+Copy-Item -LiteralPath (Join-Path $repo "installer\$prerequisiteFile") -Destination (Join-Path $publish 'VORAUSSETZUNGEN.txt') -ErrorAction Stop
 $engineProvenance = $null
 if ($OtrCanPackageDirectory) {
-    $expectedEngineVersion = '0.1.6'
+    $expectedEngineVersion = if ($audioCandidate) { '0.1.6-audio-diag.1' } else { '0.1.6' }
     $engineSourceArchive = "sources\otr-can-$expectedEngineVersion-source.zip"
     if ($snapshot.OtrCanVersion -ne $expectedEngineVersion) { throw 'CAN source snapshot declares a different motor version.' }
     $prerequisitesText = Get-Content -LiteralPath (Join-Path $publish 'VORAUSSETZUNGEN.txt') -Encoding UTF8 -Raw
-    $documentedEngine = [regex]::Match($prerequisitesText, '(?m)^Optionaler Schnittmotor otr-can (?<version>\d+\.\d+\.\d+):\s*$')
+    $documentedEngine = [regex]::Match($prerequisitesText, '(?m)^Optionaler Schnittmotor otr-can (?<version>[0-9][0-9A-Za-z.-]*):\s*$')
     if (-not $documentedEngine.Success -or $documentedEngine.Groups['version'].Value -ne $expectedEngineVersion) {
         throw 'Installer prerequisite text declares a different motor version.'
     }
@@ -119,7 +122,8 @@ if ($OtrCanPackageDirectory) {
     if ($engineProvenance.Version -ne $expectedEngineVersion) { throw 'Unexpected motor package version.' }
     if ((Get-FileHash -LiteralPath (Join-Path $enginePackage 'otr_can.exe') -Algorithm SHA256).Hash -ne $engineProvenance.ExecutableSha256) { throw 'Motor EXE differs from provenance.' }
     if ((Get-FileHash -LiteralPath (Join-Path $enginePackage $engineSourceArchive) -Algorithm SHA256).Hash -ne $engineProvenance.SourceArchiveSha256) { throw 'Motor sources differ from provenance.' }
-    $bundledEngine = Join-Path $publish 'tools\otr-can'
+    $engineDirectory = if ($audioCandidate) { 'runtime\otr-can' } else { 'tools\otr-can' }
+    $bundledEngine = Join-Path $publish $engineDirectory
     [System.IO.Directory]::CreateDirectory($bundledEngine) | Out-Null
     foreach ($file in (Get-ChildItem -LiteralPath $enginePackage -File -Recurse)) {
         $relative = $file.FullName.Substring($enginePackage.Length + 1)
@@ -134,6 +138,9 @@ if ($OtrCanPackageDirectory) {
     $capabilities = (Get-Content -LiteralPath (Join-Path $logs 'motor-capabilities.log') -Raw) -split '\s+'
     if ($capabilities -notcontains 'mp3-aac-v1') { throw 'Bundled motor does not report the required MP3-to-AAC capability.' }
     if ($capabilities -notcontains 'aac-overlap-v1') { throw 'Bundled motor does not report the required AAC-overlap capability.' }
+    if ($audioCandidate -and ('audio-diagnostic-v1' -notin $capabilities -or 'aac-gap-repair-v1' -notin $capabilities)) {
+        throw 'Bundled motor does not report the required AAC diagnostics and repair capabilities.'
+    }
 }
 $sourceHash = (Get-FileHash -LiteralPath $sourceArchive -Algorithm SHA256).Hash
 $provenance = [ordered]@{
@@ -158,7 +165,13 @@ Invoke-Step 'installer' $compiler @("--define=CanPublishDir=$publish", "--define
 $setupPath = Join-Path $output "$baseName-Setup$candidateSuffix.exe"
 if (-not (Test-Path -LiteralPath $setupPath)) { throw 'Installer output missing.' }
 Copy-Item -LiteralPath $sourceArchive -Destination (Join-Path $output ([System.IO.Path]::GetFileName($sourceArchive)))
-$artifactLines = @($sourceArchive, $zipPath, $setupPath) | ForEach-Object { '{0}  {1}' -f (Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash, [System.IO.Path]::GetFileName($_) }
+$artifacts = @($sourceArchive, $zipPath, $setupPath)
+if ($audioCandidate) {
+    $motorSource = Join-Path $output ([System.IO.Path]::GetFileName($engineSourceArchive))
+    Copy-Item -LiteralPath (Join-Path $bundledEngine $engineSourceArchive) -Destination $motorSource
+    $artifacts += $motorSource
+}
+$artifactLines = $artifacts | ForEach-Object { '{0}  {1}' -f (Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash, [System.IO.Path]::GetFileName($_) }
 [System.IO.File]::WriteAllLines((Join-Path $output 'SHA256SUMS.txt'), [string[]]$artifactLines, $utf8)
 Assert-SourceSnapshot
 Write-Host "Release packages ready: $output"

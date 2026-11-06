@@ -21,6 +21,59 @@ public sealed class AudioRecoveryDecisionTests
     }
     private static Task<ICutEngine> NoFallback(IProgress<CutProgressUpdate>? _, CancellationToken __) => throw new Exception("MP4Box was not chosen");
     private static Task<(bool, string?)> Available(CancellationToken _) => Task.FromResult<(bool, string?)>((true, null));
+    private sealed class TrackRecovery(Func<AudioTrackRecoveryOffer> offer) : IAudioTrackRecovery
+    {
+        public Task<AudioTrackRecoveryOffer> AssessAsync(CutRequest request, OtrCanAudioFailureException failure,
+            IProgress<CutProgressUpdate>? progress, CancellationToken token) => Task.FromResult(offer());
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task TrackRetryRequiresItsOwnExplicitChoice(bool confirmed)
+    {
+        var request = Request();
+        var starts = 0;
+        var engine = new OtrCanMp4BoxFallbackCutService(new Engine(_ => throw Failure()), NoFallback,
+            (offer, _) =>
+            {
+                Assert.True(offer.TrackRecovery!.IsAvailable);
+                Assert.Equal(0, starts);
+                return Task.FromResult(confirmed ? AudioRecoveryChoice.RetainVerifiedTracks : AudioRecoveryChoice.Cancel);
+            }, new Repair(_ => new("unavailable")), Available, new TrackRecovery(() => new("Spur 2 entfällt", _ =>
+            {
+                starts++;
+                return Task.FromResult(CutResult.Planned(request.OutputFilePath, request.KeepSegments, "Spur 2 entfällt"));
+            })));
+        if (confirmed) Assert.Contains("Spur 2 entfällt", (await engine.RunWithResultAsync(request)).Notice);
+        else await Assert.ThrowsAsync<OperationCanceledException>(() => engine.RunAsync(request));
+        Assert.Equal(confirmed ? 1 : 0, starts);
+        Assert.False(engine.UsedAacRepair);
+        Assert.False(engine.UsedMp4Box);
+    }
+
+    [Fact]
+    public async Task FailedTrackRetryDisablesAnotherTrackAttempt()
+    {
+        var decisions = 0;
+        var retries = 0;
+        var engine = new OtrCanMp4BoxFallbackCutService(new Engine(_ => throw Failure()), NoFallback,
+            (offer, _) =>
+            {
+                if (++decisions == 1) return Task.FromResult(AudioRecoveryChoice.RetainVerifiedTracks);
+                Assert.False(offer.TrackRecovery!.IsAvailable);
+                Assert.Contains("preparation failed", offer.Diagnosis);
+                return Task.FromResult(AudioRecoveryChoice.Cancel);
+            }, new Repair(_ => new("unavailable")), Available, new TrackRecovery(() => new("Spur 2 entfällt", _ =>
+            {
+                retries++;
+                throw new InvalidDataException("preparation failed");
+            })));
+        await Assert.ThrowsAsync<OperationCanceledException>(() => engine.RunAsync(Request()));
+        Assert.Equal(2, decisions);
+        Assert.Equal(1, retries);
+    }
+
     [Fact]
     public async Task HealthyNormalCutDoesNotInspectRepairOrFallback()
     {
@@ -83,6 +136,7 @@ public sealed class AudioRecoveryDecisionTests
     [Theory]
     [InlineData(2)]
     [InlineData(1)]
+    [InlineData(3)]
     public async Task AChoiceNotActuallyAvailableCannotStartAProcess(int choice)
     {
         var engine = new OtrCanMp4BoxFallbackCutService(new Engine(_ => throw Failure()), NoFallback,
