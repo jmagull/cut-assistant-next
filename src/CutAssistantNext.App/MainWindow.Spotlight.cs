@@ -1,6 +1,7 @@
 using System.IO;
 using System.Windows;
 using CutAssistantNext.App.Services;
+using CutAssistantNext.App.Dialogs;
 using CutAssistantNext.App.Settings;
 using SpotlightCan.App;
 using SpotlightWindow = SpotlightCan.App.MainWindow;
@@ -14,7 +15,8 @@ public partial class MainWindow
 
     private async void SpotlightMenuItem_Click(object sender, RoutedEventArgs e) => await OpenSpotlightAsync();
 
-    internal async Task OpenSpotlightAsync(Func<bool>? confirmReplacement = null, FfmpegSettings? toolSettings = null)
+    internal async Task OpenSpotlightAsync(Func<bool>? confirmReplacement = null, FfmpegSettings? toolSettings = null,
+        WindowSettingsStore? windowSettingsStore = null)
     {
         if (_spotlightInProgress) { _spotlightWindow?.Activate(); return; }
         if (!CanOpenMedia) return;
@@ -49,6 +51,7 @@ public partial class MainWindow
                 return applied;
             });
             _spotlightWindow = new SpotlightWindow(options) { Owner = this };
+            SpotlightWindowPersistence.Attach(_spotlightWindow, windowSettingsStore);
             await _spotlightWindow.InitializeHostAsync();
             if (!_spotlightWindow.Model.IsReady) throw new InvalidOperationException(_spotlightWindow.Model.Status);
             if (IsCurrentCutlistContext(context)) _spotlightWindow.ShowDialog();

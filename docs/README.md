@@ -1,5 +1,13 @@
 # Dokumentation – Cut Assistant Next
 
+## 08.11.2026 – Spotlight-Kandidat CAN 1.0.3 Build 50
+
+**1.0.3 · Build 50 · Spotlight-Entwicklung** wird als eigener lokaler Setup-/Portable-/Quellpaketsatz vorbereitet und nach erneuter Prüfung auf `codex/spotlight-integration` gesichert. Menü **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche**: grobe manuelle Markierung anhand von Vorschaubildern, direkte Übernahme in CAN und anschließende Feinkorrektur im vorhandenen Schnittfenster. Original-, Entfernen- und verbleibende Dauer werden angezeigt. Größe, Position und Maximierung bleiben über Neustarts erhalten; Monitor-/DPI-Korrektur hält das Fenster sichtbar. Fensterkomfort am 07.11. persönlich positiv bestätigt.
+
+Ausgangsnachweis: **1773 CAN-Tests, 78 Spotlight-Tests, 32 native Integrationsprüfungen, vier Fensterprozesse**, Release ohne Warnungen/Fehler. Neue Paketabnahme separat dokumentieren. Windows 11 x64 ist die geprüfte Zielplattform; Windows 10 ist nicht persönlich validiert. Stabil veröffentlicht bleibt **1.0.2 Build 48**. Die separate Audio-Entwicklung Build 51 ist nicht enthalten. **Kein öffentliches Release und kein Merge nach main.**
+
+[Paketverfahren und offene Abnahmen](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md) · [Spotlight-Bedienung](SPOTLIGHT-INTEGRATION-20261104.md) · [Fensterprüfung](SPOTLIGHT-FENSTERZUSTAND-20261107.md).
+
 **03.11.2026 – eingefrorener Entwicklungsstand CAN 1.0.3, Buildzähler 48.** Gemeinsame Server-/Lokal-Cutlist-Tabelle, Rot/Entfernen und Grün/Behalten mit dynamischer Vorschau sowie Standard / Power-User 1 / Power-User 2 einschließlich Buttonausrichtung sind umgesetzt. Letzter technischer Stand: **1.728/1.728 Tests**, Release-Build ohne Warnungen/Fehler. Quellstand und Dokumentation werden auf Nutzerauftrag committet und gepusht; keine neuen Pakete und keine Veröffentlichung ohne gesonderte Freigabe. Öffentlich bleibt der dokumentierte stabile Stand **CAN 1.0.2 Build 48**. [Freeze und Prüfgrenzen](FREEZE-1.0.3-20261103.md).
 
 [Entwicklungsnotizen 1.0.3](RELEASE-NOTES-1.0.3.md) · [Cutlist-Tabelle](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi und Vorschau](SCHNITTMODI-TIMELINE-20261103.md).

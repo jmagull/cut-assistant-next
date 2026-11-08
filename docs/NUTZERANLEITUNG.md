@@ -1,5 +1,23 @@
 # Nutzeranleitung – Cut Assistant Next
 
+## Spotlight-CAN in der lokalen 1.0.3 Build 50 – 08.11.2026
+
+Diese Anleitung enthält die neue **Spotlight-Entwicklung**, einen vorbereiteten Kandidaten. Stabil öffentlich bleibt **1.0.2 Build 48**. Windows 11 x64 ist die geprüfte Plattform; Windows 10 wurde nicht persönlich validiert.
+
+1. Film wie gewohnt in CAN öffnen. **Einstellungen → FFmpeg-Werkzeuge** muss gültige FFmpeg-/ffprobe-Pfade enthalten.
+2. **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** öffnen. Es wird derselbe Film verwendet; eine zweite Filmwahl ist nicht nötig.
+3. **Übersicht erzeugen**, Bild auswählen und **Details erzeugen**. Anhand der Vorschaubilder Werbeblöcke grob erkennen. Abstand und Detailbereich lassen sich einstellen; den Trenner für mehr Bildfläche verschieben.
+4. Mit **Schnittbereich Beginn setzen** und **Schnittbereich Ende setzen** Entfernen-Bereiche markieren. Rechts stehen die ursprüngliche Laufzeit, die abgeschlossene Entfernungsdauer und die voraussichtlich verbleibende Laufzeit. Offene Anfänge und unbestätigte Korrekturen zählen noch nicht.
+5. **Schnittbereiche an CAN übernehmen** drücken. Vorhandene Schnittarbeit wird nur nach Bestätigung ersetzt. Danach im normalen CAN-Schnittfenster die Grenzen mit Player und Frame-Lupe präzisieren, Cutlist speichern und den vertrauten Schnittmotor verwenden. Im grünen Modus zeigt CAN die dazu passenden Behaltebereiche.
+
+Spotlight ist eine manuelle visuelle Suchhilfe: keine automatische Werbeerkennung, kein eigener Player und kein Schnittmotor. Vor dem Filmwechsel Spotlight schließen. Beim Schließen werden Fenstergröße, Bildschirmposition und Maximierung automatisch gespeichert, auch für den nächsten CAN-Start. Zweiter/dritter Monitor und negative Koordinaten sind möglich. Bei fehlendem Monitor, kleinerer Auflösung oder geänderter Skalierung wird das Fenster an eine verfügbare Arbeitsfläche angepasst. Minimiertes Schließen bewahrt die normalen Maße; beim ersten Öffnen gelten sichtbare Vorgaben. Die Fensterprüfung ist persönlich positiv bestätigt; eine echte Monitorabkopplung und globale Skalierungswechsel sind nicht persönlich gesondert bestätigt.
+
+## Setup und Portable des Spotlight-Kandidaten
+
+Setup und ZIP sind getrennt mit **1.0.3-Build50 / Spotlight-Entwicklung** benannt. Portable in einen neuen Ordner entpacken und alle Dateien zusammenhalten. Das Setup verwendet die bestehende CAN-Installationsidentität und kann eine vorhandene Installation aktualisieren; neue Setup-Prüfung daher auf einem separaten Windows-11-Testsystem durchführen. Der lokale Paketbau allein bestätigt keine Installation/Deinstallation oder VM-Abnahme.
+
+Die **.NET 10 Desktop Runtime x64**, FFmpeg/ffprobe und GPAC/MP4Box bleiben extern; für otr-can außerdem die dokumentierte Visual-C++-Laufzeit und FFMS2/ffmsindex. libmpv 0.41.0 und otr-can 0.1.6 mit Quellen/Hinweisen liegen bei. Nach Entpacken/Installation die vorhandenen Werkzeugpfade kontrollieren, insbesondere `tools/otr-can/otr_can.exe`. Bestehende Benutzereinstellungen bleiben im lokalen CAN-Einstellungsordner. [Paketdetails und Abnahmeliste](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).
+
 ## Drei Ansichten in der lokalen 1.0.3 – 03.11.2026
 
 Unter **Einstellungen → Darstellung und Schnittbearbeitung … → Anordnung der Benutzeroberfläche** stehen **Standard**, **Power-User 1** (bisherige Anordnung) und **Power-User 2** zur Auswahl. **Übernehmen** wirkt sofort und speichert die Wahl. Laufender Film, Tonspur, Schnittpunkte und geladene Cutlist bleiben beim Ansichtswechsel erhalten. Die separate Rot-/Grün-Arbeitsweise gilt weiterhin erst für den nächsten Film.
@@ -8,7 +26,7 @@ Unter **Einstellungen → Darstellung und Schnittbearbeitung … → Anordnung d
 
 Bei zu schmalem Fenster verwendet CAN vorübergehend Standard und kehrt bei ausreichendem Platz zur gespeicherten Wunschansicht zurück. Alle vier Schnittbuttons bleiben in der neuen Ansicht zusammen. Bei geringer Höhe lässt sich die Arbeitsfläche scrollen. [Tatsächliche Ansichten und Prüfgrenzen](POWER-USER-2-IMPLEMENTIERUNG-20261103.md).
 
-## Geltungsstand – 03.11.2026
+## Historischer Geltungsstand vor Spotlight – 03.11.2026
 
 **Stabil veröffentlicht: CAN 1.0.2 Build 48. Eingefrorener Entwicklungsstand: CAN 1.0.3 mit unverändertem Buildzähler 48; Veröffentlichung erst nach Freigabe.** Die nachfolgend mit **1.0.3** bezeichnete gemeinsame Cutlist-Tabelle und Rot-/Grün-Bedienung sind noch nicht in den veröffentlichten 1.0.2-Paketen enthalten. [Entwicklungsnotizen](RELEASE-NOTES-1.0.3.md), [Versionen](VERSIONEN.md), [Freeze](FREEZE-1.0.3-20261103.md).
 

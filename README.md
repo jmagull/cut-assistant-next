@@ -2,13 +2,15 @@
 
 Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Es verwendet WPF und mpv/libmpv, ohne DirectShow oder installierte Windows-Codecs.
 
-## Entwicklungsbranch: Spotlight-CAN – 04.11.2026
+## Entwicklungsbranch: Spotlight-CAN – Build 50, Paketvorbereitung 08.11.2026
+
+**07.11.2026 – Fensterkomfort, lokale Prüffassung Build 50:** Spotlight merkt sich Größe, Bildschirmposition und Maximierung über CAN-Neustarts hinweg. Nicht mehr sichtbare Fenster werden auf eine verfügbare Monitor-Arbeitsfläche zurückgeholt. [Umsetzung, Tests und Testpfad](docs/SPOTLIGHT-FENSTERZUSTAND-20261107.md). Persönlich positiv bestätigt. Setup, Portable und vollständige Quellarchive werden mit festem Build 50 separat vorbereitet; Commit und Push sind beauftragt. Kein öffentliches Release. [Paketverfahren und persönliche Abnahmen](docs/PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).
 
 Im Branch codex/spotlight-integration ist **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** integriert. Die Komponente nutzt den in CAN geöffneten Film und dessen Werkzeugpfade, übergibt grobe Entfernen-Bereiche direkt und zeigt Original-, Entfernen- und verbleibende Laufzeit. Bestehende Schnitte werden nur nach Bestätigung ersetzt; Präzisierung erfolgt anschließend mit CAN-Player/Frame-Lupe. **Lokale Prüffassung, kein neues stabiles Release.** [Bedienung, Architektur und Prüfergebnisse](docs/SPOTLIGHT-INTEGRATION-20261104.md).
 
 Zum Bauen dieses Branchs zuerst **git submodule update --init --recursive** ausführen; dafür ist Zugriff auf das private Spotlight-CAN-Repository erforderlich. Die eigenständige Spotlight-Anwendung bleibt separat baubar.
 
-## Eingefrorener Entwicklungsstand – 03.11.2026
+## Historischer Ausgangsstand vor Spotlight – 03.11.2026
 
 **CAN 1.0.3, Buildzähler unverändert 48; auf Nutzerauftrag eingefroren.** Quellstand und Dokumentation werden per Commit und Push gesichert. **Veröffentlichung erst nach gesonderter Freigabe; keine neuen Pakete.** [Freeze und Prüfgrenzen](docs/FREEZE-1.0.3-20261103.md). Beim Öffnen eines Films bietet eine gemeinsame Tabelle Server- und lokale Cutlists ohne Vorauswahl an. Lokal wird ausschließlich der exakte Name **Originaldateiname einschließlich Endung + `.cutlist`** im eingerichteten Cutlist-Verzeichnis und im Filmverzeichnis geprüft. Gültige begonnene Cutlists bleiben verwendbar; unterschiedliche gleichnamige Dateien werden getrennt angeboten.
 

@@ -1,5 +1,17 @@
 # Entwicklungsnotizen – CAN 1.0.3
 
+## Spotlight-Entwicklung Build 50 – 08.11.2026
+
+Aktuell vorbereiteter Kandidat: **CAN 1.0.3 · Build 50 · Spotlight-Entwicklung**, nicht veröffentlicht. Über **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** lassen sich Werbeblöcke anhand von Übersicht-/Detailbildern grob manuell markieren und direkt an CAN übergeben. Bestehende Schnittarbeit wird nur nach Bestätigung ersetzt. Anschließend die Kanten im CAN-Player und mit der Frame-Lupe präzisieren. Keine automatische Werbeerkennung und kein eigener Filmschnitt in Spotlight.
+
+Original-, Entfernen- und voraussichtlich verbleibende Laufzeit aktualisieren sich mit den abgeschlossenen Bereichen. Spotlight merkt sich Fenstergröße, Bildschirmposition und Maximierung über CAN-Neustarts. Normale Rückkehrmaße bleiben auch nach maximiertem/minimiertem Schließen erhalten. Negative Koordinaten und weitere Monitore werden unterstützt; nicht mehr passende Geometrie wird an eine verfügbare Arbeitsfläche angepasst. Beschädigte Einstellungen führen zu sichtbaren Standardwerten. Persönlich am 07.11.2026 positiv bestätigt.
+
+Ausgangsprüfung 1773 CAN-/78 Spotlight-Tests, 32 native Integrationsfälle und vier Fensterprozesse erfolgreich. Der beauftragte Paketsatz wird mit festem Build 50 erneut geprüft. Setup-/Portable-/VM-Abnahme bleibt von der bisherigen persönlichen Entwicklungsprüfung getrennt. Windows 11 x64 geprüft; Windows 10 nicht persönlich validiert. Öffentlicher stabiler Stand unverändert 1.0.2 Build 48. Keine Übernahme der Audio-Entwicklung Build 51, kein neuer Normalmodus des Motors und keine MP4Box-Änderung.
+
+[Paketvorbereitung](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md) · [Integration](SPOTLIGHT-INTEGRATION-20261104.md) · [Fensterzustand](SPOTLIGHT-FENSTERZUSTAND-20261107.md).
+
+## Historischer Freeze vor Spotlight – 03.11.2026
+
 Stand: 03.11.2026. **Auf Nutzerauftrag eingefrorener Entwicklungsstand, nicht veröffentlicht.** Der Buildzähler bleibt 48, lokale Dateiversion 1.0.3.48. Der dokumentierte stabile öffentliche Paketsatz bleibt CAN 1.0.2 Build 48 (1.0.2.48). Commit und Push von Quellstand und Dokumentation sind beauftragt. Keine neuen Setup-/Portable-/Quellpakete; Veröffentlichung erst nach gesonderter Freigabe. [Freeze und Nachweise](FREEZE-1.0.3-20261103.md).
 
 ## Gemeinsame Cutlist-Auswahl

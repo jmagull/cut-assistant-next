@@ -1,5 +1,13 @@
 # Testplan – aktueller Funktionsstand
 
+## 08.11.2026 – Spotlight-Kandidat CAN 1.0.3 Build 50
+
+**1.0.3 · Build 50 · Spotlight-Entwicklung** wird als eigener lokaler Setup-/Portable-/Quellpaketsatz vorbereitet und nach erneuter Prüfung auf `codex/spotlight-integration` gesichert. Menü **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche**: grobe manuelle Markierung anhand von Vorschaubildern, direkte Übernahme in CAN und anschließende Feinkorrektur im vorhandenen Schnittfenster. Original-, Entfernen- und verbleibende Dauer werden angezeigt. Größe, Position und Maximierung bleiben über Neustarts erhalten; Monitor-/DPI-Korrektur hält das Fenster sichtbar. Fensterkomfort am 07.11. persönlich positiv bestätigt.
+
+Ausgangsnachweis: **1773 CAN-Tests, 78 Spotlight-Tests, 32 native Integrationsprüfungen, vier Fensterprozesse**, Release ohne Warnungen/Fehler. Neue Paketabnahme separat dokumentieren. Windows 11 x64 ist die geprüfte Zielplattform; Windows 10 ist nicht persönlich validiert. Stabil veröffentlicht bleibt **1.0.2 Build 48**. Die separate Audio-Entwicklung Build 51 ist nicht enthalten. **Kein öffentliches Release und kein Merge nach main.**
+
+[Paketverfahren und offene Abnahmen](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md) · [Spotlight-Bedienung](SPOTLIGHT-INTEGRATION-20261104.md) · [Fensterprüfung](SPOTLIGHT-FENSTERZUSTAND-20261107.md).
+
 **Nachtrag 03.11.2026:** Buttonausrichtung +10 / ◀ K / K ▶ vorab bei vier DPI-Stufen mit 4 DIP Versatz reproduziert, danach ohne Versatz bestanden; Rückwechsel stellt Gruppenmaße wieder her. Nativer Test mit geladenem Film bestätigt 0 DIP Differenz an beiden Kanten. Gesamt **1728 Tests** (200 Core, 80 Cutlists, 390 Media, 1058 App). Die folgende ursprüngliche Power-User-2-Abnahme mit 1724 Fällen bleibt als vorheriger Stand erhalten. [Nachweis](POWER-USER-2-IMPLEMENTIERUNG-20261103.md#nachtrag-03112026--persönliche-sichtprüfung-und-buttonausrichtung).
 
 ## Power-User 2 – technischer Abschluss 03.11.2026

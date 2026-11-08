@@ -1,5 +1,9 @@
 # Architektur – Arbeitsstand
 
+## Spotlight-Fenster und Paketquellen – 08.11.2026
+
+CAN bindet die Fensterpersistenz ausschließlich im Host an. Vorhandener `WindowSettingsStore`, separate Spotlight-Datei und reine Geometrieprüfung; native Bildschirmkoordinaten/DPI-Abfragen sind vom fachlichen Schnittmodell getrennt. Die Spotlight-Unterkomponente selbst bleibt auf 6973b37591e9b581b20b5a6f2117369b6df0f159. Vollständige Quellarchive enthalten diesen Teil zusätzlich zum CAN-Commit; die Laufzeit-Provenienz nennt beides. [Fensterprüfung](SPOTLIGHT-FENSTERZUSTAND-20261107.md), [Paketverfahren](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).
+
 ## Spotlight-CAN im Entwicklungsbranch – 04.11.2026
 
 Gemeinsame UI-/Medienbibliotheken über die fest versionierte Spotlight-Git-Komponente; CAN adaptiert nur vorhandene Mediendaten, Werkzeugverwaltung und direkten RemoveSegment-Ersatz. Keine Zwischen-Cutlist, kein zweiter Player oder Prozess. [Architektur, Dateisperre, atomare Übernahme und Prüfergebnisse](SPOTLIGHT-INTEGRATION-20261104.md).

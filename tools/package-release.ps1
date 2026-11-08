@@ -24,6 +24,11 @@ if ($snapshot.BuildNumber -ne $BuildNumber) { throw 'Build number differs from t
 $version = [string]$versionXml.Project.PropertyGroup.Version
 if ($snapshot.Version -ne $version) { throw 'Version differs from the source snapshot.' }
 if ($snapshot.Candidate -ne $Candidate) { throw 'Candidate differs from the source snapshot.' }
+$spotlightSource = Join-Path $repo 'external\spotlight-can'
+if (-not $snapshot.PSObject.Properties['SpotlightCan'] -or
+    -not (Test-Path -LiteralPath (Join-Path $spotlightSource 'src\SpotlightCan.Wpf\SpotlightCan.Wpf.csproj'))) {
+    throw 'The pinned Spotlight sources and their snapshot provenance are required.'
+}
 $candidateSuffix = if ($Candidate) { "-$Candidate" } else { '' }
 $releaseNotes = Join-Path $repo "docs\RELEASE-NOTES-$version.md"
 if (-not (Test-Path -LiteralPath $releaseNotes -PathType Leaf)) { throw "Missing release notes for version $version." }
@@ -94,6 +99,13 @@ if ($fileVersion -ne "$version.$BuildNumber") { throw "Unexpected file version: 
 Copy-Item -LiteralPath (Join-Path $repo 'docs\NUTZERANLEITUNG.md') -Destination (Join-Path $publish 'NUTZERANLEITUNG.md')
 Copy-Item -LiteralPath $releaseNotes -Destination (Join-Path $publish 'RELEASE-NOTES.md')
 Copy-Item -LiteralPath (Join-Path $repo 'installer\HINWEIS-DOTNET-UND-WERKZEUGE.txt') -Destination (Join-Path $publish 'VORAUSSETZUNGEN.txt')
+$spotlightNotices = Join-Path $publish 'third-party\SpotlightCan'
+[System.IO.Directory]::CreateDirectory($spotlightNotices) | Out-Null
+Copy-Item -LiteralPath (Join-Path $repo 'docs\SPOTLIGHT-QUELLEN.md') -Destination (Join-Path $spotlightNotices 'QUELLEN.md')
+Copy-Item -LiteralPath (Join-Path $spotlightSource 'README.md') -Destination (Join-Path $spotlightNotices 'README.md')
+foreach ($name in @('SpotlightCan.Core.dll', 'SpotlightCan.Media.dll', 'SpotlightCan.Wpf.dll')) {
+    if (-not (Test-Path -LiteralPath (Join-Path $publish $name))) { throw "Missing Spotlight library: $name" }
+}
 $engineProvenance = $null
 if ($OtrCanPackageDirectory) {
     $expectedEngineVersion = '0.1.6'
@@ -144,6 +156,7 @@ $provenance = [ordered]@{
     DotnetSdk = (& $dotnet --version | Out-String).Trim()
     OtrCan = $engineProvenance
     InnoCompilerSha256 = (Get-FileHash -LiteralPath $compiler -Algorithm SHA256).Hash
+    SpotlightCan = $snapshot.SpotlightCan
 }
 [System.IO.File]::WriteAllText((Join-Path $publish 'RELEASE-PROVENANCE.json'), ($provenance | ConvertTo-Json), $utf8)
 Assert-SourceSnapshot

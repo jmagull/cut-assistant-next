@@ -1,5 +1,9 @@
 # Versionen und Nachweise
 
+## 08.11.2026 – Spotlight-Kandidat
+
+**CAN 1.0.3 · Build 50 · Spotlight-Entwicklung**, Dateiversion **1.0.3.50**, otr-can **0.1.6**, libmpv **0.41.0**. Lokaler Paketsatz beauftragt, persönlicher Fensterkomfort bestätigt; kein neues öffentliches Release. Stabil bleibt 1.0.2 Build 48. Die folgende Tabelle bewahrt die historischen Ausgangsstände. [Paketvorbereitung](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).
+
 **Stand 03.11.2026.** CAN-Anwendung, Buildnummer, Schnittmotor und Wiedergabebibliothek haben getrennte Versionen. [Aktueller Stand](AKTUELLER-STAND.md).
 
 | CAN | Build | otr-can | Einordnung |

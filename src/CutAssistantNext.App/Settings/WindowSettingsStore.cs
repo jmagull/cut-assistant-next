@@ -11,6 +11,12 @@ internal sealed class WindowSettings
 
     public double Height { get; init; }
 
+    public double? Left { get; init; }
+
+    public double? Top { get; init; }
+
+    public double? DpiScale { get; init; }
+
     public bool IsMaximized { get; init; }
 
     public double? Volume { get; init; }

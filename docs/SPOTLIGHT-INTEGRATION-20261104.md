@@ -1,5 +1,11 @@
 # Spotlight-CAN in CAN – Entwicklungsstand vom 04.11.2026
 
+## Nachtrag 08.11.2026 – Fensterkomfort und Paketvorbereitung
+
+Aktueller Spotlight-Kandidat **CAN 1.0.3 Build 50**, `codex/spotlight-integration`. Die integrierte Werbesuche ergänzt nun dauerhafte Fenstergröße, Position und Maximierung mit Mehrmonitor-/DPI-Korrektur. Persönlich am 07.11.2026 positiv bestätigt. Die nachfolgenden Build-49-Zahlen und Testpfade beschreiben die ursprüngliche Integration; aktuell **1773 CAN- und 78 Spotlight-Tests** sowie 32 native Integrationsfälle und vier Fensterprozesse bestanden. Erneute Paketprüfung separat. [Fensterdetails](SPOTLIGHT-FENSTERZUSTAND-20261107.md), [Build-50-Paketverfahren](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).
+
+Quellpakete enthalten die fest eingebundene Spotlight-Unterkomponente vollständig. Herkunft und derzeit fehlende eigene Spotlight-Lizenzdatei sind [hier dokumentiert](SPOTLIGHT-QUELLEN.md). Commit und Push des geprüften Zweigs sind jetzt beauftragt; keine Veröffentlichung, kein Merge und keine Audio-Build-51-Übernahme.
+
 ## Freigabe und Grenzen
 
 Die persönliche Prüfung der eigenständigen visuellen Werbesuche ist vom Nutzer positiv bestätigt; die Integration ist ausdrücklich freigegeben. Zusätzlich beauftragt: dynamische Anzeige von Original-, Entfernen- und verbleibender Laufzeit in beiden Hosts. Keine Veröffentlichung oder Änderung des stabilen Release-Stands. Entwicklung im getrennten Checkout auf **codex/spotlight-integration**, Ausgangscommit **22f4042**. Vorhandene Dokumentations- und Lockdateiänderungen im ursprünglichen CAN-main bleiben unangetastet.

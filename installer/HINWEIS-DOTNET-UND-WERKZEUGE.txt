@@ -1,5 +1,15 @@
 Cut Assistant Next – Einmalig benötigte Programme
 
+Spotlight-Kandidat CAN 1.0.3 Build 50 – Spotlight-Entwicklung
+
+Lokale Prüffassung, noch kein neues öffentliches Release. Offiziell persönlich
+geprüfte Zielplattform: Windows 11 x64. Windows 10 ist nicht persönlich validiert.
+Spotlight unter Werkzeuge verwendet die in CAN eingerichteten FFmpeg-/ffprobe-Pfade.
+Die bisherigen Voraussetzungen für Wiedergabe, Analyse und Schnitt gelten weiter.
+Das Setup kann eine bestehende CAN-Installation aktualisieren; für die neue
+persönliche Setup-Prüfung ein separates Windows-11-Testsystem verwenden.
+Portable vollständig in einen neuen Ordner entpacken und Werkzeugpfade kontrollieren.
+
 Für diese laufzeitabhängige CAN-Ausgabe wird die .NET 10 Desktop Runtime
 für Windows x64 separat benötigt. Bitte die Variante "Desktop Runtime"
 auswählen; die einfache ".NET Runtime" reicht für CANs Oberfläche nicht.
