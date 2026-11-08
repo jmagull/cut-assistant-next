@@ -8,7 +8,7 @@ internal static class AudioDevelopmentEngine
 {
     internal static OtrCanSettings Resolve(OtrCanSettings settings, string applicationDirectory)
     {
-        var path = Path.Combine(Path.GetFullPath(applicationDirectory), "runtime", "otr-can", "otr_can.exe");
+        var path = Path.Combine(Path.GetFullPath(applicationDirectory), "tools", "otr-can", "otr_can.exe");
         if (!File.Exists(path))
             throw new FileNotFoundException("Der mitgelieferte otr-can-Motor fehlt. Bitte den vollständigen Cut-Assistant-Next-Programmordner verwenden.", path);
         return settings with { ExecutablePath = path };

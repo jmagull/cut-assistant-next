@@ -96,6 +96,13 @@ $fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $
 if ($fileVersion -ne "$version.$BuildNumber") { throw "Unexpected file version: $fileVersion" }
 Copy-Item -LiteralPath (Join-Path $repo 'docs\NUTZERANLEITUNG.md') -Destination (Join-Path $publish 'NUTZERANLEITUNG.md')
 Copy-Item -LiteralPath $releaseNotes -Destination (Join-Path $publish 'RELEASE-NOTES.md')
+Copy-Item -LiteralPath (Join-Path $repo 'docs\SPOTLIGHT-README.md') -Destination (Join-Path $publish 'README-Spotlight.md')
+Copy-Item -LiteralPath (Join-Path $repo 'docs\PFADUMSTELLUNG-BUILD54-20261108.md') -Destination (Join-Path $publish 'PRUEFHINWEISE.md')
+$spotlightNotices = Join-Path $publish 'third-party\SpotlightCan'
+[System.IO.Directory]::CreateDirectory($spotlightNotices) | Out-Null
+Copy-Item -LiteralPath (Join-Path $repo 'external\spotlight-can\README.md') -Destination $spotlightNotices
+[System.IO.File]::WriteAllText((Join-Path $spotlightNotices 'SOURCE.txt'),
+    "Spotlight-CAN component: $($snapshot.SpotlightGitCommit)`r`nComplete source: external/spotlight-can in the CAN source archive.`r`nNo separate LICENSE file exists in that pinned component. No new license grant is asserted by this local review package.`r`n", $utf8)
 $prerequisiteFile = 'HINWEIS-DOTNET-UND-WERKZEUGE.txt'
 Copy-Item -LiteralPath (Join-Path $repo "installer\$prerequisiteFile") -Destination (Join-Path $publish 'VORAUSSETZUNGEN.txt') -ErrorAction Stop
 $engineProvenance = $null
@@ -123,7 +130,7 @@ if ($OtrCanPackageDirectory) {
     if ($engineProvenance.Version -ne $expectedEngineVersion) { throw 'Unexpected motor package version.' }
     if ((Get-FileHash -LiteralPath (Join-Path $enginePackage 'otr_can.exe') -Algorithm SHA256).Hash -ne $engineProvenance.ExecutableSha256) { throw 'Motor EXE differs from provenance.' }
     if ((Get-FileHash -LiteralPath (Join-Path $enginePackage $engineSourceArchive) -Algorithm SHA256).Hash -ne $engineProvenance.SourceArchiveSha256) { throw 'Motor sources differ from provenance.' }
-    $engineDirectory = if ($audioCandidate) { 'runtime\otr-can' } else { 'tools\otr-can' }
+    $engineDirectory = 'tools\otr-can'
     $bundledEngine = Join-Path $publish $engineDirectory
     [System.IO.Directory]::CreateDirectory($bundledEngine) | Out-Null
     foreach ($file in (Get-ChildItem -LiteralPath $enginePackage -File -Recurse)) {

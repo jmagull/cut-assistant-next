@@ -1,6 +1,6 @@
 Cut Assistant Next – Einmalig benötigte Programme
 
-Cut Assistant Next 1.0.3 Build 53 – gemeinsame lokale Prüffassung.
+Cut Assistant Next 1.0.3 Build 54 – gemeinsame lokale Prüffassung.
 Windows 11 x64 ist die geprüfte Zielplattform; Windows 10 ist nicht persönlich validiert.
 Audio-Fehlerbehandlung und Spotlight-CAN sind Funktionen dieser einen Anwendung.
 
@@ -23,7 +23,7 @@ https://gpac.io/downloads/gpac-nightly-builds/
 Im Abschnitt "Current Stable Installers" die stabile Windows-64-Bit-Version wählen.
 
 Optionaler Schnittmotor otr-can 0.1.6-audio-diag.1:
-Im Paket unter runtime\otr-can\otr_can.exe enthalten und von CAN automatisch
+Im Paket unter tools\otr-can\otr_can.exe enthalten und von CAN automatisch
 als passender mitgelieferter Motor verwendet. Gespeicherte Werkzeugpfade
 werden dafür nicht überschrieben. FFMS2/ffmsindex weiterhin konfigurieren.
 Die zugehörigen Quellen und Lizenzhinweise liegen im selben Unterordner.

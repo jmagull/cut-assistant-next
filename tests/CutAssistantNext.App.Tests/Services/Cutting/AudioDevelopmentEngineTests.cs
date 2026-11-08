@@ -10,10 +10,11 @@ public sealed class AudioDevelopmentEngineTests
     [InlineData("")]
     [InlineData(@"C:\configured\otr_can.exe")]
     [InlineData(@"C:\previous-installation\otr_can.exe")]
+    [InlineData(@"C:\previous-installation\runtime\otr-can\otr_can.exe")]
     public void RegularBuildUsesBundledMotorRegardlessOfSavedPath(string? savedPath)
     {
-        var root = Path.Combine(Path.GetTempPath(), "can-bundled-engine-" + Guid.NewGuid().ToString("N"));
-        var path = Path.Combine(root, "runtime", "otr-can", "otr_can.exe");
+        var root = Path.Combine(Path.GetTempPath(), "can bundled engine " + Guid.NewGuid().ToString("N"));
+        var path = Path.Combine(root, "tools", "otr-can", "otr_can.exe");
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         try
         {
@@ -28,7 +29,7 @@ public sealed class AudioDevelopmentEngineTests
     public void PrivateBuildUsesOnlyItsOwnMotorAndPreservesSavedChoiceAndIndexer()
     {
         var root = Path.Combine(Path.GetTempPath(), "can-review-engine-" + Guid.NewGuid().ToString("N"));
-        var path = Path.Combine(root, "runtime", "otr-can", "otr_can.exe");
+        var path = Path.Combine(root, "tools", "otr-can", "otr_can.exe");
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         try
         {
@@ -41,8 +42,38 @@ public sealed class AudioDevelopmentEngineTests
         finally { Directory.Delete(root, true); }
     }
     [Fact]
-    public void IncompleteReviewPackageNeverSilentlyUsesTheInstalledMotor() =>
-        Assert.Throws<FileNotFoundException>(() => AudioDevelopmentEngine.Resolve(new(), Path.GetTempPath()));
+    public void IncompletePackageNeverFallsBackToTheLegacyRuntimeMotor()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "can-legacy-engine-" + Guid.NewGuid().ToString("N"));
+        var legacy = Path.Combine(root, "runtime", "otr-can", "otr_can.exe");
+        Directory.CreateDirectory(Path.GetDirectoryName(legacy)!);
+        try
+        {
+            File.WriteAllText(legacy, "legacy engine");
+            var settings = new OtrCanSettings { ExecutablePath = legacy };
+            Assert.Throws<FileNotFoundException>(() => AudioDevelopmentEngine.Resolve(settings, root));
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Fact]
+    public void ToolsMotorWinsWhenAnOldRuntimeCopyIsPresent()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "can-engine-upgrade-" + Guid.NewGuid().ToString("N"));
+        var current = Path.Combine(root, "tools", "otr-can", "otr_can.exe");
+        var legacy = Path.Combine(root, "runtime", "otr-can", "otr_can.exe");
+        Directory.CreateDirectory(Path.GetDirectoryName(current)!);
+        Directory.CreateDirectory(Path.GetDirectoryName(legacy)!);
+        try
+        {
+            File.WriteAllText(current, "current engine");
+            File.WriteAllText(legacy, "legacy engine");
+            var settings = new OtrCanSettings { ExecutablePath = legacy };
+            Assert.Equal(current, AudioDevelopmentEngine.Resolve(settings, root).ExecutablePath);
+            Assert.Equal(legacy, settings.ExecutablePath);
+        }
+        finally { Directory.Delete(root, true); }
+    }
 
     [Fact]
     public void ApplicationHasOnlyTheRegularProductName()

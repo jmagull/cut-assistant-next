@@ -12,7 +12,7 @@ $repo = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $engine = (Resolve-Path -LiteralPath $EngineExecutablePath).Path
 $expectedVersion = if ($AudioCandidate) { '0.1.6-audio-diag.1' } else { '0.1.6' }
 $sourceFile = "sources/otr-can-$expectedVersion-source.zip"
-$engineDirectory = if ($AudioCandidate) { 'runtime/otr-can' } else { 'tools/otr-can' }
+$engineDirectory = 'tools/otr-can'
 $root = [IO.Path]::GetFullPath($ScratchDirectory)
 if (Test-Path -LiteralPath $root) { throw 'Test scratch directory must be new.' }
 [IO.Directory]::CreateDirectory($root) | Out-Null
@@ -133,6 +133,7 @@ foreach ($case in $cases) {
         if (!$errorMessage -or $errorMessage -notlike ('*' + $expectedError + '*')) { throw "Case ${case}: expected '$expectedError', got '$errorMessage'." }
     } elseif ($errorMessage) { throw "Case $case unexpectedly failed: $errorMessage" }
     if ($case -eq 'valid') {
+        if (Test-Path -LiteralPath (Join-Path $publish 'runtime/otr-can')) { throw 'Legacy motor directory was bundled.' }
         foreach ($file in (Get-ChildItem -LiteralPath $OtrCanPackageDirectory -File -Recurse)) {
             $relative = $file.FullName.Substring($OtrCanPackageDirectory.Length + 1)
             $copy = Join-Path (Join-Path $publish $engineDirectory) $relative
