@@ -1,6 +1,6 @@
 # Spotlight-CAN in CAN – Entwicklungsstand vom 04.11.2026
 
-**Paketprüfung 08.11.2026 abgeschlossen:** Quellcommit `185e8b3`, Setup/Portable/Quellen lokal geprüft und Quellstand gepusht. Build 50 unverändert; persönliche Setup-Prüfung auf dem Arbeitsrechner positiv, VM-Setup mit MP4Box und Spotlight ebenfalls positiv; Portable, otr-can-VM-Test und Deinstallation weiter nicht bestätigt, keine Veröffentlichung. [Ergebnisse, Paketpfad und SHA-256](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md).
+**Paketprüfung 08.11.2026 abgeschlossen:** Quellcommit `185e8b3`, Setup/Portable/Quellen lokal geprüft und Quellstand gepusht. Build 50 unverändert; persönliche Setup-Prüfung auf dem Arbeitsrechner positiv, VM-Setup mit beiden Motoren und Spotlight ebenfalls positiv; Portable und Deinstallation weiter nicht bestätigt, keine Veröffentlichung. [Ergebnisse, Paketpfad und SHA-256](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md).
 
 ## Nachtrag 08.11.2026 – Fensterkomfort und Paketvorbereitung
 

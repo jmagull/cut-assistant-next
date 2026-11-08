@@ -2,7 +2,7 @@
 
 ## 08.11.2026 – Spotlight-Kandidat
 
-**CAN 1.0.3 · Build 50 · Spotlight-Entwicklung**, Dateiversion **1.0.3.50**, otr-can **0.1.6**, libmpv **0.41.0**. Lokaler Paketsatz technisch geprüft, Quellcommit `185e8b3` gepusht; persönlicher Fensterkomfort bestätigt, Setup-Prüfung auf dem Arbeitsrechner mit Buchladen der Liebe positiv, VM-Setup mit MP4Box und Spotlight ebenfalls positiv, Portable/otr-can-VM/Deinstallation weiter nicht bestätigt. [Paketbericht](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md). Kein neues öffentliches Release. Stabil bleibt 1.0.2 Build 48. Die folgende Tabelle bewahrt die historischen Ausgangsstände. [Paketvorbereitung](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).
+**CAN 1.0.3 · Build 50 · Spotlight-Entwicklung**, Dateiversion **1.0.3.50**, otr-can **0.1.6**, libmpv **0.41.0**. Lokaler Paketsatz technisch geprüft, Quellcommit `185e8b3` gepusht; persönlicher Fensterkomfort bestätigt, Setup-Prüfung auf dem Arbeitsrechner mit Buchladen der Liebe positiv, VM-Setup mit beiden Motoren und Spotlight ebenfalls positiv, Portable/Deinstallation weiter nicht bestätigt. [Paketbericht](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md). Kein neues öffentliches Release. Stabil bleibt 1.0.2 Build 48. Die folgende Tabelle bewahrt die historischen Ausgangsstände. [Paketvorbereitung](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).
 
 **Stand 03.11.2026.** CAN-Anwendung, Buildnummer, Schnittmotor und Wiedergabebibliothek haben getrennte Versionen. [Aktueller Stand](AKTUELLER-STAND.md).
 
