@@ -1,5 +1,17 @@
 # Aktueller Projektstand
 
+## Cut Assistant Next 1.0.3 Build 53 – gemeinsame lokale Prüffassung
+
+Ein maßgeblicher Entwicklungsstand im ursprünglichen Repository **cut-assistant-next**, Branch **codex/integration-build53**. Die geprüfte Audio-Fehlerbehandlung aus Build 52 und die Spotlight-Fensterpersistenz aus Build 50 gehören zu derselben regulär benannten Anwendung. Alte Funktions-Checkouts bleiben unveränderte Quellen; neue Entwicklung erfolgt im kanonischen Repository.
+
+Der normale Audioablauf bleibt streng. Nach einem belegten Tonfehler stehen Abbrechen, bestätigter MP4Box-Neustart und bei passendem Befund ausdrücklich bestätigte AAC-Reparatur oder Tonspur-Abwahl bereit. Der passende Motor wird aus `runtime/otr-can` verwendet; gespeicherte Werkzeugpfade bleiben erhalten. Keine automatische Reparatur oder pauschale Sampletoleranz.
+
+Spotlight unter **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** übergibt grobe Bereiche an CAN, zeigt Original-/Entfernen-/Restdauer und behält Größe, Position und Maximierung. Mehrmonitor-/DPI-Korrektur hält das Fenster sichtbar. Die Detailsuche hat standardmäßig zwei Sekunden Bildabstand. Den letzten betroffenen Bereich bei Bedarf in CAN mit **Videoende** bis zum tatsächlichen Dateiende abschließen.
+
+Voraussetzungen bleiben Windows 11 x64, .NET 10 Desktop Runtime x64 und die in CAN eingerichteten externen FFmpeg-/ffprobe-/MP4Box-/FFMS2-Werkzeuge. Windows 10 wurde nicht persönlich validiert. Die gemeinsame Fassung ist lokal zur neuen persönlichen Prüfung bestimmt; keine automatische Installation und kein öffentliches Release. Stabil veröffentlicht bleibt 1.0.2 Build 48.
+
+[Integration und Herkunft](INTEGRATION-BUILD53-20261108.md) · [Neue Prüfergebnisse und Startpfad](PRUEFBERICHT-BUILD53-20261108.md) · [Spotlight-README](SPOTLIGHT-README.md).
+
 ## 05.11.2026 – Cut Assistant Next 1.0.3 Build 52 eingefroren
 
 Build 52 verbindet die bestätigte Tonspur-Abwahl mit dem experimentellen AAC-Reparaturweg. Persönlich bestätigt sind der John-Wick-Dialog, der NCIS-Praxistest und beide Klebeverfahren. Der lokale Paketsatz enthält Setup, Portable-ZIP und Quellen. [Freeze, Voraussetzungen und Nachweise](FREEZE-1.0.3-BUILD52.md)

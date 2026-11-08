@@ -1,5 +1,7 @@
 # Spotlight-CAN in CAN – Entwicklungsstand vom 04.11.2026
 
+**Aktueller gemeinsamer Stand: Cut Assistant Next 1.0.3 Build 53.** Die hier historisch beschriebenen Funktionen gehören zur einen regulären Anwendung im kanonischen Repository. [Integration](INTEGRATION-BUILD53-20261108.md) und [erneute Prüfung](PRUEFBERICHT-BUILD53-20261108.md). Die nachfolgenden alten Buildnummern/Pfade bleiben als Herkunftsnachweise erhalten.
+
 ## Persönlicher Praxistest vom 05.11.2026
 
 Bei **Fire Country S03E16 – Schmutzige Deals** ermittelte Joerg die Werbeblöcke grob in Spotlight, verfeinerte die Schnittgrenzen in CAN und schnitt mit MP4Box. Er bestätigte Bild, Ton, Schnitt und Drei-Sekunden-Vorschau als einwandfrei. An derselben Aufnahme bestätigte er anschließend auch den regulären otr-can-Schnitt. Bei beiden Ausgaben prüfte er Bild, Ton, Schnitt und Drei-Sekunden-Vorschau persönlich. Beide Durchläufe liefen mit **CAN 1.0.3 Build 51**.

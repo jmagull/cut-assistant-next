@@ -15,12 +15,14 @@
   #error CanCandidate is required
 #endif
 
-#define ShowCandidate (CanCandidate != "" && CanCandidate != "Audio-Fehlerbehandlung-Entwicklung")
+#define ShowCandidate (CanCandidate != "")
 
 [Setup]
 AppId={{cdcdaf11-d631-4f81-b1d0-b50ea6ac606d}
 AppName=Cut Assistant Next
 AppVersion={#CanVersion}
+VersionInfoVersion={#CanVersion}.{#CanBuildNumber}
+VersionInfoProductVersion={#CanVersion}.{#CanBuildNumber}
 #if ShowCandidate
 AppVerName=Cut Assistant Next {#CanVersion} (Build {#CanBuildNumber}, {#CanCandidate})
 #else

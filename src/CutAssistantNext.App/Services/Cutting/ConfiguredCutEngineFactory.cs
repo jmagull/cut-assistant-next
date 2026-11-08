@@ -71,7 +71,7 @@ internal sealed class ConfiguredCutEngineFactory
 
     private static (OtrCanSettings Settings, FfmpegSettings Ffmpeg, OtrCanToolPaths Paths) ResolveNative(OtrCanSettings native)
     {
-        native = AudioDevelopmentEngine.Resolve(native, AppContext.BaseDirectory, ApplicationVersion.CandidateName);
+        native = AudioDevelopmentEngine.Resolve(native, AppContext.BaseDirectory);
         var ffmpeg = new FfmpegSettingsStore().Load() ?? FfmpegSettings.CreateDefault();
         var resolver = new ToolPathResolver();
         var paths = new OtrCanToolPaths(native.ExecutablePath, native.FfmsIndexExecutablePath,

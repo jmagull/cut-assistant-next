@@ -3,7 +3,7 @@
     <Version>1.0.3</Version>
     <!-- Stable by default; prerelease builds may explicitly set CanCandidate. -->
     <CanBuildNumber Condition="'$(CanBuildNumber)' == '' and Exists('$(MSBuildThisFileDirectory).build/build-number.txt')">$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory).build/build-number.txt').Trim())</CanBuildNumber>
-    <CanBuildNumber Condition="'$(CanBuildNumber)' == ''">0</CanBuildNumber>
+    <CanBuildNumber Condition="'$(CanBuildNumber)' == ''">53</CanBuildNumber>
     <AssemblyVersion>$(Version).0</AssemblyVersion>
     <FileVersion>$(Version).$(CanBuildNumber)</FileVersion>
     <InformationalVersion>$(Version)+build.$(CanBuildNumber)</InformationalVersion>

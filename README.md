@@ -1,18 +1,30 @@
 # Cut Assistant Next
 
-## Cut Assistant Next 1.0.3 · Build 52 · eingefrorener lokaler Stand
+## Cut Assistant Next 1.0.3 Build 53 – gemeinsame lokale Prüffassung
+
+Ein maßgeblicher Entwicklungsstand im ursprünglichen Repository **cut-assistant-next**, Branch **codex/integration-build53**. Die geprüfte Audio-Fehlerbehandlung aus Build 52 und die Spotlight-Fensterpersistenz aus Build 50 gehören zu derselben regulär benannten Anwendung. Alte Funktions-Checkouts bleiben unveränderte Quellen; neue Entwicklung erfolgt im kanonischen Repository.
+
+Der normale Audioablauf bleibt streng. Nach einem belegten Tonfehler stehen Abbrechen, bestätigter MP4Box-Neustart und bei passendem Befund ausdrücklich bestätigte AAC-Reparatur oder Tonspur-Abwahl bereit. Der passende Motor wird aus `runtime/otr-can` verwendet; gespeicherte Werkzeugpfade bleiben erhalten. Keine automatische Reparatur oder pauschale Sampletoleranz.
+
+Spotlight unter **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** übergibt grobe Bereiche an CAN, zeigt Original-/Entfernen-/Restdauer und behält Größe, Position und Maximierung. Mehrmonitor-/DPI-Korrektur hält das Fenster sichtbar. Die Detailsuche hat standardmäßig zwei Sekunden Bildabstand. Den letzten betroffenen Bereich bei Bedarf in CAN mit **Videoende** bis zum tatsächlichen Dateiende abschließen.
+
+Voraussetzungen bleiben Windows 11 x64, .NET 10 Desktop Runtime x64 und die in CAN eingerichteten externen FFmpeg-/ffprobe-/MP4Box-/FFMS2-Werkzeuge. Windows 10 wurde nicht persönlich validiert. Die gemeinsame Fassung ist lokal zur neuen persönlichen Prüfung bestimmt; keine automatische Installation und kein öffentliches Release. Stabil veröffentlicht bleibt 1.0.2 Build 48.
+
+[Integration und Herkunft](docs/INTEGRATION-BUILD53-20261108.md) · [Neue Prüfergebnisse und Startpfad](docs/PRUEFBERICHT-BUILD53-20261108.md) · [Spotlight-README](docs/SPOTLIGHT-README.md).
+
+## Historischer Ausgangsstand: Build 52
 
 Nach einem otr-can-Tonfehler kann CAN eine nachgewiesen beschädigte Tonspur nach ausdrücklicher Bestätigung ausschließen. Alle verbleibenden Tonspuren werden vor dem Angebot auf Decoderfehler und die Zeitabdeckung der Behaltebereiche geprüft. [Bedienung und Prüfgrenzen](docs/AUDIO-SPURABWAHL-BUILD52.md)
 
 Setup, Portable-ZIP und die Quellen einschließlich Spotlight-CAN gehören zum eingefrorenen Paketsatz. Der John-Wick-Tonspur-Dialog, der NCIS-Praxistest und beide Klebecenter-Wege sind persönlich bestätigt. [Pakete, Voraussetzungen und Nachweise](docs/FREEZE-1.0.3-BUILD52.md)
 
-## CAN 1.0.3 · Build 51 · Audio-Fehlerbehandlung-Entwicklung
+## Historischer Ausgangsstand: Build 51
 
 Lokale Prüffassung für Windows 11 x64 mit integriertem Spotlight-CAN und dem beiliegenden otr-can **0.1.6-audio-diag.1**. Setup, Portable-ZIP, vollständiges CAN-Quellpaket einschließlich Spotlight-CAN sowie ergänzende Motor- und libmpv-Quellen bilden den Paketsatz. [Paketübersicht und Voraussetzungen](docs/PAKETE-BUILD51-20261105.md)
 
 Bei einem Tonfehler kannst du abbrechen, den gesamten Schnitt mit dem eingerichteten MP4Box neu starten oder eine dafür geeignete AAC-Zeitlücke ausdrücklich experimentell reparieren. In **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** lassen sich Werbeblöcke grob markieren und anschließend in CAN präzisieren. Die Laufzeitanzeige berücksichtigt abgeschlossene Schnittbereiche und zählt überlappende Bereiche einmal. [Audioablauf und Praxistests](docs/AUDIO-DREI-OPTIONEN-20261105.md) · [Spotlight-CAN](docs/SPOTLIGHT-INTEGRATION-20261104.md)
 
-## Lokale Audio-Prüffassung – 04.11.2026
+## Historische Audio-Prüffassung – 04.11.2026
 
 **CAN 1.0.3 · Build 50 · Audio-Diagnose-Entwicklung**, Branch codex/audio-diagnostics-fallback auf der unveränderten Spotlight-Integration. Präzisere otr-can-Audiobefunde und ausdrücklich bestätigter vollständiger MP4Box-Neustart; strenge Sampleprüfung bleibt erhalten. Der eigene mitgelieferte Diagnosemotor 0.1.6-audio-diag.1 wird nur in dieser gekennzeichneten Prüffassung verwendet, ohne gespeicherte Motorpfade umzustellen. Keine Veröffentlichung und keine produktive neue Audioreparatur. [Umsetzung, Bedienung und Prüfstand](docs/AUDIO-FALLBACK-PAKET1-20261104.md) · [Paket-2-Konzept](docs/AUDIO-FEHLERBEHANDLUNG-PAKET2-KONZEPT-20261104.md).
 

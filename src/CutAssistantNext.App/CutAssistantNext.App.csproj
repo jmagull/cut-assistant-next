@@ -57,6 +57,9 @@
   </Target>
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
+    <AssemblyTitle>Cut Assistant Next</AssemblyTitle>
+    <Product>Cut Assistant Next</Product>
+    <Description>Cut Assistant Next</Description>
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

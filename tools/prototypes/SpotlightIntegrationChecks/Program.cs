@@ -70,6 +70,7 @@ internal static class Program
         var storeType=CanAssembly.GetType("CutAssistantNext.App.Settings.WindowSettingsStore")!;
         var store=Activator.CreateInstance(storeType,BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic,null,[Path.Combine(_output,"window-settings.json")],null)!;
         Set(_window,"_windowSettingsStore",store); // Isolate test window persistence; never save user settings.
+        var spotStore=Activator.CreateInstance(storeType,BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic,null,[Path.Combine(_output,"spotlight-window-settings.json")],null)!;
         _window.Show(); await (Task)typeof(CanWindow).GetMethod("EnsureMediaPlayerInitializedAsync",Private)!.Invoke(_window,null)!;
         var view=Field<MainWindowViewModel>(_window,"_viewModel"); var editor=Field<CutPlanViewModel>(_window,"_cutPlanViewModel");
         Check(view.AnalysisResult is null,"CAN starts without a film");
@@ -82,7 +83,7 @@ internal static class Program
         foreach(var mode in new[]{CutEditingMode.Remove,CutEditingMode.Keep})
         {
             editor.Initialize(view.MediaDuration!.Value,mode);
-            var opening=(Task)typeof(CanWindow).GetMethod("OpenSpotlightAsync",Private)!.Invoke(_window,[null,settings])!;
+            var opening=(Task)typeof(CanWindow).GetMethod("OpenSpotlightAsync",Private)!.Invoke(_window,[null,settings,spotStore])!;
             await Until(()=>Application.Current.Windows.OfType<SpotWindow>().Any(w=>w.IsVisible));
             var spot=Application.Current.Windows.OfType<SpotWindow>().Single(w=>w.IsVisible);
             Check(spot.Model.Media!.FilePath==media && spot.Model.Media.Duration==view.MediaDuration && spot.Model.Media.VideoStreamIndex==view.AnalysisResult!.VideoStreams[0].Index,"Host reuses CAN media: "+mode);
@@ -110,7 +111,7 @@ internal static class Program
             Check(editor.MarkedSegments[0].End==selected.End-TimeSpan.FromMilliseconds(40),"CAN cutlist save/read roundtrip: "+mode);
         }
         var before=editor.CreateCutPlanSnapshot().RemoveSegments.Select(s=>(s.Start,s.End)).ToArray(); var consent=false; var confirmations=0;
-        var reopen=(Task)typeof(CanWindow).GetMethod("OpenSpotlightAsync",Private)!.Invoke(_window,[new Func<bool>(()=>{confirmations++;return consent;}),settings])!;
+        var reopen=(Task)typeof(CanWindow).GetMethod("OpenSpotlightAsync",Private)!.Invoke(_window,[new Func<bool>(()=>{confirmations++;return consent;}),settings,spotStore])!;
         await Until(()=>Application.Current.Windows.OfType<SpotWindow>().Any(w=>w.IsVisible));
         var reopened=Application.Current.Windows.OfType<SpotWindow>().Single(w=>w.IsVisible);
         Check(reopened.Model.Blocks.Count==0,"Reopen starts a clean Spotlight session");
@@ -120,7 +121,7 @@ internal static class Program
         consent=true; ((Button)reopened.FindName("ExportActionButton")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); await reopen;
         Check(confirmations==2 && editor.CreateCutPlanSnapshot().RemoveSegments.Single().Start==TimeSpan.FromSeconds(3),"Explicit replacement commits the complete new plan");
         using(var unlocked=new FileStream(media,FileMode.Open,FileAccess.Write,FileShare.ReadWrite)) Check(true,"Source file lease released after window close");
-        var finalOpen=(Task)typeof(CanWindow).GetMethod("OpenSpotlightAsync",Private)!.Invoke(_window,[new Func<bool>(()=>false),settings])!;
+        var finalOpen=(Task)typeof(CanWindow).GetMethod("OpenSpotlightAsync",Private)!.Invoke(_window,[new Func<bool>(()=>false),settings,spotStore])!;
         await Until(()=>Application.Current.Windows.OfType<SpotWindow>().Any(w=>w.IsVisible)); var final=Application.Current.Windows.OfType<SpotWindow>().Single(w=>w.IsVisible);
         var generate=final.Model.OverviewAsync(0); final.Model.Cancel(); await generate;
         Check(final.Model.Status.Contains("abgebrochen"),"Integrated thumbnail generation is cancellable");

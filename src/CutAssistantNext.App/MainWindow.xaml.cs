@@ -1500,8 +1500,7 @@ public partial class MainWindow : Window
                                 })));
                                 return fallbackDialog.ShowDialog() == true;
                             }, System.Windows.Threading.DispatcherPriority.Normal, token).Task,
-                            chooseAudioRecovery: ApplicationVersion.CandidateName == ApplicationVersion.AudioRecoveryCandidateName
-                                ? (offer, token) => Dispatcher.InvokeAsync(() =>
+                            chooseAudioRecovery: (offer, token) => Dispatcher.InvokeAsync(() =>
                                 {
                                     token.ThrowIfCancellationRequested();
                                     var choices = new AudioMp4BoxFallbackDialog(offer) { Owner = (Window?)progressDialog ?? this };
@@ -1510,7 +1509,7 @@ public partial class MainWindow : Window
                                         if (choices.IsVisible) choices.Close();
                                     })));
                                     return choices.ShowDialog() == true ? choices.SelectedChoice : AudioRecoveryChoice.Cancel;
-                                }, System.Windows.Threading.DispatcherPriority.Normal, token).Task : null);
+                                }, System.Windows.Threading.DispatcherPriority.Normal, token).Task);
 
                     dialog.IsEnabled = false;
                     var cutEngine = await Task.Run(() => cutEngineFactory.Create(engineKind, selection, progress));

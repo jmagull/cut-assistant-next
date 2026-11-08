@@ -24,9 +24,10 @@ if ($snapshot.BuildNumber -ne $BuildNumber) { throw 'Build number differs from t
 $version = [string]$versionXml.Project.PropertyGroup.Version
 if ($snapshot.Version -ne $version) { throw 'Version differs from the source snapshot.' }
 if ($snapshot.Candidate -ne $Candidate) { throw 'Candidate differs from the source snapshot.' }
-$audioCandidate = $Candidate -ceq 'Audio-Fehlerbehandlung-Entwicklung'
-$candidateSuffix = if ($Candidate -and -not $audioCandidate) { "-$Candidate" } else { '' }
-if ($audioCandidate -and -not $OtrCanPackageDirectory) { throw 'The audio development candidate requires its bundled motor.' }
+if ($Candidate) { throw 'Cut Assistant Next uses only its regular product and package name.' }
+$audioCandidate = $true
+$candidateSuffix = ''
+if (-not $OtrCanPackageDirectory) { throw 'Cut Assistant Next requires its matching bundled motor.' }
 $releaseNotes = Join-Path $repo "docs\RELEASE-NOTES-$version.md"
 if (-not (Test-Path -LiteralPath $releaseNotes -PathType Leaf)) { throw "Missing release notes for version $version." }
 
@@ -95,7 +96,7 @@ $fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $
 if ($fileVersion -ne "$version.$BuildNumber") { throw "Unexpected file version: $fileVersion" }
 Copy-Item -LiteralPath (Join-Path $repo 'docs\NUTZERANLEITUNG.md') -Destination (Join-Path $publish 'NUTZERANLEITUNG.md')
 Copy-Item -LiteralPath $releaseNotes -Destination (Join-Path $publish 'RELEASE-NOTES.md')
-$prerequisiteFile = if ($audioCandidate) { 'HINWEIS-AUDIO-ENTWICKLUNG.txt' } else { 'HINWEIS-DOTNET-UND-WERKZEUGE.txt' }
+$prerequisiteFile = 'HINWEIS-DOTNET-UND-WERKZEUGE.txt'
 Copy-Item -LiteralPath (Join-Path $repo "installer\$prerequisiteFile") -Destination (Join-Path $publish 'VORAUSSETZUNGEN.txt') -ErrorAction Stop
 $engineProvenance = $null
 if ($OtrCanPackageDirectory) {

@@ -1,5 +1,7 @@
 # CAN / otr-can: drei Entscheidungen nach Audiofehler – 05.11.2026
 
+**Aktueller gemeinsamer Stand: Cut Assistant Next 1.0.3 Build 53.** Die hier historisch beschriebenen Funktionen gehören zur einen regulären Anwendung im kanonischen Repository. [Integration](INTEGRATION-BUILD53-20261108.md) und [erneute Prüfung](PRUEFBERICHT-BUILD53-20261108.md). Die nachfolgenden alten Buildnummern/Pfade bleiben als Herkunftsnachweise erhalten.
+
 **Lokale Entwicklungsversion: CAN 1.0.3 · Build 51 · Audio-Fehlerbehandlung-Entwicklung.** Der strenge otr-can-Normalmodus ist unverändert. Die drei Entscheidungen werden erst nach einem sicher beendeten Tonfehler angeboten. Keine Änderung des stabilen CAN-Standes, keine Veröffentlichung, kein Tag und keine automatische Audioreparatur.
 
 ~~~text

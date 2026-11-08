@@ -3,15 +3,14 @@ using CutAssistantNext.App.Settings;
 
 namespace CutAssistantNext.App.Services.Cutting;
 
-/// <summary>The named private review build uses its own motor without writing shared settings.</summary>
+/// <summary>Uses the matching bundled motor without rewriting the user's saved tool paths.</summary>
 internal static class AudioDevelopmentEngine
 {
-    internal static OtrCanSettings Resolve(OtrCanSettings settings, string applicationDirectory, string? candidate)
+    internal static OtrCanSettings Resolve(OtrCanSettings settings, string applicationDirectory)
     {
-        if (candidate is not ("Audio-Diagnose-Entwicklung" or ApplicationVersion.AudioRecoveryCandidateName)) return settings;
         var path = Path.Combine(Path.GetFullPath(applicationDirectory), "runtime", "otr-can", "otr_can.exe");
         if (!File.Exists(path))
-            throw new FileNotFoundException("Der Diagnosemotor dieser Audio-Prüffassung fehlt. Bitte das vollständige Entwicklungspaket verwenden.", path);
+            throw new FileNotFoundException("Der mitgelieferte otr-can-Motor fehlt. Bitte den vollständigen Cut-Assistant-Next-Programmordner verwenden.", path);
         return settings with { ExecutablePath = path };
     }
 }

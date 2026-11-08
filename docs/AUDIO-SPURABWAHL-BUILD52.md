@@ -1,5 +1,7 @@
 # CAN 1.0.3 Build 52 – Tonspur-Abwahl
 
+**Aktueller gemeinsamer Stand: Cut Assistant Next 1.0.3 Build 53.** Die hier historisch beschriebenen Funktionen gehören zur einen regulären Anwendung im kanonischen Repository. [Integration](INTEGRATION-BUILD53-20261108.md) und [erneute Prüfung](PRUEFBERICHT-BUILD53-20261108.md). Die nachfolgenden alten Buildnummern/Pfade bleiben als Herkunftsnachweise erhalten.
+
 Build 52 stellt den im John-Wick-Praxisfall bewährten Spur-Ausschluss im gemeinsamen Dialog **otr-can – Audioproblem erkannt** wieder bereit. Der normale Schnitt beginnt mit allen Spuren. Erst nach einem Tonabbruch prüft CAN jede Spur getrennt auf Decoderfehler und auf exakte Abdeckung der Behaltebereiche. [Früherer John-Wick-Nachweis](OTR-CAN-AAC-NOTFALLWEG-20261026.md)
 
 Wenn genau eine beschädigte Spur nachgewiesen ist und sämtliche übrigen Spuren verwendbar sind, nennt der Dialog die entfallende und die erhaltenen Spuren. **Mit intakter Tonspur erneut schneiden** bestätigt den Neustart. CAN erstellt eine Arbeitskopie per Streamcopy, vergleicht die Video- und Audiopakete samt Zeitstempeln und schneidet die unveränderten Behaltebereiche erneut mit otr-can. Die fertige Ausgabe wird gegen die erwarteten Spuren geprüft. Der Abschluss nennt die entfallene Spur.
