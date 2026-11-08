@@ -105,3 +105,9 @@ Damit ist die persönliche MP4Box-/Spotlight-Nutzung der Setup-Fassung in der VM
 Der Nutzer bestätigt anschließend auch **otr-can 0.1.6** in der VM mit **Grey’s Anatomy – Durchs Feuer** für Schnitt, Bild, Ton und Drei-Sekunden-Vorschau positiv. Das nachgereichte Protokoll nennt **60651 Videopakete** und **116449920 Audiosamples bei 48000 Hz**, rechnerisch übereinstimmend **00:40:26.040**; finale MP4-Prüfung und CAN-Abschluss erfolgreich. [Vollständiger VM-Nachweis](VM-SETUP-BUILD50-20261108.md).
 
 Damit ist die persönliche VM-Setup-Prüfung für **beide Schnittmotoren und Spotlight** positiv dokumentiert. Portable und Deinstallation bleiben offen; Installationstyp, sauberer Ausgangszustand und genaue Gast-Windows-Version wurden nicht separat benannt. Nur Dokumentation und rechnerischer Protokollabgleich, keine Produkt-/Paketänderung, kein erneuter Build/Suite-Lauf und keine Veröffentlichung.
+
+## Zusätzlicher VM-Setup-Lauf – NCIS Sydney
+
+Der Nutzer bestätigt anschließend MP4Box mit **NCIS Sydney – Breathless, S02E07** positiv und kündigt für diesen Film otr-can als nächsten Schritt an. Die Testumgebung wurde ausdrücklich als **Setup-Fassung in der VM** geklärt. Drei Segmentaufrufe, Zusammenfügen und Abschnittsprüfung erfolgreich; die beiden Hinweise auf gleiche Bildzeiten am Übergang bleiben dokumentiert. [Details](VM-SETUP-BUILD50-20261108.md).
+
+MP4Box für diesen weiteren Film bestanden; otr-can für NCIS Sydney noch nicht bestätigt. Der zuvor erfolgreiche otr-can-VM-Test mit Grey’s Anatomy gilt weiterhin. Keine Portable-Abnahme aus diesem Lauf abgeleitet. Nur Dokumentationsnachtrag, Build 50 und Pakete unverändert.

@@ -39,3 +39,19 @@ Die persönliche Rückmeldung bestätigt denselben Prüfungsumfang wie zuvor: Sc
 Nur persönliches Nutzerprotokoll und Rückmeldung dokumentiert. Produktcode, Buildnummer 50, Setup, Portable, Quellen und Prüfsummen unverändert. Kein erneuter Build oder Suite-Lauf für diesen Dokumentationsnachtrag. Keine Veröffentlichung, kein Release-Tag und kein Merge nach main.
 
 [Paketbericht](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md) · [Spotlight-README](SPOTLIGHT-README.md).
+
+## Zusätzlicher Setup-VM-Test – NCIS Sydney, MP4Box bestanden
+
+Am 08.11.2026 bestätigt der Nutzer einen weiteren Lauf mit **„alles check und jetzt otr-can :-)“**. Auf Nachfrage ausdrücklich der **Setup-Fassung in der VM** zugeordnet, nicht der Portable-Prüfung.
+
+Film: **NCIS Sydney – Breathless, S02E07**, Aufnahme vom **03.11.2026, 22:15 Uhr, Sat.1**, HQ/MP4. Das neue Protokoll zeigt MP4Box mit drei Segmenten:
+
+| Abschnitt | MP4Box-Aufruf Anfang (s) | MP4Box-Aufruf Ende (s) |
+| --- | ---: | ---: |
+| 1 | 430,76 | 1423,00 |
+| 2 | 1916,04 | 2922,48 |
+| 3 | 3449,52 | 3858,64 |
+
+Schneiden, Zusammenfügen und Prüfung aller drei Abschnitte enden mit **„Fertig.“**. Bei beiden Übergängen bleibt der Hinweis **„gleiche Bildzeit am Abschnittswechsel; dekodierter neuer Anfang wird geprüft“** erhalten. Der Nutzer bestätigt im laufenden Prüfkontext Schnitt, Bild, Ton, Drei-Sekunden-Vorschau und Spotlight positiv.
+
+**otr-can für diesen NCIS-Sydney-Lauf ist angekündigt, noch nicht bestätigt.** Die abgeschlossene otr-can-VM-Abnahme mit Grey’s Anatomy bleibt davon getrennt gültig. Portable und Deinstallation bleiben offen. Nur zusätzlicher persönlicher Protokoll-/Dokumentationsnachweis; keine Produkt-, Build- oder Paketänderung.
