@@ -1,19 +1,36 @@
-# Entwicklungsnotizen – CAN 1.0.3
+# Release Notes – Cut Assistant Next 1.0.3 Build 54
 
-## Cut Assistant Next 1.0.3 Build 54 – gemeinsame lokale Prüffassung
+Stabile Version vom 08.11.2026, persönlich freigegeben. Gegenüber 1.0.2 Build 48:
 
-Ein maßgeblicher Entwicklungsstand im ursprünglichen Repository **cut-assistant-next**, Branch **codex/integration-build54**. Die geprüfte Audio-Fehlerbehandlung aus Build 52 und die Spotlight-Fensterpersistenz aus Build 50 gehören zu derselben regulär benannten Anwendung. Alte Funktions-Checkouts bleiben unveränderte Quellen; neue Entwicklung erfolgt im kanonischen Repository.
+- **Spotlight-CAN integriert:** Werbeblöcke mit Vorschaubildern grob markieren, Original-/Entfernen-/Restdauer sehen und bestätigte Schnittbereiche direkt an CAN übergeben. Feinkontrolle mit Player und Frame-Lupe; den tatsächlichen letzten Frame bei Bedarf mit **Videoende** setzen. Keine automatische oder framegenaue Werbeerkennung.
+- **Spotlight-Fenster merken:** Größe, Position und Maximierung bleiben auch nach CAN-Neustart erhalten. Negative Monitorpositionen werden unterstützt; bei fehlendem Monitor, anderer Auflösung oder DPI-Skalierung wird das Fenster sichtbar korrigiert.
+- **Audiofehler gezielt behandeln:** Normalmodus weiterhin strikt. Bei einer Mehrspurdatei kann eine nachweislich beschädigte Spur nach Prüfung der verbleibenden Spuren ausdrücklich abgewählt werden. Abbrechen und bestätigter vollständiger MP4Box-Neustart bleiben verfügbar.
+- **AAC-Zeitlücken reparieren (experimentell):** Nur für unterstützte, nachgewiesene Lücken und ausschließlich nach ausdrücklicher Zustimmung. Positionsgenaue Stille, vollständiger neuer Schnitt und unabhängige Bild-/Ton-/Containerprüfung. Keine allgemeine Sampletoleranz und keine stillschweigende Korrektur; verlorene Originaltöne werden nicht wiederhergestellt. Bei Fehlschlag kontrollierter Abbruch.
+- **Schnittbearbeitung:** Gemeinsame Server-/Lokal-Cutlist-Auswahl mit exaktem Originalnamen; Rot/Entfernen oder Grün/Behalten, dynamische Markierungsvorschau und dauerhaft wählbare Ansichten Standard/Power-User 1/Power-User 2. Bestehende Cutlists und manuelle Feinarbeit bleiben nutzbar.
+- **Stabilität und Werkzeuge:** Geprüfte Player-/Drei-Sekunden-Vorschau und Tonspurwechsel aus 1.0.2 bleiben erhalten. Die abgesicherten Audio-Neustarts verwenden bestätigte Schnittbereiche und bestehende Werkzeugkonfiguration. Der passende mitgelieferte Motor wird einheitlich aus **tools/otr-can/otr_can.exe** gewählt, ohne gespeicherte Pfade zu überschreiben; fehlt er, klarer Fehler statt stiller Verwendung einer alten EXE.
 
-Der normale Audioablauf bleibt streng. Nach einem belegten Tonfehler stehen Abbrechen, bestätigter MP4Box-Neustart und bei passendem Befund ausdrücklich bestätigte AAC-Reparatur oder Tonspur-Abwahl bereit. Der passende Motor wird aus `tools/otr-can` verwendet; gespeicherte Werkzeugpfade bleiben erhalten. Keine automatische Reparatur oder pauschale Sampletoleranz.
+## Einrichtung und Grenzen
 
-Spotlight unter **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** übergibt grobe Bereiche an CAN, zeigt Original-/Entfernen-/Restdauer und behält Größe, Position und Maximierung. Mehrmonitor-/DPI-Korrektur hält das Fenster sichtbar. Die Detailsuche hat standardmäßig zwei Sekunden Bildabstand. Den letzten betroffenen Bereich bei Bedarf in CAN mit **Videoende** bis zum tatsächlichen Dateiende abschließen.
+Windows 11 x64, **.NET 10 Desktop Runtime x64** sowie für otr-can **Visual C++ v14 Redistributable x64** separat erforderlich. Enthalten: libmpv **0.41.0**, otr-can **0.1.6-audio-diag.1** samt Quellen-/Lizenznachweisen. FFmpeg/ffprobe, GPAC/MP4Box und FFMS2/ffmsindex separat einrichten. FFmpeg/ffprobe müssen neuer als 5.1 sein; ab 9.0.2 empfohlen, Git-Entwicklungsbuilds werden anhand ihres Bibliotheksstands geprüft.
 
-Voraussetzungen bleiben Windows 11 x64, .NET 10 Desktop Runtime x64 und die in CAN eingerichteten externen FFmpeg-/ffprobe-/MP4Box-/FFMS2-Werkzeuge. Windows 10 wurde nicht persönlich validiert. Build 53 wurde vom Nutzer auf Arbeitsrechner und in der VM einschließlich Setup/ZIP, Spotlight, Audiofällen und Klebecenter persönlich bestätigt. Build 54 ändert ausschließlich den Motorordner und ist lokal zur erneuten Prüfung dieses Pfades bestimmt; keine automatische Installation und kein öffentliches Release. Stabil veröffentlicht bleibt 1.0.2 Build 48.
+Setup oder vollständige Portable-ZIP verwenden; die ZIP in einen frischen Ordner entpacken. Beide Varianten benötigen die externen Laufzeiten und verwenden CANs Einstellungen im lokalen Windows-Benutzerprofil. Bei Überinstallation können alte runtime-Dateien bestehen bleiben; der Motor wird ausschließlich aus tools/otr-can verwendet.
 
-[Integration und Herkunft](INTEGRATION-BUILD53-20261108.md) · [Prüfbericht Build 53](PRUEFBERICHT-BUILD53-20261108.md) · [Spotlight-README](SPOTLIGHT-README.md).
+AVI bleibt experimentell, bekannte MP4Box-/Werbeblitzer-Grenzen bleiben bestehen. QUICK AND COPY kann Zeitstempel-/Laufzeithinweise ausgeben und führt keine samplegenaue Tonprüfung aus. Bild, jede Tonspur, Übergänge und Drei-Sekunden-Vorschau persönlich kontrollieren. Windows 10 wurde nicht persönlich validiert.
 
+## Prüfungen und persönliche Abnahme
 
-[Pfadumstellung und neue Prüffassung](PFADUMSTELLUNG-BUILD54-20261108.md).
+Build-54-Nachweis: **1857 CAN-Tests, 78 Spotlight-Tests, 32 native Spotlight-, 32 Kontrollplayer-Prüfungen, vier Fensterprozesse, 20 native Audiofälle und 13 Motor-Paketprüfungen**, jeweils erfolgreich; Build ohne Warnungen/Fehler. Schlussprüfungen und Binärzuordnung für die Veröffentlichung werden im Veröffentlichungsnachweis ergänzt; Wiederholungen zählen nicht als zusätzliche unterschiedliche Tests.
+
+**Cut Assistant Next 1.0.3 Build 54 wurde persönlich erfolgreich geprüft.** Setup in der Windows-VM: regulärer Grey’s-Anatomy-Schnitt sowie NCIS Sydney – Breathless, S02E07 mit ausdrücklich bestätigter experimenteller AAC-Reparatur; Bild, Ton und Drei-Sekunden-Vorschau positiv. Die frühere Build-53-Abnahme einschließlich Setup/ZIP, Spotlight-Fenster/-Übergabe, Mehrspur-/Spur-Abwahl und beiden Klebecenter-Wegen bleibt diesem ursprünglichen Paketsatz zugeordnet. Automatisierte Nachweise und persönliche Rückmeldungen sind getrennt dokumentiert.
+
+## Pakete und Quellen
+
+[Release und Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54): Setup, Portable-ZIP, vollständiges CAN-Quellarchiv einschließlich angeheftetem Spotlight-CAN und passendem Motorquellarchiv, separates Motorquellarchiv, unveränderte libmpv-Quellen/Relink sowie beide Prüfsummenmanifeste. App-Dateiversion **1.0.3.54**, Tag **v1.0.3-build54**. Die persönlich geprüften Programmdateien bleiben bei der dokumentarischen Veröffentlichung unverändert; Quellenarchiv und Provenienz ordnen den finalen Dokumentationsstand eindeutig zu.
+
+[Anleitung](NUTZERANLEITUNG.md) · [Spotlight](SPOTLIGHT-README.md) · [Herkunft, Abnahme und Veröffentlichung](RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md) · [Build 48 bleibt erhalten](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build48).
+
+<details>
+<summary>Historische Entwicklungs- und Prüfstände vor Veröffentlichung</summary>
 
 ## Build 52 · eingefrorener lokaler Paketsatz vom 05.11.2026
 
@@ -70,3 +87,5 @@ Der Anwender bestätigt die gemeinsame Tabelle, Dauer und Downloadbeschriftung m
 **Santa Tell Me** ist inzwischen im grünen Modus mit vier Bereichen und **01:21:24.120** persönlich für Ton, Bild, Schnitt und Drei-Sekunden-Vorschau positiv gemeldet. MP4Box-/otr-can-Protokolle, gespeicherte Cutlist und Servereintrag liegen vor. [Praxisnachweis](SANTA-TELL-ME-GRUENER-PRAXISTEST-20261103.md). Die persönliche Wiederaufnahme gespeicherter begonnener Arbeit bleibt offen. Bestehende AVI-/Zeitstempel-/MP4Box-Grenzen bleiben gültig. Keine neue Setup-/Portable-/VM-Abnahme. Der anschließende Nutzerauftrag friert den korrigierten Stand ein und beauftragt Commit und Push. Kein Versions-/Buildsprung, Paketbau oder Release.
 
 [Bedienung](NUTZERANLEITUNG.md) · [Projektstand](AKTUELLER-STAND.md) · [Testplan](TESTPLAN.md) · [Tabelle: Umsetzung und Nachweise](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi: Umsetzung und Nachweise](SCHNITTMODI-TIMELINE-20261103.md)
+
+</details>

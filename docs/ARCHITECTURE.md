@@ -1,5 +1,24 @@
 # Architektur – Arbeitsstand
 
+## Aktueller Release-Build – 1.0.3 Build 54
+
+Die Produktfunktionalität entspricht dem persönlich geprüften Quellcommit `249511d001c327526e447b6a94127f3ac0c085f2`. Die Veröffentlichung ergänzt ausschließlich Dokumentation und Quellen-/Paketnachweise. Der zugehörige Release-Tag ist `v1.0.3-build54`; die vollständige zugehörige Quellen-ZIP ist gegenüber GitHubs automatischem Quellarchiv zu bevorzugen, weil sie das angeheftete Spotlight-Submodul vollständig enthält. Dessen ursprüngliches README beschreibt den damaligen privaten Entwicklungsstand; für Einrichtung und Veröffentlichung ist die CAN-Dokumentation maßgeblich.
+
+Windows 11 x64 und .NET 10 SDK verwenden. Die vier geprüften libmpv-0.41.0-DLLs mit `tools/setup-libmpv.ps1 -SourceDirectory <DLL-Ordner>` bereitstellen. Dann für die vorhandenen win-x64-Sperrdateien:
+
+```powershell
+dotnet restore .\CutAssistantNext.sln --locked-mode -r win-x64
+dotnet build .\CutAssistantNext.sln -c Release --no-restore -p:CanBuildNumber=54
+dotnet test .\CutAssistantNext.sln -c Release --no-build --no-restore
+dotnet test .\external\spotlight-can\tests\SpotlightCan.Tests\SpotlightCan.Tests.csproj -c Release
+dotnet test .\external\spotlight-can\tests\SpotlightCan.App.Tests\SpotlightCan.App.Tests.csproj -c Release
+```
+
+`tools/build.ps1` ist für neue Entwicklungsbuilds nummerierend; für die exakte Reproduktion von Build 54 den expliziten Parameter verwenden. Spotlight- und Motorquellcommit, Quellmanifest, SDK und Produktzuordnung stehen in `SOURCE-SNAPSHOT.json` bzw. `RELEASE-PROVENANCE.json`. Der Motor liegt unter `tools/otr-can/otr_can.exe`. Die Motorquellen sind als Archiv enthalten; Rust 1.99, gesperrte Abhängigkeiten und Feature `experimental-aac-gap` entsprechen dem dokumentierten Neubau. Native Ressourcen und externe FFmpeg-/MP4Box-/FFMS-Werkzeuge weiterhin getrennt bereitstellen.
+
+Bei einem Git-Checkout zunächst das angeheftete Submodul initialisieren; falls das ursprüngliche Komponentenrepository nicht erreichbar ist, den vollständigen angebotenen Release-Quellsnapshot verwenden. Keine separaten CAN-Funktions-Repositories fortentwickeln. [Release und Nachweise](RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md).
+
+
 ## Spotlight-CAN im Entwicklungsbranch – 04.11.2026
 
 Gemeinsame UI-/Medienbibliotheken über die fest versionierte Spotlight-Git-Komponente; CAN adaptiert nur vorhandene Mediendaten, Werkzeugverwaltung und direkten RemoveSegment-Ersatz. Keine Zwischen-Cutlist, kein zweiter Player oder Prozess. [Architektur, Dateisperre, atomare Übernahme und Prüfergebnisse](SPOTLIGHT-INTEGRATION-20261104.md).

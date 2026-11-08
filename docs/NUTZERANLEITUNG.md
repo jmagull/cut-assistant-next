@@ -1,35 +1,39 @@
 # Nutzeranleitung – Cut Assistant Next
 
-## Cut Assistant Next 1.0.3 Build 54 – gemeinsame lokale Prüffassung
+## Cut Assistant Next 1.0.3 Build 54 – stabile Version
 
-Ein maßgeblicher Entwicklungsstand im ursprünglichen Repository **cut-assistant-next**, Branch **codex/integration-build54**. Die geprüfte Audio-Fehlerbehandlung aus Build 52 und die Spotlight-Fensterpersistenz aus Build 50 gehören zu derselben regulär benannten Anwendung. Alte Funktions-Checkouts bleiben unveränderte Quellen; neue Entwicklung erfolgt im kanonischen Repository.
+Aktueller gemeinsamer Stand im ursprünglichen Repository **cut-assistant-next**; nach ausdrücklicher persönlicher Freigabe vom **08.11.2026** für `main` und [GitHub Latest](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) bestimmt. Dateiversion **1.0.3.54**, libmpv **0.41.0**, mitgelieferter otr-can **0.1.6-audio-diag.1**. Alte Funktionszweige sind historische Quellen; es gibt eine gemeinsame CAN-Version.
 
-Der normale Audioablauf bleibt streng. Nach einem belegten Tonfehler stehen Abbrechen, bestätigter MP4Box-Neustart und bei passendem Befund ausdrücklich bestätigte AAC-Reparatur oder Tonspur-Abwahl bereit. Der passende Motor wird aus `tools/otr-can` verwendet; gespeicherte Werkzeugpfade bleiben erhalten. Keine automatische Reparatur oder pauschale Sampletoleranz.
+Spotlight-CAN ist unter **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** integriert: Werbeblöcke anhand von Vorschaubildern grob markieren, bestätigte Schnittbereiche direkt an CAN übergeben und dort mit Player/Frame-Lupe präzisieren. Größe, Position und Maximierungszustand werden über CAN-Neustarts erhalten. Mehrmonitor-/DPI-Korrektur hält das Fenster bei geänderter Bildschirmkonfiguration sichtbar. Die Detailsuche hat standardmäßig zwei Sekunden Bildabstand; den letzten Bereich bei Bedarf in CAN mit **Videoende** bis zum tatsächlichen Dateiende abschließen.
 
-Spotlight unter **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** übergibt grobe Bereiche an CAN, zeigt Original-/Entfernen-/Restdauer und behält Größe, Position und Maximierung. Mehrmonitor-/DPI-Korrektur hält das Fenster sichtbar. Die Detailsuche hat standardmäßig zwei Sekunden Bildabstand. Den letzten betroffenen Bereich bei Bedarf in CAN mit **Videoende** bis zum tatsächlichen Dateiende abschließen.
+Der normale otr-can-Audiomodus prüft streng und verändert bei einem Fehler keine Samples. Bei geeigneten Befunden stehen Abbrechen, ein ausdrücklich bestätigter vollständiger MP4Box-Neustart, Tonspur-Abwahl bei Mehrspurdateien oder **AAC-Zeitlücken reparieren (experimentell)** zur Wahl. Die Reparatur benötigt ausdrückliche Zustimmung, ergänzt nur nachgewiesene unterstützte Lücken positionsgenau mit Stille und prüft den gesamten Schnitt unabhängig. Keine allgemeine Sampletoleranz, keine automatische Reparatur und keine Wiederherstellung verlorener Originaltöne.
 
-Voraussetzungen bleiben Windows 11 x64, .NET 10 Desktop Runtime x64 und die in CAN eingerichteten externen FFmpeg-/ffprobe-/MP4Box-/FFMS2-Werkzeuge. Windows 10 wurde nicht persönlich validiert. Build 53 wurde vom Nutzer auf Arbeitsrechner und in der VM einschließlich Setup/ZIP, Spotlight, Audiofällen und Klebecenter persönlich bestätigt. Build 54 ändert ausschließlich den Motorordner und ist lokal zur erneuten Prüfung dieses Pfades bestimmt; keine automatische Installation und kein öffentliches Release. Stabil veröffentlicht bleibt 1.0.2 Build 48.
+Der passende Motor liegt ausschließlich unter **`tools/otr-can/otr_can.exe`** relativ zur Anwendung; gespeicherte Werkzeugpfade werden nicht überschrieben. Für eine ZIP den vollständigen Inhalt in einen frischen Ordner entpacken. Die Portable-Fassung verwendet wie das Setup CANs Benutzereinstellungen unter dem lokalen Windows-Benutzerprofil. Beim Setup-Upgrade können alte `runtime`-Dateien verbleiben; sie werden nicht verwendet.
 
-[Integration und Herkunft](INTEGRATION-BUILD53-20261108.md) · [Prüfbericht Build 53](PRUEFBERICHT-BUILD53-20261108.md) · [Spotlight-README](SPOTLIGHT-README.md).
+Voraussetzungen: **Windows 11 x64**, **.NET 10 Desktop Runtime x64**, für otr-can **Microsoft Visual C++ v14 Redistributable x64**. FFmpeg/ffprobe, GPAC/MP4Box und FFMS2/ffmsindex separat einrichten; keine Windows-Codec-Pakete erforderlich. Windows 10 ist nicht persönlich validiert. Bild, jede Tonspur und Schnittübergänge weiterhin selbst kontrollieren. QUICK AND COPY führt keine samplegenaue Tonprüfung aus; AVI bleibt experimentell.
+
+**Cut Assistant Next 1.0.3 Build 54 wurde persönlich erfolgreich geprüft.** Insbesondere Setup in der Windows-VM: Grey’s Anatomy regulär sowie NCIS Sydney – Breathless, S02E07 nach ausdrücklich bestätigter AAC-Reparatur; Bild, Ton und Drei-Sekunden-Vorschau positiv. Die weitergehende persönliche Setup-/ZIP-/Spotlight-/Mehrspur-/Klebecenter-Abnahme von Build 53 bleibt separat zugeordnet.
+
+[Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) · [Release Notes](RELEASE-NOTES-1.0.3.md) · [Spotlight-Anleitung](SPOTLIGHT-README.md) · [Abnahme und Veröffentlichung](RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md). Die folgenden datierten Entwicklungsstände und alten Prüffassungen sind historische Nachweise, keine aktuelle Installationsanleitung.
 
 
-[Pfadumstellung und neue Prüffassung](PFADUMSTELLUNG-BUILD54-20261108.md).
+## Installation und ZIP
 
-## Cut Assistant Next 1.0.3 Build 52
+Das x64-Setup installiert unter dem gewohnten Namen **Cut Assistant Next**. Alternativ die Portable-ZIP vollständig in einen frischen Ordner entpacken und `CutAssistantNext.App.exe` starten. Externe Laufzeiten und Werkzeuge werden in beiden Varianten separat benötigt; die Datei `VORAUSSETZUNGEN.txt` im Paket nennt Details und Bezugsquellen. Der mitgelieferte Motor bleibt zusammen mit Quellen und Lizenzhinweisen unter `tools\otr-can`. Keine einzelne Motor- oder CAN-EXE aus einer anderen Ausgabe einsetzen.
 
-Setup, Portable-ZIP und Quellen gehören zum eingefrorenen lokalen Paketsatz. Beide Programmvarianten benötigen die .NET 10 Desktop Runtime x64 und verwenden die CAN-Benutzereinstellungen. [Pakete und Voraussetzungen](FREEZE-1.0.3-BUILD52.md)
+Unter **Einstellungen → FFmpeg-Werkzeuge**, **Schnittanwendung** und **OTR-CAN-Werkzeuge** die passenden externen Programme prüfen. Der Schnittauftrag wählt **Schneiden MP4Box (schnell)** oder **Schneiden otr-can (framegenau, langsam)**. Der otr-can-Auftrag verwendet den passenden mitgelieferten Motor; der gespeicherte ffmsindex-Pfad bleibt erhalten.
 
-### Tonspur-Abwahl
+## Tonspur-Abwahl
 
 Wenn otr-can bei einer Mehrspurdatei abbricht, prüft CAN die Spuren einzeln. Sobald die beschädigte Spur eindeutig feststeht und alle übrigen Spuren die Behaltebereiche vollständig abdecken, zeigt der Dialog, welche Spur entfällt und welche bleiben. **Mit intakter Tonspur erneut schneiden** startet den kompletten Schnitt nach deiner Bestätigung. Die experimentelle AAC-Reparatur und MP4Box bleiben als eigene Optionen im selben Dialog. [Voraussetzungen](AUDIO-SPURABWAHL-BUILD52.md)
 
-## Hinweise zur lokalen Audio-Prüffassung Build 51
+## Spotlight und Audiofehler
 
 Mit **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** kannst du Werbeblöcke grob markieren und zur Feinarbeit an CAN übergeben. Unter **Schnittbereiche** zeigt Spotlight-CAN Originaldauer, Dauer der vollständigen Entfernen-Bereiche und die geschätzte Filmlaufzeit. Die Anzeige berücksichtigt Überschneidungen einmal und wird beim Bearbeiten sofort neu berechnet. Prüfe anschließend die Schnittübergänge im Film.
 
-Wenn otr-can einen Tonfehler meldet, bietet CAN Abbrechen und einen vollständigen Neustart mit dem konfigurierten MP4Box an. Bei einer nachgewiesenen geeigneten AAC-Zeitlücke ist zusätzlich **AAC-Zeitlücken reparieren (experimentell)** verfügbar. Diese Option füllt die Lücke mit Stille, prüft den gesamten Schnitt erneut und kann entsprechend länger dauern. Kontrolliere Bild, alle Tonspuren und die Schnittübergänge. Die beiliegende `VORAUSSETZUNGEN.txt` nennt die für Build 51 benötigten Werkzeuge.
+Wenn otr-can einen Tonfehler meldet, bietet CAN Abbrechen und einen vollständigen Neustart mit dem konfigurierten MP4Box an. Bei einer nachgewiesenen geeigneten AAC-Zeitlücke ist zusätzlich **AAC-Zeitlücken reparieren (experimentell)** verfügbar. Diese Option füllt die Lücke mit Stille, prüft den gesamten Schnitt erneut und kann entsprechend länger dauern. Kontrolliere Bild, alle Tonspuren und die Schnittübergänge. Die beiliegende `VORAUSSETZUNGEN.txt` nennt die benötigten Werkzeuge.
 
-## Drei Ansichten in der lokalen 1.0.3 – 03.11.2026
+## Drei Ansichten
 
 Unter **Einstellungen → Darstellung und Schnittbearbeitung … → Anordnung der Benutzeroberfläche** stehen **Standard**, **Power-User 1** (bisherige Anordnung) und **Power-User 2** zur Auswahl. **Übernehmen** wirkt sofort und speichert die Wahl. Laufender Film, Tonspur, Schnittpunkte und geladene Cutlist bleiben beim Ansichtswechsel erhalten. Die separate Rot-/Grün-Arbeitsweise gilt weiterhin erst für den nächsten Film.
 
@@ -37,15 +41,11 @@ Unter **Einstellungen → Darstellung und Schnittbearbeitung … → Anordnung d
 
 Bei zu schmalem Fenster verwendet CAN vorübergehend Standard und kehrt bei ausreichendem Platz zur gespeicherten Wunschansicht zurück. Alle vier Schnittbuttons bleiben in der neuen Ansicht zusammen. Bei geringer Höhe lässt sich die Arbeitsfläche scrollen. [Tatsächliche Ansichten und Prüfgrenzen](POWER-USER-2-IMPLEMENTIERUNG-20261103.md).
 
-## Geltungsstand – 03.11.2026
+## Geltungsstand
 
-**Stabil veröffentlicht: CAN 1.0.2 Build 48. Eingefrorener Entwicklungsstand: CAN 1.0.3 mit unverändertem Buildzähler 48; Veröffentlichung erst nach Freigabe.** Die nachfolgend mit **1.0.3** bezeichnete gemeinsame Cutlist-Tabelle und Rot-/Grün-Bedienung sind noch nicht in den veröffentlichten 1.0.2-Paketen enthalten. [Entwicklungsnotizen](RELEASE-NOTES-1.0.3.md), [Versionen](VERSIONEN.md), [Freeze](FREEZE-1.0.3-20261103.md).
+Diese Anleitung gilt für die stabile Version **1.0.3 Build 54**. Die datierten Angaben „ab Build …“ kennzeichnen die Einführung einer weiterhin enthaltenen Funktion. Alte Praxis- und Paketberichte bleiben historische Nachweise. Für die aktuelle Installation sind die oben genannten Voraussetzungen, `tools/otr-can` und die mitgelieferte `VORAUSSETZUNGEN.txt` maßgeblich.
 
-Für 1.0.3: Unter **Einstellungen → Darstellung und Schnittbearbeitung …** die Arbeitsweise wählen, übernehmen und den Film neu öffnen. Rot markiert zu entfernende, Grün zu behaltende Teile. Eine begonnene Markierung folgt dem Slider; **Esc** verwirft nur diesen offenen Anfang. Kapitel 3 bis 5 erläutern gemeinsame Cutlist-Auswahl und sicheres Speichern.
-
-**01.11.2026: CAN 1.0.2 Build 48 ist als stabile Latest-Version veröffentlicht.** [Release v1.0.2-build48](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build48), App-Dateiversion **1.0.2.48**. Build 47 bleibt unverändert als stabile Vorgängerversion erhalten. Motor otr-can 0.1.6, libmpv 0.41.0, .NET 10/WPF unverändert.
-
-**Build 48, veröffentlicht am 01.11.2026:** Tonspurwechsel im Kontrollplayer erhalten Position und Play/Pause; nach EOF wird nötigenfalls kontrolliert neu geladen. 1634 Pakettests, 1362 finale DLL-Tests und 32 native/WPF-Kontrollen erfolgreich. [Korrekturbericht](KONTROLLPLAYER-TONSPUR-KORREKTUR-20261101.md).
+Unter **Einstellungen → Darstellung und Schnittbearbeitung …** die Arbeitsweise wählen, übernehmen und den Film neu öffnen. Rot markiert zu entfernende, Grün zu behaltende Teile. Eine begonnene Markierung folgt dem Slider; **Esc** verwirft nur diesen offenen Anfang. Kapitel 3 bis 5 erläutern gemeinsame Cutlist-Auswahl und sicheres Speichern.
 
 ## Klebecenter – zwei fertige Filmteile verbinden
 
@@ -66,13 +66,13 @@ Bei beiden Verfahren bleibt das passende H.264-Bild unverändert. Ganze Filmteil
 
 **Menü ab Entwicklungsbuild 44:** Im Klebecenter gibt es nur **Filmteile zusammenfügen …**. Tonspuren werden direkt in diesem Dialog gewählt; eine Vorbereitungskopie ist nicht erforderlich. Der separate Eintrag **Tonspur für Filmteile auswählen …** wurde entfernt. Seine bisherige Funktion bleibt im Code für eine mögliche spätere Werkzeugrubrik erhalten. Die bereits erstellten Build-43-Pakete enthalten den alten zusätzlichen Eintrag weiterhin.
 
-## AAC-Notfallweg beim otr-can-Schnitt
+## Tonspur-Abwahl und AAC-Reparatur beim otr-can-Schnitt
 
-Scheitert der normale Schnitt bei der Tonaufbereitung und ist eine passende AAC-Spur verfügbar, kann CAN nach ausdrücklicher Bestätigung mit dieser Spur erneut schneiden. Die Rückfrage zeigt entfallende Spuren. Erst vollständig fehler- und warnungsfreie Prüfung der gewählten Spur erlaubt den erneuten Versuch mit denselben Schnittpunkten. Gesunde Aufträge behalten alle Tonspuren.
+Scheitert der normale Schnitt bei der Tonaufbereitung, prüft CAN die angebotenen Möglichkeiten. Ist bei einer Mehrspurdatei die beschädigte Spur eindeutig bestimmt und sind die verbleibenden Spuren für die Schnittbereiche nachweislich verwendbar, kann der gesamte Schnitt nach ausdrücklicher Bestätigung mit diesen Spuren neu gestartet werden. Die Rückfrage zeigt entfallende Spuren. Gesunde Aufträge behalten alle Tonspuren.
 
-Der Notfallweg repariert keine defekte Spur. Für späteres Kleben genügt die Auswahl pro Teil im Klebecenter; keine separate Vorbereitungskopie erforderlich. [Notfallweg](OTR-CAN-AAC-NOTFALLWEG-20261026.md).
+Für passende nachgewiesene AAC-Zeitlücken steht getrennt **AAC-Zeitlücken reparieren (experimentell)** bereit. Erst die ausdrückliche Bestätigung startet einen vollständigen neuen Schnitt mit positionsgenauer Stille und unabhängigen Prüfungen. Ablehnung oder fehlgeschlagene Reparatur führt nicht stillschweigend zum Erfolg. Abbrechen und bestätigter MP4Box-Neustart bleiben verfügbar. [Spur-Abwahl und Prüfgrenzen](AUDIO-SPURABWAHL-BUILD52.md), [Release Notes](RELEASE-NOTES-1.0.3.md).
 
-## Versionen und Installation
+## Historische Versions- und Installationsnachweise bis Build 40
 
 Build 39 enthielt Motor 0.1.6, nannte im Voraussetzungstext aber 0.1.5. Build 40 korrigiert den Text und ergänzt den Paketabgleich. Der Setup-Screenshot bestätigt den Hinweis **0.1.6**. Nach dem Umstieg auf Setup Build 40 bestätigt der Nutzer beide Furiosa-Schnitte mit otr-can, das Klebecenter und alle Prüfstellen. Damit ist der Arbeits-PC-Funktionslauf positiv; zusätzliche Portable-/VM-/Deinstallationsvarianten bleiben getrennt offen. [Furiosa-Praxisbericht](FURIOSA-KLEBECENTER-PRAXIS-20261027.md). [Pakete und Prüfsummen](RELEASE-1.0.2-BUILD40-RESULT.md).
 
@@ -633,4 +633,6 @@ Nach Erfolg werden temporäre Dateien, Erfolgsprotokoll und leerer Arbeitsordner
 
 ## Mitgelieferten Motor nach Überinstallation prüfen
 
-Der aktuelle Paketsatz enthält **otr-can 0.1.6** unter **tools/otr-can/otr_can.exe**. Unter **Einstellungen → OTR-CAN-Werkzeuge** den Pfad auf diese mitgelieferte EXE setzen. Eine übernommene Einstellung kann weiterhin auf eine ältere Kopie zeigen. Die Versionsprüfung muss **0.1.6** melden. Das Klebecenter verwendet die konfigurierten FFmpeg-Werkzeuge. Im veröffentlichten Build 47 verwendet AUDIO-ENTHUSIAST genau eine gewählte Spur je Teil mit durchgehender AAC-LC-Neukodierung; erkannte GPAC/MP4Box-Teile sind dafür gesperrt. QUICK AND COPY erhält bestätigte kompatible AAC-/AC-3-Paare ohne Neukodierung.
+Der aktuelle Paketsatz enthält **otr-can 0.1.6-audio-diag.1** unter **tools/otr-can/otr_can.exe**. Der otr-can-Schnitt verwendet diese passende mitgelieferte EXE unabhängig von einem alten gespeicherten Motorpfad. Der ffmsindex-Pfad bleibt konfigurierbar. Die Versionsprüfung muss **0.1.6-audio-diag.1** melden. Bei fehlendem Paketmotor den vollständigen Paketsatz verwenden; eine alte Kopie unter runtime wird nicht als Ersatz verwendet.
+
+Das Klebecenter verwendet die konfigurierten FFmpeg-Werkzeuge. AUDIO-ENTHUSIAST verarbeitet genau eine gewählte Spur je Teil mit durchgehender AAC-LC-Neukodierung; erkannte GPAC/MP4Box-Teile sind dafür gesperrt. QUICK AND COPY erhält bestätigte kompatible AAC-/AC-3-Paare ohne Neukodierung.

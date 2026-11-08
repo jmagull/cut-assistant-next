@@ -1,19 +1,55 @@
 # Cut Assistant Next
 
-## Cut Assistant Next 1.0.3 Build 54 – gemeinsame lokale Prüffassung
+Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Die Oberfläche verwendet WPF, die Wiedergabe mpv/libmpv – ohne DirectShow und ohne zusätzliche Windows-Codec-Pakete.
 
-Ein maßgeblicher Entwicklungsstand im ursprünglichen Repository **cut-assistant-next**, Branch **codex/integration-build54**. Die geprüfte Audio-Fehlerbehandlung aus Build 52 und die Spotlight-Fensterpersistenz aus Build 50 gehören zu derselben regulär benannten Anwendung. Alte Funktions-Checkouts bleiben unveränderte Quellen; neue Entwicklung erfolgt im kanonischen Repository.
+## Aktuelle Version: 1.0.3 Build 54
 
-Der normale Audioablauf bleibt streng. Nach einem belegten Tonfehler stehen Abbrechen, bestätigter MP4Box-Neustart und bei passendem Befund ausdrücklich bestätigte AAC-Reparatur oder Tonspur-Abwahl bereit. Der passende Motor wird aus `tools/otr-can` verwendet; gespeicherte Werkzeugpfade bleiben erhalten. Keine automatische Reparatur oder pauschale Sampletoleranz.
+[**Release und Downloads**](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) · [Setup](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-win-x64-Setup.exe) · [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-win-x64.zip) · [Vollständige Quellen](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-source.zip)
 
-Spotlight unter **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** übergibt grobe Bereiche an CAN, zeigt Original-/Entfernen-/Restdauer und behält Größe, Position und Maximierung. Mehrmonitor-/DPI-Korrektur hält das Fenster sichtbar. Die Detailsuche hat standardmäßig zwei Sekunden Bildabstand. Den letzten betroffenen Bereich bei Bedarf in CAN mit **Videoende** bis zum tatsächlichen Dateiende abschließen.
+Spotlight-CAN und die erweiterte Audiobehandlung sind Funktionen dieser einen CAN-Version. Entwicklung und Veröffentlichung erfolgen im ursprünglichen Repository. **Cut Assistant Next 1.0.3 Build 54 wurde persönlich erfolgreich geprüft und am 08.11.2026 zur stabilen Veröffentlichung freigegeben.** [Abnahme und Herkunft](docs/RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md).
 
-Voraussetzungen bleiben Windows 11 x64, .NET 10 Desktop Runtime x64 und die in CAN eingerichteten externen FFmpeg-/ffprobe-/MP4Box-/FFMS2-Werkzeuge. Windows 10 wurde nicht persönlich validiert. Build 53 wurde vom Nutzer auf Arbeitsrechner und in der VM einschließlich Setup/ZIP, Spotlight, Audiofällen und Klebecenter persönlich bestätigt. Build 54 ändert ausschließlich den Motorordner und ist lokal zur erneuten Prüfung dieses Pfades bestimmt; keine automatische Installation und kein öffentliches Release. Stabil veröffentlicht bleibt 1.0.2 Build 48.
+## Neu gegenüber 1.0.2
 
-[Integration und Herkunft](docs/INTEGRATION-BUILD53-20261108.md) · [Prüfbericht Build 53](docs/PRUEFBERICHT-BUILD53-20261108.md) · [Spotlight-README](docs/SPOTLIGHT-README.md).
+- **Spotlight-CAN:** Werbeblöcke mit Vorschaubildern grob markieren, Original-/Entfernen-/Restdauer sehen und bestätigte Schnittbereiche direkt an CAN übergeben. Größe, Position und Maximierung werden über Programmstarts erhalten; Mehrmonitor-/DPI-Korrektur hält das Fenster sichtbar. Feinarbeit erfolgt in CAN. Beim Zwei-Sekunden-Bildraster das tatsächliche Dateiende bei Bedarf mit **Videoende** setzen.
+- **Audiofehler:** Strenger normaler otr-can-Schnitt; beschädigte optionale Tonspur bei passenden Mehrspurdateien nach Prüfung und Bestätigung abwählen. Abbrechen und ausdrücklich bestätigter vollständiger MP4Box-Neustart bleiben verfügbar.
+- **AAC-Zeitlücken reparieren (experimentell):** Ausschließlich nach ausdrücklicher Zustimmung für unterstützte, nachgewiesene Lücken. Fehlende Zeitabschnitte werden positionsgenau mit Stille belegt; anschließend unabhängige vollständige Bild-/Ton-/Containerprüfung. Keine allgemeine Sampletoleranz, keine automatische Reparatur und keine Wiederherstellung verlorener Originaltöne.
+- **Schnittbearbeitung:** Gemeinsame Server-/Lokal-Cutlist-Auswahl, Rot/Entfernen oder Grün/Behalten, dynamische Vorschau und drei dauerhaft wählbare Ansichten einschließlich Power-User 2.
+- **Einheitlicher Paketmotor:** `tools/otr-can/otr_can.exe` relativ zur Anwendung, für Setup und ZIP. Gespeicherte Werkzeugpfade bleiben erhalten; der Schnitt verwendet den passenden mitgelieferten Motor. Fehlt dieser, verständlicher Fehler statt stillen Rückfalls.
 
+## Installation und Voraussetzungen
 
-[Pfadumstellung und neue Prüffassung](docs/PFADUMSTELLUNG-BUILD54-20261108.md).
+**Windows 11 x64**, **.NET 10 Desktop Runtime x64** und für otr-can **Microsoft Visual C++ v14 Redistributable x64**. Die .NET-Variante **Desktop Runtime** ist erforderlich. Windows 10 wurde nicht persönlich validiert.
+
+Das Setup installiert unter dem gewohnten Namen **Cut Assistant Next**. Alternativ die Portable-ZIP vollständig in einen frischen Ordner entpacken und `CutAssistantNext.App.exe` starten. Beide Varianten verwenden CANs Einstellungen im lokalen Windows-Benutzerprofil. Eine ZIP ist kein selbstenthaltenes .NET-Paket. Beim Setup-Upgrade können alte runtime-Dateien stehen bleiben; sie werden nicht verwendet.
+
+Enthalten sind **libmpv 0.41.0** und **otr-can 0.1.6-audio-diag.1** samt Hinweisen/Quellen. Separat benötigt werden:
+
+- **FFmpeg und ffprobe:** Medienanalyse/-vorbereitung und Motor; neuer als 5.1, ab 9.0.2 empfohlen. Git-Entwicklungsbuilds prüft CAN anhand ihres Bibliotheksstands.
+- **GPAC/MP4Box:** schneller MP4Box-Schnitt und angebotene Alternative.
+- **FFMS2/ffmsindex:** für den otr-can-Schnitt, einschließlich seiner DLLs.
+
+Die Datei `VORAUSSETZUNGEN.txt` im Paket nennt Bezugsquellen. In CAN unter **Einstellungen → FFmpeg-Werkzeuge**, **Schnittanwendung** und **OTR-CAN-Werkzeuge** einrichten und prüfen. MP4Box bleibt der Standard; der konkrete Schnittauftrag wählt den Motor.
+
+## Prüfen und verwenden
+
+Bild, jede Tonspur, Schnittübergänge und Drei-Sekunden-Vorschau persönlich kontrollieren. AVI bleibt experimentell; bekannte MP4Box-/Werbeblitzer-Grenzen bleiben bestehen. QUICK AND COPY führt keine samplegenaue Tonprüfung aus und kann technische Zeitstempelhinweise melden.
+
+Für Build 54 sind **1857 CAN- und 78 Spotlight-Tests** sowie native Audio-/Fenster-/Player- und Paketprüfungen dokumentiert. Persönlich bestätigt sind insbesondere Setup in der Windows-VM mit regulärem Schnitt und dem NCIS-AAC-Reparaturfall einschließlich Bild, Ton und Drei-Sekunden-Vorschau. Die umfangreichere vorherige Build-53-Abnahme bleibt gesondert zugeordnet.
+
+[Nutzeranleitung](docs/NUTZERANLEITUNG.md) · [Spotlight-Anleitung](docs/SPOTLIGHT-README.md) · [Release Notes](docs/RELEASE-NOTES-1.0.3.md) · [Quell-/Prüfnachweise](docs/RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md) · [Dokumentation](docs/README.md)
+
+## Entwickeln, Quellen und Danksagung
+
+C#, .NET 10, WPF und Windows x64. Das vollständige Release-Quellarchiv enthält die exakten CAN- und angehefteten Spotlight-Quellen sowie die passenden Motorquellen. GitHubs automatisch erzeugtes Quellarchiv enthält Submodule nicht vollständig; für einen vollständigen Build das ausdrücklich angebotene **Build54-source.zip** verwenden. [Buildhinweise und Architektur](docs/ARCHITECTURE.md).
+
+Lizenz: [GPL-3.0-or-later](LICENSE); Drittanbieter behalten ihre eigenen Lizenzbedingungen. Die bewährten libmpv-Quellen-/Relink-Archive werden unverändert mit ausgeliefert. [Lizenzen und Herkunft](docs/libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) · [.NET-/NuGet-Hinweise](docs/DOTNET-LICENSING.md) · [Danksagung](docs/DANKSAGUNG.md).
+
+Die bisherige stabile [Version 1.0.2 Build 48](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.2-build48) und frühere Releases bleiben vollständig erhalten.
+
+<details>
+<summary>Historische Entwicklung und frühere Prüfstände</summary>
+
+Die folgenden Angaben beschreiben ihren jeweiligen damaligen Stand. Aktuelle Downloads und Einrichtung stehen oben.
 
 ## Historischer Ausgangsstand: Build 52
 
@@ -317,3 +353,5 @@ Eine optionale Vorabkennung wird über die Build-Eigenschaft `CanCandidate` gese
 | `docs` | Anleitung, Status, Testplan und technische Dokumentation |
 
 Historischer RC2-Release-Stand (01.10.2026): **0.2.1 Build 7 – RC2**, Release-Build ohne Warnungen oder Fehler und **496/496 automatisierte Tests bestanden**. Alle 148 Dateien des Portable-ZIPs wurden geprüft; Start, Versionsanzeige und reguläres Beenden waren erfolgreich. Die Installation in einer VM und ein dreiteiliger HQ-MP4-Schnitt von „Grey’s Anatomy – Durchs Feuer“ wurden bestätigt; Bild und Ton der fertigen Datei waren einwandfrei. Die Setup-Deinstallation wurde ebenfalls als erfolgreich bestätigt. Der separate Portable-ZIP-Schnitt mit drei Behaltebereichen wurde ebenfalls erfolgreich abgeschlossen; Bild und Ton der fertigen Datei wurden vom Benutzer als einwandfrei bestätigt. Details stehen im [damaligen Prüfbericht](docs/RELEASE-BUILD7-RC2-RESULT.md); die früheren Pakettests bleiben im [Build-6-Prüfbericht](docs/RELEASE-BUILD6-RC2-RESULT.md) dokumentiert.
+
+</details>

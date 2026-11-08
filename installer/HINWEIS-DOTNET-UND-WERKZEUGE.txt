@@ -1,6 +1,6 @@
 Cut Assistant Next – Einmalig benötigte Programme
 
-Cut Assistant Next 1.0.3 Build 54 – gemeinsame lokale Prüffassung.
+Cut Assistant Next 1.0.3 Build 54 – stabile Ausgabe.
 Windows 11 x64 ist die geprüfte Zielplattform; Windows 10 ist nicht persönlich validiert.
 Audio-Fehlerbehandlung und Spotlight-CAN sind Funktionen dieser einen Anwendung.
 
@@ -69,5 +69,6 @@ MP4Box bleibt Standardschnittmotor.
 
 Die Wiedergabe benötigt FFmpeg und GPAC nicht; für die Analyse wird ffprobe
 benötigt. Beim Schneiden werden die Werkzeuge des gewählten Motors benötigt.
-Diese Ausgabe ist eine lokale Prüffassung. Die neue gemeinsame Fassung
-wird nicht automatisch installiert und ist noch nicht veröffentlicht.
+Release und vollständige Downloads:
+https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54
+Die AAC-Zeitlückenreparatur bleibt experimentell und benötigt Zustimmung.

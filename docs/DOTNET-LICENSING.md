@@ -1,4 +1,6 @@
-# .NET- und NuGet-Lizenzen der Windows-Testausgabe
+# .NET- und NuGet-Lizenzen der Windows-Ausgabe
+
+**Aktueller Paketsatz: Cut Assistant Next 1.0.3 Build 54**, frameworkabhängig mit .NET 10 Desktop Runtime x64. Die Laufzeit bleibt separat zu installieren; die nachstehende datierte Bestandsaufnahme und die unveränderten Drittanbieterhinweise bleiben als Herkunftsnachweis erhalten. [Veröffentlichung](RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md).
 
 **Stand 27.09.2026: begründete Projektbewertung für die frameworkabhängige Windows-x64-Ausgabe unter GPL-3.0-or-later.** Die Bewertung dient der Release-Vorbereitung; sie ist keine verbindliche Rechtsberatung oder Garantie und keine pauschale Freigabe anderer Paketformen. Die fremden Laufzeitdateien bleiben unter ihren eigenen Bedingungen.
 

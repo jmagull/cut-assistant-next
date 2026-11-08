@@ -1,5 +1,7 @@
 # Spotlight-CAN – kurze Bedienung
 
+Spotlight-CAN ist Bestandteil von Cut Assistant Next 1.0.3 Build 54.
+
 Spotlight hilft, Werbung anhand von Vorschaubildern grob zu finden und Schnittbereiche vorzubereiten. Die genaue Kontrolle und der eigentliche Filmschnitt erfolgen anschließend in Cut Assistant Next.
 
 ## Vom Überblick zum fertigen Schnitt
@@ -26,4 +28,4 @@ Fenstergröße, Bildschirmposition und Maximierung werden beim Schließen gespei
 
 Spotlight verwendet den bereits in CAN geöffneten Film sowie die unter **Einstellungen → FFmpeg-Werkzeuge** eingerichteten Programme. Es besitzt keinen eigenen Player und keinen eigenen Schnittmotor. Für einen Filmwechsel zuerst Spotlight schließen.
 
-Gültig für Cut Assistant Next 1.0.3 Build 53. Die Fensterverwaltung stammt aus dem persönlich geprüften Build 50; die neue gemeinsame Fassung benötigt ihre eigene persönliche Prüfung. Die finale Schnittkontrolle bleibt erforderlich.
+Gültig für Cut Assistant Next 1.0.3 Build 54. Die integrierte Fensterverwaltung wurde mit Build 53 persönlich erfolgreich geprüft und ist in Build 54 unverändert enthalten. Die finale Schnittkontrolle bleibt erforderlich. [Abnahme und Veröffentlichung](RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md).

@@ -54,4 +54,4 @@ Die rechtlichen Hinweise zu mitgelieferten Komponenten stehen in den [Third-Part
 
 ## Spotlight-CAN
 
-Die ursprüngliche Idee der visuellen Werbesuche und der AutoIt-Cutfinder stammen von Martin. Spotlight-CAN ist eine eigenständige C#-Umsetzung; Martins Originalquellen und Bildressourcen wurden nicht übernommen. Integration nach ausdrücklicher persönlicher Freigabe am 04.11.2026.
+Die ursprüngliche Idee der visuellen Werbesuche und der AutoIt-Cutfinder stammen von Martin. Spotlight-CAN ist eine eigenständige C#-Umsetzung; Martins Originalquellen und Bildressourcen wurden nicht übernommen. Integration nach ausdrücklicher persönlicher Freigabe am 04.11.2026; Veröffentlichung als Bestandteil von Cut Assistant Next 1.0.3 Build 54 am 08.11.2026 ausdrücklich beauftragt. Danke für die Idee und die persönlichen Integrations- und Mehrmonitorprüfungen. Der angeheftete vollständige Komponentenquellstand gehört zum CAN-Quellarchiv; das ursprüngliche Komponenten-README bleibt als historischer Herkunftsnachweis erhalten.

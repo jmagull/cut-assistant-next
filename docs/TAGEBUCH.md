@@ -1,19 +1,21 @@
 # Entwicklungstagebuch
 
-## Cut Assistant Next 1.0.3 Build 54 – gemeinsame lokale Prüffassung
+## Cut Assistant Next 1.0.3 Build 54 – stabile Version
 
-Ein maßgeblicher Entwicklungsstand im ursprünglichen Repository **cut-assistant-next**, Branch **codex/integration-build54**. Die geprüfte Audio-Fehlerbehandlung aus Build 52 und die Spotlight-Fensterpersistenz aus Build 50 gehören zu derselben regulär benannten Anwendung. Alte Funktions-Checkouts bleiben unveränderte Quellen; neue Entwicklung erfolgt im kanonischen Repository.
+Aktueller gemeinsamer Stand im ursprünglichen Repository **cut-assistant-next**; nach ausdrücklicher persönlicher Freigabe vom **08.11.2026** für `main` und [GitHub Latest](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) bestimmt. Dateiversion **1.0.3.54**, libmpv **0.41.0**, mitgelieferter otr-can **0.1.6-audio-diag.1**. Alte Funktionszweige sind historische Quellen; es gibt eine gemeinsame CAN-Version.
 
-Der normale Audioablauf bleibt streng. Nach einem belegten Tonfehler stehen Abbrechen, bestätigter MP4Box-Neustart und bei passendem Befund ausdrücklich bestätigte AAC-Reparatur oder Tonspur-Abwahl bereit. Der passende Motor wird aus `tools/otr-can` verwendet; gespeicherte Werkzeugpfade bleiben erhalten. Keine automatische Reparatur oder pauschale Sampletoleranz.
+Spotlight-CAN ist unter **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** integriert: Werbeblöcke anhand von Vorschaubildern grob markieren, bestätigte Schnittbereiche direkt an CAN übergeben und dort mit Player/Frame-Lupe präzisieren. Größe, Position und Maximierungszustand werden über CAN-Neustarts erhalten. Mehrmonitor-/DPI-Korrektur hält das Fenster bei geänderter Bildschirmkonfiguration sichtbar. Die Detailsuche hat standardmäßig zwei Sekunden Bildabstand; den letzten Bereich bei Bedarf in CAN mit **Videoende** bis zum tatsächlichen Dateiende abschließen.
 
-Spotlight unter **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** übergibt grobe Bereiche an CAN, zeigt Original-/Entfernen-/Restdauer und behält Größe, Position und Maximierung. Mehrmonitor-/DPI-Korrektur hält das Fenster sichtbar. Die Detailsuche hat standardmäßig zwei Sekunden Bildabstand. Den letzten betroffenen Bereich bei Bedarf in CAN mit **Videoende** bis zum tatsächlichen Dateiende abschließen.
+Der normale otr-can-Audiomodus prüft streng und verändert bei einem Fehler keine Samples. Bei geeigneten Befunden stehen Abbrechen, ein ausdrücklich bestätigter vollständiger MP4Box-Neustart, Tonspur-Abwahl bei Mehrspurdateien oder **AAC-Zeitlücken reparieren (experimentell)** zur Wahl. Die Reparatur benötigt ausdrückliche Zustimmung, ergänzt nur nachgewiesene unterstützte Lücken positionsgenau mit Stille und prüft den gesamten Schnitt unabhängig. Keine allgemeine Sampletoleranz, keine automatische Reparatur und keine Wiederherstellung verlorener Originaltöne.
 
-Voraussetzungen bleiben Windows 11 x64, .NET 10 Desktop Runtime x64 und die in CAN eingerichteten externen FFmpeg-/ffprobe-/MP4Box-/FFMS2-Werkzeuge. Windows 10 wurde nicht persönlich validiert. Build 53 wurde vom Nutzer auf Arbeitsrechner und in der VM einschließlich Setup/ZIP, Spotlight, Audiofällen und Klebecenter persönlich bestätigt. Build 54 ändert ausschließlich den Motorordner und ist lokal zur erneuten Prüfung dieses Pfades bestimmt; keine automatische Installation und kein öffentliches Release. Stabil veröffentlicht bleibt 1.0.2 Build 48.
+Der passende Motor liegt ausschließlich unter **`tools/otr-can/otr_can.exe`** relativ zur Anwendung; gespeicherte Werkzeugpfade werden nicht überschrieben. Für eine ZIP den vollständigen Inhalt in einen frischen Ordner entpacken. Die Portable-Fassung verwendet wie das Setup CANs Benutzereinstellungen unter dem lokalen Windows-Benutzerprofil. Beim Setup-Upgrade können alte `runtime`-Dateien verbleiben; sie werden nicht verwendet.
 
-[Integration und Herkunft](INTEGRATION-BUILD53-20261108.md) · [Prüfbericht Build 53](PRUEFBERICHT-BUILD53-20261108.md) · [Spotlight-README](SPOTLIGHT-README.md).
+Voraussetzungen: **Windows 11 x64**, **.NET 10 Desktop Runtime x64**, für otr-can **Microsoft Visual C++ v14 Redistributable x64**. FFmpeg/ffprobe, GPAC/MP4Box und FFMS2/ffmsindex separat einrichten; keine Windows-Codec-Pakete erforderlich. Windows 10 ist nicht persönlich validiert. Bild, jede Tonspur und Schnittübergänge weiterhin selbst kontrollieren. QUICK AND COPY führt keine samplegenaue Tonprüfung aus; AVI bleibt experimentell.
 
+**Cut Assistant Next 1.0.3 Build 54 wurde persönlich erfolgreich geprüft.** Insbesondere Setup in der Windows-VM: Grey’s Anatomy regulär sowie NCIS Sydney – Breathless, S02E07 nach ausdrücklich bestätigter AAC-Reparatur; Bild, Ton und Drei-Sekunden-Vorschau positiv. Die weitergehende persönliche Setup-/ZIP-/Spotlight-/Mehrspur-/Klebecenter-Abnahme von Build 53 bleibt separat zugeordnet.
 
-[Pfadumstellung und neue Prüffassung](PFADUMSTELLUNG-BUILD54-20261108.md).
+[Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) · [Release Notes](RELEASE-NOTES-1.0.3.md) · [Spotlight-Anleitung](SPOTLIGHT-README.md) · [Abnahme und Veröffentlichung](RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md). Die folgenden datierten Entwicklungsstände und alten Prüffassungen sind historische Nachweise, keine aktuelle Installationsanleitung.
+
 
 ## 05.11.2026 – Cut Assistant Next 1.0.3 Build 52 lokal eingefroren
 
