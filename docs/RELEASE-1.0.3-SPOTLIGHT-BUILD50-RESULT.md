@@ -61,14 +61,15 @@ Paketordner:
 | CutAssistantNext-1.0.3-Build50-win-x64.zip | 25424103 | A6AF6C8C12E4BE35B08A471CF20E2322AB5F2BE9A54D33F06AEEA218279E5882 |
 | otr-can-0.1.6-source.zip | 71900 | B10A984080CD6FA4C6C21274CB1E740797B84DF6B66859B21CE2A6E157B3040F |
 | PUBLISH-FILES.sha256 | 33650 | 0400E37362EAD9D7347708F26201E02230AD1B98E15DA0489A78488843AF1C58 |
-| SHA256SUMS.txt | 834 | 5B25A1992AA2A25E7B164E5008605DDB7806502410378C7346903735CF87CBD3 |
+| README-Spotlight.md | 3143 | 8EE8B457AD901A48CA03AC06CF908E3F81D5E9690000EAE6A7C16A151F5AE764 |
+| SHA256SUMS.txt | 921 | 68E24E14B58D29AAC880DC062C72A0B46749390FCB19252FA7CD6C8DF1BC953D |
 | SpotlightCan-6973b37-source.zip | 740232 | D52E0E8B516FAF55A2F38C8075D6A5BD36494279F631C15AE9D5FA22415C04E0 |
 
-`SHA256SUMS.txt` erfasst alle übrigen acht auszuliefernden Dateien einschließlich `PUBLISH-FILES.sha256`; der eigene Hash steht in dieser Tabelle. `PUBLISH-FILES.sha256` beschreibt alle 258 Laufzeit-/Hinweisdateien. Keine Logdateien, Diagnosefilme oder Testergebnisse in Portable oder Setup. Paketlogs und TRX liegen separat in `logs/` beziehungsweise `test-results/`, nicht in der Auslieferungsstruktur.
+`SHA256SUMS.txt` erfasst alle übrigen neun auszuliefernden Dateien einschließlich `PUBLISH-FILES.sha256`; der eigene Hash steht in dieser Tabelle. `PUBLISH-FILES.sha256` beschreibt alle 258 Laufzeit-/Hinweisdateien. Keine Logdateien, Diagnosefilme oder Testergebnisse in Portable oder Setup. Paketlogs und TRX liegen separat in `logs/` beziehungsweise `test-results/`, nicht in der Auslieferungsstruktur.
 
 ## Offene persönliche Prüfungen und Git-Status
 
-- Neue Setup-Installation, Start, Beenden und Deinstallation auf einem sauberen Windows-11-Testsystem sowie neue Portable-/VM-Abnahme **nicht durchgeführt**. Windows Sandbox ist hier nicht verfügbar; kein sauberes Gast-Testsystem wurde bereitgestellt. Die produktive Installation wurde nicht verändert.
+- **Persönliche Setup-Prüfung auf dem Arbeitsrechner inzwischen positiv:** Buchladen der Liebe mit MP4Box und otr-can, jeweils Bild/Ton/Schnitt/Drei-Sekunden-Vorschau. otr-can ohne Vorgängersendungs-Blitzer, MP4Box mit Anfangsblitzer laut eigener Cutlist. Spotlight-Grobauswahl und Maximierungserhalt bestätigt. [Praxisnachweis](BUCHLADEN-DER-LIEBE-SETUP-PRAXIS-20261108.md). Installationstyp (frisch/Überinstallation), neue saubere VM, Deinstallation und Portable weiter nicht bestätigt. Die automatisierte Prüfung selbst hat keine Installation auf dem Arbeitsrechner ausgeführt.
 - Das Setup verwendet die bisherige CAN-Installationsidentität und kann eine bestehende Installation aktualisieren. Zur persönlichen Setup-Abnahme ein getrenntes Testsystem verwenden. Portable in einen neuen Ordner entpacken und Werkzeugpfade, insbesondere den beigelegten otr-can, kontrollieren.
 - Physische Monitorabkopplung und globale Windows-Skalierungswechsel nicht durchgeführt; simulierte Tests sind entsprechend gekennzeichnet. Persönliche Fensterkomfort-Bestätigung ist keine nachträgliche Setup-/Portable-Abnahme.
 - Öffentliche Spotlight-Lizenzzuordnung vor einer späteren Release-Entscheidung klären. Dieser lokale Kandidat ist technisch geprüft, keine öffentliche Auslieferungsfreigabe.
@@ -84,3 +85,11 @@ Prüfnachweise im ignorierten `.build/`: `spotlight50-final-package.log`, `spotl
 Auf Nutzerwunsch Paketordner und die drei CAN-Paketdateien ohne Spotlight-Zusatz umbenannt. Setup, Portable-ZIP und CAN-Quell-ZIP sind bytegleich zu den zuvor geprüften Dateien; ihre SHA-256-Werte bleiben gleich. Anwendung, Quellstand, Build 50 und die technischen Kandidatenkennungen wurden nicht geändert. Kein neuer Build erforderlich.
 
 SHA256SUMS.txt nennt nun die üblichen Dateinamen; dessen neuer eigener Hash steht oben. Alle sechs ZIPs, 258 Publish-/Portable-Dateien, Installer-Eingaben und sämtliche Prüfsummen nach der Umbenennung erneut erfolgreich geprüft. Interne Herkunftsdaten und das Quell-ZIP-Wurzelverzeichnis bewahren die ursprünglichen Namen zum Bauzeitpunkt; der identische Quell-ZIP-Hash ordnet den heutigen Dateinamen eindeutig zu. Der bisherige Nachweis gilt weiter. Umbenennungsnachweis: .build/spotlight50-renamed.json und spotlight50-renamed-archives.json. Keine neue Veröffentlichung.
+
+## Persönliche Setup-Abnahme – Buchladen der Liebe, 08.11.2026
+
+Der Nutzer bestätigt die Setup-Fassung auf dem Arbeitsrechner mit MP4Box und otr-can für Bild, Ton, Schnitt und Drei-Sekunden-Vorschau positiv. Spotlight wurde zur Grobauswahl genutzt; maximiertes Öffnen bleibt erhalten. Die eigene Cutlist bestätigt fünf Behaltebereiche, 25 fps und 01:22:02.120. otr-can zeigt nach persönlicher Rückmeldung keinen Vorgängersendungs-Blitzer; für MP4Box steht im Cutlist-Kommentar ausdrücklich ein Blitzer der vorherigen Sendung am Anfang. [Vollständiger Praxisnachweis](BUCHLADEN-DER-LIEBE-SETUP-PRAXIS-20261108.md).
+
+Neue [Spotlight-README](SPOTLIGHT-README.md): Vorschaubilder standardmäßig im einstellbaren Zwei-Sekunden-Abstand; den letzten betroffenen Bereich, der bis zum tatsächlichen Original-Dateiende reichen soll, anschließend in CAN mit **Videoende** abschließen. Die kurze Anleitung liegt zusätzlich als **README-Spotlight.md** neben Setup/Portable im Paketordner und ist in SHA256SUMS.txt erfasst. Die obige Tabelle und der Hash der Prüfsummenliste sind dafür aktualisiert. Setup, Portable, Quellen und alle übrigen ursprünglichen Auslieferungsdateien bleiben bytegleich; Build 50 unverändert.
+
+Nur Dokumentations- und Ausleseprüfung, kein neuer Build oder Suite-Lauf. Cutlist unverändert gelesen, Zeit-/Bild-/Samplezahlen mit Dezimalrechnung abgeglichen; sechs Archive, 258 Portable-/Setup-Eingabedateien und sämtliche Prüfsummen erneut erfolgreich geprüft. Saubere VM, Portable-Abnahme, Deinstallation und physische Skalierungswechsel bleiben offen. Kein neues öffentliches Release.

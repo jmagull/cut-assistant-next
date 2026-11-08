@@ -1,6 +1,6 @@
 # CAN 1.0.3 Build 50 – Spotlight-Paketvorbereitung
 
-**Paketprüfung 08.11.2026 abgeschlossen:** Quellcommit `185e8b3`, Setup/Portable/Quellen lokal geprüft und Quellstand gepusht. Build 50 unverändert; persönliche Setup-/Portable-Abnahme offen, keine Veröffentlichung. [Ergebnisse, Paketpfad und SHA-256](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md).
+**Paketprüfung 08.11.2026 abgeschlossen:** Quellcommit `185e8b3`, Setup/Portable/Quellen lokal geprüft und Quellstand gepusht. Build 50 unverändert; persönliche Setup-Prüfung auf dem Arbeitsrechner positiv, Portable-/VM-/Deinstallationsprüfung weiter offen, keine Veröffentlichung. [Ergebnisse, Paketpfad und SHA-256](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md).
 
 Stand 08.11.2026. Beauftragter Kandidat: **1.0.3 · Build 50 · Spotlight-Entwicklung**, Branch `codex/spotlight-integration`. Die Fensterverwaltung wurde am 07.11.2026 persönlich positiv bestätigt. Bisheriger Entwicklungsnachweis: 1773 CAN-Tests, 78 Spotlight-Tests, 32 native Integrationsprüfungen und vier getrennte Fensterprozesse erfolgreich; Release-Build ohne Warnungen/Fehler. Diese Zahlen ersetzen nicht die erneute Paketprüfung.
 

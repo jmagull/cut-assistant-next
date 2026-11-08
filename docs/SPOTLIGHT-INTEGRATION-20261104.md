@@ -1,6 +1,6 @@
 # Spotlight-CAN in CAN – Entwicklungsstand vom 04.11.2026
 
-**Paketprüfung 08.11.2026 abgeschlossen:** Quellcommit `185e8b3`, Setup/Portable/Quellen lokal geprüft und Quellstand gepusht. Build 50 unverändert; persönliche Setup-/Portable-Abnahme offen, keine Veröffentlichung. [Ergebnisse, Paketpfad und SHA-256](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md).
+**Paketprüfung 08.11.2026 abgeschlossen:** Quellcommit `185e8b3`, Setup/Portable/Quellen lokal geprüft und Quellstand gepusht. Build 50 unverändert; persönliche Setup-Prüfung auf dem Arbeitsrechner positiv, Portable-/VM-/Deinstallationsprüfung weiter offen, keine Veröffentlichung. [Ergebnisse, Paketpfad und SHA-256](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md).
 
 ## Nachtrag 08.11.2026 – Fensterkomfort und Paketvorbereitung
 
@@ -13,6 +13,8 @@ Quellpakete enthalten die fest eingebundene Spotlight-Unterkomponente vollständ
 Die persönliche Prüfung der eigenständigen visuellen Werbesuche ist vom Nutzer positiv bestätigt; die Integration ist ausdrücklich freigegeben. Zusätzlich beauftragt: dynamische Anzeige von Original-, Entfernen- und verbleibender Laufzeit in beiden Hosts. Keine Veröffentlichung oder Änderung des stabilen Release-Stands. Entwicklung im getrennten Checkout auf **codex/spotlight-integration**, Ausgangscommit **22f4042**. Vorhandene Dokumentations- und Lockdateiänderungen im ursprünglichen CAN-main bleiben unangetastet.
 
 ## Bedienung
+
+[Kurze Spotlight-README](SPOTLIGHT-README.md), insbesondere der Schritt **letzten betroffenen Bereich in CAN mit Videoende abschließen**: Die Detailsuche zeigt standardmäßig Bilder im Zwei-Sekunden-Abstand, keine lückenlose Filmfolge. Der Abstand ist änderbar. Ein letztes Rasterbild muss nicht das tatsächliche Dateiende treffen; die genaue Grenze anschließend im CAN-Schnittfenster setzen. Die vorhandene Positionsliste bietet exakte Zeitgrenzen zusätzlich an.
 
 1. Film wie gewohnt ausschließlich in CAN öffnen. Vorhandene FFmpeg-/ffprobe-Einstellungen und der normale CAN-Standardordner bleiben maßgeblich.
 2. **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** öffnen. Ohne analysierten Film erscheint ein verständlicher Hinweis. CANs bestehende Werkzeugprüfung meldet fehlende oder unbrauchbare Werkzeuge unter Verweis auf Einstellungen → FFmpeg-Werkzeuge.
