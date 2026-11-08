@@ -6,7 +6,7 @@ Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten
 
 [**Release und Downloads**](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) · [Setup](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-win-x64-Setup.exe) · [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-win-x64.zip) · [Vollständige Quellen](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-source.zip)
 
-Spotlight-CAN und die erweiterte Audiobehandlung sind Funktionen dieser einen CAN-Version. Entwicklung und Veröffentlichung erfolgen im ursprünglichen Repository. **Cut Assistant Next 1.0.3 Build 54 wurde persönlich erfolgreich geprüft und am 08.11.2026 zur stabilen Veröffentlichung freigegeben.** [Abnahme und Herkunft](docs/RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md).
+Spotlight-CAN und die erweiterte Audiobehandlung sind Funktionen dieser einen CAN-Version. Entwicklung und Veröffentlichung erfolgen im ursprünglichen Repository. **Cut Assistant Next 1.0.3 Build 54 wurde persönlich erfolgreich geprüft und am 08.11.2026 als stabile Latest-Version veröffentlicht.** [Abnahme und Herkunft](docs/RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md).
 
 ## Neu gegenüber 1.0.2
 
