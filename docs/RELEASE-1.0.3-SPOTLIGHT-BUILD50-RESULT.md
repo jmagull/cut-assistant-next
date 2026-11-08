@@ -39,7 +39,7 @@ Fensterprozesse: **1200×850 bei X=1960/Y=40 auf Monitor 2** in einem weiteren P
 
 ## Installer, Laufzeit und Quellenbeigaben
 
-Setup-Produktversion **1.0.3**, Anwendungs-Dateiversion **1.0.3.50**; Build/Kandidat stehen im unveränderten Inno-AppVerName-Schema und den Compilerargumenten/Paketnamen. Die leere Setup-Dateiversionsressource entspricht dem bisherigen Installerschema. Setup-Kompression und Compilerprüfung erfolgreich; Eingabedateien vollständig gegen Publish abgeglichen. Das Setup selbst wurde hier nicht installiert oder zur Laufzeit entpackt.
+Setup-Produktversion **1.0.3**, Anwendungs-Dateiversion **1.0.3.50**; Build/Kandidat stehen im unveränderten Inno-AppVerName-Schema und den Compilerargumenten. Die äußeren Dateinamen folgen nach der unten dokumentierten Umbenennung dem üblichen CAN-Schema. Die leere Setup-Dateiversionsressource entspricht dem bisherigen Installerschema. Setup-Kompression und Compilerprüfung erfolgreich; Eingabedateien vollständig gegen Publish abgeglichen. Das Setup selbst wurde hier nicht installiert oder zur Laufzeit entpackt.
 
 Vier libmpv-DLLs SHA-256-identisch zum geprüften **0.41.0**-Stack. Unverändertes **otr-can 0.1.6** einschließlich Quell-ZIP, Lizenz-/Herkunftsdateien und Motor-Dateimanifest. Motor-EXE-SHA-256: **73DEB7D81C0D24241649B28D7ED924D3D64131E2EA84C3013198BBBDCB1CAE3E**. Fähigkeiten **mp3-aac-v1 / aac-overlap-v1** erneut geprüft. Der gesonderte Motor-Quell-ZIP entspricht bytegenau der beigefügten Kopie im Publish. Keine neue Behauptung eines bitidentischen Motor-Neubaus.
 
@@ -50,18 +50,18 @@ Beide bisherigen libmpv-Prüf-/Relinkarchive unverändert übernommen, vollstän
 ## Dateien, Größen und SHA-256
 
 Paketordner:
-**`C:\Users\joerg\Documents\GitHub\cut-assistant-next-spotlight\artifacts\release-1.0.3-build50-Spotlight-Entwicklung`**
+**`C:\Users\joerg\Documents\GitHub\cut-assistant-next-spotlight\artifacts\release-1.0.3-build50`**
 
 | Datei | Bytes | SHA-256 |
 | --- | ---: | --- |
 | CAN-libmpv-v0.41.0-pruefpaket-2026-09-26.zip | 405926830 | 01546ADB0BCCB15588456CAA2E90BE805B6A55804618E0A4EECA08B01AB1FE8B |
 | CAN-libmpv-v0.41.0-relink-2026-09-26.zip | 47273515 | 00EE11B824D7E28C30D62096C4C1BC5BFD6052FEE393956980FC14152661A342 |
-| CutAssistantNext-1.0.3-Build50-Spotlight-Entwicklung-source.zip | 6341654 | 31200C22667786751BB05FED7D53F461090A36F73239B92C7C3D888ADAE4B261 |
-| CutAssistantNext-1.0.3-Build50-win-x64-Setup-Spotlight-Entwicklung.exe | 20648565 | 5AC4BEE806B782345CDD7A1282D1D6B6D70E02E042CD0DF8F49C4E1CA29E3603 |
-| CutAssistantNext-1.0.3-Build50-win-x64-Spotlight-Entwicklung.zip | 25424103 | A6AF6C8C12E4BE35B08A471CF20E2322AB5F2BE9A54D33F06AEEA218279E5882 |
+| CutAssistantNext-1.0.3-Build50-source.zip | 6341654 | 31200C22667786751BB05FED7D53F461090A36F73239B92C7C3D888ADAE4B261 |
+| CutAssistantNext-1.0.3-Build50-win-x64-Setup.exe | 20648565 | 5AC4BEE806B782345CDD7A1282D1D6B6D70E02E042CD0DF8F49C4E1CA29E3603 |
+| CutAssistantNext-1.0.3-Build50-win-x64.zip | 25424103 | A6AF6C8C12E4BE35B08A471CF20E2322AB5F2BE9A54D33F06AEEA218279E5882 |
 | otr-can-0.1.6-source.zip | 71900 | B10A984080CD6FA4C6C21274CB1E740797B84DF6B66859B21CE2A6E157B3040F |
 | PUBLISH-FILES.sha256 | 33650 | 0400E37362EAD9D7347708F26201E02230AD1B98E15DA0489A78488843AF1C58 |
-| SHA256SUMS.txt | 900 | 5CC87E00246BBB027BAC8A818A5D222C0B2C4F43D80A129FC429053D16D24FE5 |
+| SHA256SUMS.txt | 834 | 5B25A1992AA2A25E7B164E5008605DDB7806502410378C7346903735CF87CBD3 |
 | SpotlightCan-6973b37-source.zip | 740232 | D52E0E8B516FAF55A2F38C8075D6A5BD36494279F631C15AE9D5FA22415C04E0 |
 
 `SHA256SUMS.txt` erfasst alle übrigen acht auszuliefernden Dateien einschließlich `PUBLISH-FILES.sha256`; der eigene Hash steht in dieser Tabelle. `PUBLISH-FILES.sha256` beschreibt alle 258 Laufzeit-/Hinweisdateien. Keine Logdateien, Diagnosefilme oder Testergebnisse in Portable oder Setup. Paketlogs und TRX liegen separat in `logs/` beziehungsweise `test-results/`, nicht in der Auslieferungsstruktur.
@@ -78,3 +78,9 @@ Commit und Push des Quellcommits sind erfolgreich und remote bestätigt. Nach de
 Prüfnachweise im ignorierten `.build/`: `spotlight50-final-package.log`, `spotlight50-final-archives.json`, `spotlight50-final-qa/` mit TRX/nativen JSON/Prozesslogs, `spotlight50-final-qa.log`, `spotlight50-source-push.txt`, `spotlight50-preserved.json` und Export-Metadaten unter `spotlight50-final-source/`. Die vorgelagerte Prüfung vor dem Quellcommit ist getrennt unter `spotlight50-precommit-*` erhalten. Kleine Hilfs-Ausleseprüfungen wurden auf LiteralPath für TRX-Namen mit eckigen Klammern korrigiert; keine Test-/Produktänderung, keine Testentfernung und kein fehlgeschlagener Suite-Lauf in diesem Paketauftrag.
 
 [Bedienung](NUTZERANLEITUNG.md) · [Release Notes](RELEASE-NOTES-1.0.3.md) · [Fensterprüfung](SPOTLIGHT-FENSTERZUSTAND-20261107.md) · [Paketverfahren](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).
+
+## Nachtrag 08.11.2026 – übliche CAN-Paketnamen
+
+Auf Nutzerwunsch Paketordner und die drei CAN-Paketdateien ohne Spotlight-Zusatz umbenannt. Setup, Portable-ZIP und CAN-Quell-ZIP sind bytegleich zu den zuvor geprüften Dateien; ihre SHA-256-Werte bleiben gleich. Anwendung, Quellstand, Build 50 und die technischen Kandidatenkennungen wurden nicht geändert. Kein neuer Build erforderlich.
+
+SHA256SUMS.txt nennt nun die üblichen Dateinamen; dessen neuer eigener Hash steht oben. Alle sechs ZIPs, 258 Publish-/Portable-Dateien, Installer-Eingaben und sämtliche Prüfsummen nach der Umbenennung erneut erfolgreich geprüft. Interne Herkunftsdaten und das Quell-ZIP-Wurzelverzeichnis bewahren die ursprünglichen Namen zum Bauzeitpunkt; der identische Quell-ZIP-Hash ordnet den heutigen Dateinamen eindeutig zu. Der bisherige Nachweis gilt weiter. Umbenennungsnachweis: .build/spotlight50-renamed.json und spotlight50-renamed-archives.json. Keine neue Veröffentlichung.

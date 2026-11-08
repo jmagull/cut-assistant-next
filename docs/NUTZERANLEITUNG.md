@@ -14,7 +14,7 @@ Spotlight ist eine manuelle visuelle Suchhilfe: keine automatische Werbeerkennun
 
 ## Setup und Portable des Spotlight-Kandidaten
 
-Setup und ZIP sind getrennt mit **1.0.3-Build50 / Spotlight-Entwicklung** benannt. Portable in einen neuen Ordner entpacken und alle Dateien zusammenhalten. Das Setup verwendet die bestehende CAN-Installationsidentität und kann eine vorhandene Installation aktualisieren; neue Setup-Prüfung daher auf einem separaten Windows-11-Testsystem durchführen. Der lokale Paketbau allein bestätigt keine Installation/Deinstallation oder VM-Abnahme.
+Setup und ZIP heißen wie gewohnt **CutAssistantNext-1.0.3-Build50-win-x64-Setup.exe** und **CutAssistantNext-1.0.3-Build50-win-x64.zip**. Die technische Entwicklungskennung bleibt in Anwendung und Setup sichtbar. Portable in einen neuen Ordner entpacken und alle Dateien zusammenhalten. Das Setup verwendet die bestehende CAN-Installationsidentität und kann eine vorhandene Installation aktualisieren; neue Setup-Prüfung daher auf einem separaten Windows-11-Testsystem durchführen. Der lokale Paketbau allein bestätigt keine Installation/Deinstallation oder VM-Abnahme.
 
 Die **.NET 10 Desktop Runtime x64**, FFmpeg/ffprobe und GPAC/MP4Box bleiben extern; für otr-can außerdem die dokumentierte Visual-C++-Laufzeit und FFMS2/ffmsindex. libmpv 0.41.0 und otr-can 0.1.6 mit Quellen/Hinweisen liegen bei. Nach Entpacken/Installation die vorhandenen Werkzeugpfade kontrollieren, insbesondere `tools/otr-can/otr_can.exe`. Bestehende Benutzereinstellungen bleiben im lokalen CAN-Einstellungsordner. [Paketdetails und Abnahmeliste](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).
 

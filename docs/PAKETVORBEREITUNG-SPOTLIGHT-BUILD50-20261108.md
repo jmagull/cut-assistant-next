@@ -10,11 +10,11 @@ Die Pakete enthalten nur den Spotlight-Stand dieses Zweigs einschließlich der F
 
 ## Paketverfahren
 
-- Neuer Ordner `artifacts/release-1.0.3-build50-Spotlight-Entwicklung`; bisherige Pakete erhalten.
+- Paketordner `artifacts/release-1.0.3-build50`; bisherige Pakete erhalten. Auf Nutzerwunsch heißen die Dateien wie gewohnt `CutAssistantNext-1.0.3-Build50-win-x64-Setup.exe`, `CutAssistantNext-1.0.3-Build50-win-x64.zip` und `CutAssistantNext-1.0.3-Build50-source.zip`, ohne Spotlight-Zusatz.
 - CAN-Quellarchiv mit kompletter, fest versionierter Spotlight-Unterkomponente; zusätzlicher Spotlight-Quell-ZIP.
 - Source-Snapshot und SHA-256-Dateimanifest; keine persönlichen Einstellungen, Filme, Git-Metadaten, Buildausgaben oder Zugangsdaten im Quellarchiv.
 - Vorhandenes `tools/package-release.ps1` aus dem entpackten Snapshot verwenden: `-BuildNumber 50 -Candidate Spotlight-Entwicklung`. Das nummerierende `tools/build.ps1` wird für diesen Auftrag nicht ausgeführt. Build/Publish setzen die Nummer ausdrücklich und verändern den lokalen Zähler nicht.
-- Frameworkabhängiger Windows-x64-Publish, Portable-ZIP und Inno-Setup-7-Installer aus genau demselben Publish-Ordner. Im Setup und den Paketnamen steht die Kandidatenkennung. Anwendung: Dateiversion 1.0.3.50.
+- Frameworkabhängiger Windows-x64-Publish, Portable-ZIP und Inno-Setup-7-Installer aus genau demselben Publish-Ordner. Die technische Kandidatenkennung bleibt in Anwendung und Setup; die fertig geprüften Dateien werden ohne Inhaltsänderung nach dem üblichen CAN-Schema benannt und die Prüfsummenliste wird aktualisiert. Anwendung: Dateiversion 1.0.3.50.
 - Unverändertes otr-can-0.1.6-Paket mit Quellen/Lizenzen und die bisherigen libmpv-0.41.0-Prüf-/Relinkarchive beilegen. Vier native libmpv-DLLs per SHA-256 verifizieren. Spotlight-Herkunft und Quellcommit in der Laufzeit-Provenienz führen.
 - .NET 10 Desktop Runtime x64, FFmpeg/ffprobe, GPAC/MP4Box und gegebenenfalls FFMS2 sowie Visual-C++-Laufzeit bleiben separat einzurichten. Kein solches Werkzeug wird zusätzlich gebündelt.
 - Alle CAN-/Spotlight-Suiten, native Integration und Kontrollplayer prüfen; Suiten nochmals mit finalen Publish-DLLs. Fensterpersistenz einschließlich getrennter Prozesse prüfen. Alle Archive, Quell-/Lizenzdateien, Portable-Einträge, Installer-Eingaben und SHA-256-Werte kontrollieren.
