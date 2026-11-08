@@ -80,3 +80,24 @@ Keine Veröffentlichung, kein Release-Tag, kein Merge nach main und keine automa
 Vorbereitende Prüfhilfen: kopierte Motor-Hinweise hatten zunächst geerbten Schreibschutz; nur die neue Kopie wurde beschreibbar gemacht. Ein zusätzlicher Quellvergleich behandelte noch unversionierte neue Dateien zunächst als fehlend; nach gezieltem Erfassen stimmen sie exakt mit Build 50 überein. Alle maßgeblichen Suite-/nativen Tests bestanden; keine Fehler durch Testentfernung oder gelockerte Produktprüfungen umgangen.
 
 Nachweise im Worktree unter `.build/proof/`: finale TRX in `final-tests-metadata/results/`, `recheck-native.log`, `final-native/`, `final-audio-synthetic/`, `final-ncis/` und `.run.json`, Rust-/Build-/Publishlogs, Produktmetadaten und `PRESERVATION.json`. [Integration](INTEGRATION-BUILD53-20261108.md) · [Bedienung](NUTZERANLEITUNG.md) · [Spotlight-README](SPOTLIGHT-README.md).
+
+## Abschließender Paketnachweis
+
+Der vollständige Quell-/Produktstand ist lokal als **b75992921d7b8cee93c6016f22187a2f897ec348** auf `codex/integration-build53` gesichert. Dieser Commit ist die verbindliche Quelle aller drei Pakete. Der folgende Dokumentationscommit ergänzt ausschließlich diesen Abschlussnachweis; er ändert keine Produktdatei und löst keinen weiteren Build aus.
+
+Paketordner: `C:\Users\joerg\Documents\GitHub\cut-assistant-next\artifacts\release-1.0.3-build53`.
+
+| Datei | Bytes | SHA-256 |
+| --- | ---: | --- |
+| CutAssistantNext-1.0.3-Build53-win-x64-Setup.exe | 20650901 | `55645A646624089BECAB71F3FB4A7467ABA670ED742CDE924458E05AFB461E45` |
+| CutAssistantNext-1.0.3-Build53-win-x64.zip | 25451982 | `C021622E5E8C9FB18FC4B1FAC21499F6107086E8396DA5D3DF239E8B41C97BFD` |
+| CutAssistantNext-1.0.3-Build53-source.zip | 6516979 | `0A6C5468981FF54DBCA482EB70AE03CCCFD67F0FAAD8D664408D680832FD50B5` |
+| PUBLISH-FILES.sha256 | 34400 | `D6DE0A96CAC6CA50183B0AD0E3AD52E879D83492AEBCC16B39269CC37EC4D9E2` |
+
+**264 Anwendungsdateien** einzeln gehasht, Portable-Inhalt vollständig identisch, alle 264 Dateieinträge im erfolgreichen Installer-Compilerlauf bestätigt. Keine Installation zur Verifikation vorgenommen. **845 Quelldateien** einschließlich Versions-/Herkunftsnachweis, Buildanleitung, vollständigem angeheftetem Spotlight-Quellstand und passendem Motor-Quellarchiv geprüft. Jede versionierte CAN-/Spotlight-Datei stimmt bytegenau mit dem angegebenen Quellcommit überein. Die beiden äußeren ZIPs und das enthaltene Motor-Quellarchiv bestehen die CRC-Prüfung. `SHA256SUMS.txt` deckt sämtliche vier obersten Auslieferungsdateien ab; das Manifest selbst ist davon ausgenommen.
+
+Der Paketnachweis `publish/RELEASE-PROVENANCE.json` bindet Quellarchiv, Quellmanifest und die endgültigen App-/Motor-Hashes aus dem praktischen NCIS-Lauf. Keine gemischten Produkt-DLLs. Produkt- und Installer-Metadaten tragen den regulären Namen und Build 53. Die abschließende Startprüfung wurde mit genau der endgültigen `CutAssistantNext.App.exe` wiederholt: korrekter Fenstertitel, Produktname und Dateiversion; sämtliche persönlichen Einstellungsdateien davor/danach unverändert. Reguläres Schließen wurde separat in isolierten nativen Prozessen geprüft.
+
+Bei der Paketvorbereitung lieferte Inno die Versionsfelder mit nachgestellten Leerzeichen; die unveränderten korrekten Werte werden für die Metadatenprüfung normalisiert. Dem Quell-Snapshot wurden die vom vorhandenen Paketwerkzeug erwarteten Felder `BaseGitCommit` und `OtrCanVersion` hinzugefügt. Anschließend wurden ausschließlich die neuen, noch nicht ausgegebenen Build-53-Archive und das Setup neu gepackt und vollständig geprüft. Keine Produktdatei, kein älteres Paket und kein Testergebnis dadurch geändert.
+
+Abschlusskontrolle: **4473/4473** geschützte Bestandsdateien unverändert; ursprüngliche HEADs, Git-Status und Zähler aller vier Ausgangscheckouts unverändert. Die stabile Version, main und lokale Nutzeränderungen bleiben erhalten. Nachweise: `.build/proof/PACKAGE.json`, `PACKAGE-VERIFICATION.json`, `APPHOST-FINAL.json`, `PRESERVATION-FINAL.json`. Keine neuen Funktions-Repositories, kein Push, kein Merge, kein Tag, kein Release und keine automatische Installation. **Hier zur persönlichen Prüfung angehalten.**
