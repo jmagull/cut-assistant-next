@@ -1,5 +1,7 @@
 # Entwicklungsnotizen – CAN 1.0.3
 
+**Paketprüfung 08.11.2026 abgeschlossen:** Quellcommit `185e8b3`, Setup/Portable/Quellen lokal geprüft und Quellstand gepusht. Build 50 unverändert; persönliche Setup-/Portable-Abnahme offen, keine Veröffentlichung. [Ergebnisse, Paketpfad und SHA-256](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md).
+
 ## Spotlight-Entwicklung Build 50 – 08.11.2026
 
 Aktuell vorbereiteter Kandidat: **CAN 1.0.3 · Build 50 · Spotlight-Entwicklung**, nicht veröffentlicht. Über **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** lassen sich Werbeblöcke anhand von Übersicht-/Detailbildern grob manuell markieren und direkt an CAN übergeben. Bestehende Schnittarbeit wird nur nach Bestätigung ersetzt. Anschließend die Kanten im CAN-Player und mit der Frame-Lupe präzisieren. Keine automatische Werbeerkennung und kein eigener Filmschnitt in Spotlight.

@@ -1,5 +1,7 @@
 # Spotlight-CAN in CAN – Entwicklungsstand vom 04.11.2026
 
+**Paketprüfung 08.11.2026 abgeschlossen:** Quellcommit `185e8b3`, Setup/Portable/Quellen lokal geprüft und Quellstand gepusht. Build 50 unverändert; persönliche Setup-/Portable-Abnahme offen, keine Veröffentlichung. [Ergebnisse, Paketpfad und SHA-256](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md).
+
 ## Nachtrag 08.11.2026 – Fensterkomfort und Paketvorbereitung
 
 Aktueller Spotlight-Kandidat **CAN 1.0.3 Build 50**, `codex/spotlight-integration`. Die integrierte Werbesuche ergänzt nun dauerhafte Fenstergröße, Position und Maximierung mit Mehrmonitor-/DPI-Korrektur. Persönlich am 07.11.2026 positiv bestätigt. Die nachfolgenden Build-49-Zahlen und Testpfade beschreiben die ursprüngliche Integration; aktuell **1773 CAN- und 78 Spotlight-Tests** sowie 32 native Integrationsfälle und vier Fensterprozesse bestanden. Erneute Paketprüfung separat. [Fensterdetails](SPOTLIGHT-FENSTERZUSTAND-20261107.md), [Build-50-Paketverfahren](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).

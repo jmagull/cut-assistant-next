@@ -1,5 +1,7 @@
 # Spotlight-CAN – Fensterzustand dauerhaft speichern
 
+**Paketprüfung 08.11.2026 abgeschlossen:** Quellcommit `185e8b3`, Setup/Portable/Quellen lokal geprüft und Quellstand gepusht. Build 50 unverändert; persönliche Setup-/Portable-Abnahme offen, keine Veröffentlichung. [Ergebnisse, Paketpfad und SHA-256](RELEASE-1.0.3-SPOTLIGHT-BUILD50-RESULT.md).
+
 ## Nachtrag 08.11.2026 – Auftrag zur Paketierung und Branch-Sicherung
 
 Nach der positiven persönlichen Rückmeldung vom 07.11. sind vollständige lokale Pakete, erneute Prüfung, Commit und Push auf `codex/spotlight-integration` ausdrücklich beauftragt. Buildnummer bleibt **50**, Kandidat **Spotlight-Entwicklung**. Das ersetzt die damalige Commit-/Push-Sperre im historischen Bericht unten. Keine Veröffentlichung und kein Merge nach main; Audio-Build 51 bleibt separat. [Paketverfahren und offene persönliche Abnahmen](PAKETVORBEREITUNG-SPOTLIGHT-BUILD50-20261108.md).
