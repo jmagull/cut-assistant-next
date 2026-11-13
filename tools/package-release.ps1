@@ -97,12 +97,21 @@ if ($fileVersion -ne "$version.$BuildNumber") { throw "Unexpected file version: 
 Copy-Item -LiteralPath (Join-Path $repo 'docs\NUTZERANLEITUNG.md') -Destination (Join-Path $publish 'NUTZERANLEITUNG.md')
 Copy-Item -LiteralPath $releaseNotes -Destination (Join-Path $publish 'RELEASE-NOTES.md')
 Copy-Item -LiteralPath (Join-Path $repo 'docs\SPOTLIGHT-README.md') -Destination (Join-Path $publish 'README-Spotlight.md')
-Copy-Item -LiteralPath (Join-Path $repo 'docs\PFADUMSTELLUNG-BUILD54-20261108.md') -Destination (Join-Path $publish 'PRUEFHINWEISE.md')
+$reviewNotes = if ($BuildNumber -eq 54) { 'docs\PFADUMSTELLUNG-BUILD54-20261108.md' } else { "docs\PRUEFHINWEISE-BUILD$BuildNumber.md" }
+if (-not (Test-Path -LiteralPath (Join-Path $repo $reviewNotes) -PathType Leaf)) { throw "Missing review notes for Build $BuildNumber." }
+Copy-Item -LiteralPath (Join-Path $repo $reviewNotes) -Destination (Join-Path $publish 'PRUEFHINWEISE.md')
+if ($BuildNumber -eq 58) {
+    foreach ($name in @('PRUEFHINWEISE-BUILD58.md', 'SCHNITTSHUFFLE-BUILD57.md', 'PLAYER-FILMENDE-BUILD58.md',
+        'MP4BOX-WILD-CARD-ZUSAMMENFUEHRUNG-BUILD56.md', 'CUTLIST-BEWERTUNG-BUILD55.md', 'SPOTLIGHT-VIDEOENDE-BUILD55.md')) {
+        Copy-Item -LiteralPath (Join-Path $repo "docs\$name") -Destination (Join-Path $publish $name)
+    }
+}
+Copy-Item -LiteralPath (Join-Path $repo 'docs\DANKSAGUNG.md') -Destination (Join-Path $publish 'DANKSAGUNG.md')
 $spotlightNotices = Join-Path $publish 'third-party\SpotlightCan'
 [System.IO.Directory]::CreateDirectory($spotlightNotices) | Out-Null
 Copy-Item -LiteralPath (Join-Path $repo 'external\spotlight-can\README.md') -Destination $spotlightNotices
 [System.IO.File]::WriteAllText((Join-Path $spotlightNotices 'SOURCE.txt'),
-    "Spotlight-CAN component: $($snapshot.SpotlightGitCommit)`r`nComplete source: external/spotlight-can in the CAN source archive.`r`nNo separate LICENSE file exists in that pinned component. No new license grant is asserted by this local review package.`r`n", $utf8)
+    "Spotlight-CAN component: $($snapshot.SpotlightGitCommit)`r`nComplete build source: external/spotlight-can in the CAN source archive. SOURCE-SNAPSHOT.json records the base commit and any working tree changes.`r`nNo separate LICENSE file exists in that pinned component. No new license grant is asserted by this local review package.`r`n", $utf8)
 $prerequisiteFile = 'HINWEIS-DOTNET-UND-WERKZEUGE.txt'
 Copy-Item -LiteralPath (Join-Path $repo "installer\$prerequisiteFile") -Destination (Join-Path $publish 'VORAUSSETZUNGEN.txt') -ErrorAction Stop
 $engineProvenance = $null
@@ -156,11 +165,12 @@ $provenance = [ordered]@{
     SourceArchive = [System.IO.Path]::GetFileName($sourceArchive); SourceArchiveSha256 = $sourceHash
     SourceFilesManifestSha256 = $archivedManifestHash; BaseGitCommit = $snapshot.BaseGitCommit
     IncludesWorkingTreeChanges = $snapshot.IncludesWorkingTreeChanges
+    SpotlightGitCommit = $snapshot.SpotlightGitCommit
     DotnetSdk = (& $dotnet --version | Out-String).Trim()
     OtrCan = $engineProvenance
     InnoCompilerSha256 = (Get-FileHash -LiteralPath $compiler -Algorithm SHA256).Hash
 }
-[System.IO.File]::WriteAllText((Join-Path $publish 'RELEASE-PROVENANCE.json'), ($provenance | ConvertTo-Json), $utf8)
+[System.IO.File]::WriteAllText((Join-Path $publish 'RELEASE-PROVENANCE.json'), ($provenance | ConvertTo-Json -Depth 12), $utf8)
 Assert-SourceSnapshot
 $fileLines = @(Get-ChildItem -LiteralPath $publish -File -Recurse | Sort-Object FullName | ForEach-Object {
     '{0}  {1}' -f (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash, $_.FullName.Substring($publish.Length + 1).Replace('\', '/')

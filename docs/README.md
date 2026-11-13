@@ -1,6 +1,19 @@
 # Dokumentation – Cut Assistant Next
 
-## Cut Assistant Next 1.0.3 Build 54 – stabile Version
+## Cut Assistant Next 1.0.3 Build 58 – vorbereiteter Release-Kandidat
+
+Die lokale Prüffassung hat die Dateiversion **1.0.3.58** und ist für die abschließende Paketfreigabe vorbereitet. Die öffentliche GitHub-Latest-Version ist weiterhin [Build 54](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54).
+
+- **MP4Box:** CAN importiert das erste Segment mit `-add`, hängt weitere mit `-cat` an und erzeugt die Ausgabe mit `-new`. Zuvor konnte GPAC bei gleichartigen AAC-Spuren beide Eingabespuren einer Zielspur zuordnen. Geprüft sind AAC, AAC+AC-3, AAC+AAC und AC-3+AC-3. Die bekannten Keyframe-Werbeblitzer können weiterhin auftreten. [Ursache, Paketvergleich und Praxistests](MP4BOX-WILD-CARD-ZUSAMMENFUEHRUNG-BUILD56.md)
+- **Spotlight-CAN:** Einen offenen Entfernen-Bereich mit **Schnitt bis Videoende abschließen** bis zur tatsächlichen Dateidauer schließen. **Videoanfang** in CAN setzt die Grenze auf **00:00:00.000**. [Bedienung](SPOTLIGHT-README.md)
+- **Cutlist-Bewertung:** Übernommene fremde Cutlists beim Wechsel oder Beenden freiwillig bewerten. Im persönlichen Test wurden die serverseitige Bewertung, ihre dauerhafte Anzeige und das Entfernen aus der Liste unbewerteter Downloads bestätigt. [Bewertungsablauf](CUTLIST-BEWERTUNG-BUILD55.md)
+- **Schnittshuffle:** Einen vollständigen roten oder grünen Schnittbereich auswählen und mit **←** oder **→** zu seiner Grenze springen. Auswahl, Bearbeitungskante und gespeicherte Grenzen bleiben erhalten. [Schnittshuffle in den drei Ansichten](SCHNITTSHUFFLE-BUILD57.md)
+- **Hauptplayer am Filmende:** Die Datei bleibt am tatsächlichen Ende geladen und der Player pausiert. Mit dem Slider zurück in den Film springen und Play betätigen. Der Anwender hat den Ablauf mit einem Realfilm in Build 58 bestätigt. [Fehleranalyse und Praxistest](PLAYER-FILMENDE-BUILD58.md)
+- **Namensmaske:** Bei fremden Cutlists bleibt der übernommene Namensvorschlag zunächst erhalten. **Aus obigen Eingaben neu erzeugen** verwendet die aktuell gespeicherte Standardmaske. Bei eigenen Cutlists die gewünschten Namensbestandteile ausfüllen. Der Ausgabedateiname bleibt im Schneidedialog frei bearbeitbar.
+
+[Prüfhinweise zu Build 58](PRUEFHINWEISE-BUILD58.md) · [Historische Build-56-Prüfhinweise](PRUEFHINWEISE-BUILD56.md)
+
+## Cut Assistant Next 1.0.3 Build 54 – öffentliche stabile Version
 
 Aktueller gemeinsamer Stand im ursprünglichen Repository **cut-assistant-next**; nach ausdrücklicher persönlicher Freigabe vom **08.11.2026** in `main` übernommen und als stabile [GitHub-Latest-Version](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) veröffentlicht. Dateiversion **1.0.3.54**, libmpv **0.41.0**, mitgelieferter otr-can **0.1.6-audio-diag.1**. Alte Funktionszweige sind historische Quellen; es gibt eine gemeinsame CAN-Version.
 

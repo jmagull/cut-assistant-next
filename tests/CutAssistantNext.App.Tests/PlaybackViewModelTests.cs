@@ -319,6 +319,28 @@ public sealed class PlaybackViewModelTests
     }
 
     [Fact]
+    public async Task TogglePlaybackAsync_IgnoresConcurrentClicksUntilPlayCompletes()
+    {
+        var completion = new TaskCompletionSource();
+        var service = new StubMediaPlayerService
+        {
+            State = MediaPlayerState.Paused,
+            PlayCompletion = completion.Task
+        };
+        using var viewModel = new PlaybackViewModel(service);
+
+        var first = viewModel.TogglePlaybackAsync();
+        await viewModel.TogglePlaybackAsync();
+        Assert.Equal(1, service.PlayCallCount);
+
+        completion.SetResult();
+        await first;
+        service.State = MediaPlayerState.Playing;
+        await viewModel.TogglePlaybackAsync();
+        Assert.Equal(1, service.PauseCallCount);
+    }
+
+    [Fact]
     public async Task PlayAsync_ForwardsToService()
     {
         var service = new StubMediaPlayerService();
@@ -386,63 +408,47 @@ public sealed class PlaybackViewModelTests
     }
 
     [Fact]
-    public async Task StepBackwardTenFramesAsync_ForwardsMinusTenToService()
+    public async Task JumpBackwardTenSeconds_UsesDirectSeek()
     {
-        var service = new StubMediaPlayerService();
-
-        using var viewModel =
-            new PlaybackViewModel(service);
-
-        await viewModel.StepBackwardTenFramesAsync();
-
-        Assert.Equal(
-            [-10],
-            service.StepFrameCounts);
+        var service = new StubMediaPlayerService
+        { State = MediaPlayerState.Paused, Duration = TimeSpan.FromSeconds(200), Position = TimeSpan.FromSeconds(100) };
+        using var viewModel = new PlaybackViewModel(service) { JumpSecondsText = "10" };
+        await viewModel.JumpAsync(-1);
+        Assert.Equal(TimeSpan.FromSeconds(90), Assert.Single(service.SeekPositions));
+        Assert.Empty(service.StepFrameCounts);
     }
 
     [Fact]
-    public async Task StepForwardTenFramesAsync_ForwardsTenToService()
+    public async Task JumpForwardTenSeconds_UsesDirectSeek()
     {
-        var service = new StubMediaPlayerService();
-
-        using var viewModel =
-            new PlaybackViewModel(service);
-
-        await viewModel.StepForwardTenFramesAsync();
-
-        Assert.Equal(
-            [10],
-            service.StepFrameCounts);
+        var service = new StubMediaPlayerService
+        { State = MediaPlayerState.Paused, Duration = TimeSpan.FromSeconds(200), Position = TimeSpan.FromSeconds(100) };
+        using var viewModel = new PlaybackViewModel(service) { JumpSecondsText = "10" };
+        await viewModel.JumpAsync(1);
+        Assert.Equal(TimeSpan.FromSeconds(110), Assert.Single(service.SeekPositions));
+        Assert.Empty(service.StepFrameCounts);
     }
 
     [Fact]
-    public async Task StepBackwardTwentyFramesAsync_ForwardsMinusTwentyToService()
+    public async Task JumpBackwardTwentySeconds_UsesDirectSeek()
     {
-        var service = new StubMediaPlayerService();
-
-        using var viewModel =
-            new PlaybackViewModel(service);
-
-        await viewModel.StepBackwardTwentyFramesAsync();
-
-        Assert.Equal(
-            [-20],
-            service.StepFrameCounts);
+        var service = new StubMediaPlayerService
+        { State = MediaPlayerState.Paused, Duration = TimeSpan.FromSeconds(200), Position = TimeSpan.FromSeconds(100) };
+        using var viewModel = new PlaybackViewModel(service) { JumpSecondsText = "20" };
+        await viewModel.JumpAsync(-1);
+        Assert.Equal(TimeSpan.FromSeconds(80), Assert.Single(service.SeekPositions));
+        Assert.Empty(service.StepFrameCounts);
     }
 
     [Fact]
-    public async Task StepForwardTwentyFramesAsync_ForwardsTwentyToService()
+    public async Task JumpForwardTwentySeconds_UsesDirectSeek()
     {
-        var service = new StubMediaPlayerService();
-
-        using var viewModel =
-            new PlaybackViewModel(service);
-
-        await viewModel.StepForwardTwentyFramesAsync();
-
-        Assert.Equal(
-            [20],
-            service.StepFrameCounts);
+        var service = new StubMediaPlayerService
+        { State = MediaPlayerState.Paused, Duration = TimeSpan.FromSeconds(200), Position = TimeSpan.FromSeconds(100) };
+        using var viewModel = new PlaybackViewModel(service) { JumpSecondsText = "20" };
+        await viewModel.JumpAsync(1);
+        Assert.Equal(TimeSpan.FromSeconds(120), Assert.Single(service.SeekPositions));
+        Assert.Empty(service.StepFrameCounts);
     }
 
     [Fact]
@@ -745,6 +751,8 @@ public sealed class PlaybackViewModelTests
 
         public List<TimeSpan> SeekPositions { get; } = [];
 
+        public Task? PlayCompletion { get; set; }
+
         public Task? SeekCompletion { get; set; }
 
         public Exception? SeekError { get; set; }
@@ -784,7 +792,7 @@ public sealed class PlaybackViewModelTests
 
             PlayCallCount++;
 
-            return Task.CompletedTask;
+            return PlayCompletion ?? Task.CompletedTask;
         }
 
         public Task PauseAsync(

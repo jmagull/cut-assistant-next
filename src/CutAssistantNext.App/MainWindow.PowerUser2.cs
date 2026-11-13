@@ -11,7 +11,7 @@ public partial class MainWindow
 {
     private readonly Dictionary<Button, CutToolAppearance> _standardPlaybackAppearance = [];
     private readonly Dictionary<FrameworkElement, Thickness> _standardPowerMargins = [];
-    private (int Row, int Column, int RowSpan, int ColumnSpan, Thickness Margin) _standardSearchPlacement;
+    private (int Row, int Column, int RowSpan, int ColumnSpan, Thickness Margin) _standardCutNavigationPlacement;
     private string _standardPendingLabelText = "";
     private object _standardPendingLabelForeground = DependencyProperty.UnsetValue;
     private object _standardPendingTimeForeground = DependencyProperty.UnsetValue;
@@ -24,15 +24,16 @@ public partial class MainWindow
 
     private void InitializePowerUser2Appearance()
     {
-        foreach (var button in PlaybackButtons(PlaybackControls))
+        foreach (var button in PlaybackButtons(PlaybackControls)
+            .Where(button => button != SchnittshuffleStartButton && button != SchnittshuffleEndButton))
             _standardPlaybackAppearance.Add(button, CaptureCutTool(button));
         _standardKeyframeGroupMargin = KeyframeButtons.Margin;
         _standardKeyframeGroupAlignment = KeyframeButtons.VerticalAlignment;
         foreach (var element in PowerCutActionsGrid.Children.OfType<FrameworkElement>()
             .Where(element => element is TextBlock or Border).Concat([PowerCutHeader, PowerCutActionsGrid, PowerNamingGrid]))
             _standardPowerMargins.Add(element, element.Margin);
-        _standardSearchPlacement = (Grid.GetRow(PlayerFrameSearchControls), Grid.GetColumn(PlayerFrameSearchControls),
-            Grid.GetRowSpan(PlayerFrameSearchControls), Grid.GetColumnSpan(PlayerFrameSearchControls), PlayerFrameSearchControls.Margin);
+        _standardCutNavigationPlacement = (Grid.GetRow(CutNavigationControls), Grid.GetColumn(CutNavigationControls),
+            Grid.GetRowSpan(CutNavigationControls), Grid.GetColumnSpan(CutNavigationControls), CutNavigationControls.Margin);
         _standardPendingLabelText = PendingStartLabel.Text;
         _standardPendingLabelForeground = PendingStartLabel.ReadLocalValue(TextBlock.ForegroundProperty);
         _standardPendingTimeForeground = PendingStartTime.ReadLocalValue(TextBlock.ForegroundProperty);
@@ -84,6 +85,11 @@ public partial class MainWindow
             CompactButton(button, false);
             button.Margin = new Thickness(0, 0, 4, 4);
         }
+        SecondsSeekControls.Width = 144;
+        SecondsSeekControls.Height = JumpSecondsPicker.Height = 30;
+        SecondsSeekControls.Margin = new Thickness(0, 0, 4, 4);
+        SecondsSeekControls.ColumnDefinitions[0].Width = SecondsSeekControls.ColumnDefinitions[2].Width = new GridLength(32);
+        JumpBackwardButton.Margin = JumpForwardButton.Margin = new Thickness(0);
         KeyframeButtons.Margin = new Thickness(0, 0, 4, 4);
         KeyframeButtons.VerticalAlignment = VerticalAlignment.Center;
         foreach (var button in KeyframeButtons.Children.OfType<Button>())
@@ -99,8 +105,8 @@ public partial class MainWindow
         MoveCutTool(FrameLoupeButton, Power2PendingGrid, 0, 1);
         FrameLoupeButton.Margin = new Thickness(8, 0, 0, 0);
         PendingStartTime.Width = double.NaN;
-        MoveCutTool(PlayerFrameSearchControls, Power2ToolStrip);
-        PlayerFrameSearchControls.Margin = new Thickness(0);
+        MoveCutTool(CutNavigationControls, Power2ToolStrip);
+        CutNavigationControls.Margin = new Thickness(0);
         foreach (var element in _standardPowerMargins.Keys)
         {
             var margin = _standardPowerMargins[element];
@@ -114,12 +120,16 @@ public partial class MainWindow
     {
         Power2EditingDock.Visibility = Visibility.Collapsed;
         foreach (var (button, appearance) in _standardPlaybackAppearance) RestoreCutTool(button, appearance);
+        SecondsSeekControls.Width = 190;
+        SecondsSeekControls.Height = JumpSecondsPicker.Height = 36;
+        SecondsSeekControls.Margin = new Thickness(0, 0, 10, 8);
+        SecondsSeekControls.ColumnDefinitions[0].Width = SecondsSeekControls.ColumnDefinitions[2].Width = new GridLength(40);
         KeyframeButtons.Margin = _standardKeyframeGroupMargin;
         KeyframeButtons.VerticalAlignment = _standardKeyframeGroupAlignment;
-        MoveCutTool(PlayerFrameSearchControls, PlaybackControls, _standardSearchPlacement.Row, _standardSearchPlacement.Column);
-        Grid.SetRowSpan(PlayerFrameSearchControls, _standardSearchPlacement.RowSpan);
-        Grid.SetColumnSpan(PlayerFrameSearchControls, _standardSearchPlacement.ColumnSpan);
-        PlayerFrameSearchControls.Margin = _standardSearchPlacement.Margin;
+        MoveCutTool(CutNavigationControls, PlaybackControls, _standardCutNavigationPlacement.Row, _standardCutNavigationPlacement.Column);
+        Grid.SetRowSpan(CutNavigationControls, _standardCutNavigationPlacement.RowSpan);
+        Grid.SetColumnSpan(CutNavigationControls, _standardCutNavigationPlacement.ColumnSpan);
+        CutNavigationControls.Margin = _standardCutNavigationPlacement.Margin;
         foreach (var (element, margin) in _standardPowerMargins) element.Margin = margin;
         PowerCutlistsGrid.RowDefinitions[1].Height = new GridLength(8);
         PendingStartLabel.Text = _standardPendingLabelText;

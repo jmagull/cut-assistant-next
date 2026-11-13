@@ -1,6 +1,8 @@
 using System.Globalization;
 using CutAssistantNext.Core.Logging;
 using CutAssistantNext.Media.Playback.Interop;
+using HanumanInstitute.LibMpv;
+using HanumanInstitute.LibMpv.Core;
 
 namespace CutAssistantNext.Media.Playback;
 
@@ -13,6 +15,7 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
         "estimated-frame-count";
 
     private const string PauseProperty = "pause";
+    private const string EofReachedProperty = "eof-reached";
     private const string VolumeProperty = "volume";
 
     private const double MinimumVolume = 0;
@@ -21,6 +24,7 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
 
     private readonly ILibMpvClient _client;
     private readonly IAppLogger _logger;
+    private readonly bool _keepOpenAtEnd;
     private readonly object _syncRoot = new();
 
     private CancellationTokenSource? _eventLoopCancellation;
@@ -49,7 +53,12 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
     }
 
     public MpvMediaPlayerService(IAppLogger logger)
-        : this(new HanumanLibMpvClient(), logger)
+        : this(logger, keepOpenAtEnd: false)
+    {
+    }
+
+    public MpvMediaPlayerService(IAppLogger logger, bool keepOpenAtEnd)
+        : this(new HanumanLibMpvClient(), logger, keepOpenAtEnd)
     {
     }
 
@@ -60,13 +69,15 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
 
     internal MpvMediaPlayerService(
         ILibMpvClient client,
-        IAppLogger logger)
+        IAppLogger logger,
+        bool keepOpenAtEnd = false)
     {
         _client = client
             ?? throw new ArgumentNullException(nameof(client));
 
         _logger = logger
             ?? throw new ArgumentNullException(nameof(logger));
+        _keepOpenAtEnd = keepOpenAtEnd;
     }
 
     public event EventHandler? StateChanged;
@@ -191,6 +202,9 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
                 videoWindowHandle,
                 cancellationToken);
 
+            if (_keepOpenAtEnd)
+                await _client.CommandAsync(["set", "keep-open", "yes"], cancellationToken);
+
             await _client.ObservePropertyAsync(
                 TimePositionProperty,
                 cancellationToken);
@@ -298,6 +312,12 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
 
         try
         {
+            // With keep-open, libmpv can seek back from EOF with the same file loaded.
+            // At EOF itself, leave the last picture paused until the user moves the playhead.
+            if (_keepOpenAtEnd && (State == MediaPlayerState.Ended ||
+                await _client.GetStringPropertyAsync(EofReachedProperty, cancellationToken) == "yes"))
+                return;
+
             await _client.SetBooleanPropertyAsync(
                 PauseProperty,
                 false,
@@ -319,7 +339,7 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
                 "Wiedergabe konnte nicht gestartet werden.",
                 exception);
 
-            SetError(exception.Message);
+            SetPlaybackActionError(exception);
             throw;
         }
     }
@@ -355,7 +375,7 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
                 "Wiedergabe konnte nicht pausiert werden.",
                 exception);
 
-            SetError(exception.Message);
+            SetPlaybackActionError(exception);
             throw;
         }
     }
@@ -467,7 +487,7 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
                 $"{position:hh\\:mm\\:ss\\.fff}.",
                 exception);
 
-            SetError(exception.Message);
+            SetPlaybackActionError(exception);
             throw;
         }
     }
@@ -988,6 +1008,16 @@ public sealed partial class MpvMediaPlayerService : IMediaPlayerService, IAudioT
         return Math.Min(
             frameNumber,
             estimatedFrameCount.Value - 1);
+    }
+
+    private void SetPlaybackActionError(Exception exception)
+    {
+        // A rejected property write does not invalidate the loaded main-player session.
+        // The caller still receives the error and can allow the user to try another action.
+        if (_keepOpenAtEnd && exception is MpvException error && error.Code == (int)MpvError.PropertyUnavailable)
+            return;
+
+        SetError(exception.Message);
     }
 
     private void SetError(string errorMessage)

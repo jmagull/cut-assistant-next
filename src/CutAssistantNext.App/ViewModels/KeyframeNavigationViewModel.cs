@@ -20,6 +20,8 @@ internal sealed class KeyframeNavigationViewModel : INotifyPropertyChanged, IDis
     public event PropertyChangedEventHandler? PropertyChanged;
     public IReadOnlyList<TimeSpan> Positions => _index?.Positions ?? [];
     public string Status { get; private set; } = "Keyframe-Informationen noch nicht verfügbar.";
+    public string PreviousToolTip => $"Vorheriger Keyframe (Strg + ←){Environment.NewLine}{Status}";
+    public string NextToolTip => $"Nächster Keyframe (Strg + →){Environment.NewLine}{Status}";
     public bool IsSupported { get; private set; }
     public bool IsLoading { get; private set; }
     public bool IsNavigating { get; private set; }
@@ -135,7 +137,7 @@ internal sealed class KeyframeNavigationViewModel : INotifyPropertyChanged, IDis
     }
     private void Publish()
     {
-        foreach (string property in new[] { nameof(Positions), nameof(Status), nameof(IsSupported), nameof(IsLoading), nameof(IsNavigating),
+        foreach (string property in new[] { nameof(Positions), nameof(Status), nameof(PreviousToolTip), nameof(NextToolTip), nameof(IsSupported), nameof(IsLoading), nameof(IsNavigating),
             nameof(CanPrevious), nameof(CanNext), nameof(Indicator) })
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
     }

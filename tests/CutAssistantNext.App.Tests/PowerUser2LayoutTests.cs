@@ -3,6 +3,8 @@ using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Automation;
+using System.Windows.Input;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -77,6 +79,7 @@ public sealed class PowerUser2LayoutTests
         var parents = new[] { Get<FrameworkElement>(window, "VideoHost").Parent, Get<FrameworkElement>(window, "CutTimelineTrack").Parent, Get<DataGrid>(window, "RemoveSegmentsGrid").Parent };
         var playback = Get<Grid>(window, "PlaybackControls").DataContext;
         var search = Get<WrapPanel>(window, "PlayerFrameSearchControls"); var searchContext = search.DataContext;
+        var navigation = Get<WrapPanel>(window, "CutNavigationControls");
         Apply(window, InterfaceLayout.Standard);
         var geometry = controls.Take(5).Cast<Control>().Select(c => (c.Height, c.MinHeight, c.MinWidth, c.Padding, c.Margin)).ToArray();
         foreach (var layout in new[] { InterfaceLayout.PowerUser, InterfaceLayout.PowerUser2, InterfaceLayout.Standard,
@@ -93,14 +96,16 @@ public sealed class PowerUser2LayoutTests
             if (layout == InterfaceLayout.PowerUser2)
             {
                 Assert.Same(plan, Get<Button>(window, "CutStartButton").DataContext);
-                Assert.Same(Get<CutToolStripPanel>(window, "Power2ToolStrip"), search.Parent);
-                Assert.Equal(1, Grid.GetColumnSpan(search)); Assert.Equal(0, Grid.GetRow(search));
+                Assert.Same(navigation, search.Parent);
+                Assert.Same(Get<CutToolStripPanel>(window, "Power2ToolStrip"), navigation.Parent);
+                Assert.Equal(1, Grid.GetColumnSpan(navigation)); Assert.Equal(0, Grid.GetRow(navigation));
                 Assert.Equal(Visibility.Collapsed, Get<Grid>(window, "PowerCutMarkersGrid").Visibility);
             }
             else
             {
-                Assert.Same(Get<Grid>(window, "PlaybackControls"), search.Parent);
-                Assert.Equal(8, Grid.GetColumnSpan(search)); Assert.Equal(2, Grid.GetRow(search));
+                Assert.Same(navigation, search.Parent);
+                Assert.Same(Get<Grid>(window, "PlaybackControls"), navigation.Parent);
+                Assert.Equal(8, Grid.GetColumnSpan(navigation)); Assert.Equal(2, Grid.GetRow(navigation));
                 Assert.Equal("Vorgemerkter Anfang:", Get<TextBlock>(window, "PendingStartLabel").Text);
             }
             if (layout == InterfaceLayout.Standard)
@@ -216,7 +221,7 @@ public sealed class PowerUser2LayoutTests
         var originalMargin = group.Margin; var originalAlignment = group.VerticalAlignment;
         Apply(window, InterfaceLayout.PowerUser2, 1900, 900);
         var player = Get<Grid>(window, "PlaybackControls");
-        var step = Get<Button>(window, "StepForwardFramesButton");
+        var step = Get<Button>(window, "StepForwardButton");
         var stepBounds = step.TransformToAncestor(player).TransformBounds(new Rect(step.RenderSize));
         foreach (var key in group.Children.OfType<Button>())
         {
@@ -270,6 +275,212 @@ public sealed class PowerUser2LayoutTests
         typeof(MainWindow).GetField("_preferredLayout", Private)!.SetValue(window, layout);
         var content = (FrameworkElement)window.Content;
         for (var i = 0; i < 4; i++) { content.Measure(new Size(width, height)); content.Arrange(new Rect(0, 0, width, height)); content.UpdateLayout(); window.ApplyInterfaceLayout(); Pump(); }
+    }
+
+    [Theory]
+    [InlineData("Standard")]
+    [InlineData("PowerUser")]
+    [InlineData("PowerUser2")]
+    public void SecondsControlsReuseExistingButtonHeightAndKeepSingleRow(string layoutName) => WithWindow(window =>
+    {
+        var layout = Enum.Parse<InterfaceLayout>(layoutName);
+        Apply(window, layout, 1900, 1000);
+        var strip = Get<WrapPanel>(window, "PlayerButtonStrip");
+        var group = Get<Grid>(window, "SecondsSeekControls");
+        Assert.Equal(new[] { "PlayPauseButton", "SecondsSeekControls", "StepBackwardButton", "StepForwardButton", "KeyframeButtons" },
+            strip.Children.OfType<FrameworkElement>().Take(5).Select(c => c.Name));
+        Assert.Null(window.FindName("StepBackwardFramesButton")); Assert.Null(window.FindName("StepForwardFramesButton"));
+        var frame = Get<Button>(window, "StepForwardButton");
+        Assert.Equal(layout == InterfaceLayout.PowerUser2 ? 30 : 36, frame.ActualHeight);
+        foreach (var name in new[] { "JumpBackwardButton", "JumpForwardButton", "JumpSecondsPicker" })
+        {
+            var control = Get<FrameworkElement>(window, name);
+            Assert.Equal(frame.ActualHeight, control.ActualHeight);
+            Assert.InRange(Math.Abs(control.TransformToAncestor(strip).Transform(new Point()).Y -
+                frame.TransformToAncestor(strip).Transform(new Point()).Y), 0, .5);
+        }
+        Assert.True(MainWindow.IsPlaybackTextInput(new TextBox()));
+        Assert.True(MainWindow.IsPlaybackTextInput(Get<ComboBox>(window, "JumpSecondsPicker")));
+        Assert.False(MainWindow.IsPlaybackTextInput(Get<Button>(window, "JumpBackwardButton")));
+        Assert.Same(Get<Grid>(window, "PlaybackControls"), strip.Parent);
+    });
+
+    [Theory]
+    [InlineData("Standard", CutEditingMode.Remove)]
+    [InlineData("Standard", CutEditingMode.Keep)]
+    [InlineData("PowerUser", CutEditingMode.Remove)]
+    [InlineData("PowerUser", CutEditingMode.Keep)]
+    [InlineData("PowerUser2", CutEditingMode.Remove)]
+    [InlineData("PowerUser2", CutEditingMode.Keep)]
+    public void SchnittshuffleUsesSelectedBoundariesWithoutChangingTheEdit(string layoutName, CutEditingMode mode) => WithWindow(window =>
+    {
+        var layout = Enum.Parse<InterfaceLayout>(layoutName);
+        var duration = TimeSpan.FromSeconds(100);
+        var plan = Field<CutPlanViewModel>(window, "_cutPlanViewModel");
+        var group = Get<StackPanel>(window, "SchnittshuffleControls");
+        var table = Get<DataGrid>(window, "RemoveSegmentsGrid");
+        var slider = Get<Slider>(window, "TimelineSlider");
+        var start = Get<Button>(window, "SchnittshuffleStartButton");
+        var end = Get<Button>(window, "SchnittshuffleEndButton");
+        var player = UseSchnittshuffleTestPlayer(window, duration);
+
+        Apply(window, layout, 1900);
+        Assert.Equal(Visibility.Hidden, group.Visibility);
+        plan.Initialize(duration, mode);
+        plan.SetStart(TimeSpan.FromSeconds(10));
+        Pump();
+        Assert.Equal(Visibility.Hidden, group.Visibility);
+        start.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Assert.Empty(player.SeekPositions);
+        plan.SetEnd(TimeSpan.FromSeconds(20));
+        plan.SetStart(TimeSpan.FromSeconds(40));
+        plan.SetEnd(duration);
+        Pump();
+        Assert.Equal(Visibility.Hidden, group.Visibility);
+
+        var first = plan.MarkedSegments[0];
+        var second = plan.MarkedSegments[1];
+        var savedRanges = plan.CreateCutPlanSnapshot().RemoveSegments.Select(x => (x.Start, x.End)).ToArray();
+        plan.SelectEdge(first, CutEdgeSide.End);
+        Apply(window, layout, 1900);
+        Assert.Equal(Visibility.Visible, group.Visibility);
+        Assert.Same(first, table.SelectedItem);
+        FocusManager.SetFocusedElement(window, start);
+        foreach (var button in new[] { start, end, start, end })
+        {
+            button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Pump();
+            Assert.Same(first, table.SelectedItem);
+            Assert.Same(first, plan.SelectedRemoveSegment);
+            Assert.Equal(CutEdgeSide.End, plan.SelectedEdgeSide);
+            Assert.Equal(mode, plan.EditingMode);
+            Assert.Equal(player.Position.TotalSeconds, slider.Value, 5);
+        }
+        Assert.Equal(new[] { 10d, 20d, 10d, 20d }, player.SeekPositions.Select(x => x.TotalSeconds));
+
+        table.SelectedItem = second;
+        Pump();
+        start.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        end.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Pump();
+        Assert.Equal(TimeSpan.FromSeconds(40), player.SeekPositions[^2]);
+        Assert.Equal(TimeSpan.FromSeconds(99.96), player.SeekPositions[^1]);
+        Assert.Same(second, table.SelectedItem);
+        Assert.Equal(duration, second.End);
+        Assert.Equal(savedRanges, plan.CreateCutPlanSnapshot().RemoveSegments.Select(x => (x.Start, x.End)));
+
+        plan.Replace(second, TimeSpan.FromSeconds(41), duration);
+        Pump();
+        start.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Pump();
+        Assert.Equal(TimeSpan.FromSeconds(41), player.SeekPositions[^1]);
+        Assert.Same(plan.SelectedRemoveSegment, table.SelectedItem);
+
+        table.SelectedItem = null;
+        Pump();
+        Assert.Equal(Visibility.Hidden, group.Visibility);
+        plan.SelectEdge(first, CutEdgeSide.Start);
+        player.State = MediaPlayerState.Empty;
+        player.RaiseStateChanged();
+        Pump();
+        Assert.Equal(Visibility.Hidden, group.Visibility);
+    });
+
+    [Theory]
+    [InlineData("Standard", 1d)]
+    [InlineData("Standard", 1.25d)]
+    [InlineData("Standard", 1.5d)]
+    [InlineData("Standard", 2d)]
+    [InlineData("PowerUser", 1d)]
+    [InlineData("PowerUser", 1.25d)]
+    [InlineData("PowerUser", 1.5d)]
+    [InlineData("PowerUser", 2d)]
+    [InlineData("PowerUser2", 1d)]
+    [InlineData("PowerUser2", 1.25d)]
+    [InlineData("PowerUser2", 1.5d)]
+    [InlineData("PowerUser2", 2d)]
+    public void SchnittshuffleGeometryRemainsCompactWhenSelectionChanges(string layoutName, double scale) => WithWindow(window =>
+    {
+        VisualTreeHelper.SetRootDpi(window, new DpiScale(scale, scale));
+        var layout = Enum.Parse<InterfaceLayout>(layoutName);
+        var duration = TimeSpan.FromSeconds(100);
+        UseSchnittshuffleTestPlayer(window, duration);
+        var plan = Field<CutPlanViewModel>(window, "_cutPlanViewModel");
+        plan.Initialize(duration);
+        plan.SetStart(TimeSpan.FromSeconds(5));
+        plan.SetEnd(TimeSpan.FromSeconds(15));
+        var nav = Get<WrapPanel>(window, "CutNavigationControls");
+        var search = Get<WrapPanel>(window, "PlayerFrameSearchControls");
+        var shuffle = Get<StackPanel>(window, "SchnittshuffleControls");
+        var left = Get<Button>(window, "SchnittshuffleStartButton");
+        var right = Get<Button>(window, "SchnittshuffleEndButton");
+        var step = Get<Button>(window, "StepForwardButton");
+        var loupe = Get<Button>(window, "FrameLoupeButton");
+        var markers = Get<Button>(window, "VideoEndButton");
+        foreach (var width in new[] { 1900d, layout == InterfaceLayout.Standard ? 760d : 1180d })
+        {
+            plan.SelectedRemoveSegment = null;
+            Apply(window, layout, width, 900);
+            Assert.Equal(layout, Field<InterfaceLayout?>(window, "_activeLayout"));
+            var previousPosition = search.TransformToAncestor(nav).Transform(new Point());
+            var previousSizes = (nav.ActualHeight, search.RenderSize, step.RenderSize, loupe.RenderSize, markers.RenderSize);
+            Assert.Equal(Visibility.Hidden, shuffle.Visibility);
+            plan.SelectedRemoveSegment = plan.MarkedSegments.Single();
+            Apply(window, layout, width, 900);
+            Assert.Equal(Visibility.Visible, shuffle.Visibility);
+            Assert.Equal(previousPosition, search.TransformToAncestor(nav).Transform(new Point()));
+            Assert.Equal(previousSizes, (nav.ActualHeight, search.RenderSize, step.RenderSize, loupe.RenderSize, markers.RenderSize));
+            Assert.Equal(new Size(34, 30), left.RenderSize);
+            Assert.Equal(left.RenderSize, right.RenderSize);
+            var leftPosition = left.TransformToAncestor(shuffle).Transform(new Point());
+            var rightPosition = right.TransformToAncestor(shuffle).Transform(new Point());
+            Assert.Equal(leftPosition.Y, rightPosition.Y);
+            Assert.Equal(4, rightPosition.X - leftPosition.X - left.ActualWidth, 6);
+            Assert.Equal(left.ToolTip, AutomationProperties.GetName(left));
+            Assert.Equal(right.ToolTip, AutomationProperties.GetName(right));
+            Assert.True(shuffle.TransformToAncestor(nav).TransformBounds(new Rect(shuffle.RenderSize)).Right <= nav.ActualWidth + 1);
+            Assert.True(search.TransformToAncestor(nav).TransformBounds(new Rect(search.RenderSize)).Right <= nav.ActualWidth + 1);
+            var searchBounds = search.TransformToAncestor(nav).TransformBounds(new Rect(search.RenderSize));
+            var shuffleBounds = shuffle.TransformToAncestor(nav).TransformBounds(new Rect(shuffle.RenderSize));
+            Assert.False(Rect.Intersect(searchBounds, shuffleBounds) is { Width: > 0, Height: > 0 });
+            if (layout == InterfaceLayout.PowerUser2)
+            {
+                var dock = Get<CutToolStripPanel>(window, "Power2ToolStrip");
+                Assert.Equal(width < 1900, dock.IsSearchBelow);
+                Capture(dock, $"schnittshuffle-{layout}-{width:0}-{scale:0.00}.png", scale);
+            }
+            else
+            {
+                Capture(nav, $"schnittshuffle-{layout}-{width:0}-{scale:0.00}.png", scale);
+            }
+        }
+    });
+
+    [Theory]
+    [InlineData(10d, 20d, 25d, 10d)]
+    [InlineData(20d, 20d, 25d, 19.96d)]
+    [InlineData(20d, 20d, 50d, 19.98d)]
+    [InlineData(20d, 20d, null, 19.96d)]
+    [InlineData(0.01d, 0.01d, 25d, 0d)]
+    public void SchnittshuffleEofSeekStaysInsideMedia(double boundary, double duration, double? fps, double expected)
+    {
+        Assert.Equal(TimeSpan.FromSeconds(expected),
+            MainWindow.GetSchnittshuffleSeekPosition(TimeSpan.FromSeconds(boundary), TimeSpan.FromSeconds(duration), fps));
+    }
+
+    private static PlaybackViewModelTests.StubMediaPlayerService UseSchnittshuffleTestPlayer(MainWindow window, TimeSpan duration)
+    {
+        var player = new PlaybackViewModelTests.StubMediaPlayerService
+        {
+            Duration = duration,
+            State = MediaPlayerState.Paused
+        };
+        Field<PlaybackViewModel>(window, "_playbackViewModel").Dispose();
+        var playback = new PlaybackViewModel(player);
+        typeof(MainWindow).GetField("_playbackViewModel", Private)!.SetValue(window, playback);
+        Get<Grid>(window, "PlaybackControls").DataContext = playback;
+        Get<Grid>(window, "PlaybackControls").IsEnabled = true;
+        return player;
     }
 
     private static void Capture(FrameworkElement control, string name, double scale)

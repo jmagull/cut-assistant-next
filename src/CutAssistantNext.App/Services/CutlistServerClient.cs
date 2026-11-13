@@ -6,7 +6,7 @@ internal sealed record CutlistUploadResult(
     string Message);
 
 
-internal sealed class CutlistServerClient
+internal sealed partial class CutlistServerClient
 {
     private readonly HttpClient _httpClient;
 

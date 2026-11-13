@@ -12,8 +12,49 @@ public sealed class PlaybackViewModel
     private readonly SynchronizationContext? _synchronizationContext;
 
     private bool _isSeeking;
+    private bool _isTogglingPlayback;
     private double _seekPositionSeconds;
     private bool _disposed;
+    private string _jumpSecondsText = "10";
+    private decimal _lastValidJumpSeconds = 10;
+
+    public IReadOnlyList<string> JumpPresets { get; } = ["1", "5", "10", "30", "60"];
+
+    public string JumpSecondsText
+    {
+        get => _jumpSecondsText;
+        set
+        {
+            if (_jumpSecondsText == value) return;
+            _jumpSecondsText = value;
+            if (TryParseJumpSeconds(value, out var seconds)) _lastValidJumpSeconds = seconds;
+            OnPropertyChanged(nameof(JumpSecondsText));
+        }
+    }
+
+    internal string JumpSecondsSetting => _lastValidJumpSeconds.ToString(CultureInfo.InvariantCulture);
+
+    internal void RestoreJumpSeconds(string? value)
+    {
+        JumpSecondsText = (TryParseJumpSeconds(value, out var seconds) ? seconds : 10)
+            .ToString(CultureInfo.InvariantCulture);
+    }
+
+    private static bool TryParseJumpSeconds(string? text, out decimal seconds) =>
+        decimal.TryParse(text?.Trim().Replace(',', '.'), NumberStyles.AllowDecimalPoint,
+            CultureInfo.InvariantCulture, out seconds) && seconds >= 0.0000001m &&
+        seconds <= TimeSpan.MaxValue.Ticks / (decimal)TimeSpan.TicksPerSecond;
+
+    public Task JumpAsync(int direction, CancellationToken cancellationToken = default)
+    {
+        if (direction is not (-1 or 1)) throw new ArgumentOutOfRangeException(nameof(direction));
+        if (!TryParseJumpSeconds(JumpSecondsText, out var seconds))
+            throw new ArgumentException("Sprungweite bitte als positive Sekundenanzahl eingeben.");
+        if (!CanSeek || IsSeeking) return Task.CompletedTask;
+        var offset = decimal.Round(seconds * TimeSpan.TicksPerSecond, 0, MidpointRounding.AwayFromZero);
+        var target = (long)Math.Clamp(Position.Ticks + direction * offset, 0, Duration!.Value.Ticks);
+        return SeekToAsync(TimeSpan.FromTicks(target), cancellationToken);
+    }
 
     public PlaybackViewModel(
         IMediaPlayerService mediaPlayerService)
@@ -228,19 +269,20 @@ public sealed class PlaybackViewModel
             cancellationToken);
     }
 
-    public Task TogglePlaybackAsync(
-        CancellationToken cancellationToken = default)
+    public async Task TogglePlaybackAsync(CancellationToken cancellationToken = default)
     {
-        return State switch
+        if (_isTogglingPlayback) return;
+
+        _isTogglingPlayback = true;
+        try
         {
-            MediaPlayerState.Paused =>
-                PlayAsync(cancellationToken),
-
-            MediaPlayerState.Playing =>
-                PauseAsync(cancellationToken),
-
-            _ => Task.CompletedTask
-        };
+            if (CanPlay) await PlayAsync(cancellationToken);
+            else if (CanPause) await PauseAsync(cancellationToken);
+        }
+        finally
+        {
+            _isTogglingPlayback = false;
+        }
     }
 
     public Task SetVolumeAsync(
@@ -265,42 +307,6 @@ public sealed class PlaybackViewModel
     {
         NavigationRequested?.Invoke(this, EventArgs.Empty);
         return _mediaPlayerService.StepBackwardAsync(
-            cancellationToken);
-    }
-
-    public Task StepBackwardTenFramesAsync(
-        CancellationToken cancellationToken = default)
-    {
-        NavigationRequested?.Invoke(this, EventArgs.Empty);
-        return _mediaPlayerService.StepFramesAsync(
-            -10,
-            cancellationToken);
-    }
-
-    public Task StepForwardTenFramesAsync(
-        CancellationToken cancellationToken = default)
-    {
-        NavigationRequested?.Invoke(this, EventArgs.Empty);
-        return _mediaPlayerService.StepFramesAsync(
-            10,
-            cancellationToken);
-    }
-
-    public Task StepBackwardTwentyFramesAsync(
-        CancellationToken cancellationToken = default)
-    {
-        NavigationRequested?.Invoke(this, EventArgs.Empty);
-        return _mediaPlayerService.StepFramesAsync(
-            -20,
-            cancellationToken);
-    }
-
-    public Task StepForwardTwentyFramesAsync(
-        CancellationToken cancellationToken = default)
-    {
-        NavigationRequested?.Invoke(this, EventArgs.Empty);
-        return _mediaPlayerService.StepFramesAsync(
-            20,
             cancellationToken);
     }
 

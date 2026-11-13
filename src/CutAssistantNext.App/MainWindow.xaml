@@ -250,6 +250,7 @@
                     <RowDefinition x:Name="VideoRow" Height="350" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock Margin="0,0,0,8"
@@ -264,6 +265,9 @@
                         BorderThickness="1">
                     <controls:MpvVideoHost x:Name="VideoHost" />
                 </Border>
+
+                <TextBlock x:Name="PlaybackActionStatus" Grid.Row="4" Margin="0,6,0,0"
+                           Foreground="#991B1B" TextWrapping="Wrap" Visibility="Collapsed" />
 
                 <Grid x:Name="PlaybackControls"
                       Grid.Row="2"
@@ -316,8 +320,8 @@
                                                    SelectedRemoveSegment="{Binding SelectedRemoveSegment, Mode=TwoWay}" />
                     </StackPanel>
 
-                    <WrapPanel Grid.Row="1" Grid.ColumnSpan="8">
-                        <Button
+                    <WrapPanel x:Name="PlayerButtonStrip" Grid.Row="1" Grid.ColumnSpan="8">
+                        <Button x:Name="PlayPauseButton"
                                 MinWidth="90"
                                 Height="36"
                                 Padding="14,0"
@@ -326,17 +330,27 @@
                                 Click="PlayButton_Click"
                                 Content="Play/Pause" />
 
-                        <Button x:Name="StepBackwardFramesButton"
-                                MinWidth="90"
-                                Height="36"
-                                Margin="0,0,10,8"
-                                Padding="14,0"
-                                IsEnabled="{Binding CanStepFrame}"
-                                ToolTip="−20 Bilder (Strg+Klick)"
-                                Click="StepBackwardFramesButton_Click"
-                                Content="−10 Bilder" />
+                        <Grid x:Name="SecondsSeekControls" Width="190" Height="36" Margin="0,0,10,8"
+                              VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="40" />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="JumpBackwardButton" Height="36" Padding="8,0"
+                                    IsEnabled="{Binding CanSeek}" Click="JumpBackwardButton_Click"
+                                    ToolTip="Um die gewählte Sekundenanzahl zurückspringen" Content="←" />
+                            <ComboBox x:Name="JumpSecondsPicker" Grid.Column="1" Height="36" Margin="4,0"
+                                      IsEditable="True" VerticalContentAlignment="Center"
+                                      ItemsSource="{Binding JumpPresets}"
+                                      Text="{Binding JumpSecondsText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      ToolTip="Sprungweite in Sekunden" AutomationProperties.Name="Sprungweite in Sekunden" />
+                            <Button x:Name="JumpForwardButton" Grid.Column="2" Height="36" Padding="8,0"
+                                    IsEnabled="{Binding CanSeek}" Click="JumpForwardButton_Click"
+                                    ToolTip="Um die gewählte Sekundenanzahl vorspringen" Content="→" />
+                        </Grid>
 
-                        <Button
+                        <Button x:Name="StepBackwardButton"
                                 MinWidth="110"
                                 Height="36"
                                 Margin="0,0,10,8"
@@ -345,7 +359,7 @@
                                 Click="StepBackwardButton_Click"
                                 Content="Bild zurück" />
 
-                        <Button
+                        <Button x:Name="StepForwardButton"
                                 MinWidth="110"
                                 Height="36"
                                 Margin="0,0,10,8"
@@ -354,25 +368,15 @@
                                 Click="StepForwardButton_Click"
                                 Content="Bild vor" />
 
-                        <Button x:Name="StepForwardFramesButton"
-                                MinWidth="90"
-                                Height="36"
-                                Margin="0,0,10,8"
-                                Padding="14,0"
-                                IsEnabled="{Binding CanStepFrame}"
-                                ToolTip="+20 Bilder (Strg+Klick)"
-                                Click="StepForwardFramesButton_Click"
-                                Content="+10 Bilder" />
-
                         <StackPanel x:Name="KeyframeButtons" Orientation="Horizontal" Margin="0,0,8,8"
                                     Visibility="{Binding IsSupported, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Button Content="◀ K" Width="48" Height="36" Margin="0,0,4,0"
                                     IsEnabled="{Binding CanPrevious}" Click="PreviousKeyframe_Click"
-                                    ToolTip="{Binding Status, StringFormat=Vorheriger Keyframe. {0}}"
+                                    ToolTip="{Binding PreviousToolTip}"
                                     ToolTipService.ShowOnDisabled="True" />
                             <Button Content="K ▶" Width="48" Height="36"
                                     IsEnabled="{Binding CanNext}" Click="NextKeyframe_Click"
-                                    ToolTip="{Binding Status, StringFormat=Nächster Keyframe. {0}}"
+                                    ToolTip="{Binding NextToolTip}"
                                     ToolTipService.ShowOnDisabled="True" />
                         </StackPanel>
                         <StackPanel
@@ -456,16 +460,57 @@
                             </StackPanel>
                         </StackPanel>
                     </WrapPanel>
-                    <WrapPanel x:Name="PlayerFrameSearchControls" Grid.Row="2" Grid.ColumnSpan="8" Margin="0,4,0,0"
-                               Visibility="{Binding DataContext.IsPlayerFrameSearchVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToVisibilityConverter}}"
-                               ToolTip="{Binding Status}" ToolTipService.ShowOnDisabled="True">
-                        <TextBlock Text="Halbierungssuche" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,4" />
-                        <Button Content="{Binding SearchLeftText}" IsEnabled="{Binding CanSearch}"
-                                Height="32" Padding="10,0" Margin="0,0,6,4" Click="SearchLeft_Click" />
-                        <Button Content="{Binding SearchRightText}" IsEnabled="{Binding CanSearch}"
-                                Height="32" Padding="10,0" Margin="0,0,6,4" Click="SearchRight_Click" />
-                        <Button Content="Zurücksetzen" IsEnabled="{Binding CanReset}"
-                                Height="32" Padding="10,0" Margin="0,0,0,4" Click="ResetPlayerSearch_Click" />
+                    <WrapPanel x:Name="CutNavigationControls" Grid.Row="2" Grid.ColumnSpan="8" Margin="0,4,0,0">
+                        <WrapPanel.Style>
+                            <Style TargetType="WrapPanel">
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Visibility, ElementName=SchnittshuffleControls}" Value="Hidden" />
+                                            <Condition Binding="{Binding Visibility, ElementName=PlayerFrameSearchControls}" Value="Collapsed" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </WrapPanel.Style>
+                        <StackPanel x:Name="SchnittshuffleControls" Orientation="Horizontal" Margin="0,0,12,4"
+                                    VerticalAlignment="Center">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding CanShuffleSelectedSegment}" Value="True" />
+                                                <Condition Binding="{Binding DataContext.CanSeek, ElementName=PlaybackControls}" Value="True" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <TextBlock Text="Schnittshuffle" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <Button x:Name="SchnittshuffleStartButton" Width="34" Height="30" Margin="0,0,4,0"
+                                    Padding="0" FontSize="15" Content="←" Click="SchnittshuffleStart_Click"
+                                    AutomationProperties.Name="Schnittshuffle: Zum Anfang des ausgewählten Schnittbereichs springen"
+                                    ToolTip="Schnittshuffle: Zum Anfang des ausgewählten Schnittbereichs springen" />
+                            <Button x:Name="SchnittshuffleEndButton" Width="34" Height="30"
+                                    Padding="0" FontSize="15" Content="→" Click="SchnittshuffleEnd_Click"
+                                    AutomationProperties.Name="Schnittshuffle: Zum Ende des ausgewählten Schnittbereichs springen"
+                                    ToolTip="Schnittshuffle: Zum Ende des ausgewählten Schnittbereichs springen" />
+                        </StackPanel>
+                        <WrapPanel x:Name="PlayerFrameSearchControls"
+                                   Visibility="{Binding DataContext.IsPlayerFrameSearchVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   ToolTip="{Binding Status}" ToolTipService.ShowOnDisabled="True">
+                            <TextBlock Text="Halbierungssuche" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,4" />
+                            <Button Content="{Binding SearchLeftText}" IsEnabled="{Binding CanSearch}"
+                                    Height="32" Padding="10,0" Margin="0,0,6,4" Click="SearchLeft_Click" />
+                            <Button Content="{Binding SearchRightText}" IsEnabled="{Binding CanSearch}"
+                                    Height="32" Padding="10,0" Margin="0,0,6,4" Click="SearchRight_Click" />
+                            <Button Content="Zurücksetzen" IsEnabled="{Binding CanReset}"
+                                    Height="32" Padding="10,0" Margin="0,0,0,4" Click="ResetPlayerSearch_Click" />
+                        </WrapPanel>
                     </WrapPanel>
                 </Grid>
                 <Grid x:Name="Power2EditingDock" Grid.Row="3" Margin="0,6,0,0" Visibility="Collapsed">

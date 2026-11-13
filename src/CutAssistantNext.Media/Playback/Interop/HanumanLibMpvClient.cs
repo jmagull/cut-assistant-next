@@ -234,6 +234,11 @@ internal sealed class HanumanLibMpvClient : ILibMpvClient
             }, cancellationToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
+        catch (MpvException error) when (error.Code == (int)MpvError.PropertyUnavailable)
+        {
+            // Report this per-operation failure through the awaiting caller.
+            throw;
+        }
         catch (Exception exception)
         {
             PublishError(exception.Message);

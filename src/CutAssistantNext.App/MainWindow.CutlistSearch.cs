@@ -18,13 +18,13 @@ public partial class MainWindow
     private bool ConfirmCutlistReplacement() => !MediaOpenRequest.NeedsReplacementConfirmation(
         _cutPlanViewModel.RemoveSegments.Count, _cutPlanViewModel.PendingStart.HasValue,
         _cutNamingState is not null || _loadedCutlistAuthor is not null || _loadedIntendedCutApplicationName is not null) ||
-        MessageBox.Show(this,
+        (CutlistReplacementPrompt?.Invoke() ?? MessageBox.Show(this,
             "Die aktuelle Schnittarbeit durch die ausgewählte Cutlist ersetzen? Bitte bei Bedarf vorher speichern.",
-            "Schnittarbeit ersetzen", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes;
+            "Schnittarbeit ersetzen", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes);
 
     private async Task SearchCutlistsForCurrentMediaAsync(bool skipIfNotConfigured = false)
     {
-        if (_cutlistSearchInProgress || _shutdownStarted || _isClosed) return;
+        if (_cutlistSearchInProgress || _ratingTransitionInProgress || _shutdownStarted || _isClosed) return;
         if (_viewModel.AnalysisResult is not { Duration: { } duration } analysis || duration <= TimeSpan.Zero)
         {
             if (!skipIfNotConfigured)
@@ -62,7 +62,7 @@ public partial class MainWindow
             // The selected document is re-read or downloaded without touching any local cutlist for writing.
             var imported = await CutlistSelectionReader.ReadAsync(selected, client.DownloadBytesAsync, _mediaInputCancellation.Token);
             if (IsCurrentCutlistContext(context))
-                LoadCutlistDocument(imported.Document, duration, imported.LocalFilePath);
+                await LoadCutlistDocument(imported.Document, duration, imported.LocalFilePath, imported.ServerSource);
         }
         catch (OperationCanceledException) when (_mediaInputCancellation.IsCancellationRequested) { }
         catch (Exception error)

@@ -4,7 +4,7 @@ using CutAssistantNext.Cutlists.Model;
 
 namespace CutAssistantNext.App.Services;
 
-internal sealed record CutlistImportDocument(CutlistDocument Document, string? LocalFilePath);
+internal sealed record CutlistImportDocument(CutlistDocument Document, string? LocalFilePath, CutlistRatingSource? ServerSource = null);
 
 internal static class CutlistSelectionReader
 {
@@ -35,6 +35,7 @@ internal static class CutlistSelectionReader
         if (row.Server is null || row.ServerUrl is null) throw new InvalidOperationException("Die Herkunft der Cutlist fehlt.");
         var serverBytes = await download(row.ServerUrl, row.Server.Id, cancellationToken);
         var document = await Task.Run(() => CutlistFileReader.ReadBytes(serverBytes), cancellationToken);
-        return new CutlistImportDocument(document, null);
+        return new CutlistImportDocument(document, null, CutlistRatingSource.Create(
+            row.ServerUrl, row.Server.Id, row.Server.Author, row.Server.CutlistFileName));
     }
 }

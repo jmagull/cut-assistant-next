@@ -24,6 +24,30 @@ public sealed class MpvMediaPlayerServiceTests
     }
 
     [Fact]
+    public async Task KeepOpenPlayerIgnoresPlayAtEofAndPlaysAfterSeekingBack()
+    {
+        var client = new StubLibMpvClient();
+        await using var service = new MpvMediaPlayerService(client, new RecordingAppLogger(), keepOpenAtEnd: true);
+        await service.InitializeAsync(123);
+        Assert.Equal(["set", "keep-open", "yes"], Assert.Single(client.Commands));
+        client.Publish(new LibMpvEvent(LibMpvEventKind.FileLoaded));
+        await WaitUntilAsync(() => service.State == MediaPlayerState.Paused);
+        client.StringProperties["eof-reached"] = "yes";
+
+        await service.PlayAsync();
+
+        Assert.Equal(MediaPlayerState.Paused, service.State);
+        Assert.Empty(client.BooleanPropertyCalls);
+
+        await service.SeekAsync(TimeSpan.FromSeconds(3));
+        Assert.Equal(("time-pos", 3d), Assert.Single(client.DoublePropertyCalls));
+        client.StringProperties["eof-reached"] = "no";
+        await service.PlayAsync();
+        Assert.Equal(("pause", false), Assert.Single(client.BooleanPropertyCalls));
+        Assert.Equal(MediaPlayerState.Playing, service.State);
+    }
+
+    [Fact]
     public async Task PauseOnEmptyContextPreservesEmptyState()
     {
         var client = new StubLibMpvClient();
@@ -389,6 +413,31 @@ public sealed class MpvMediaPlayerServiceTests
         Assert.Empty(logger.InformationMessages);
         Assert.Empty(logger.WarningMessages);
         Assert.Empty(logger.Errors);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task DirectSeeksBothDirectionsUseTimePositionWithoutFrameStepsOrPauseChanges(bool playing)
+    {
+        var client = new StubLibMpvClient();
+        await using var service = new MpvMediaPlayerService(client);
+        await service.InitializeAsync(123);
+        client.Publish(new LibMpvEvent(LibMpvEventKind.FileLoaded));
+        await WaitUntilAsync(() => service.State == MediaPlayerState.Paused);
+        if (playing) await service.PlayAsync();
+        var booleanCount = client.BooleanPropertyCalls.Count;
+        var commandCount = client.Commands.Count;
+        var propertyCount = client.DoublePropertyCalls.Count;
+        var changes = new List<MediaPlayerState>();
+        service.StateChanged += (_, _) => changes.Add(service.State);
+        await service.SeekAsync(TimeSpan.FromSeconds(60));
+        await service.SeekAsync(TimeSpan.FromSeconds(5));
+        Assert.Equal(new[] { ("time-pos", 60d), ("time-pos", 5d) }, client.DoublePropertyCalls.Skip(propertyCount));
+        Assert.Equal(booleanCount, client.BooleanPropertyCalls.Count);
+        Assert.Equal(commandCount, client.Commands.Count);
+        Assert.Empty(changes);
+        Assert.Equal(playing ? MediaPlayerState.Playing : MediaPlayerState.Paused, service.State);
     }
 
     [Fact]

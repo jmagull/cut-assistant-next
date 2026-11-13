@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using CutAssistantNext.App.Controls;
 using CutAssistantNext.App.Dialogs;
 using CutAssistantNext.App.Naming;
@@ -79,10 +80,11 @@ public partial class MainWindow : Window
         RestoreWindowSettings();
 
         _mediaPlayerService =
-            new MpvMediaPlayerService(_logger);
+            new MpvMediaPlayerService(_logger, keepOpenAtEnd: true);
 
         _playbackViewModel =
             new PlaybackViewModel(_mediaPlayerService);
+        _playbackViewModel.RestoreJumpSeconds(_windowSettingsStore.Load()?.SeekStepSeconds);
 
         _keyframeNavigation = new KeyframeNavigationViewModel(_playbackViewModel);
         _playerFrameSearch = new PlayerFrameSearchViewModel(_playbackViewModel);
@@ -108,6 +110,7 @@ public partial class MainWindow : Window
         KeyframeIndicator.DataContext = _keyframeNavigation;
         CutPlanSection.DataContext = _cutPlanViewModel;
         CutTimelineTrack.DataContext = _cutPlanViewModel;
+        SchnittshuffleControls.DataContext = _cutPlanViewModel;
         Power2EditingDock.DataContext = _cutPlanViewModel;
 
         VideoHost.VideoWindowHandleCreated +=
@@ -115,7 +118,6 @@ public partial class MainWindow : Window
 
         Closing += MainWindow_Closing;
         PreviewKeyDown += MainWindow_PreviewKeyDown;
-        PreviewKeyUp += MainWindow_PreviewKeyUp;
 
         InitializeAppearance();
         InitializeMediaInput(startupArguments ?? [], startupDirectory ?? Environment.CurrentDirectory);
@@ -198,6 +200,8 @@ public partial class MainWindow : Window
             return;
         }
 
+        if (!await ConfirmRatingDepartureAsync()) return;
+
         _shutdownStarted = true;
         _isClosed = true;
 
@@ -210,7 +214,6 @@ public partial class MainWindow : Window
 
         PreviewKeyDown -= MainWindow_PreviewKeyDown;
 
-        PreviewKeyUp -= MainWindow_PreviewKeyUp;
 
         await CloseSpotlightSafelyAsync();
         await _cutReviewController.CloseAsync();
@@ -308,7 +311,8 @@ public partial class MainWindow : Window
                     WindowState ==
                     System.Windows.WindowState.Maximized,
                 Volume =
-                    _playbackViewModel.Volume
+                    _playbackViewModel.Volume,
+                SeekStepSeconds = _playbackViewModel.JumpSecondsSetting
             });
 
         if (saved)
@@ -427,12 +431,11 @@ public partial class MainWindow : Window
             e.Handled = true;
             return;
         }
+        // Arrow keys in text/selection inputs belong to the focused control.
+        if (IsPlaybackTextInput(e.OriginalSource as DependencyObject)) return;
         if (_playerFrameSearch.IsNavigating) return;
 
         var modifiers = Keyboard.Modifiers;
-
-        UpdateFrameStepButtonLabels(
-            modifiers);
 
         if (e.Key == Key.F && modifiers == ModifierKeys.Shift &&
             e.OriginalSource is not System.Windows.Controls.Primitives.TextBoxBase)
@@ -451,6 +454,13 @@ public partial class MainWindow : Window
             await ExecutePlaybackActionAsync(
                 () => _playbackViewModel.TogglePlaybackAsync());
 
+            return;
+        }
+
+        var keyframeJump = TryHandleKeyframeShortcutAsync(e, modifiers);
+        if (keyframeJump is not null)
+        {
+            await keyframeJump;
             return;
         }
 
@@ -481,50 +491,27 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (e.Key == Key.Left &&
-            modifiers == ModifierKeys.Control)
-        {
-            e.Handled = true;
-
-            await ExecutePlaybackActionAsync(
-                () => _playbackViewModel.StepBackwardTwentyFramesAsync());
-
-            return;
-        }
-
-        if (e.Key == Key.Right &&
-            modifiers == ModifierKeys.Control)
-        {
-            e.Handled = true;
-
-            await ExecutePlaybackActionAsync(
-                () => _playbackViewModel.StepForwardTwentyFramesAsync());
-        }
     }
 
-    private void MainWindow_PreviewKeyUp(
-        object sender,
-        KeyEventArgs e)
+    internal Task? TryHandleKeyframeShortcutAsync(KeyEventArgs e, ModifierKeys modifiers)
     {
-        UpdateFrameStepButtonLabels(
-            Keyboard.Modifiers);
+        if (e.Handled || modifiers != ModifierKeys.Control || e.Key is not (Key.Left or Key.Right) ||
+            _isClosed || _mediaLoadInProgress || _frameLoupeOpening || !IsEnabled || !PlaybackControls.IsEnabled ||
+            _playerFrameSearch.IsNavigating || IsPlaybackTextInput(e.OriginalSource as DependencyObject) ||
+            IsPlaybackTextInput(Keyboard.FocusedElement as DependencyObject)) return null;
+        var direction = e.Key == Key.Left ? -1 : 1;
+        if (!(direction < 0 ? _keyframeNavigation.CanPrevious : _keyframeNavigation.CanNext)) return null;
+        // Mark the routed event before the asynchronous jump yields to the dispatcher.
+        e.Handled = true;
+        return _keyframeNavigation.JumpAsync(direction);
     }
 
-    private void UpdateFrameStepButtonLabels(
-        ModifierKeys modifiers)
+    internal static bool IsPlaybackTextInput(DependencyObject? source)
     {
-        var useTwentyFrames =
-            (modifiers & ModifierKeys.Control) != 0;
-
-        StepBackwardFramesButton.Content =
-            useTwentyFrames
-                ? "−20 Bilder"
-                : "−10 Bilder";
-
-        StepForwardFramesButton.Content =
-            useTwentyFrames
-                ? "+20 Bilder"
-                : "+10 Bilder";
+        for (var node = source; node is not null; node = node is Visual || node is System.Windows.Media.Media3D.Visual3D
+            ? VisualTreeHelper.GetParent(node) : LogicalTreeHelper.GetParent(node))
+            if (node is TextBoxBase or PasswordBox or ComboBox) return true;
+        return false;
     }
 
     private async void PlayButton_Click(
@@ -535,21 +522,11 @@ public partial class MainWindow : Window
             () => _playbackViewModel.TogglePlaybackAsync());
     }
 
-    private async void StepBackwardFramesButton_Click(
-        object sender,
-        RoutedEventArgs e)
-    {
-        if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
-        {
-            await ExecutePlaybackActionAsync(
-                () => _playbackViewModel.StepBackwardTwentyFramesAsync());
+    private async void JumpBackwardButton_Click(object sender, RoutedEventArgs e) =>
+        await ExecutePlaybackActionAsync(() => _playbackViewModel.JumpAsync(-1, _mediaInputCancellation.Token));
 
-            return;
-        }
-
-        await ExecutePlaybackActionAsync(
-            () => _playbackViewModel.StepBackwardTenFramesAsync());
-    }
+    private async void JumpForwardButton_Click(object sender, RoutedEventArgs e) =>
+        await ExecutePlaybackActionAsync(() => _playbackViewModel.JumpAsync(1, _mediaInputCancellation.Token));
 
     private async void StepBackwardButton_Click(
         object sender,
@@ -565,22 +542,6 @@ public partial class MainWindow : Window
     {
         await ExecutePlaybackActionAsync(
             () => _playbackViewModel.StepForwardAsync());
-    }
-
-    private async void StepForwardFramesButton_Click(
-        object sender,
-        RoutedEventArgs e)
-    {
-        if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
-        {
-            await ExecutePlaybackActionAsync(
-                () => _playbackViewModel.StepForwardTwentyFramesAsync());
-
-            return;
-        }
-
-        await ExecutePlaybackActionAsync(
-            () => _playbackViewModel.StepForwardTenFramesAsync());
     }
 
     private async void RemoveSegmentsDataGrid_PreviewMouseLeftButtonDown(
@@ -884,26 +845,22 @@ public partial class MainWindow : Window
         return null;
     }
 
-    private async Task ExecutePlaybackActionAsync(
-        Func<Task> action)
+    private async Task ExecutePlaybackActionAsync(Func<Task> action)
     {
         if (_playerFrameSearch.IsNavigating) return;
         try
         {
+            PlaybackActionStatus.Visibility = Visibility.Collapsed;
             await action();
         }
         catch (Exception exception)
         {
-            if (!_isClosed)
-            {
-                MessageBox.Show(
-                    this,
-                    $"Die Wiedergabeaktion ist fehlgeschlagen:" +
-                    $"{Environment.NewLine}{exception.Message}",
-                    "Wiedergabefehler",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
+            if (_isClosed) return;
+
+            _logger.Error("Wiedergabeaktion fehlgeschlagen.", exception);
+            PlaybackActionStatus.Text = "Die Wiedergabeaktion konnte nicht ausgeführt werden. " +
+                "Versuche, die Position erneut zu ändern oder die Datei neu zu öffnen.";
+            PlaybackActionStatus.Visibility = Visibility.Visible;
         }
     }
 
@@ -1661,7 +1618,7 @@ public partial class MainWindow : Window
         object sender,
         RoutedEventArgs e)
     {
-        if (_mediaLoadInProgress || _cutlistSearchInProgress || !IsEnabled) return;
+        if (_mediaLoadInProgress || _cutlistSearchInProgress || _ratingTransitionInProgress || !IsEnabled) return;
 
         var mediaDuration =
             _viewModel.MediaDuration;
@@ -1710,16 +1667,16 @@ public partial class MainWindow : Window
             return;
         }
 
-        LoadCutlistFromFile(
+        await LoadCutlistFromFile(
             dialog.FileName,
             mediaDuration.Value,
             rememberAsUploadCandidate: true);
     }
-    private void LoadCutlistFromFile(string fileName, TimeSpan mediaDuration, bool rememberAsUploadCandidate)
+    private async Task LoadCutlistFromFile(string fileName, TimeSpan mediaDuration, bool rememberAsUploadCandidate)
     {
         try
         {
-            LoadCutlistDocument(CutlistFileReader.Read(fileName), mediaDuration,
+            await LoadCutlistDocument(CutlistFileReader.Read(fileName), mediaDuration,
                 rememberAsUploadCandidate ? Path.GetFullPath(fileName) : null);
         }
         catch (Exception exception)
@@ -1728,7 +1685,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void LoadCutlistDocument(CutlistDocument document, TimeSpan mediaDuration, string? uploadCandidatePath)
+    private async Task LoadCutlistDocument(CutlistDocument document, TimeSpan mediaDuration, string? uploadCandidatePath, CutlistRatingSource? serverSource = null)
     {
         try
         {
@@ -1816,6 +1773,7 @@ public partial class MainWindow : Window
             }
 
             if (!ConfirmCutlistReplacement()) return;
+            if (!await ConfirmRatingDepartureAsync(serverSource) || _isClosed || _shutdownStarted) return;
             var namingState = _cutNamingState;
 
             var suggestedMovieName =
@@ -1840,6 +1798,8 @@ public partial class MainWindow : Window
             }
 
             _cutPlanViewModel.LoadCutPlan(cutPlan);
+            _cutlistRatings.Use(serverSource, _viewModel.FilePath,
+                new CutlistSettingsStore().Load()?.DefaultAuthor ?? string.Empty, document.Info.Author);
             _cutNamingState = namingState;
             _lastSavedCutlistFilePath = uploadCandidatePath;
 
@@ -2321,8 +2281,10 @@ public partial class MainWindow : Window
 
     private async Task LoadMediaFileCoreAsync(string mediaPath)
     {
+        if (!await ConfirmRatingDepartureAsync() || _isClosed || _shutdownStarted) return;
         var editingSettings = await Task.Run(() => new AppearanceSettingsStore().Load(), _mediaInputCancellation.Token);
         if (_isClosed || _mediaInputCancellation.IsCancellationRequested) return;
+        _cutlistRatings.Clear();
         ++_cutlistMediaGeneration;
         _logger.Information($"Mediendatei wurde ausgewählt: {mediaPath}");
 

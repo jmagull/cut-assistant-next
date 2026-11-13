@@ -1,0 +1,19 @@
+<Window x:Class="CutAssistantNext.App.Dialogs.CutlistRatingQuestionDialog" x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Verwendete Cutlist bewerten" Width="640" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" Background="#F4F6F8">
+    <StackPanel Margin="22">
+        <TextBlock FontSize="22" FontWeight="SemiBold" Text="Cutlist bewerten?" />
+        <TextBlock Margin="0,12,0,8" TextWrapping="Wrap"
+                   Text="Möchtest du die verwendete Server-Cutlist vor dem Wechsel oder Beenden freiwillig bewerten?" />
+        <TextBlock x:Name="IdentityText" TextWrapping="Wrap" Margin="0,0,0,12" />
+        <TextBlock TextWrapping="Wrap" Foreground="#6B7280"
+                   Text="Überspringen setzt den begonnenen Vorgang ohne Bewertung fort. Abbrechen erhält die bisherige Schnittarbeit." />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button x:Name="RateButton" Content="Bewerten" Padding="14,8" Margin="0,0,10,0" Click="RateClick" />
+            <Button x:Name="SkipButton" Content="Überspringen" Padding="14,8" Margin="0,0,10,0" Click="SkipClick" />
+            <Button Content="Abbrechen" Padding="14,8" IsCancel="True" IsDefault="True" />
+        </StackPanel>
+    </StackPanel>
+</Window>

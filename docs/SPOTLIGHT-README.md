@@ -1,6 +1,6 @@
 # Spotlight-CAN – kurze Bedienung
 
-Spotlight-CAN ist Bestandteil von Cut Assistant Next 1.0.3 Build 54.
+Spotlight-CAN ist Bestandteil von Cut Assistant Next 1.0.3 Build 58.
 
 Spotlight hilft, Werbung anhand von Vorschaubildern grob zu finden und Schnittbereiche vorzubereiten. Die genaue Kontrolle und der eigentliche Filmschnitt erfolgen anschließend in Cut Assistant Next.
 
@@ -12,15 +12,21 @@ Spotlight hilft, Werbung anhand von Vorschaubildern grob zu finden und Schnittbe
 4. **Schnittbereiche an CAN übernehmen**. Vor dem Ersetzen vorhandener Schnittarbeit wird gefragt.
 5. In CAN die Grenzen mit Player und Frame-Lupe präzisieren, das Dateiende kontrollieren, Cutlist speichern und mit dem gewünschten Schnittmotor schneiden. Danach Bild, Ton, Schnittübergänge und Drei-Sekunden-Vorschau prüfen.
 
-## Wichtig: letzter Bereich und tatsächliches Videoende
+## Schnitt bis Videoende abschließen
 
-**Ein Vorschaubild ist nicht automatisch das letzte Bild des Originalfilms.** Die Detailsuche verwendet standardmäßig **2 Sekunden Bildabstand**. Zwischen den angezeigten Bildern liegen weitere Filmframes; auch am Ende kann hinter dem letzten Rasterbild noch ein Rest liegen. Der Abstand lässt sich unter **Abstand (s)** ändern. Spotlight zeigt keine lückenlose Folge aller Filmframes.
+1. Das erste zu entfernende Bild auswählen.
+2. **Schnittbereich Beginn setzen** drücken. Der Beginn ist vorgemerkt.
+3. **Schnitt bis Videoende abschließen** drücken. Das Ende wird automatisch auf die tatsächliche Mediendauer gesetzt; kein weiteres Bild auswählen.
 
-**Wenn ein Schnittbereich bis zum tatsächlichen Dateiende reichen soll, nach der Übernahme in CAN den betreffenden letzten Bereich auswählen und mit „Videoende“ dessen Ende setzen.** Bei einem neu begonnenen Bereich erst den Anfang setzen und anschließend **Videoende** drücken. Dieser Button setzt die Schnittgrenze auf die vollständige Dateidauer, unabhängig vom letzten Spotlight-Vorschaubild.
+Der vollständige Entfernen-Bereich erscheint sofort in der Schnittbereichsliste und in der Laufzeitberechnung. Ohne offenen Beginn ist der Button deaktiviert. Bereits abgeschlossene Werbeblöcke bleiben erhalten; Überschneidungen werden abgewiesen. Der Bereich lässt sich wie jeder andere korrigieren oder mit **Bereich löschen** entfernen. Eine zusätzliche Behaltebild-Markierung oder ein separates „Videoende aufheben“ gibt es nicht mehr.
 
-Im roten Entfernen-Modus betrifft das beispielsweise die Nachlaufwerbung bis zum Ende des Originals. Im grünen Behalten-Modus nur dann bis **Videoende** verlängern, wenn dieser Rest tatsächlich erhalten bleiben soll. Die Farb-/Schnittarbeitsweise beachten; nicht versehentlich Werbung behalten.
+Beispiel: **02:00:03.560 bis 02:09:58.000** entfernt **00:09:54.440**. Die Übernahme nach CAN berücksichtigt wie bisher Rot/Entfernen und Grün/Behalten. [Umsetzung und Tests](SPOTLIGHT-VIDEOENDE-BUILD55.md).
 
-Der Zwei-Sekunden-Abstand ist eine normale Eigenschaft der groben Bildauswahl. Die Feinkorrektur einschließlich des exakten Videoendes gehört zum anschließenden CAN-Arbeitsschritt.
+Die Sekunden-Sprungsteuerung ist nach der persönlichen Prüfung aus Spotlight entfernt worden. Sie liegt jetzt direkt in der CAN-Hauptplayerleiste. Spotlight behält seine Bildauswahl und Detailsuche. Pfeiltasten werden hier nicht mehr speziell abgefangen. Mehr im [Korrekturbericht zu Build 55](PLAYER-SEKUNDEN-NAVIGATION-BUILD55.md).
+
+## Vorschaubilder und Dateigrenzen
+
+Die Detailsuche zeigt standardmäßig alle zwei Sekunden ein Vorschaubild. **Schnitt bis Videoende abschließen** verwendet die tatsächliche Dateidauer, unabhängig vom letzten Rasterbild. **Videoanfang** setzt die CAN-Grenze auf **00:00:00.000**. Nach der Übernahme kannst du die übrigen Schnittgrenzen im CAN-Player und mit der Frame-Lupe präzisieren.
 
 ## Fenster und Werkzeuge
 
@@ -28,4 +34,4 @@ Fenstergröße, Bildschirmposition und Maximierung werden beim Schließen gespei
 
 Spotlight verwendet den bereits in CAN geöffneten Film sowie die unter **Einstellungen → FFmpeg-Werkzeuge** eingerichteten Programme. Es besitzt keinen eigenen Player und keinen eigenen Schnittmotor. Für einen Filmwechsel zuerst Spotlight schließen.
 
-Gültig für Cut Assistant Next 1.0.3 Build 54. Die integrierte Fensterverwaltung wurde mit Build 53 persönlich erfolgreich geprüft und ist in Build 54 unverändert enthalten. Die finale Schnittkontrolle bleibt erforderlich. [Abnahme und Veröffentlichung](RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md).
+Die Bedienung gilt für die lokale Prüffassung 1.0.3 Build 58. [Videoende und Prüfungen](SPOTLIGHT-VIDEOENDE-BUILD55.md)

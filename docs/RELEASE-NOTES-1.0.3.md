@@ -1,3 +1,24 @@
+# Release Notes – Cut Assistant Next 1.0.3 Build 58
+
+## Cut Assistant Next 1.0.3 Build 58 – vorbereiteter Release-Kandidat
+
+Die lokale Prüffassung hat die Dateiversion **1.0.3.58** und ist für die abschließende Paketfreigabe vorbereitet. Die öffentliche GitHub-Latest-Version ist weiterhin [Build 54](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54).
+
+- **MP4Box:** CAN importiert das erste Segment mit `-add`, hängt weitere mit `-cat` an und erzeugt die Ausgabe mit `-new`. Zuvor konnte GPAC bei gleichartigen AAC-Spuren beide Eingabespuren einer Zielspur zuordnen. Geprüft sind AAC, AAC+AC-3, AAC+AAC und AC-3+AC-3. Die bekannten Keyframe-Werbeblitzer können weiterhin auftreten. [Ursache, Paketvergleich und Praxistests](MP4BOX-WILD-CARD-ZUSAMMENFUEHRUNG-BUILD56.md)
+- **Spotlight-CAN:** Einen offenen Entfernen-Bereich mit **Schnitt bis Videoende abschließen** bis zur tatsächlichen Dateidauer schließen. **Videoanfang** in CAN setzt die Grenze auf **00:00:00.000**. [Bedienung](SPOTLIGHT-README.md)
+- **Cutlist-Bewertung:** Übernommene fremde Cutlists beim Wechsel oder Beenden freiwillig bewerten. Im persönlichen Test wurden die serverseitige Bewertung, ihre dauerhafte Anzeige und das Entfernen aus der Liste unbewerteter Downloads bestätigt. [Bewertungsablauf](CUTLIST-BEWERTUNG-BUILD55.md)
+- **Schnittshuffle:** Einen vollständigen roten oder grünen Schnittbereich auswählen und mit **←** oder **→** zu seiner Grenze springen. Auswahl, Bearbeitungskante und gespeicherte Grenzen bleiben erhalten. [Schnittshuffle in den drei Ansichten](SCHNITTSHUFFLE-BUILD57.md)
+- **Hauptplayer am Filmende:** Die Datei bleibt am tatsächlichen Ende geladen und der Player pausiert. Mit dem Slider zurück in den Film springen und Play betätigen. Der Anwender hat den Ablauf mit einem Realfilm in Build 58 bestätigt. [Fehleranalyse und Praxistest](PLAYER-FILMENDE-BUILD58.md)
+- **Namensmaske:** Bei fremden Cutlists bleibt der übernommene Namensvorschlag zunächst erhalten. **Aus obigen Eingaben neu erzeugen** verwendet die aktuell gespeicherte Standardmaske. Bei eigenen Cutlists die gewünschten Namensbestandteile ausfüllen. Der Ausgabedateiname bleibt im Schneidedialog frei bearbeitbar.
+- **Weiter verfügbar:** Rot/Grün-Modus, Power-User 2, lokale und serverseitige Cutlist-Suche, Frame-Lupe, Halbierungssuche sowie otr-can mit den bestehenden Optionen zur Tonspur-Abwahl und AAC-Reparatur.
+
+**Prüfbasis.** Der Anwender hat die MP4Box-Schnitte und Cutlist-Bewertung in Build 56 sowie Schnittshuffle und die Playerkorrektur in Build 58 persönlich bestätigt. Die Paketprüfung wird im separaten Paketbericht dokumentiert. [Prüfhinweise](PRUEFHINWEISE-BUILD58.md)
+
+**Pakete:** Windows-x64-Setup, Portable-ZIP, CAN-Quellen mit vollständigem Spotlight-CAN, passende Motorquellen, libmpv-Quellen und Relink-Archiv sowie Prüfsummen. Windows 11 x64, .NET 10 Desktop Runtime x64 und für otr-can Visual C++ v14 Redistributable x64 separat einrichten. Die Programme FFmpeg, ffprobe, MP4Box und FFMS2 bleiben extern.
+
+<details>
+<summary>Veröffentlichter Build 54 und frühere Prüfstände</summary>
+
 # Release Notes – Cut Assistant Next 1.0.3 Build 54
 
 Stabile Version vom 08.11.2026, persönlich freigegeben. Gegenüber 1.0.2 Build 48:
@@ -87,5 +108,7 @@ Der Anwender bestätigt die gemeinsame Tabelle, Dauer und Downloadbeschriftung m
 **Santa Tell Me** ist inzwischen im grünen Modus mit vier Bereichen und **01:21:24.120** persönlich für Ton, Bild, Schnitt und Drei-Sekunden-Vorschau positiv gemeldet. MP4Box-/otr-can-Protokolle, gespeicherte Cutlist und Servereintrag liegen vor. [Praxisnachweis](SANTA-TELL-ME-GRUENER-PRAXISTEST-20261103.md). Die persönliche Wiederaufnahme gespeicherter begonnener Arbeit bleibt offen. Bestehende AVI-/Zeitstempel-/MP4Box-Grenzen bleiben gültig. Keine neue Setup-/Portable-/VM-Abnahme. Der anschließende Nutzerauftrag friert den korrigierten Stand ein und beauftragt Commit und Push. Kein Versions-/Buildsprung, Paketbau oder Release.
 
 [Bedienung](NUTZERANLEITUNG.md) · [Projektstand](AKTUELLER-STAND.md) · [Testplan](TESTPLAN.md) · [Tabelle: Umsetzung und Nachweise](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi: Umsetzung und Nachweise](SCHNITTMODI-TIMELINE-20261103.md)
+
+</details>
 
 </details>

@@ -20,6 +20,8 @@ internal sealed class WindowSettings
     public bool IsMaximized { get; init; }
 
     public double? Volume { get; init; }
+
+    public string? SeekStepSeconds { get; init; }
 }
 
 internal sealed class WindowSettingsStore

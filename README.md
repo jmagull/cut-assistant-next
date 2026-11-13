@@ -2,7 +2,19 @@
 
 Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Die Oberfläche verwendet WPF, die Wiedergabe mpv/libmpv – ohne DirectShow und ohne zusätzliche Windows-Codec-Pakete.
 
-## Aktuelle Version: 1.0.3 Build 54
+## Cut Assistant Next 1.0.3 Build 58 – vorbereiteter Release-Kandidat
+
+Die lokale Prüffassung hat die Dateiversion **1.0.3.58** und ist für die abschließende Paketfreigabe vorbereitet. Die öffentliche GitHub-Latest-Version ist weiterhin [Build 54](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54).
+
+- **MP4Box:** CAN importiert das erste Segment mit `-add`, hängt weitere mit `-cat` an und erzeugt die Ausgabe mit `-new`. Zuvor konnte GPAC bei gleichartigen AAC-Spuren beide Eingabespuren einer Zielspur zuordnen. Geprüft sind AAC, AAC+AC-3, AAC+AAC und AC-3+AC-3. Die bekannten Keyframe-Werbeblitzer können weiterhin auftreten. [Ursache, Paketvergleich und Praxistests](docs/MP4BOX-WILD-CARD-ZUSAMMENFUEHRUNG-BUILD56.md)
+- **Spotlight-CAN:** Einen offenen Entfernen-Bereich mit **Schnitt bis Videoende abschließen** bis zur tatsächlichen Dateidauer schließen. **Videoanfang** in CAN setzt die Grenze auf **00:00:00.000**. [Bedienung](docs/SPOTLIGHT-README.md)
+- **Cutlist-Bewertung:** Übernommene fremde Cutlists beim Wechsel oder Beenden freiwillig bewerten. Im persönlichen Test wurden die serverseitige Bewertung, ihre dauerhafte Anzeige und das Entfernen aus der Liste unbewerteter Downloads bestätigt. [Bewertungsablauf](docs/CUTLIST-BEWERTUNG-BUILD55.md)
+- **Schnittshuffle:** Einen vollständigen roten oder grünen Schnittbereich auswählen und mit **←** oder **→** zu seiner Grenze springen. Auswahl, Bearbeitungskante und gespeicherte Grenzen bleiben erhalten. [Schnittshuffle in den drei Ansichten](docs/SCHNITTSHUFFLE-BUILD57.md)
+- **Hauptplayer am Filmende:** Die Datei bleibt am tatsächlichen Ende geladen und der Player pausiert. Mit dem Slider zurück in den Film springen und Play betätigen. Der Anwender hat den Ablauf mit einem Realfilm in Build 58 bestätigt. [Fehleranalyse und Praxistest](docs/PLAYER-FILMENDE-BUILD58.md)
+- **Namensmaske:** Bei fremden Cutlists bleibt der übernommene Namensvorschlag zunächst erhalten. **Aus obigen Eingaben neu erzeugen** verwendet die aktuell gespeicherte Standardmaske. Bei eigenen Cutlists die gewünschten Namensbestandteile ausfüllen. Der Ausgabedateiname bleibt im Schneidedialog frei bearbeitbar.
+- **Weiter verfügbar:** Rot/Grün-Modus, Power-User 2, lokale und serverseitige Cutlist-Suche, Frame-Lupe, Halbierungssuche sowie otr-can mit den bestehenden Optionen zur Tonspur-Abwahl und AAC-Reparatur.
+
+## Öffentliche Version: 1.0.3 Build 54
 
 [**Release und Downloads**](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) · [Setup](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-win-x64-Setup.exe) · [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-win-x64.zip) · [Vollständige Quellen](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-source.zip)
 
@@ -10,7 +22,7 @@ Spotlight-CAN und die erweiterte Audiobehandlung sind Funktionen dieser einen CA
 
 ## Neu gegenüber 1.0.2
 
-- **Spotlight-CAN:** Werbeblöcke mit Vorschaubildern grob markieren, Original-/Entfernen-/Restdauer sehen und bestätigte Schnittbereiche direkt an CAN übergeben. Größe, Position und Maximierung werden über Programmstarts erhalten; Mehrmonitor-/DPI-Korrektur hält das Fenster sichtbar. Feinarbeit erfolgt in CAN. Beim Zwei-Sekunden-Bildraster das tatsächliche Dateiende bei Bedarf mit **Videoende** setzen.
+- **Spotlight-CAN:** Werbeblöcke mit Vorschaubildern grob markieren, Original-/Entfernen-/Restdauer sehen und bestätigte Schnittbereiche direkt an CAN übergeben. Größe, Position und Maximierung werden über Programmstarts erhalten; Mehrmonitor-/DPI-Korrektur hält das Fenster sichtbar. Feinarbeit erfolgt in CAN. Einen offenen Entfernen-Bereich in Spotlight mit **Schnitt bis Videoende abschließen** bis zur tatsächlichen Dateidauer schließen.
 - **Audiofehler:** Strenger normaler otr-can-Schnitt; beschädigte optionale Tonspur bei passenden Mehrspurdateien nach Prüfung und Bestätigung abwählen. Abbrechen und ausdrücklich bestätigter vollständiger MP4Box-Neustart bleiben verfügbar.
 - **AAC-Zeitlücken reparieren (experimentell):** Ausschließlich nach ausdrücklicher Zustimmung für unterstützte, nachgewiesene Lücken. Fehlende Zeitabschnitte werden positionsgenau mit Stille belegt; anschließend unabhängige vollständige Bild-/Ton-/Containerprüfung. Keine allgemeine Sampletoleranz, keine automatische Reparatur und keine Wiederherstellung verlorener Originaltöne.
 - **Schnittbearbeitung:** Gemeinsame Server-/Lokal-Cutlist-Auswahl, Rot/Entfernen oder Grün/Behalten, dynamische Vorschau und drei dauerhaft wählbare Ansichten einschließlich Power-User 2.

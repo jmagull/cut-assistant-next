@@ -11,7 +11,7 @@ public partial class MainWindow
     private VideoFileDropTarget? _videoDropTarget;
     private readonly CancellationTokenSource _mediaInputCancellation = new();
 
-    private bool CanOpenMedia => !_isClosed && !_shutdownStarted && !_mediaLoadInProgress &&
+    private bool CanOpenMedia => !_isClosed && !_shutdownStarted && !_ratingTransitionInProgress && !_mediaLoadInProgress &&
         !_spotlightInProgress && !_cutlistSearchInProgress && !_cutlistUploadInProgress && !_frameLoupeOpening &&
         !_cutOutputOpening && !_audioTrackCopyInProgress && !_joinInProgress && !_playerFrameSearch.IsNavigating && !_keyframeNavigation.IsNavigating && IsEnabled;
 
@@ -82,9 +82,9 @@ public partial class MainWindow
 
     private bool ConfirmMediaReplacement() => !MediaOpenRequest.NeedsReplacementConfirmation(
         _cutPlanViewModel.RemoveSegments.Count, _cutPlanViewModel.PendingStart.HasValue, _cutNamingState is not null) ||
-        MessageBox.Show(this,
+        (MediaReplacementPrompt?.Invoke() ?? MessageBox.Show(this,
             "Eine andere Videodatei laden und die aktuelle Schnittarbeit verwerfen? Bitte bei Bedarf vorher die Cutlist speichern.",
-            "Videodatei wechseln", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes;
+            "Videodatei wechseln", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes);
 
     private void ShowMediaInputError(Exception error)
     {

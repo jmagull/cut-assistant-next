@@ -1,21 +1,15 @@
 # Nutzeranleitung – Cut Assistant Next
 
-## Cut Assistant Next 1.0.3 Build 54 – stabile Version
+## Cut Assistant Next 1.0.3 Build 58 – vorbereiteter Release-Kandidat
 
-Aktueller gemeinsamer Stand im ursprünglichen Repository **cut-assistant-next**; nach ausdrücklicher persönlicher Freigabe vom **08.11.2026** in `main` übernommen und als stabile [GitHub-Latest-Version](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) veröffentlicht. Dateiversion **1.0.3.54**, libmpv **0.41.0**, mitgelieferter otr-can **0.1.6-audio-diag.1**. Alte Funktionszweige sind historische Quellen; es gibt eine gemeinsame CAN-Version.
+Die lokale Prüffassung hat die Dateiversion **1.0.3.58** und ist für die abschließende Paketfreigabe vorbereitet. Die öffentliche GitHub-Latest-Version ist weiterhin [Build 54](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54).
 
-Spotlight-CAN ist unter **Werkzeuge → Spotlight-CAN – Visuelle Werbesuche** integriert: Werbeblöcke anhand von Vorschaubildern grob markieren, bestätigte Schnittbereiche direkt an CAN übergeben und dort mit Player/Frame-Lupe präzisieren. Größe, Position und Maximierungszustand werden über CAN-Neustarts erhalten. Mehrmonitor-/DPI-Korrektur hält das Fenster bei geänderter Bildschirmkonfiguration sichtbar. Die Detailsuche hat standardmäßig zwei Sekunden Bildabstand; den letzten Bereich bei Bedarf in CAN mit **Videoende** bis zum tatsächlichen Dateiende abschließen.
-
-Der normale otr-can-Audiomodus prüft streng und verändert bei einem Fehler keine Samples. Bei geeigneten Befunden stehen Abbrechen, ein ausdrücklich bestätigter vollständiger MP4Box-Neustart, Tonspur-Abwahl bei Mehrspurdateien oder **AAC-Zeitlücken reparieren (experimentell)** zur Wahl. Die Reparatur benötigt ausdrückliche Zustimmung, ergänzt nur nachgewiesene unterstützte Lücken positionsgenau mit Stille und prüft den gesamten Schnitt unabhängig. Keine allgemeine Sampletoleranz, keine automatische Reparatur und keine Wiederherstellung verlorener Originaltöne.
-
-Der passende Motor liegt ausschließlich unter **`tools/otr-can/otr_can.exe`** relativ zur Anwendung; gespeicherte Werkzeugpfade werden nicht überschrieben. Für eine ZIP den vollständigen Inhalt in einen frischen Ordner entpacken. Die Portable-Fassung verwendet wie das Setup CANs Benutzereinstellungen unter dem lokalen Windows-Benutzerprofil. Beim Setup-Upgrade können alte `runtime`-Dateien verbleiben; sie werden nicht verwendet.
-
-Voraussetzungen: **Windows 11 x64**, **.NET 10 Desktop Runtime x64**, für otr-can **Microsoft Visual C++ v14 Redistributable x64**. FFmpeg/ffprobe, GPAC/MP4Box und FFMS2/ffmsindex separat einrichten; keine Windows-Codec-Pakete erforderlich. Windows 10 ist nicht persönlich validiert. Bild, jede Tonspur und Schnittübergänge weiterhin selbst kontrollieren. QUICK AND COPY führt keine samplegenaue Tonprüfung aus; AVI bleibt experimentell.
-
-**Cut Assistant Next 1.0.3 Build 54 wurde persönlich erfolgreich geprüft.** Insbesondere Setup in der Windows-VM: Grey’s Anatomy regulär sowie NCIS Sydney – Breathless, S02E07 nach ausdrücklich bestätigter AAC-Reparatur; Bild, Ton und Drei-Sekunden-Vorschau positiv. Die weitergehende persönliche Setup-/ZIP-/Spotlight-/Mehrspur-/Klebecenter-Abnahme von Build 53 bleibt separat zugeordnet.
-
-[Downloads](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) · [Release Notes](RELEASE-NOTES-1.0.3.md) · [Spotlight-Anleitung](SPOTLIGHT-README.md) · [Abnahme und Veröffentlichung](RELEASE-1.0.3-BUILD54-PUBLISHED-20261108.md). Die folgenden datierten Entwicklungsstände und alten Prüffassungen sind historische Nachweise, keine aktuelle Installationsanleitung.
-
+- **MP4Box:** CAN importiert das erste Segment mit `-add`, hängt weitere mit `-cat` an und erzeugt die Ausgabe mit `-new`. Zuvor konnte GPAC bei gleichartigen AAC-Spuren beide Eingabespuren einer Zielspur zuordnen. Geprüft sind AAC, AAC+AC-3, AAC+AAC und AC-3+AC-3. Die bekannten Keyframe-Werbeblitzer können weiterhin auftreten. [Ursache, Paketvergleich und Praxistests](MP4BOX-WILD-CARD-ZUSAMMENFUEHRUNG-BUILD56.md)
+- **Spotlight-CAN:** Einen offenen Entfernen-Bereich mit **Schnitt bis Videoende abschließen** bis zur tatsächlichen Dateidauer schließen. **Videoanfang** in CAN setzt die Grenze auf **00:00:00.000**. [Bedienung](SPOTLIGHT-README.md)
+- **Cutlist-Bewertung:** Übernommene fremde Cutlists beim Wechsel oder Beenden freiwillig bewerten. Im persönlichen Test wurden die serverseitige Bewertung, ihre dauerhafte Anzeige und das Entfernen aus der Liste unbewerteter Downloads bestätigt. [Bewertungsablauf](CUTLIST-BEWERTUNG-BUILD55.md)
+- **Schnittshuffle:** Einen vollständigen roten oder grünen Schnittbereich auswählen und mit **←** oder **→** zu seiner Grenze springen. Auswahl, Bearbeitungskante und gespeicherte Grenzen bleiben erhalten. [Schnittshuffle in den drei Ansichten](SCHNITTSHUFFLE-BUILD57.md)
+- **Hauptplayer am Filmende:** Die Datei bleibt am tatsächlichen Ende geladen und der Player pausiert. Mit dem Slider zurück in den Film springen und Play betätigen. Der Anwender hat den Ablauf mit einem Realfilm in Build 58 bestätigt. [Fehleranalyse und Praxistest](PLAYER-FILMENDE-BUILD58.md)
+- **Namensmaske:** Bei fremden Cutlists bleibt der übernommene Namensvorschlag zunächst erhalten. **Aus obigen Eingaben neu erzeugen** verwendet die aktuell gespeicherte Standardmaske. Bei eigenen Cutlists die gewünschten Namensbestandteile ausfüllen. Der Ausgabedateiname bleibt im Schneidedialog frei bearbeitbar.
 
 ## Installation und ZIP
 
@@ -43,7 +37,7 @@ Bei zu schmalem Fenster verwendet CAN vorübergehend Standard und kehrt bei ausr
 
 ## Geltungsstand
 
-Diese Anleitung gilt für die stabile Version **1.0.3 Build 54**. Die datierten Angaben „ab Build …“ kennzeichnen die Einführung einer weiterhin enthaltenen Funktion. Alte Praxis- und Paketberichte bleiben historische Nachweise. Für die aktuelle Installation sind die oben genannten Voraussetzungen, `tools/otr-can` und die mitgelieferte `VORAUSSETZUNGEN.txt` maßgeblich.
+Diese Anleitung beschreibt die lokale Prüffassung **1.0.3 Build 58**. Für die veröffentlichte Ausgabe **Build 54** gilt der Funktionsstand ihrer Release-Dokumentation. Die datierten Angaben „ab Build …“ kennzeichnen die Einführung einer weiterhin enthaltenen Funktion. Alte Praxis- und Paketberichte bleiben historische Nachweise. Für die aktuelle Installation sind die oben genannten Voraussetzungen, `tools/otr-can` und die mitgelieferte `VORAUSSETZUNGEN.txt` maßgeblich.
 
 Unter **Einstellungen → Darstellung und Schnittbearbeitung …** die Arbeitsweise wählen, übernehmen und den Film neu öffnen. Rot markiert zu entfernende, Grün zu behaltende Teile. Eine begonnene Markierung folgt dem Slider; **Esc** verwirft nur diesen offenen Anfang. Kapitel 3 bis 5 erläutern gemeinsame Cutlist-Auswahl und sicheres Speichern.
 
@@ -368,6 +362,12 @@ Cutlists aus anderen Formaten können dieselbe Timeline beschreiben. Deshalb wer
 
 Leere Bereiche mit exakt null Dauer werden beim Import ignoriert. Die übrigen gültigen Bereiche bleiben erhalten; die Cutlist-Datei auf der Festplatte wird dabei nicht verändert. Widersprüchliche oder negative Angaben bleiben Fehler. Schnittpositionen hinter dem tatsächlichen Videoende werden geprüft; erkannte kurze Endfragmente können über den vorhandenen Korrekturdialog behandelt werden.
 
+### Verwendete Server-Cutlist bewerten (lokaler Build 55)
+
+Nach dem tatsächlichen Laden einer Server-Cutlist kannst du sie beim Wechsel zu einer anderen Cutlist, beim Filmwechsel oder beim Beenden freiwillig bewerten. **Bewerten** öffnet die sechs Stufen 0–5 ohne Vorauswahl; erst **Absenden** übermittelt. Autor, Original-ID und Film stehen im Dialog. **Überspringen** setzt ohne Bewertung fort; **Abbrechen** erhält die bisherige Schnittarbeit. Bestehende Rückfragen zum Verwerfen bleiben erhalten.
+
+Eigene Cutlists mit passendem Standardautor, lokale Dateien, reine Suchtreffer und unbenutzte Downloads werden nicht angeboten. Eine nachträgliche Korrektur der Schnitte löscht die ursprüngliche Serverherkunft nicht. Nach Erfolg steht „Bewertung an den Server übermittelt.“ im Dialog. Bei Fehlern kannst du zur Schnittarbeit zurückkehren. Bereits gespeicherte Versandversuche werden auch nach Neustart nicht erneut angeboten; bei unklarem Ergebnis gibt es keinen automatischen oder versehentlichen zweiten Versand. Eine manuelle Wiederholung wird derzeit nicht angeboten. [Prüfbericht und Einschränkungen](CUTLIST-BEWERTUNG-BUILD55.md).
+
 ## 4. Schnittmarken bearbeiten
 
 **Rot – „Das kann weg“** ist der Standard: Vorlauf, Werbung, Nachlauf oder andere unerwünschte Teile markieren. **Grün – „Das soll bleiben“** steht in der lokalen 1.0.3 zusätzlich zur Verfügung: die gewünschten Filmteile markieren. Timeline und Tabelle zeigen in beiden Fällen genau die markierten Bereiche.
@@ -382,7 +382,7 @@ Die Arbeitsweise unter **Einstellungen → Darstellung und Schnittbearbeitung �
 
 Rückwärtsziehen ist zur Orientierung möglich; ein Ende vor dem Anfang bleibt ungültig. Fertige Bereiche bleiben bei diesem Fehler und beim Abbruch erhalten. In 1.0.2 steht nur die bisherige rote Bedienung zur Verfügung.
 
-Mit **Videoanfang** bzw. **Videoende** kannst du die entsprechende Dateigrenze verwenden. Bestehende Bereiche lassen sich in der Tabelle oder Timeline auswählen und korrigieren. **Bereich löschen** entfernt die ausgewählte Markierung aus dem Schnittplan; es löscht keine Videodatei.
+**Videoanfang** setzt die Schnittgrenze auf **00:00:00.000**, **Videoende** auf die tatsächliche Dateidauer. Bestehende Bereiche lassen sich in der Tabelle oder Timeline auswählen und korrigieren. **Bereich löschen** entfernt die ausgewählte Markierung aus dem Schnittplan; es löscht keine Videodatei.
 
 Ein Klick auf einen Schnittbereich wählt ihn aus und hebt ihn hervor. Ein erneuter Klick auf denselben Bereich hebt die Auswahl wieder auf – sowohl in der Timeline als auch in jeder Tabellenzelle. Ein Klick auf eine andere Zeile wechselt die Auswahl; Timeline und Tabelle bleiben synchron. In der Schnittliste werden Anfang, Ende und Dauer einheitlich als Stunden:Minuten:Sekunden mit drei Nachkommastellen dargestellt. Die interne Genauigkeit der Schnittmarken wird dadurch nicht verändert.
 
@@ -390,7 +390,7 @@ Ein Klick auf **Anfang** oder **Ende** springt zusätzlich weiterhin an die jewe
 
 Ein Klick auf die Zeitleiste oder die farbige Schnitt-Timeline setzt die Wiedergabeposition und den Slider direkt auf die gewählte Stelle. Bei markierten roten oder grünen Bereichen wird zusätzlich die Auswahl umgeschaltet. Das Ziehen des Reglers bleibt möglich.
 
-Play/Pause, Zeitleiste, **−10 Bilder**, **Bild zurück**, **Bild vor** und **+10 Bilder** helfen bei der Positionierung. Einzelbildschritte sind im pausierten Zustand verfügbar. Tastatur: Leertaste für Play/Pause, Pfeil links/rechts für ein Bild, Strg+Pfeil links/rechts für zwanzig Bilder. Mit Strg verwenden auch die größeren Bildschritt-Buttons zwanzig Bilder.
+In der korrigierten lokalen Build-55-Fassung folgen auf **Play/Pause** die Sekundensteuerung **← · Sprungweite · →**, danach **Bild zurück**, **Bild vor** und die Keyframe-Tasten. Die Sekundensteuerung ersetzt die bisherigen **−10/+10 Bilder**-Buttons. Standard 10 Sekunden, Auswahl 1/5/10/30/60; positive eigene Werte mit Punkt oder Komma sind möglich. Die Auswahl wird mit den CAN-Fenstereinstellungen gespeichert. Sprünge sind auf die Datei begrenzt und erhalten den Play/Pause-Zustand. Einzelbildschritte bleiben im pausierten Zustand verfügbar. Tastatur: Leertaste für Play/Pause, Pfeil links/rechts für ein Bild. Die alte 10-/20-Bilder-Mehrbildsteuerung ist entfernt. In der lokalen Ergänzung vom 10.11.2026 springen **Strg+Links/Rechts** im Hauptplayer zum vorherigen/nächsten Keyframe, sofern verfügbar. Eingabefelder behalten ihre Pfeiltasten. Strg verändert die Sekunden-Sprungweite nicht.
 
 Die Anzeige **Geschnitten** ist eine Vorschau der geplanten Ausgabelaufzeit. Im grünen Modus zählt sie ausschließlich die markierten Behaltebereiche; noch unmarkierte Filmteile werden bei der Ausgabe weggelassen. Vor Speichern oder Schneiden nennt eine Rückfrage Anzahl und Dauer und verlangt die bewusste Bestätigung dieser Auswahl. Prüfe das tatsächliche Schnittergebnis im Player; Schnittmotor und Videostruktur können die exakten Grenzen beeinflussen.
 
@@ -415,7 +415,7 @@ Rechtsklick auf Anfang: 3 Sekunden zurück. Rechtsklick auf Ende: 3 Sekunden vor
 
 ### Keyframes im Hauptfenster – ab Build 30 RC3
 
-Nach dem Laden einer MP4 analysiert CAN Keyframes im Hintergrund. Bei langen Aufnahmen kann das einige Zeit dauern; die normale Wiedergabe bleibt verfügbar. **◀ K** und **K ▶** neben den Bildschritten sind bis zum Abschluss deaktiviert; ihr Tooltip zeigt den Zustand. Anschließend springen sie zum vorherigen/nächsten analysierten Keyframe und pausieren die Wiedergabe. Die blauen Bereiche am oberen Rand der Schnitt-Timeline markieren diese Positionen; die roten Entfernungs- beziehungsweise grünen Behaltebereiche bleiben erhalten. Mehrere Keyframes können bei langen Filmen in derselben Bildspalte liegen.
+Nach dem Laden einer MP4 analysiert CAN Keyframes im Hintergrund. Bei langen Aufnahmen kann das einige Zeit dauern; die normale Wiedergabe bleibt verfügbar. **◀ K** und **K ▶** neben den Bildschritten sind bis zum Abschluss deaktiviert; ihr Tooltip zeigt den Zustand. Anschließend springen sie zum vorherigen/nächsten analysierten Keyframe und pausieren die Wiedergabe. In der lokalen Build-55-Ergänzung vom 10.11.2026 geht dies auch mit **Strg + ←** beziehungsweise **Strg + →**. Die Tooltips zeigen die Kürzel und weiterhin den aktuellen Status oder Fehler. Texteingaben behalten ihre Tastenkombinationen; in der Frame-Lupe gelten deren eigene Belegungen unverändert. Die blauen Bereiche am oberen Rand der Schnitt-Timeline markieren diese Positionen; die roten Entfernungs- beziehungsweise grünen Behaltebereiche bleiben erhalten. Mehrere Keyframes können bei langen Filmen in derselben Bildspalte liegen.
 
 **(K)** neben der Framenummer erscheint nur auf einem zugeordneten Keyframe im pausierten Zustand. Nach einem Bildschritt oder während eines Sprungs verschwindet es. Die Navigation verändert keine Schnittmarken. Fehlende oder unsichere Zeitinformationen geben keine Keyframe-Navigation frei.
 
@@ -445,7 +445,7 @@ Klicke in der Schnitttabelle auf die **Startzeit oder Endzeit** und drücke **Sh
 **Ab Build 30 RC3:** Mit **Frame-Lupe** in der Schnittliste oder **Shift+F** kannst du auch ohne ausgewählte Kante untersuchen. Navigiere im Hauptplayer zur gewünschten Stelle. Die Lupe öffnet im **Untersuchungsmodus** an der vom Player gemeldeten erreichten Position; der Sliderwert allein ist nicht maßgeblich. Vorschau, Bildschritte, Suche und Frame-Details bleiben verfügbar. **Schnittkante übernehmen** ist deaktiviert; die Schnittliste und ein vorgemerkter Anfang bleiben unverändert. Das gilt auch bei vorhandenen, aber abgewählten Bereichen oder einer ausgewählten Zeile ohne Start-/Endkante. Mit ausgewählter Kante öffnet weiterhin die bisherige Kantenbearbeitung. [Entwicklungsprüfung](FRAME-LUPE-UNTERSUCHUNGSMODUS-20261014.md), [veröffentlichte Pakete](RELEASE-PUBLICATION-BUILD30-RC3.md).
 
 - **Links/Rechts** und die Buttons **−1/+1**: ein tatsächlich analysierter Frame.
-- **−10/+10**: zehn Frames; mit Strg zwanzig. **Strg+Links/Rechts**: zwanzig Frames.
+- **−10/+10**: zehn analysierte Frames; mit Strg zwanzig. **Strg+Links/Rechts**: zwanzig Frames. Diese Belegung gilt in der Frame-Lupe. Die neue Keyframe-Belegung gilt ausschließlich im CAN-Hauptplayer.
 - **Umschalt+Links/Rechts** oder die beiden Suchbuttons: richtungsabhängige Suche ab **Build 27**. Der erste Sprung verwendet den eingestellten Startwert, standardmäßig 2000 Frames. Gleiche Richtung behält den Wert; erst ein Richtungswechsel halbiert ihn, bereits für den Sprung in die Gegenrichtung. Beispiel: **+2000 → +2000 → −1000 → −1000 → +500**. Minimum 1 Frame; die beiden Buttons zeigen ihre jeweilige nächste Sprungweite an.
 - **Suche neu starten** setzt Suchweite und gemerkte Suchrichtung zurück. Normale Bildschritte verändern beides nicht. Fehlgeschlagene, abgebrochene oder an der Dateigrenze bewegungslose Suchsprünge verbrauchen keine Halbierung.
 - Unter **Einstellungen → Frame-Lupe** lässt sich der Startwert ändern; er gilt beim nächsten Öffnen.

@@ -55,6 +55,58 @@ public sealed class SpotlightMediaSessionTests : IDisposable
         Assert.Equal(T(7), editor.EstimatedOutputDuration); Assert.Equal(mode, editor.EditingMode);
         if (mode == CutEditingMode.Keep) Assert.Equal([1d, 5d], editor.MarkedSegments.Select(s => s.Start.TotalSeconds));
     }
+    [Theory]
+    [InlineData(CutEditingMode.Remove, false)]
+    [InlineData(CutEditingMode.Remove, true)]
+    [InlineData(CutEditingMode.Keep, false)]
+    [InlineData(CutEditingMode.Keep, true)]
+    public async Task NineBlocksAndOptionalEndReachCanWithoutLosingRanges(CutEditingMode mode, bool markEnd)
+    {
+        var analysis = Analysis() with { Duration = T(120) };
+        using var session = await SpotlightMediaSession.CaptureAsync(new(Source, analysis, 4));
+        var editor = new CutPlanViewModel(); editor.Initialize(T(120), mode);
+        var blocks = Enumerable.Range(0, 9).Select(i => S(5 + 10 * i, 7 + 10 * i)).ToArray();
+        var complete = SpotlightCan.Core.CutPlan.Validate(markEnd ? blocks.Append(new SpotlightSegment(TimeSpan.FromMilliseconds(95040), T(120))) : blocks, T(120));
+        Assert.True(session.TryApply(complete, editor, () => true, () => true));
+        Assert.Equal(complete.Select(s => (s.Start, s.End)), editor.CreateCutPlanSnapshot().RemoveSegments.Select(s => (s.Start, s.End)));
+        Assert.Equal(markEnd ? TimeSpan.FromMilliseconds(77040) : T(102), editor.EstimatedOutputDuration);
+    }
+
+    [Theory]
+    [InlineData(CutEditingMode.Remove, false)]
+    [InlineData(CutEditingMode.Remove, true)]
+    [InlineData(CutEditingMode.Keep, false)]
+    [InlineData(CutEditingMode.Keep, true)]
+    public async Task PracticalEofCaseReachesCorrectRedOrGreenPlan(CutEditingMode mode, bool previousAds)
+    {
+        var duration = SpotlightCan.Core.TimeText.Parse("02:09:58.000");
+        var start = SpotlightCan.Core.TimeText.Parse("02:00:03.560");
+        using var session = await SpotlightMediaSession.CaptureAsync(new(Source, Analysis() with { Duration = duration }, 4));
+        var model = new SpotlightCan.App.MainViewModel(); await model.SetMediaAsync(session.Media);
+        try
+        {
+            if (previousAds) { model.Blocks.Add(S(2, 4)); model.Blocks.Add(S(8, 10)); }
+            model.PositionText = "02:00:03.560"; model.MarkStart(); model.CompleteToVideoEnd();
+            var complete = model.CreateTransferSnapshot();
+            Assert.Equal(new(start, duration), complete.Last());
+            Assert.Equal(SpotlightCan.Core.TimeText.Parse("00:09:54.440"), complete.Last().End - complete.Last().Start);
+            var editor = new CutPlanViewModel(); editor.Initialize(duration, mode);
+            Assert.True(session.TryApply(complete, editor, () => true, () => true));
+            Assert.Equal(complete.Select(s => (s.Start, s.End)), editor.CreateCutPlanSnapshot().RemoveSegments.Select(s => (s.Start, s.End)));
+            Assert.Equal(start - (previousAds ? T(4) : TimeSpan.Zero), editor.EstimatedOutputDuration);
+            Assert.Equal(model.Runtime.Remaining, editor.EstimatedOutputDuration);
+            Assert.Equal(mode == CutEditingMode.Keep, editor.IsKeepMode);
+            if (mode == CutEditingMode.Keep)
+            {
+                var expected = SpotlightCan.Core.CutPlan.Complement(complete, duration);
+                Assert.Equal(expected.Select(s => (s.Start, s.End)), editor.MarkedSegments.Select(s => (s.Start, s.End)));
+                Assert.Equal(start, editor.MarkedSegments.Last().End);
+            }
+            else Assert.Equal(complete.Select(s => (s.Start, s.End)), editor.MarkedSegments.Select(s => (s.Start, s.End)));
+        }
+        finally { await model.CloseAsync(); }
+    }
+
     [Fact]
     public async Task DeclinedConfirmationPreservesIdentitySelectionAndOpenStart()
     {

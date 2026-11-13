@@ -275,7 +275,10 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
                 CreateNoWindow = true
             };
 
-        foreach (var segmentFilePath in fullSegmentFilePaths)
+        startInfo.ArgumentList.Add("-add");
+        startInfo.ArgumentList.Add(fullSegmentFilePaths[0]);
+
+        foreach (var segmentFilePath in fullSegmentFilePaths.Skip(1))
         {
             startInfo.ArgumentList.Add(
                 "-cat");
@@ -284,6 +287,7 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
                 segmentFilePath);
         }
 
+        startInfo.ArgumentList.Add("-new");
         startInfo.ArgumentList.Add(
             fullOutputFilePath);
 
@@ -301,7 +305,7 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
             $"MP4Box-Aufruf: {commandLine}");
 
         _logger.Information(
-            $"MP4Box -cat wird gestartet: {fullSegmentFilePaths.Count} Segment(e).");
+            $"MP4Box -add/-cat wird gestartet: {fullSegmentFilePaths.Count} Segment(e).");
 
         using var process =
             new Process
@@ -372,7 +376,7 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
                     errorOutput.Trim());
 
             _logger.Error(
-                "MP4Box -cat ist fehlgeschlagen.",
+                "MP4Box -add/-cat ist fehlgeschlagen.",
                 exception);
 
             throw exception;
@@ -397,6 +401,6 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
         }
 
         _logger.Information(
-            "MP4Box -cat wurde erfolgreich abgeschlossen.");
+            "MP4Box -add/-cat wurde erfolgreich abgeschlossen.");
     }
 }

@@ -79,6 +79,10 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public bool CanModifySelectedSegment =>
         SelectedRemoveSegment is not null;
 
+    public bool CanShuffleSelectedSegment =>
+        PendingStart is null && MediaDuration is { } duration &&
+        SelectedRemoveSegment is { } segment && segment.End <= duration && RemoveSegments.Contains(segment);
+
     public CutEdgeSide? SelectedEdgeSide { get; private set; }
 
     public TimeSpan? SelectedEdgePosition =>
@@ -114,6 +118,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
 
             OnPropertyChanged();
             OnPropertyChanged(nameof(CanModifySelectedSegment));
+            OnPropertyChanged(nameof(CanShuffleSelectedSegment));
             OnPropertyChanged(nameof(CanSetStart));
             OnPropertyChanged(nameof(CanSetEnd));
             PublishEdgeSelectionChanges();
@@ -226,6 +231,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
 
             OnPropertyChanged();
             OnPropertyChanged(nameof(PendingStartText));
+            OnPropertyChanged(nameof(CanShuffleSelectedSegment));
             OnPropertyChanged(nameof(CanSetEnd));
         }
     }
