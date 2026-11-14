@@ -100,6 +100,9 @@ Copy-Item -LiteralPath (Join-Path $repo 'docs\SPOTLIGHT-README.md') -Destination
 $reviewNotes = if ($BuildNumber -eq 54) { 'docs\PFADUMSTELLUNG-BUILD54-20261108.md' } else { "docs\PRUEFHINWEISE-BUILD$BuildNumber.md" }
 if (-not (Test-Path -LiteralPath (Join-Path $repo $reviewNotes) -PathType Leaf)) { throw "Missing review notes for Build $BuildNumber." }
 Copy-Item -LiteralPath (Join-Path $repo $reviewNotes) -Destination (Join-Path $publish 'PRUEFHINWEISE.md')
+if ($BuildNumber -ge 60) {
+    Copy-Item -LiteralPath (Join-Path $repo 'docs\CUTLIST-ENDGRENZEN.md') -Destination $publish
+}
 if ($BuildNumber -eq 58) {
     foreach ($name in @('PRUEFHINWEISE-BUILD58.md', 'SCHNITTSHUFFLE-BUILD57.md', 'PLAYER-FILMENDE-BUILD58.md',
         'MP4BOX-WILD-CARD-ZUSAMMENFUEHRUNG-BUILD56.md', 'CUTLIST-BEWERTUNG-BUILD55.md', 'SPOTLIGHT-VIDEOENDE-BUILD55.md')) {
