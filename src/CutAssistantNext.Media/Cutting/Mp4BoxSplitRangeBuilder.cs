@@ -2,7 +2,10 @@ namespace CutAssistantNext.Media.Cutting;
 
 public sealed record Mp4BoxSplitRange(
     TimeSpan Start,
-    TimeSpan End);
+    TimeSpan End)
+{
+    public TimeSpan? RequestedEnd { get; init; }
+}
 
 public static class Mp4BoxSplitRangeBuilder
 {
@@ -35,11 +38,14 @@ public static class Mp4BoxSplitRangeBuilder
             TimeSpan.FromSeconds(
                 1d / framesPerSecond);
 
-        var end =
-            start + duration - frameDuration;
+        var requestedEnd = start + duration;
+        var end = requestedEnd - frameDuration;
+        // One frame is a valid keep interval. Pass its exclusive end when the usual adjustment collapses it.
+        if (!Mp4BoxSplitRangeFormatter.HasIncreasingBounds(new(start, end)))
+            end = requestedEnd;
 
         return new Mp4BoxSplitRange(
             start,
-            end);
+            end) { RequestedEnd = requestedEnd };
     }
 }

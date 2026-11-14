@@ -111,7 +111,7 @@ public sealed class CutlistEndFragmentDetectorTests
     }
 
     [Fact]
-    public void Find_WithTwoFrameFragmentEndingOneFrameBeyondMediaEnd_ReturnsFragment()
+    public void Find_WithTwoFrameFragmentEndingOneFrameBeyondMediaEnd_IsNotAValidFragment()
     {
         var cuts =
             new[]
@@ -140,8 +140,6 @@ public sealed class CutlistEndFragmentDetectorTests
                 document,
                 TimeSpan.FromSeconds(100));
 
-        Assert.Same(
-            cuts[1],
-            fragment);
+        Assert.Null(fragment);
     }
 }

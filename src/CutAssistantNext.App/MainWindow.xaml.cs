@@ -18,6 +18,7 @@ using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Editing;
 using CutAssistantNext.Core.Logging;
+using CutAssistantNext.Core.Media;
 using CutAssistantNext.Core.Naming;
 using CutAssistantNext.Cutlists.Compatibility;
 using CutAssistantNext.Cutlists.Editing;
@@ -1371,8 +1372,15 @@ public partial class MainWindow : Window
                         CutMediaAnalysisValidator.GetFramesPerSecond(
                             analysis);
 
-                    var cutPlan =
-                        _cutPlanViewModel.CreateCutPlanSnapshot();
+                    var cutPlan = _cutPlanViewModel.CreateCutPlanSnapshot();
+                    Mp4BoxSplitRange? measuredTail = null;
+                    if (engineKind == CutEngineKind.Mp4Box && !requiresPreparation)
+                    {
+                        var preflight = await ConfirmMp4BoxTailAsync(dialog, originalFilePath, analysis, cutPlan, framesPerSecond);
+                        if (preflight.Plan is null) return;
+                        cutPlan = preflight.Plan;
+                        measuredTail = preflight.Range;
+                    }
 
                     var cutRequest = CutRequestFactory.Create(
                         originalFilePath,
@@ -1513,10 +1521,9 @@ public partial class MainWindow : Window
                             cutRequest = cutRequest.WithSourceFilePath(temporaryVideo);
                         }
 
-                        var cutResult = await cutEngine.RunWithResultAsync(
-                            cutRequest,
-                            progress,
-                            cancellationTokenSource.Token);
+                        var cutResult = measuredTail is not null && cutEngine is Mp4BoxCutService mp4Box
+                            ? await mp4Box.RunWithTailRangeAsync(cutRequest, measuredTail, progress, cancellationTokenSource.Token)
+                            : await cutEngine.RunWithResultAsync(cutRequest, progress, cancellationTokenSource.Token);
                         completionViewModel = new CutCompletionViewModel(cutResult);
 
                         cutSucceeded = true;
@@ -1724,54 +1731,32 @@ public partial class MainWindow : Window
                 }
             }
 
-            var endFragment =
-                CutlistEndFragmentDetector.Find(
-                    document,
-                    mediaDuration);
+            var media = _viewModel.AnalysisResult;
+            var context = media is null ? null : new CutlistMediaContext(_viewModel.FilePath, media, _cutlistMediaGeneration);
+            VideoFrameWindow? tail = null;
+            var videoEnd = CutlistImportReview.GetVideoEnd(media, mediaDuration);
+            if (context is not null && CutlistImportReview.NeedsTailProbe(document.Cuts, videoEnd))
+                tail = await ReadCutlistTailAsync(context.FilePath, media, videoEnd);
+            if (context is not null && !IsCurrentCutlistContext(context)) return;
 
-            CutPlan cutPlan;
-
-            if (endFragment is not null)
+            var review = CutlistImportReview.Analyze(document, mediaDuration, media, tail);
+            if (review.FrameRateMismatch)
+                throw new InvalidDataException(review.FrameRateNotice + " Bitte überprüfe, ob die Cutlist zur Aufnahme passt.");
+            var cutPlan = review.Plan;
+            if (review.Fragment is { } fragment)
             {
-                var framesPerSecond =
-                    document.General.FramesPerSecond.GetValueOrDefault();
-
-                var approximateFrames =
-                    (int)Math.Round(
-                        endFragment.Duration.TotalSeconds *
-                        framesPerSecond);
-
-                var correctionResult =
-                    MessageBox.Show(
-                        this,
-                        "Die Cutlist enthält am Videoende einen ungewöhnlich kurzen " +
-                        $"Behaltebereich von {endFragment.Duration.TotalSeconds:0.###} Sekunden " +
-                        $"(ca. {approximateFrames} Frames)." +
-                        $"{Environment.NewLine}{Environment.NewLine}" +
-                        "Dieser Bereich kann beim Schneiden mit MP4Box zu Problemen führen." +
-                        $"{Environment.NewLine}{Environment.NewLine}" +
-                        "Neues Ende bis Videoende setzen?",
-                        "Cutlist laden",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Warning);
-
-                if (correctionResult != MessageBoxResult.Yes)
+                var canRemove = document.Cuts.Count > 1;
+                var question = new CutlistEndFragmentDialog(DescribeFragment(review) +
+                    "\n\nMP4Box kann einen so kurzen Endbereich möglicherweise nicht zuverlässig schneiden." +
+                    (canRemove ? " Beim Entfernen bleibt das Ende des davorliegenden Bereichs erhalten." : "") +
+                    " Die Cutlist-Datei bleibt unverändert.",
+                    allowUnchangedImport: true, allowRemoval: canRemove) { Owner = this };
+                if (question.ShowDialog() != true) return;
+                if (question.RemoveFragment)
                 {
-                    return;
+                    cutPlan = CutlistEndFragmentCorrector.BuildCutPlan(document, review.Plan.MediaDuration, fragment);
+                    uploadCandidatePath = null;
                 }
-
-                cutPlan =
-                    CutlistEndFragmentCorrector.BuildCutPlan(
-                        document,
-                        mediaDuration,
-                        endFragment);
-            }
-            else
-            {
-                cutPlan =
-                    CutlistCutPlanBuilder.Build(
-                        document,
-                        mediaDuration);
             }
 
             if (!ConfirmCutlistReplacement()) return;
@@ -1815,7 +1800,7 @@ public partial class MainWindow : Window
 
             MessageBox.Show(
                 this,
-                "Die Cutlist wurde erfolgreich geladen.",
+                review.FrameRateNotice is { } notice ? $"Die Cutlist wurde erfolgreich geladen.\n\n{notice}" : "Die Cutlist wurde erfolgreich geladen.",
                 "Cutlist laden",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);

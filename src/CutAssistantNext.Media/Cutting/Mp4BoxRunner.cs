@@ -190,8 +190,9 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
 
         if (!File.Exists(fullOutputFilePath))
         {
-            throw new InvalidOperationException(
-                "MP4Box wurde erfolgreich beendet, hat aber keine Zieldatei erzeugt.");
+            var failure = new Mp4BoxSegmentException(range, errorOutput);
+            _logger.Error("MP4Box -splitx hat keine Segmentdatei erzeugt.", failure);
+            throw failure;
         }
 
         if (!string.IsNullOrWhiteSpace(standardOutput))

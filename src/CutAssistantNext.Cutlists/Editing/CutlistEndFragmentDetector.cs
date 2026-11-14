@@ -1,65 +1,35 @@
+using CutAssistantNext.Cutlists.Model;
+
 namespace CutAssistantNext.Cutlists.Editing;
 
 public static class CutlistEndFragmentDetector
 {
-    private const double MaximumFragmentFrames = 3;
+    public static bool IsKnownFrameRate(double? value) => value is > 0 && double.IsFinite(value.Value);
 
-    public static CutlistKeepSegment? Find(
-        Model.CutlistDocument document,
-        TimeSpan mediaDuration)
+    public static CutlistKeepSegment? Find(CutlistDocument document, TimeSpan mediaDuration,
+        double? mediaFramesPerSecond = null, IReadOnlyList<TimeSpan>? measuredFrameStarts = null)
     {
-        ArgumentNullException.ThrowIfNull(
-            document);
-
-        if (mediaDuration <= TimeSpan.Zero)
-        {
-            throw new ArgumentOutOfRangeException(
-                nameof(mediaDuration));
-        }
-
-        var framesPerSecond =
-            document.General.FramesPerSecond;
-
-        if (!framesPerSecond.HasValue ||
-            framesPerSecond.Value <= 0 ||
-            document.Cuts.Count < 2)
-        {
+        ArgumentNullException.ThrowIfNull(document);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(mediaDuration, TimeSpan.Zero);
+        if (document.Cuts.Count == 0)
             return null;
-        }
 
-        var lastSegment =
-            document.Cuts[^1];
-
-        var previousSegment =
-            document.Cuts[^2];
-
-        var maximumFragmentDuration =
-            TimeSpan.FromSeconds(
-                MaximumFragmentFrames /
-                framesPerSecond.Value);
-
-        var maximumEndDistance =
-            TimeSpan.FromSeconds(
-                2 /
-                framesPerSecond.Value);
-
-        var maximumEndOvershoot =
-            TimeSpan.FromSeconds(
-                1 /
-                framesPerSecond.Value);
-
-        var distanceToMediaEnd =
-            mediaDuration -
-            lastSegment.End;
-
-        if (lastSegment.Duration > maximumFragmentDuration ||
-            previousSegment.End >= lastSegment.Start ||
-            distanceToMediaEnd < -maximumEndOvershoot ||
-            distanceToMediaEnd > maximumEndDistance)
-        {
+        var last = document.Cuts[^1];
+        if ((document.Cuts.Count >= 2 && document.Cuts[^2].End >= last.Start) || last.End > mediaDuration)
             return null;
+
+        if (measuredFrameStarts is { Count: > 0 } && measuredFrameStarts[0] <= last.Start)
+        {
+            var frames = measuredFrameStarts.Count(time => time >= last.Start && time < last.End);
+            var after = measuredFrameStarts.Count(time => time >= last.End);
+            return frames <= 3 && after <= 2 ? last : null;
         }
 
-        return lastSegment;
+        var fps = IsKnownFrameRate(mediaFramesPerSecond) ? mediaFramesPerSecond : document.General.FramesPerSecond;
+        if (!IsKnownFrameRate(fps))
+            return null;
+
+        return last.Duration.TotalSeconds * fps.GetValueOrDefault() <= 3 &&
+               (mediaDuration - last.End).TotalSeconds * fps.GetValueOrDefault() <= 2 ? last : null;
     }
 }

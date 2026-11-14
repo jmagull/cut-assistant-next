@@ -1,8 +1,8 @@
 # Nutzeranleitung – Cut Assistant Next
 
-## Cut Assistant Next 1.0.3 Build 59
+## Cut Assistant Next 1.0.3 Build 60
 
-**Neu gegenüber Build 58**
+**Bedienverbesserungen aus Build 59**
 
 - **Sekundensprünge:** Frei einstellbare Sprungweite. `S` halten und `←` oder `→` drücken. Ein kurzer Druck springt einmal. Beim Halten folgen weitere Sprünge nach etwa 350 ms und danach etwa alle 200 ms. Die vorhandenen Sprungbuttons wiederholen bei gehaltener Maustaste genauso. Texteingaben, Einzelbildnavigation und `Strg + ←/→` für Keyframes behalten ihre Bedienung.
 - **Schnittshuffle:** Der aktive rote oder grüne Bereich bleibt nach einer Korrektur ausgewählt. Für einen neuen Bereich zuerst die Auswahl aufheben.
@@ -10,6 +10,8 @@
 - **Tooltips:** Belegte Schaltflächen zeigen das jeweilige Tastenkürzel zusätzlich zur Funktionsbeschreibung.
 
 **Aus Build 58 übernommen:** Spotlight-CAN mit „Schnitt bis Videoende abschließen“, Rot-/Grün-Schnittmodus, gemeinsame Suche nach lokalen und Server-Cutlists, Cutlist-Bewertung, Bild- und Schnittvorschau sowie Kontrollplayer. otr-can behält die Audioprüfung, Tonspur-Abwahl und die ausdrücklich zu bestätigende experimentelle AAC-Zeitlückenreparatur. MP4Box fügt Segmente mit gleichartigen AAC-Tonspuren weiterhin über `-add`, `-cat` und `-new` zusammen. Keyframe-bedingte Werbeblitzer können bei MP4Box weiterhin auftreten.
+
+**Kurzbereiche am Videoende:** CAN kann beim Laden vor einem ungewöhnlich kurzen letzten Behaltebereich warnen. Du entscheidest, ob der Bereich übernommen oder entfernt wird. Einzelheiten stehen unter **Warnungen beim Einlesen**.
 
 ## Installation und ZIP
 
@@ -360,7 +362,11 @@ Eine andere Dateigröße kann auf eine andere Aufnahme oder Qualitätsstufe hinw
 
 Cutlists aus anderen Formaten können dieselbe Timeline beschreiben. Deshalb werden sie nicht allein aufgrund des Formats ausgefiltert.
 
-Leere Bereiche mit exakt null Dauer werden beim Import ignoriert. Die übrigen gültigen Bereiche bleiben erhalten; die Cutlist-Datei auf der Festplatte wird dabei nicht verändert. Widersprüchliche oder negative Angaben bleiben Fehler. Schnittpositionen hinter dem tatsächlichen Videoende werden geprüft; erkannte kurze Endfragmente können über den vorhandenen Korrekturdialog behandelt werden.
+Leere Bereiche mit exakt null Dauer werden beim Import ignoriert. Die übrigen gültigen Bereiche bleiben erhalten; die Cutlist-Datei auf der Festplatte wird dabei nicht verändert. Widersprüchliche oder negative Angaben bleiben Fehler. Schnittpositionen hinter dem tatsächlichen Videoende werden mit Angabe beider Zeiten abgewiesen. Bei zeitbasierten Cutlists ohne brauchbare FPS-Angabe prüft CAN die geladene Aufnahme. Weichen zwei gültige Bildraten voneinander ab, meldet CAN den Konflikt beim Import.
+
+Bei einem ungewöhnlich kurzen letzten Behaltebereich zeigt CAN die Zeiten und, sofern sicher ermittelt, die Zahl der Bildanfänge. **Unverändert laden** behält alle Bereiche. **Letzten Behaltebereich entfernen** entfernt nach Bestätigung nur diesen Bereich aus dem aktuellen Schnittplan. Einziger Behaltebereich: Er kann behalten oder von Hand korrigiert werden. **Abbrechen** lässt den aktuellen Schnittplan bestehen. Die ursprüngliche Cutlist-Datei bleibt erhalten.
+
+Vor einem direkten MP4Box-Schnitt kann CAN einen auffälligen Endbereich separat prüfen. Wenn MP4Box dafür keine Datei erzeugt, kannst du den letzten von mehreren Bereichen entfernen oder abbrechen und die Grenzen von Hand korrigieren. Die vorhandenen Keyframe-Grenzen von MP4Box gelten weiterhin. [Technische Einzelheiten und Prüfergebnisse](CUTLIST-ENDGRENZEN.md).
 
 ### Verwendete Server-Cutlist bewerten (lokaler Build 55)
 

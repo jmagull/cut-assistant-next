@@ -2,15 +2,17 @@
 
 Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Die Oberfläche verwendet WPF, die Wiedergabe mpv/libmpv – ohne DirectShow und ohne zusätzliche Windows-Codec-Pakete.
 
-## Cut Assistant Next 1.0.3 Build 59 – lokaler Releasekandidat
+## Cut Assistant Next 1.0.3 Build 60 – lokaler Releasekandidat
 
-Dateiversion **1.0.3.59**. Nebeneinander vorbereitet sind Windows-x64-Setup, Portable-ZIP und das vollständige Quellarchiv. Die persönliche Bedienabnahme unter Windows 11 bezieht sich auf den Usability-Entwicklungsstand.
+Dateiversion **1.0.3.60**. Nebeneinander vorbereitet sind Windows-x64-Setup, Portable-ZIP und das vollständige Quellarchiv. Die Usability und der korrigierte Import wurden mit den Entwicklungsfassungen unter Windows 11 persönlich geprüft.
 
 - **Sekundensprünge:** S und Pfeiltaste oder den vorhandenen Sprungbutton gedrückt halten. Die eingestellte Sprungweite wird wiederholt angewendet. Keyframe- und Einzelbildkürzel bleiben verfügbar.
 - **Schnittshuffle:** Der aktive Schnitt bleibt nach der Korrektur ausgewählt.
 - **Kontrollplayer:** Die Lautstärke folgt dem Hauptfenster. Tooltips zeigen die gültigen Tastenkürzel.
 
-[Release Notes](docs/RELEASE-NOTES-1.0.3.md) · [Prüfhinweise](docs/PRUEFHINWEISE-BUILD59.md)
+- **Kurze Behaltebereiche am Videoende:** CAN prüft auch zeitbasierte Cutlists ohne gültige FPS-Angabe. Ein kurzer Bereich kann erhalten oder ausdrücklich entfernt werden. MP4Box-Fehler nennen den betroffenen Bereich und die Werkzeuggrenzen.
+
+[Release Notes](docs/RELEASE-NOTES-1.0.3.md) · [Prüfhinweise](docs/PRUEFHINWEISE-BUILD60.md) · [Technische Einzelheiten](docs/CUTLIST-ENDGRENZEN.md)
 
 ## Rückblick auf Build 58
 

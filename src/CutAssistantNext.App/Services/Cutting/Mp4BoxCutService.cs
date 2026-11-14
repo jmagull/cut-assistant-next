@@ -25,15 +25,20 @@ internal sealed class Mp4BoxCutService : ICutEngine
     public Task RunAsync(CutRequest request, IProgress<CutProgressUpdate>? progress = null,
         CancellationToken cancellationToken = default) => RunWithResultAsync(request, progress, cancellationToken);
 
-    public async Task<CutResult> RunWithResultAsync(CutRequest request,
-        IProgress<CutProgressUpdate>? progress = null, CancellationToken cancellationToken = default)
+    public Task<CutResult> RunWithResultAsync(CutRequest request,
+        IProgress<CutProgressUpdate>? progress = null, CancellationToken cancellationToken = default) =>
+        RunWithTailRangeAsync(request, null, progress, cancellationToken);
+
+    internal async Task<CutResult> RunWithTailRangeAsync(CutRequest request, Mp4BoxSplitRange? tail,
+        IProgress<CutProgressUpdate>? progress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
         cancellationToken.ThrowIfCancellationRequested();
         var framesPerSecond = request.FramesPerSecond
             ?? throw new InvalidOperationException("Für den MP4Box-Schnitt ist eine Bildrate erforderlich.");
         var planned = CutResult.Planned(request.OutputFilePath, request.KeepSegments);
-        var ranges = CutPlanMp4BoxRangeBuilder.Build(request.KeepSegments, framesPerSecond);
+        var ranges = CutPlanMp4BoxRangeBuilder.Build(request.KeepSegments, framesPerSecond).ToArray();
+        if (tail is not null) ranges[^1] = tail;
         var result = await _workflow.RunWithAnalysisAsync(request.SourceFilePath, request.OutputFilePath, ranges,
             progress, cancellationToken, request.OverwriteExistingOutput, _outputAnalyzer).ConfigureAwait(false);
         return result.Timeline is { } timeline

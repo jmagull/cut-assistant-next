@@ -16,7 +16,7 @@ public static class CutlistEndFragmentCorrector
         ArgumentNullException.ThrowIfNull(
             fragment);
 
-        if (document.Cuts.Count == 0 ||
+        if (document.Cuts.Count < 2 ||
             !ReferenceEquals(
                 document.Cuts[^1],
                 fragment))

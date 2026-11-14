@@ -66,6 +66,32 @@ public sealed class Mp4BoxCutWorkflowSplitFailureTests
         }
     }
 
+    [Theory]
+    [InlineData(20, 20)]
+    [InlineData(20, 19)]
+    public async Task RunAsync_WhenLaterRangeIsInvalid_NeverStartsMp4BoxOrReplacesOutput(int start, int end)
+    {
+        var runner = new FailingSecondSplitMp4BoxRunner();
+        var workflow = new Mp4BoxCutWorkflow(runner);
+        var existing = Path.GetTempFileName();
+
+        try
+        {
+            await File.WriteAllTextAsync(existing, "existing output");
+            var error = await Assert.ThrowsAsync<InvalidOperationException>(() => workflow.RunAsync(
+                "source.mp4", existing,
+                [new(TimeSpan.Zero, TimeSpan.FromSeconds(10)), new(TimeSpan.FromSeconds(start), TimeSpan.FromSeconds(end))],
+                overwriteExistingOutput: true));
+            Assert.Contains("Segment 2 von 2", error.Message);
+            Assert.Empty(runner.SegmentFilePaths);
+            Assert.Equal("existing output", await File.ReadAllTextAsync(existing));
+        }
+        finally
+        {
+            File.Delete(existing);
+        }
+    }
+
     private sealed class FailingSecondSplitMp4BoxRunner : IMp4BoxRunner
     {
         private int _splitCallCount;

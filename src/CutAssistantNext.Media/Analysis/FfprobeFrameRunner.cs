@@ -18,7 +18,7 @@ public sealed class FfprobeFrameRunner : IFrameAnalysisRunner, IKeyframeAnalysis
         string mediaFilePath,
         int videoStreamIndex,
         TimeSpan intervalStart,
-        TimeSpan intervalEnd)
+        TimeSpan? intervalEnd)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(mediaFilePath);
         if (videoStreamIndex < 0)
@@ -26,15 +26,16 @@ public sealed class FfprobeFrameRunner : IFrameAnalysisRunner, IKeyframeAnalysis
             throw new ArgumentOutOfRangeException(nameof(videoStreamIndex));
         }
 
-        if (intervalEnd <= intervalStart)
+        if (intervalEnd is { } endTime && endTime <= intervalStart)
         {
             throw new ArgumentOutOfRangeException(nameof(intervalEnd));
         }
 
         var start = ((decimal)intervalStart.Ticks / TimeSpan.TicksPerSecond)
             .ToString(CultureInfo.InvariantCulture);
-        var end = ((decimal)intervalEnd.Ticks / TimeSpan.TicksPerSecond)
-            .ToString(CultureInfo.InvariantCulture);
+        var end = intervalEnd is { } exclusiveEnd
+            ? ((decimal)exclusiveEnd.Ticks / TimeSpan.TicksPerSecond).ToString(CultureInfo.InvariantCulture)
+            : string.Empty;
 
         return [
             "-v", "error",
@@ -58,6 +59,13 @@ public sealed class FfprobeFrameRunner : IFrameAnalysisRunner, IKeyframeAnalysis
     {
         var arguments = BuildArguments(mediaFilePath, videoStreamIndex, intervalStart, intervalEnd);
         return await RunCoreAsync(mediaFilePath, videoStreamIndex, arguments, false, cancellationToken).ConfigureAwait(false);
+    }
+
+    public Task<VideoFrameWindow> RunTailAsync(string mediaFilePath, int videoStreamIndex,
+        TimeSpan intervalStart, CancellationToken cancellationToken = default)
+    {
+        var arguments = BuildArguments(mediaFilePath, videoStreamIndex, intervalStart, intervalEnd: null);
+        return RunCoreAsync(mediaFilePath, videoStreamIndex, arguments, true, cancellationToken);
     }
 
     public Task<VideoFrameWindow> RunKeyframesAsync(string mediaFilePath, int videoStreamIndex,

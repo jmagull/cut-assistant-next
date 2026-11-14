@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.IO;
 using CutAssistantNext.Cutlists.Compatibility;
-using CutAssistantNext.Cutlists.Editing;
 using CutAssistantNext.Cutlists.Model;
 
 namespace CutAssistantNext.App.Services;
@@ -68,10 +67,7 @@ internal sealed class CutlistResultRow
         {
             document = candidate.ReadDocument();
             var duration = context.Analysis.Duration ?? throw new InvalidDataException("Mediendauer fehlt.");
-            // Retain the existing end-fragment exception instead of rejecting a correctable document.
-            var fragment = CutlistEndFragmentDetector.Find(document, duration);
-            if (fragment is null) _ = CutlistCutPlanBuilder.Build(document, duration);
-            else _ = CutlistEndFragmentCorrector.BuildCutPlan(document, duration, fragment);
+            var review = CutlistImportReview.Analyze(document, duration, context.Analysis);
             var reasons = new List<string>();
             var applicable = true;
             var original = Path.GetFileName(context.FilePath);
@@ -85,14 +81,9 @@ internal sealed class CutlistResultRow
                 reasons.Add(CutlistFileSizeCompatibilityDetector.FindMismatch(expected, actual) is null
                     ? "Dateigröße weicht innerhalb der bisherigen 5-%-Toleranz ab."
                     : "Dateigröße weicht um mehr als 5 % ab; vorhandene Rückfrage beim Laden beachten.");
-            var fps = document.General.FramesPerSecond;
-            var mediaFps = context.Analysis.VideoStreams.FirstOrDefault()?.FramesPerSecond;
-            if (fps is null || mediaFps is null) reasons.Add("Framerate nicht zuverlässig vergleichbar.");
-            else if (!double.IsFinite(fps.Value) || fps <= 0 || !double.IsFinite(mediaFps.Value) || mediaFps <= 0)
-            { reasons.Add("Ungültige Framerate."); applicable = false; }
-            else if (Math.Abs(fps.Value - mediaFps.Value) > 0.001)
-            { reasons.Add("Framerate passt nicht zum Film."); applicable = false; }
-            if (fragment is not null) reasons.Add("Winziges Endfragment: bestehende Korrekturrückfrage erforderlich.");
+            if (review.FrameRateNotice is { } frameRateNotice) reasons.Add(frameRateNotice);
+            if (review.FrameRateMismatch) applicable = false;
+            if (review.Fragment is not null) reasons.Add("Kurzer Endbereich: CAN prüft die Bildgrenzen beim Laden.");
             if (document.Cuts.Count == 0) reasons.Add("Die geplante Ausgabe ist leer (gesamten Film entfernen).");
             return new CutlistResultRow
             {

@@ -19,6 +19,10 @@ public static class Mp4BoxSplitRangeFormatter
             $"{FormatSeconds(range.Start)}:{FormatSeconds(range.End)}";
     }
 
+    internal static bool HasIncreasingBounds(Mp4BoxSplitRange range) =>
+        decimal.Parse(FormatSeconds(range.End), CultureInfo.InvariantCulture) >
+        decimal.Parse(FormatSeconds(range.Start), CultureInfo.InvariantCulture);
+
     private static string FormatSeconds(
         TimeSpan value)
     {

@@ -24,6 +24,7 @@ public sealed record VideoStreamInfo(
 {
     public double? StartTimeSeconds { get; init; }
     public long? FrameCount { get; init; }
+    public double? DurationSeconds { get; init; }
 }
 
 public sealed record AudioStreamInfo(
@@ -35,6 +36,7 @@ public sealed record AudioStreamInfo(
     string? ChannelLayout)
 {
     public double? StartTimeSeconds { get; init; }
+    public double? DurationSeconds { get; init; }
     public string? Language { get; init; }
     public string? Title { get; init; }
 }

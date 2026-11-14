@@ -64,6 +64,14 @@ public sealed class Mp4BoxCutWorkflow
                 nameof(ranges));
         }
 
+        for (var index = 0; index < ranges.Count; index++)
+        {
+            if (Mp4BoxSplitRangeFormatter.HasIncreasingBounds(ranges[index])) continue;
+            throw new InvalidOperationException($"MP4Box-Segment {index + 1} von {ranges.Count}: " +
+                Mp4BoxSegmentException.DescribeRange(ranges[index]) +
+                " Der Werkzeugbereich ist leer oder rückläufig. Bitte die Schnittgrenzen prüfen.");
+        }
+
         var fullSourceFilePath =
             Path.GetFullPath(
                 sourceFilePath);
@@ -126,11 +134,14 @@ public sealed class Mp4BoxCutWorkflow
                 segmentFilePaths.Add(
                     segmentFilePath);
 
-                await _runner.RunSplitAsync(
-                    sourceFilePath,
-                    segmentFilePath,
-                    ranges[index],
-                    cancellationToken);
+                try
+                {
+                    await _runner.RunSplitAsync(sourceFilePath, segmentFilePath, ranges[index], cancellationToken);
+                }
+                catch (Mp4BoxSegmentException error)
+                {
+                    throw new InvalidOperationException($"MP4Box-Segment {index + 1} von {ranges.Count}: {error.Message}", error);
+                }
             }
 
             cancellationToken.ThrowIfCancellationRequested();

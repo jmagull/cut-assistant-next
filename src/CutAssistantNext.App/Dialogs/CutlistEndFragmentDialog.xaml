@@ -1,0 +1,14 @@
+<Window x:Class="CutAssistantNext.App.Dialogs.CutlistEndFragmentDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Kurzer Behaltebereich am Videoende"
+        Width="650" SizeToContent="Height" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
+        Background="#F4F6F8">
+    <StackPanel Margin="22">
+        <TextBlock x:Name="Finding" TextWrapping="Wrap" Margin="0,0,0,20" />
+        <WrapPanel HorizontalAlignment="Right">
+            <Button x:Name="KeepButton" Content="Unverändert laden" Click="Keep" Padding="12,8" Margin="0,0,8,0" />
+            <Button x:Name="RemoveButton" Content="Letzten Behaltebereich entfernen" Click="Remove" Padding="12,8" Margin="0,0,8,0" />
+            <Button x:Name="CancelButton" Content="Abbrechen" IsCancel="True" IsDefault="True" ToolTip="Abbrechen (Enter oder Esc)" Padding="12,8" />
+        </WrapPanel>
+    </StackPanel>
+</Window>

@@ -41,6 +41,7 @@ public static class CutlistParser
         if (maximumCuts.HasValue && numberOfCuts > maximumCuts.Value)
             throw new FormatException("Die Cutlist enthält zu viele Bereiche für die automatische Suche.");
 
+        var fps = ParseNullableDouble(GetValue(generalSection, "FramesPerSecond"), "FramesPerSecond");
         var cuts =
             new List<CutlistKeepSegment>(
                 numberOfCuts);
@@ -54,19 +55,26 @@ public static class CutlistParser
                     sections,
                     $"Cut{index}");
 
-            var start =
-                ParseDouble(
-                    GetRequiredValue(
-                        cutSection,
-                        "Start"),
-                    $"Cut{index}.Start");
+            var startText = GetValue(cutSection, "Start");
+            var durationText = GetValue(cutSection, "Duration");
+            if (string.IsNullOrWhiteSpace(startText) && string.IsNullOrWhiteSpace(durationText))
+            {
+                if (!CutlistEndFragmentDetector.IsKnownFrameRate(fps))
+                    throw new FormatException($"Cut{index}: Für Bildnummern ist eine gültige Cutlist-Bildrate erforderlich.");
 
-            var duration =
-                ParseDouble(
-                    GetRequiredValue(
-                        cutSection,
-                        "Duration"),
-                    $"Cut{index}.Duration");
+                var startFrame = ParseNullableInt64(GetRequiredValue(cutSection, "StartFrame"), $"Cut{index}.StartFrame")!.Value;
+                var durationFrames = ParseNullableInt64(GetRequiredValue(cutSection, "DurationFrames"), $"Cut{index}.DurationFrames")!.Value;
+                if (startFrame < 0 || durationFrames <= 0)
+                    throw new FormatException($"Cut{index}: Die Bildgrenzen müssen einen gültigen Behaltebereich bilden.");
+                var frameRate = fps.GetValueOrDefault();
+                var startTime = TimeSpan.FromSeconds(startFrame / frameRate);
+                var endTime = TimeSpan.FromSeconds(checked(startFrame + durationFrames) / frameRate);
+                cuts.Add(new CutlistKeepSegment(startTime, endTime - startTime));
+                continue;
+            }
+
+            var start = ParseDouble(GetRequiredValue(cutSection, "Start"), $"Cut{index}.Start");
+            var duration = ParseDouble(GetRequiredValue(cutSection, "Duration"), $"Cut{index}.Duration");
 
             // Some legacy cutlists contain an empty end marker, not a keep range.
             if (duration == 0 && double.IsFinite(start) && start >= 0)
@@ -102,12 +110,7 @@ public static class CutlistParser
                         generalSection,
                         "Version"),
 
-                FramesPerSecond =
-                    ParseNullableDouble(
-                        GetValue(
-                            generalSection,
-                            "FramesPerSecond"),
-                        "FramesPerSecond"),
+                FramesPerSecond = fps,
 
                 DisplayAspectRatio =
                     GetNullableValue(

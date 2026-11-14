@@ -75,6 +75,58 @@ public sealed class Mp4BoxRunnerConcatIntegrationTests
         }
     }
 
+    [Mp4BoxIntegrationTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task TailSplitReportsMissingOutputOrKeepsOneValidFrame(bool everyFrameIsKeyframe)
+    {
+        var directory = Directory.CreateTempSubdirectory("can-tail-");
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var token = timeout.Token;
+        try
+        {
+            var source = Path.Combine(directory.FullName, "source.mp4");
+            var output = Path.Combine(directory.FullName, "output.mp4");
+            var args = new List<string>
+            {
+                "-nostdin", "-v", "error", "-f", "lavfi", "-i", "testsrc2=size=96x64:rate=25:duration=3"
+            };
+            if (!everyFrameIsKeyframe)
+                args.AddRange(["-f", "lavfi", "-i", "sine=sample_rate=48000:duration=2.55", "-c:a", "aac"]);
+            args.AddRange(["-c:v", "libx264", "-threads:v", "1", "-g", everyFrameIsKeyframe ? "1" : "75",
+                "-sc_threshold", "0", "-bf", "0", source]);
+            await RunAsync(GetTool(FfmpegVariable), args, token);
+            var range = Mp4BoxSplitRangeBuilder.Build(TimeSpan.FromSeconds(everyFrameIsKeyframe ? 2.96 : 2.95),
+                TimeSpan.FromSeconds(everyFrameIsKeyframe ? 0.04 : 0.05), 25);
+            var workflow = new Mp4BoxCutWorkflow(new Mp4BoxRunner(GetTool(Mp4BoxVariable)));
+
+            if (everyFrameIsKeyframe)
+            {
+                await workflow.RunAsync(source, output, [range], token);
+                var tracks = await ReadTracksAsync(output, token);
+                Assert.Single(Assert.Single(tracks).Packets);
+                return;
+            }
+
+            await File.WriteAllTextAsync(output, "Vorhandene Ausgabe", token);
+            var failure = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                workflow.RunAsync(source, output, [range], token, overwriteExistingOutput: true));
+            Assert.IsType<Mp4BoxSegmentException>(failure.InnerException);
+            Assert.Contains("Segment 1 von 1", failure.Message);
+            Assert.Contains("Quellbereich", failure.Message);
+            Assert.Contains("-splitx 2.95:2.96", failure.Message);
+            Assert.Contains("Exitcode 0", failure.Message);
+            Assert.Equal("Vorhandene Ausgabe", await File.ReadAllTextAsync(output, token));
+            Assert.Empty(Directory.EnumerateFiles(directory.FullName, ".cut-assistant-next-*"));
+        }
+        finally
+        {
+            foreach (var path in Directory.EnumerateFiles(directory.FullName))
+                File.Delete(path);
+            directory.Delete();
+        }
+    }
+
     private static async Task CreateSegmentAsync(string path, int part, string firstCodec, string? secondCodec,
         CancellationToken token)
     {

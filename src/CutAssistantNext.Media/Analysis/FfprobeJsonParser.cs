@@ -38,7 +38,8 @@ public static class FfprobeJsonParser
                         GetString(stream, "field_order"))
                     {
                         StartTimeSeconds = GetDouble(stream, "start_time"),
-                        FrameCount = GetInt64(stream, "nb_frames")
+                        FrameCount = GetInt64(stream, "nb_frames"),
+                        DurationSeconds = GetDouble(stream, "duration")
                     });
                 }
                 else if (streamType == "audio")
@@ -52,6 +53,7 @@ public static class FfprobeJsonParser
                         GetString(stream, "channel_layout"))
                     {
                         StartTimeSeconds = GetDouble(stream, "start_time"),
+                        DurationSeconds = GetDouble(stream, "duration"),
                         Language = stream.TryGetProperty("tags", out var audioTags)
                             ? GetString(audioTags, "language") : null,
                         Title = stream.TryGetProperty("tags", out var titleTags)
