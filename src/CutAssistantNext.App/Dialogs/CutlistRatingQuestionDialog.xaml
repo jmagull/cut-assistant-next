@@ -13,7 +13,7 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
             <Button x:Name="RateButton" Content="Bewerten" Padding="14,8" Margin="0,0,10,0" Click="RateClick" />
             <Button x:Name="SkipButton" Content="Überspringen" Padding="14,8" Margin="0,0,10,0" Click="SkipClick" />
-            <Button Content="Abbrechen" Padding="14,8" IsCancel="True" IsDefault="True" />
+            <Button Content="Abbrechen" Padding="14,8" IsCancel="True" IsDefault="True" ToolTip="Abbrechen (Enter oder Esc)" />
         </StackPanel>
     </StackPanel>
 </Window>

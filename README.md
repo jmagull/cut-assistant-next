@@ -4,7 +4,7 @@ Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten
 
 ## Cut Assistant Next 1.0.3 Build 58 – vorbereiteter Release-Kandidat
 
-Die lokale Prüffassung hat die Dateiversion **1.0.3.58** und ist für die abschließende Paketfreigabe vorbereitet. Die öffentliche GitHub-Latest-Version ist weiterhin [Build 54](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54).
+[Build 58 wurde am 13.11.2026 veröffentlicht](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build58).
 
 - **MP4Box:** CAN importiert das erste Segment mit `-add`, hängt weitere mit `-cat` an und erzeugt die Ausgabe mit `-new`. Zuvor konnte GPAC bei gleichartigen AAC-Spuren beide Eingabespuren einer Zielspur zuordnen. Geprüft sind AAC, AAC+AC-3, AAC+AAC und AC-3+AC-3. Die bekannten Keyframe-Werbeblitzer können weiterhin auftreten. [Ursache, Paketvergleich und Praxistests](docs/MP4BOX-WILD-CARD-ZUSAMMENFUEHRUNG-BUILD56.md)
 - **Spotlight-CAN:** Einen offenen Entfernen-Bereich mit **Schnitt bis Videoende abschließen** bis zur tatsächlichen Dateidauer schließen. **Videoanfang** in CAN setzt die Grenze auf **00:00:00.000**. [Bedienung](docs/SPOTLIGHT-README.md)
@@ -14,7 +14,7 @@ Die lokale Prüffassung hat die Dateiversion **1.0.3.58** und ist für die absch
 - **Namensmaske:** Bei fremden Cutlists bleibt der übernommene Namensvorschlag zunächst erhalten. **Aus obigen Eingaben neu erzeugen** verwendet die aktuell gespeicherte Standardmaske. Bei eigenen Cutlists die gewünschten Namensbestandteile ausfüllen. Der Ausgabedateiname bleibt im Schneidedialog frei bearbeitbar.
 - **Weiter verfügbar:** Rot/Grün-Modus, Power-User 2, lokale und serverseitige Cutlist-Suche, Frame-Lupe, Halbierungssuche sowie otr-can mit den bestehenden Optionen zur Tonspur-Abwahl und AAC-Reparatur.
 
-## Öffentliche Version: 1.0.3 Build 54
+## Frühere öffentliche Version: 1.0.3 Build 54
 
 [**Release und Downloads**](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) · [Setup](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-win-x64-Setup.exe) · [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-win-x64.zip) · [Vollständige Quellen](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build54/CutAssistantNext-1.0.3-Build54-source.zip)
 
@@ -230,7 +230,7 @@ Dateigrenzen und sehr kurze angrenzende Filmabschnitte begrenzen den Sprung. Aus
 
 ## Schnittübergänge nach dem Schneiden prüfen
 
-Ab dem lokalen Build 25 öffnet **Prüfen** neben Anfang, jedem Übergang und Ende im Abschlussfenster die fertige Datei in einem eigenen CAN-Kontrollplayer, auch bei nur einem Behalteabschnitt. Am Anfang startet die Wiedergabe bei 0:00, vor einem Übergang drei Sekunden davor und am Ende drei Sekunden vor der tatsächlich geladenen Filmdauer. Sehr kurze Filme beginnen bei 0:00. **Vorherige Prüfstelle** und **Nächste Prüfstelle** wechseln zwischen allen Kontrollstellen. Play/Pause, Positionsregler und eigene Lautstärke stehen bereit. Das Fenster wird wiederverwendet; Originalplayer und Schnittliste bleiben erhalten. Bitte auch Anfang, Ende, Bild, Ton und Tonsynchronität prüfen. [Bedienung und Prüfgrenzen](docs/SCHNITTUEBERGAENGE-KONTROLLPLAYER-20261012.md).
+Ab dem lokalen Build 25 öffnet **Prüfen** neben Anfang, jedem Übergang und Ende im Abschlussfenster die fertige Datei in einem eigenen CAN-Kontrollplayer, auch bei nur einem Behalteabschnitt. Am Anfang startet die Wiedergabe bei 0:00, vor einem Übergang drei Sekunden davor und am Ende drei Sekunden vor der tatsächlich geladenen Filmdauer. Sehr kurze Filme beginnen bei 0:00. **Vorherige Prüfstelle** und **Nächste Prüfstelle** wechseln zwischen allen Kontrollstellen. Play/Pause und Positionsregler stehen bereit. Der Kontrollplayer folgt dem Lautstärkeregler im Hauptfenster. Das Fenster wird wiederverwendet; Originalplayer und Schnittliste bleiben erhalten. Bitte auch Anfang, Ende, Bild, Ton und Tonsynchronität prüfen. [Bedienung und Prüfgrenzen](docs/SCHNITTUEBERGAENGE-KONTROLLPLAYER-20261012.md).
 
 
 **Lokale Weiterentwicklung nach 1.0.0 (18.10.2026):** MP4Box ermittelt die Prüfstellen jetzt zusätzlich aus seinen Segmenten und der fertigen Videozeitachse. Geprüfte Ausgabezeiten und lediglich berechnete Prüfstellen werden unterschieden. Scheitert die Zusatzprüfung oder wird sie abgebrochen, bleibt der fertig geschnittene Film erhalten. Fehlende Bilder werden durch die Korrektur der Prüfpositionen nicht wiederhergestellt. otr-can behält seine bisherigen Planzeiten. Noch keine neue Veröffentlichung; [Integration und Prüfungen](docs/UEBERGANGSPRUEFUNG-INTEGRATION-20261018.md).

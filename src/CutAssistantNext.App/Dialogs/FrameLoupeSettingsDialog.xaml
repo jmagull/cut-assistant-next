@@ -16,8 +16,8 @@
         <TextBlock Grid.Row="2" Text="Gleiche Suchrichtung behält die Weite. Erst beim Richtungswechsel wird sie halbiert, bis auf 1 Frame. Die normale Navigation bleibt erhalten."
                    TextWrapping="Wrap" Margin="0,14,0,14" Foreground="#4B5563" />
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Speichern" Width="100" Height="32" IsDefault="True" Click="Save_Click" />
-            <Button Content="Abbrechen" Width="100" Height="32" IsCancel="True" Margin="8,0,0,0" />
+            <Button Content="Speichern" Width="100" Height="32" IsDefault="True" Click="Save_Click" ToolTip="Einstellungen speichern (Enter)" />
+            <Button Content="Abbrechen" Width="100" Height="32" IsCancel="True" ToolTip="Abbrechen (Esc)" Margin="8,0,0,0" />
         </StackPanel>
     </Grid>
 </Window>

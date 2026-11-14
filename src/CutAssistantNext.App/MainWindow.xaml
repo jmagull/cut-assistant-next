@@ -328,6 +328,7 @@
                                 Margin="0,0,10,8"
                                 IsEnabled="{Binding CanTogglePlayback}"
                                 Click="PlayButton_Click"
+                                ToolTip="Wiedergabe starten oder pausieren (Leertaste)"
                                 Content="Play/Pause" />
 
                         <Grid x:Name="SecondsSeekControls" Width="190" Height="36" Margin="0,0,10,8"
@@ -338,16 +339,20 @@
                                 <ColumnDefinition Width="40" />
                             </Grid.ColumnDefinitions>
                             <Button x:Name="JumpBackwardButton" Height="36" Padding="8,0"
-                                    IsEnabled="{Binding CanSeek}" Click="JumpBackwardButton_Click"
-                                    ToolTip="Um die gewählte Sekundenanzahl zurückspringen" Content="←" />
+                                    IsEnabled="{Binding CanSeek}" Click="SecondsJumpButton_Click" ClickMode="Press"
+                                    PreviewMouseLeftButtonUp="SecondsJumpButton_MouseUp"
+                                    LostMouseCapture="SecondsJumpButton_LostMouseCapture"
+                                    ToolTip="Um die gewählte Sekundenanzahl zurückspringen (S + ←, für Dauersprung halten)" Content="←" />
                             <ComboBox x:Name="JumpSecondsPicker" Grid.Column="1" Height="36" Margin="4,0"
                                       IsEditable="True" VerticalContentAlignment="Center"
                                       ItemsSource="{Binding JumpPresets}"
                                       Text="{Binding JumpSecondsText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       ToolTip="Sprungweite in Sekunden" AutomationProperties.Name="Sprungweite in Sekunden" />
                             <Button x:Name="JumpForwardButton" Grid.Column="2" Height="36" Padding="8,0"
-                                    IsEnabled="{Binding CanSeek}" Click="JumpForwardButton_Click"
-                                    ToolTip="Um die gewählte Sekundenanzahl vorspringen" Content="→" />
+                                    IsEnabled="{Binding CanSeek}" Click="SecondsJumpButton_Click" ClickMode="Press"
+                                    PreviewMouseLeftButtonUp="SecondsJumpButton_MouseUp"
+                                    LostMouseCapture="SecondsJumpButton_LostMouseCapture"
+                                    ToolTip="Um die gewählte Sekundenanzahl vorspringen (S + →, für Dauersprung halten)" Content="→" />
                         </Grid>
 
                         <Button x:Name="StepBackwardButton"
@@ -357,6 +362,7 @@
                                 Padding="14,0"
                                 IsEnabled="{Binding CanStepFrame}"
                                 Click="StepBackwardButton_Click"
+                                ToolTip="Ein Bild zurück (←)"
                                 Content="Bild zurück" />
 
                         <Button x:Name="StepForwardButton"
@@ -366,6 +372,7 @@
                                 Padding="14,0"
                                 IsEnabled="{Binding CanStepFrame}"
                                 Click="StepForwardButton_Click"
+                                ToolTip="Ein Bild vor (→)"
                                 Content="Bild vor" />
 
                         <StackPanel x:Name="KeyframeButtons" Orientation="Horizontal" Margin="0,0,8,8"

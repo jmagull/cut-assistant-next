@@ -369,8 +369,16 @@ public sealed class PowerUser2LayoutTests
         Assert.Equal(duration, second.End);
         Assert.Equal(savedRanges, plan.CreateCutPlanSnapshot().RemoveSegments.Select(x => (x.Start, x.End)));
 
-        plan.Replace(second, TimeSpan.FromSeconds(41), duration);
+        plan.SelectEdge(second, CutEdgeSide.End);
+        plan.SetEnd(TimeSpan.FromSeconds(90));
+        plan.SetStart(TimeSpan.FromSeconds(41));
         Pump();
+        Assert.Equal(Visibility.Visible, group.Visibility);
+        Assert.Equal(CutEdgeSide.End, plan.SelectedEdgeSide);
+        Assert.Same(plan.SelectedRemoveSegment, table.SelectedItem);
+        end.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Pump();
+        Assert.Equal(TimeSpan.FromSeconds(90), player.SeekPositions[^1]);
         start.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         Pump();
         Assert.Equal(TimeSpan.FromSeconds(41), player.SeekPositions[^1]);

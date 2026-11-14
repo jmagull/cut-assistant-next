@@ -41,6 +41,7 @@ public partial class MainWindow : Window
     private readonly PlayerFrameSearchViewModel _playerFrameSearch;
     private readonly CutPlanViewModel _cutPlanViewModel;
     private readonly CutReviewController _cutReviewController;
+    private readonly SecondsJumpRepeat _secondsJump;
     private CutNamingState? _cutNamingState;
     private string? _loadedCutlistAuthor;
     private string? _loadedIntendedCutApplicationName;
@@ -72,7 +73,6 @@ public partial class MainWindow : Window
             ?? throw new ArgumentNullException(nameof(logger));
 
         InitializeComponent();
-        _cutReviewController = new CutReviewController(this, _logger);
 
         _windowSettingsStore =
             new WindowSettingsStore();
@@ -85,6 +85,8 @@ public partial class MainWindow : Window
         _playbackViewModel =
             new PlaybackViewModel(_mediaPlayerService);
         _playbackViewModel.RestoreJumpSeconds(_windowSettingsStore.Load()?.SeekStepSeconds);
+        _cutReviewController = new CutReviewController(this, _logger, centralPlayback: _playbackViewModel);
+        _secondsJump = new SecondsJumpRepeat(JumpSecondsAsync);
 
         _keyframeNavigation = new KeyframeNavigationViewModel(_playbackViewModel);
         _playerFrameSearch = new PlayerFrameSearchViewModel(_playbackViewModel);
@@ -118,6 +120,7 @@ public partial class MainWindow : Window
 
         Closing += MainWindow_Closing;
         PreviewKeyDown += MainWindow_PreviewKeyDown;
+        InitializeSecondsJump();
 
         InitializeAppearance();
         InitializeMediaInput(startupArguments ?? [], startupDirectory ?? Environment.CurrentDirectory);
@@ -205,6 +208,7 @@ public partial class MainWindow : Window
         _shutdownStarted = true;
         _isClosed = true;
 
+        StopSecondsJump();
         _mediaInputCancellation.Cancel();
         _videoDropTarget?.Dispose();
         SaveWindowSettings();
@@ -433,9 +437,13 @@ public partial class MainWindow : Window
         }
         // Arrow keys in text/selection inputs belong to the focused control.
         if (IsPlaybackTextInput(e.OriginalSource as DependencyObject)) return;
-        if (_playerFrameSearch.IsNavigating) return;
-
         var modifiers = Keyboard.Modifiers;
+        if (TryHandleSecondsJumpKey(e, modifiers, Keyboard.IsKeyDown(Key.S)))
+        {
+            e.Handled = true;
+            return;
+        }
+        if (_playerFrameSearch.IsNavigating) return;
 
         if (e.Key == Key.F && modifiers == ModifierKeys.Shift &&
             e.OriginalSource is not System.Windows.Controls.Primitives.TextBoxBase)
@@ -521,12 +529,6 @@ public partial class MainWindow : Window
         await ExecutePlaybackActionAsync(
             () => _playbackViewModel.TogglePlaybackAsync());
     }
-
-    private async void JumpBackwardButton_Click(object sender, RoutedEventArgs e) =>
-        await ExecutePlaybackActionAsync(() => _playbackViewModel.JumpAsync(-1, _mediaInputCancellation.Token));
-
-    private async void JumpForwardButton_Click(object sender, RoutedEventArgs e) =>
-        await ExecutePlaybackActionAsync(() => _playbackViewModel.JumpAsync(1, _mediaInputCancellation.Token));
 
     private async void StepBackwardButton_Click(
         object sender,
@@ -2242,6 +2244,7 @@ public partial class MainWindow : Window
     {
         if (!CanOpenMedia) return;
 
+        StopSecondsJump();
         _mediaLoadInProgress = true;
 
         try

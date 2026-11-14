@@ -99,8 +99,9 @@ internal static class Program
     private static HwndSource Host() => new(new HwndSourceParameters("CAN regression HWND")
     { Width = 16, Height = 16, WindowStyle = unchecked((int)0x80000000) });
 
-    private static object Model(IMediaPlayerService player) => Activator.CreateInstance(ReviewType,
-        BindingFlags.Instance | BindingFlags.NonPublic, null, [player, null, null, Log], null)!;
+    private static object Model(IMediaPlayerService player, PlaybackViewModel? centralPlayback = null) =>
+        Activator.CreateInstance(ReviewType, BindingFlags.Instance | BindingFlags.NonPublic,
+            null, [player, null, null, Log, centralPlayback], null)!;
 
     private static CutCompletionViewModel Completion() => new(new CutResult(_media,
         new(TimeSpan.FromSeconds(8), [TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(5)]), CutReviewTimingKind.Estimated));
@@ -198,11 +199,17 @@ internal static class Program
         await WaitAsync(() => Math.Abs(main.Position.TotalSeconds - 1) < .1);
         var before = main.Position;
         var mainAudio = (await main.GetAudioTracksAsync()).Single(t => t.Selected).Id;
-        var model = Model(review);
+        using var centralPlayback = new PlaybackViewModel(main);
+        var model = Model(review, centralPlayback);
         try
         {
             await Call(model, "ReviewAsync", Completion(), 3, reviewHost.Handle);
-            await review.SetVolumeAsync(0);
+            Check(review.Volume == 0, "review starts with the main player's volume");
+            await centralPlayback.SetVolumeAsync(18);
+            await WaitAsync(() => review.Volume == 18);
+            Check(review.Volume == main.Volume, "open review tracks central volume changes");
+            await centralPlayback.SetVolumeAsync(0);
+            await WaitAsync(() => review.Volume == 0);
             var other = (await review.GetAudioTracksAsync()).Single(t => !t.Selected);
             await WaitAsync(() => review.State == MediaPlayerState.Ended);
             await Call(model, "SelectAudioAsync", other);
@@ -248,7 +255,8 @@ internal static class Program
         var player = new FaultPlayer(new MpvMediaPlayerService(Log));
         var windowType = typeof(CutCompletionViewModel).Assembly.GetType("CutAssistantNext.App.Dialogs.CutReviewWindow", true)!;
         var window = (Window)Activator.CreateInstance(windowType, BindingFlags.Instance | BindingFlags.NonPublic,
-            null, [player, Log], null)!;
+            null, [player, Log, null], null)!;
+        Check(window.FindName("VolumeSlider") is null, "review window has no separate volume control");
         window.Opacity = 0;
         window.ShowActivated = false;
         window.ShowInTaskbar = false;

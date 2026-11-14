@@ -169,6 +169,71 @@ public sealed class KeyframeShortcutTests
         Assert.Equal(before, buttons.Select(b => (b.Height, b.Width, b.Margin, b.Padding, b.Style, b.RenderSize)).ToArray());
     });
 
+    [Theory]
+    [InlineData("Standard")]
+    [InlineData("PowerUser")]
+    [InlineData("PowerUser2")]
+    public Task SecondsJumpAndPlayerTooltipsUseTheSameShortcutsInEveryLayout(string layout) => Sta(async () =>
+    {
+        await using var fixture = new Fixture();
+        await fixture.Load();
+        await fixture.Layout(layout);
+        var window = fixture.Window;
+        var player = fixture.Player;
+        player.Duration = TimeSpan.FromSeconds(200);
+        player.Position = TimeSpan.FromSeconds(100);
+        fixture.Playback.JumpSecondsText = "5";
+
+        foreach (var (buttonName, shortcut) in new[]
+        {
+            ("PlayPauseButton", "Leertaste"), ("StepBackwardButton", "←"), ("StepForwardButton", "→"),
+            ("JumpBackwardButton", "S + ←"), ("JumpForwardButton", "S + →")
+        })
+        {
+            var button = (Button)window.FindName(buttonName);
+            Assert.Contains(shortcut, Assert.IsType<string>(button.ToolTip));
+        }
+
+        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.Right), ModifierKeys.None, sDown: false));
+        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.F), ModifierKeys.Shift, sDown: true));
+        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.Space), ModifierKeys.None, sDown: true));
+        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.Left), ModifierKeys.Control, sDown: true));
+        Assert.True(window.TryHandleSecondsJumpKey(fixture.Key(Key.Left), ModifierKeys.None, sDown: true));
+        Assert.Equal(TimeSpan.FromSeconds(95), player.Position);
+
+        var controls = (Grid)window.FindName("PlaybackControls");
+        controls.IsEnabled = false;
+        await Dispatcher.Yield(DispatcherPriority.ApplicationIdle);
+        Assert.Single(player.SeekPositions);
+    });
+
+    [Theory]
+    [InlineData("text")]
+    [InlineData("richtext")]
+    [InlineData("editable_combo")]
+    [InlineData("combo")]
+    [InlineData("password")]
+    public Task SecondsJumpDoesNotClaimArrowsInInputFields(string kind) => Sta(async () =>
+    {
+        await using var fixture = new Fixture();
+        await fixture.Load();
+        DependencyObject input = kind switch
+        {
+            "text" => new TextBox(),
+            "richtext" => new RichTextBox(),
+            "password" => new PasswordBox(),
+            _ => new ComboBox { IsEditable = kind == "editable_combo" }
+        };
+
+        foreach (var key in new[] { Key.Left, Key.Right })
+        {
+            var args = fixture.Key(key, input);
+            Assert.False(fixture.Window.TryHandleSecondsJumpKey(args, ModifierKeys.None, sDown: true));
+            Assert.False(args.Handled);
+        }
+        Assert.Empty(fixture.Player.SeekPositions);
+    });
+
     private sealed class Fixture : IAsyncDisposable
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;

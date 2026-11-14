@@ -213,8 +213,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
         // Both edges are boundaries before the chosen frame, without an implicit frame offset.
         Replace(expectedSegment,
             side == CutEdgeSide.Start ? position : expectedSegment.Start,
-            side == CutEdgeSide.End ? position : expectedSegment.End);
-        SelectEdge(SelectedRemoveSegment!, side);
+            side == CutEdgeSide.End ? position : expectedSegment.End, side);
     }
 
     public TimeSpan? PendingStart
@@ -346,7 +345,8 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             Replace(
                 selectedSegment,
                 position,
-                selectedSegment.End);
+                selectedSegment.End,
+                SelectedEdgeSide);
 
             return;
         }
@@ -371,9 +371,9 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             Replace(
                 selectedSegment,
                 selectedSegment.Start,
-                position);
+                position,
+                SelectedEdgeSide);
 
-            SelectedRemoveSegment = null;
             return;
         }
 
@@ -419,7 +419,9 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public void Replace(
         RemoveSegment existingSegment,
         TimeSpan start,
-        TimeSpan end)
+        TimeSpan end) => Replace(existingSegment, start, end, null);
+
+    private void Replace(RemoveSegment existingSegment, TimeSpan start, TimeSpan end, CutEdgeSide? selectedEdge)
     {
         var cutPlan = GetInitializedMarkedPlan();
 
@@ -441,7 +443,10 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             replacementSegment);
 
         SynchronizeSegments();
-        SelectedRemoveSegment = replacementSegment;
+        if (selectedEdge is { } side)
+            SelectEdge(replacementSegment, side);
+        else
+            SelectedRemoveSegment = replacementSegment;
     }
 
     public CutPlan CreateCutPlanSnapshot()

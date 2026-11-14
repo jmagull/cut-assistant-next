@@ -16,9 +16,10 @@ internal partial class CutReviewWindow : Window
     private bool _allowClose;
     private bool _sliderDragging;
 
-    internal CutReviewWindow(IMediaPlayerService player, IAppLogger? logger = null)
+    internal CutReviewWindow(IMediaPlayerService player, IAppLogger? logger = null,
+        PlaybackViewModel? centralPlayback = null)
     {
-        _viewModel = new CutReviewViewModel(player, logger: logger);
+        _viewModel = new CutReviewViewModel(player, logger: logger, centralPlayback: centralPlayback);
         InitializeComponent();
         DataContext = _viewModel;
         VideoHost.VideoWindowHandleCreated += VideoHost_HandleCreated;
@@ -120,11 +121,6 @@ internal partial class CutReviewWindow : Window
         await RunAsync(() => _viewModel.SeekAsync(TimeSpan.FromSeconds(
             Math.Clamp(seconds.Value, 0, _viewModel.Playback.DurationSeconds))));
     }
-
-    private async void VolumeSlider_MouseUp(object sender, MouseButtonEventArgs e) =>
-        await RunAsync(() => _viewModel.SetVolumeAsync(VolumeSlider.Value));
-    private async void VolumeSlider_KeyUp(object sender, KeyEventArgs e) =>
-        await RunAsync(() => _viewModel.SetVolumeAsync(VolumeSlider.Value));
 
     private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
     {

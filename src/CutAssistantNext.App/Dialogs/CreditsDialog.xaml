@@ -55,7 +55,7 @@
                 </FlowDocument>
             </FlowDocumentScrollViewer>
         </Border>
-        <Button Grid.Row="2" Content="Schließen" IsCancel="True" IsDefault="True"
+        <Button Grid.Row="2" Content="Schließen" IsCancel="True" IsDefault="True" ToolTip="Fenster schließen (Enter oder Esc)"
                 HorizontalAlignment="Right" Width="110" Height="36" Margin="0,18,0,0" />
     </Grid>
 </Window>

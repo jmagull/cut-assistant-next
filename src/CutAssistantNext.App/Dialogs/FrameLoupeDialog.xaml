@@ -64,15 +64,15 @@
         </ScrollViewer>
         <StackPanel Grid.Row="2">
             <WrapPanel IsEnabled="{Binding CanNavigate}">
-                <Button Content="−10" Tag="-10" Click="Step_Click" ToolTip="Strg: −20 Frames" />
-                <Button Content="−1" Tag="-1" Click="Step_Click" />
-                <Button Content="+1" Tag="1" Click="Step_Click" />
-                <Button Content="+10" Tag="10" Click="Step_Click" ToolTip="Strg: +20 Frames" />
+                <Button Content="−10" Tag="-10" Click="Step_Click" ToolTip="10 Bilder zurück (Strg + Klick oder Strg + ← für 20 Bilder)" />
+                <Button Content="−1" Tag="-1" Click="Step_Click" ToolTip="Ein Bild zurück (←)" />
+                <Button Content="+1" Tag="1" Click="Step_Click" ToolTip="Ein Bild vor (→)" />
+                <Button Content="+10" Tag="10" Click="Step_Click" ToolTip="10 Bilder vor (Strg + Klick oder Strg + → für 20 Bilder)" />
                 <TextBlock Text="← / →: 1 Frame · Strg+← / →: 20 Frames" VerticalAlignment="Center" Margin="6,0,0,6" />
             </WrapPanel>
             <WrapPanel IsEnabled="{Binding CanNavigate}">
-                <Button Content="{Binding SearchLeftText}" Tag="-1" Click="Search_Click" ToolTip="Umschalt+←" />
-                <Button Content="{Binding SearchRightText}" Tag="1" Click="Search_Click" ToolTip="Umschalt+→" />
+                <Button Content="{Binding SearchLeftText}" Tag="-1" Click="Search_Click" ToolTip="Suchsprung zurück (Umschalt + ←)" />
+                <Button Content="{Binding SearchRightText}" Tag="1" Click="Search_Click" ToolTip="Suchsprung vor (Umschalt + →)" />
                 <Button Content="Suche neu starten" Click="ResetSearch_Click" />
             </WrapPanel>
             <TextBlock Text="Suchsprung: Umschalt+← / →. Gleiche Richtung: gleiche Weite. Richtungswechsel: halbe Weite."
@@ -83,7 +83,7 @@
         <DockPanel Grid.Row="4">
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="12,0,0,0">
                 <Button Content="Schnittkante übernehmen" IsEnabled="{Binding CanApply}" Click="Apply_Click" Margin="0,0,8,0" />
-                <Button Content="Abbrechen" IsCancel="True" Click="Close_Click" Margin="0" />
+                <Button Content="Abbrechen" IsCancel="True" ToolTip="Abbrechen (Esc)" Click="Close_Click" Margin="0" />
             </StackPanel>
             <TextBlock Text="{Binding SelectedCutPositionText}"
                        TextWrapping="Wrap" VerticalAlignment="Center" Foreground="#6B7280" />

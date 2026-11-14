@@ -70,5 +70,5 @@ MP4Box bleibt Standardschnittmotor.
 Die Wiedergabe benötigt FFmpeg und GPAC nicht; für die Analyse wird ffprobe
 benötigt. Beim Schneiden werden die Werkzeuge des gewählten Motors benötigt.
 Öffentliche stabile Downloads (Build 54):
-https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54
+https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build58
 Die AAC-Zeitlückenreparatur bleibt experimentell und benötigt Zustimmung.

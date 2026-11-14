@@ -67,6 +67,7 @@ public partial class MainWindow
     internal async Task OpenMediaFileAsync(string path)
     {
         if (!CanOpenMedia) return;
+        StopSecondsJump();
         _mediaLoadInProgress = true;
         try
         {

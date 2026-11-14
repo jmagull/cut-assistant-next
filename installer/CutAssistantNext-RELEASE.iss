@@ -20,7 +20,7 @@
 [Setup]
 AppId={{cdcdaf11-d631-4f81-b1d0-b50ea6ac606d}
 AppName=Cut Assistant Next
-AppVersion={#CanVersion}
+AppVersion={#CanVersion}.{#CanBuildNumber}
 VersionInfoVersion={#CanVersion}.{#CanBuildNumber}
 VersionInfoProductVersion={#CanVersion}.{#CanBuildNumber}
 #if ShowCandidate

@@ -1,8 +1,32 @@
+# Cut Assistant Next 1.0.3 Build 59
+
+**Neu gegenüber Build 58**
+
+- **Sekundensprünge:** Frei einstellbare Sprungweite. `S` halten und `←` oder `→` drücken. Ein kurzer Druck springt einmal. Beim Halten folgen weitere Sprünge nach etwa 350 ms und danach etwa alle 200 ms. Die vorhandenen Sprungbuttons wiederholen bei gehaltener Maustaste genauso. Texteingaben, Einzelbildnavigation und `Strg + ←/→` für Keyframes behalten ihre Bedienung.
+- **Schnittshuffle:** Der aktive rote oder grüne Bereich bleibt nach einer Korrektur ausgewählt. Für einen neuen Bereich zuerst die Auswahl aufheben.
+- **Lautstärke:** Das Hauptfenster regelt auch den Kontrollplayer. Beim Öffnen und bei späteren Änderungen übernimmt der Kontrollplayer den zentralen Wert.
+- **Tooltips:** Belegte Schaltflächen zeigen das jeweilige Tastenkürzel zusätzlich zur Funktionsbeschreibung.
+
+**Aus Build 58 übernommen:** Spotlight-CAN mit „Schnitt bis Videoende abschließen“, Rot-/Grün-Schnittmodus, gemeinsame Suche nach lokalen und Server-Cutlists, Cutlist-Bewertung, Bild- und Schnittvorschau sowie Kontrollplayer. otr-can behält die Audioprüfung, Tonspur-Abwahl und die ausdrücklich zu bestätigende experimentelle AAC-Zeitlückenreparatur. MP4Box fügt Segmente mit gleichartigen AAC-Tonspuren weiterhin über `-add`, `-cat` und `-new` zusammen. Keyframe-bedingte Werbeblitzer können bei MP4Box weiterhin auftreten.
+
+## Installation
+
+Windows 11 x64 und .NET 10 Desktop Runtime x64 vorausgesetzt. Für otr-can wird außerdem Microsoft Visual C++ v14 Redistributable x64 benötigt. Das Setup aktualisiert die vorhandene Installation. Für die portable Ausgabe das ZIP vollständig in ein frisches Verzeichnis entpacken und `CutAssistantNext.App.exe` starten.
+
+Enthalten sind libmpv 0.41.0 und otr-can 0.1.6-audio-diag.1 unter `tools/otr-can/otr_can.exe`. FFmpeg, ffprobe, MP4Box und FFMS2 bleiben externe Werkzeuge. Bezugsquellen und Pfadeinstellungen stehen in `VORAUSSETZUNGEN.txt`. Die vollständigen Quellen, das libmpv-Relink-Archiv und SHA-256-Prüfsummen werden separat bereitgestellt.
+
+## Prüfbasis
+
+Jörg hat Tastatur- und Mauswiederholung, die erhaltene Schnittauswahl, den zentralen Lautstärkeregler, die Lautstärkeübernahme und die Tooltips mit dem Usability-Entwicklungsstand persönlich unter Windows 11 geprüft. Die persönliche Prüfung der neuen Build-59-Pakete steht aus. Windows 10 wurde nicht persönlich geprüft.
+
+<details>
+<summary>Release Notes zu Build 58 und früheren Fassungen</summary>
+
 # Release Notes – Cut Assistant Next 1.0.3 Build 58
 
 ## Cut Assistant Next 1.0.3 Build 58 – vorbereiteter Release-Kandidat
 
-Die lokale Prüffassung hat die Dateiversion **1.0.3.58** und ist für die abschließende Paketfreigabe vorbereitet. Die öffentliche GitHub-Latest-Version ist weiterhin [Build 54](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54).
+[Build 58 wurde am 13.11.2026 veröffentlicht](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build58).
 
 - **MP4Box:** CAN importiert das erste Segment mit `-add`, hängt weitere mit `-cat` an und erzeugt die Ausgabe mit `-new`. Zuvor konnte GPAC bei gleichartigen AAC-Spuren beide Eingabespuren einer Zielspur zuordnen. Geprüft sind AAC, AAC+AC-3, AAC+AAC und AC-3+AC-3. Die bekannten Keyframe-Werbeblitzer können weiterhin auftreten. [Ursache, Paketvergleich und Praxistests](MP4BOX-WILD-CARD-ZUSAMMENFUEHRUNG-BUILD56.md)
 - **Spotlight-CAN:** Einen offenen Entfernen-Bereich mit **Schnitt bis Videoende abschließen** bis zur tatsächlichen Dateidauer schließen. **Videoanfang** in CAN setzt die Grenze auf **00:00:00.000**. [Bedienung](SPOTLIGHT-README.md)
@@ -108,6 +132,8 @@ Der Anwender bestätigt die gemeinsame Tabelle, Dauer und Downloadbeschriftung m
 **Santa Tell Me** ist inzwischen im grünen Modus mit vier Bereichen und **01:21:24.120** persönlich für Ton, Bild, Schnitt und Drei-Sekunden-Vorschau positiv gemeldet. MP4Box-/otr-can-Protokolle, gespeicherte Cutlist und Servereintrag liegen vor. [Praxisnachweis](SANTA-TELL-ME-GRUENER-PRAXISTEST-20261103.md). Die persönliche Wiederaufnahme gespeicherter begonnener Arbeit bleibt offen. Bestehende AVI-/Zeitstempel-/MP4Box-Grenzen bleiben gültig. Keine neue Setup-/Portable-/VM-Abnahme. Der anschließende Nutzerauftrag friert den korrigierten Stand ein und beauftragt Commit und Push. Kein Versions-/Buildsprung, Paketbau oder Release.
 
 [Bedienung](NUTZERANLEITUNG.md) · [Projektstand](AKTUELLER-STAND.md) · [Testplan](TESTPLAN.md) · [Tabelle: Umsetzung und Nachweise](CUTLIST-TABELLE-IMPLEMENTIERUNG-20261103.md) · [Schnittmodi: Umsetzung und Nachweise](SCHNITTMODI-TIMELINE-20261103.md)
+
+</details>
 
 </details>
 

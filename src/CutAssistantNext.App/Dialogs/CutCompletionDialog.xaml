@@ -97,7 +97,7 @@
             <Button x:Name="CopyButton" Content="Hinweise kopieren" Click="CopyButton_Click" />
             <Button x:Name="CloseButton" Grid.Column="2" Content="Schließen" MinWidth="110"
                     Background="#007AFF" Foreground="White" BorderBrush="#007AFF"
-                    IsDefault="True" Click="CloseButton_Click" />
+                    IsDefault="True" Click="CloseButton_Click" ToolTip="Abschlussfenster schließen (Enter oder Esc)" />
         </Grid>
     </Grid>
 </Window>

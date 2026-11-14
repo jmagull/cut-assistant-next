@@ -12,6 +12,8 @@ namespace CutAssistantNext.App.ViewModels;
 internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposable
 {
     private readonly IMediaPlayerService _player;
+    private readonly PlaybackViewModel? _centralPlayback;
+    private bool _volumeUpdateInProgress;
     private readonly Func<string, bool> _fileExists;
     private readonly TimeSpan _loadTimeout;
     private readonly IAppLogger _logger;
@@ -31,7 +33,7 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
     private Task? _closeTask;
 
     internal CutReviewViewModel(IMediaPlayerService player, Func<string, bool>? fileExists = null,
-        TimeSpan? loadTimeout = null, IAppLogger? logger = null)
+        TimeSpan? loadTimeout = null, IAppLogger? logger = null, PlaybackViewModel? centralPlayback = null)
     {
         _player = player ?? throw new ArgumentNullException(nameof(player));
         _fileExists = fileExists ?? File.Exists;
@@ -39,6 +41,9 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
         _logger = logger ?? NullAppLogger.Instance;
         _token = _lifetime.Token;
         Playback = new PlaybackViewModel(player);
+        _centralPlayback = centralPlayback;
+        if (_centralPlayback is not null)
+            _centralPlayback.PropertyChanged += CentralPlayback_PropertyChanged;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -93,6 +98,8 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
                 _initialized = true;
             }
 
+            if (_centralPlayback is not null)
+                await ApplyCentralVolumeAsync(_centralPlayback, token);
             Playback.CancelSeek();
             var completionChanged = !ReferenceEquals(_completion, completion);
             var needsReload = completionChanged || NeedsReload(completion);
@@ -113,6 +120,8 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
             }
 
             await _player.SeekAsync(ReviewPosition(completion, index), token);
+            if (_centralPlayback is not null)
+                await ApplyCentralVolumeAsync(_centralPlayback, token);
             token.ThrowIfCancellationRequested();
             await _player.PlayAsync(token);
         });
@@ -237,7 +246,38 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
         return requested < TimeSpan.Zero ? TimeSpan.Zero : requested > latest ? latest : requested;
     }
 
-    internal Task SetVolumeAsync(double volume) => ExecuteAsync(token => Playback.SetVolumeAsync(volume, token));
+    private async void CentralPlayback_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(PlaybackViewModel.Volume) || !_initialized || IsClosing ||
+            _volumeUpdateInProgress || _centralPlayback is null)
+            return;
+
+        _volumeUpdateInProgress = true;
+        try
+        {
+            await _gate.WaitAsync(_token);
+            try { await ApplyCentralVolumeAsync(_centralPlayback, _token); }
+            finally { _gate.Release(); }
+        }
+        catch (OperationCanceledException) when (IsClosing) { }
+        catch (Exception exception)
+        {
+            _logger.Error("Zentrale Lautstärke konnte im Kontrollplayer nicht übernommen werden.", exception);
+        }
+        finally { _volumeUpdateInProgress = false; }
+    }
+
+    private async Task ApplyCentralVolumeAsync(PlaybackViewModel source, CancellationToken token)
+    {
+        double volume;
+        do
+        {
+            volume = source.Volume;
+            if (volume != Playback.Volume)
+                await Playback.SetVolumeAsync(volume, token);
+        }
+        while (volume != source.Volume);
+    }
 
     private async Task ExecuteAsync(Func<CancellationToken, Task> action)
     {
@@ -303,6 +343,8 @@ internal sealed class CutReviewViewModel : INotifyPropertyChanged, IAsyncDisposa
 
     private async Task CloseCoreAsync()
     {
+        if (_centralPlayback is not null)
+            _centralPlayback.PropertyChanged -= CentralPlayback_PropertyChanged;
         _lifetime.Cancel();
         Notify();
         await _gate.WaitAsync();

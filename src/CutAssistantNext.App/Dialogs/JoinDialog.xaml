@@ -56,7 +56,7 @@
             <WrapPanel HorizontalAlignment="Right">
                 <Button x:Name="QuickButton" Content="QUICK AND COPY" Padding="14,9" Margin="0,0,10,8" IsEnabled="False" Click="AcceptQuick" />
                 <Button x:Name="AcceptButton" Content="AUDIO-ENTHUSIAST – NEUKODIERUNG" Padding="14,9" Margin="0,0,10,8" IsEnabled="False" Click="Accept" />
-                <Button Content="Abbrechen" Padding="14,9" Margin="0,0,0,8" IsCancel="True" />
+                <Button Content="Abbrechen" Padding="14,9" Margin="0,0,0,8" IsCancel="True" ToolTip="Abbrechen (Esc)" />
             </WrapPanel>
             <TextBlock TextWrapping="Wrap" Margin="0,4,0,6" Text="QUICK AND COPY übernimmt kompatible Bild- und Tonspuren ohne Neukodierung. Technische Hinweise stehen in der Meckerecke des Protokolls. Bitte den fertigen Film kontrollieren." />
             <TextBlock TextWrapping="Wrap" Text="AUDIO-ENTHUSIAST verbindet die Tonspuren samplegenau und kodiert den Ton einmal durchgehend neu." />

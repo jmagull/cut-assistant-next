@@ -316,7 +316,7 @@
                 Height="34"
                 Margin="0,6,0,0"
                 HorizontalAlignment="Right"
-                IsCancel="True"
+                IsCancel="True" ToolTip="Videoinformationen schließen (Esc)"
                 Content="Schließen" />
     </Grid>
 </Window>

@@ -221,14 +221,59 @@ public sealed partial class CutReviewViewModelTests
         await using var model = new CutReviewViewModel(p, _ => true);
         await model.ReviewAsync(Completion(), 1, 123);
         await model.SeekAsync(TimeSpan.FromSeconds(90));
-        await model.SetVolumeAsync(35);
         await model.TogglePlaybackAsync();
         Assert.Equal(TimeSpan.FromSeconds(90), p.Position);
-        Assert.Equal(35, p.Volume);
         Assert.Empty(original.Commands);
         Assert.Equal(TimeSpan.FromSeconds(88), original.Position);
         Assert.Equal(MediaPlayerState.Playing, original.State);
         Assert.DoesNotContain("stop", p.Commands);
+    }
+
+    [Fact]
+    public async Task ReviewInheritsCentralVolumeBeforePlaybackAndTracksChangesUntilClosed()
+    {
+        var original = new Player();
+        using var centralPlayback = new PlaybackViewModel(original);
+        await centralPlayback.SetVolumeAsync(35);
+        var player = new Player();
+        var model = new CutReviewViewModel(player, _ => true, centralPlayback: centralPlayback);
+        var completion = Completion();
+        await model.ReviewAsync(completion, 1, 123);
+        Assert.Equal(["initialize:123", "volume:35", "load:cut.mp4", "seek:7", "play"], player.Commands);
+        Assert.Equal(35, player.Volume);
+
+        await centralPlayback.SetVolumeAsync(0);
+        Assert.Equal(0, player.Volume);
+        Assert.Equal(MediaPlayerState.Playing, player.State);
+        Assert.Equal(TimeSpan.FromSeconds(7), player.Position);
+        await model.MoveAsync(1, 123);
+        Assert.Equal(0, player.Volume);
+
+        await model.DisposeAsync();
+        await centralPlayback.SetVolumeAsync(65);
+        Assert.Equal(0, player.Volume);
+
+        var reopenedPlayer = new Player();
+        await using var reopened = new CutReviewViewModel(reopenedPlayer, _ => true, centralPlayback: centralPlayback);
+        await reopened.ReviewAsync(completion, 0, 123);
+        Assert.Equal(65, reopenedPlayer.Volume);
+    }
+
+    [Fact]
+    public async Task CentralVolumeChangesDuringLoadAreAppliedBeforePlay()
+    {
+        using var centralPlayback = new PlaybackViewModel(new Player());
+        var player = new Player { DeferredLoad = true };
+        await using var model = new CutReviewViewModel(player, _ => true, centralPlayback: centralPlayback);
+        var review = model.ReviewAsync(Completion(), 1, 123);
+        await centralPlayback.SetVolumeAsync(25);
+        await centralPlayback.SetVolumeAsync(45);
+        player.ReadyDuration();
+        player.ReadyState();
+        await review;
+
+        Assert.Equal(["initialize:123", "load:cut.mp4", "seek:7", "volume:45", "play"], player.Commands);
+        Assert.Equal(45, player.Volume);
     }
 
     [Fact]
@@ -476,7 +521,13 @@ public sealed partial class CutReviewViewModelTests
         }
         public Task PlayAsync(CancellationToken t = default) { Commands.Add("play"); State = MediaPlayerState.Playing; StateChanged?.Invoke(this, EventArgs.Empty); return Task.CompletedTask; }
         public Task PauseAsync(CancellationToken t = default) { Commands.Add("pause"); OnPause?.Invoke(this); if (State == MediaPlayerState.Playing) State = MediaPlayerState.Paused; StateChanged?.Invoke(this, EventArgs.Empty); return Task.CompletedTask; }
-        public Task SetVolumeAsync(double v, CancellationToken t = default) { Volume = v; VolumeChanged?.Invoke(this, EventArgs.Empty); return Task.CompletedTask; }
+        public Task SetVolumeAsync(double v, CancellationToken t = default)
+        {
+            Commands.Add($"volume:{v}");
+            Volume = v;
+            VolumeChanged?.Invoke(this, EventArgs.Empty);
+            return Task.CompletedTask;
+        }
         public Task StopAsync(CancellationToken t = default) { Commands.Add("stop"); return Task.CompletedTask; }
         public Task StepForwardAsync(CancellationToken t = default) => Task.CompletedTask;
         public Task StepFramesAsync(int f, CancellationToken t = default) => Task.CompletedTask;

@@ -7,7 +7,7 @@ using CutAssistantNext.Media.Playback;
 namespace CutAssistantNext.App.Services;
 
 internal sealed class CutReviewController(Window owner, IAppLogger logger,
-    Func<CutReviewWindow>? createWindow = null)
+    Func<CutReviewWindow>? createWindow = null, PlaybackViewModel? centralPlayback = null)
 {
     private CutReviewWindow? _window;
     private bool _closed;
@@ -21,7 +21,7 @@ internal sealed class CutReviewController(Window owner, IAppLogger logger,
         if (_closed) return;
         if (_window is null)
         {
-            var window = createWindow?.Invoke() ?? new CutReviewWindow(new MpvMediaPlayerService(logger), logger);
+            var window = createWindow?.Invoke() ?? new CutReviewWindow(new MpvMediaPlayerService(logger), logger, centralPlayback);
             window.Owner = owner;
             window.Closed += (_, _) => { if (ReferenceEquals(_window, window)) _window = null; };
             _window = window;

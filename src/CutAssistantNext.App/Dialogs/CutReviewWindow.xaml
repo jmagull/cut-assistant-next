@@ -52,13 +52,6 @@
                 <Button x:Name="PreviousButton" Content="Vorherige Prüfstelle" IsEnabled="{Binding CanPrevious}" Click="PreviousButton_Click" />
                 <Button x:Name="NextButton" Content="Nächste Prüfstelle" IsEnabled="{Binding CanNext}" Click="NextButton_Click" />
                 <Button x:Name="PlayButton" Content="Play/Pause" IsEnabled="{Binding Playback.CanTogglePlayback}" Click="PlayButton_Click" />
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
-                    <TextBlock Text="Lautstärke" VerticalAlignment="Center" Margin="0,0,8,0" />
-                    <Slider x:Name="VolumeSlider" Width="100" Minimum="0" Maximum="100"
-                            Value="{Binding Playback.Volume, Mode=OneWay}" IsEnabled="{Binding Playback.CanSetVolume}"
-                            PreviewMouseLeftButtonUp="VolumeSlider_MouseUp" PreviewKeyUp="VolumeSlider_KeyUp"
-                            AutomationProperties.Name="Lautstärke des Kontrollplayers" />
-                </StackPanel>
             </WrapPanel>
         </StackPanel>
         <StackPanel Grid.Row="3" Margin="0,4,0,12">
@@ -68,6 +61,6 @@
             <TextBlock Text="{Binding Playback.ErrorMessage}" TextWrapping="Wrap" Foreground="#B91C1C" />
         </StackPanel>
         <Button Grid.Row="4" Content="Schließen" HorizontalAlignment="Right" Margin="0"
-                Click="CloseButton_Click" />
+                Click="CloseButton_Click" ToolTip="Kontrollplayer schließen (Esc)" />
     </Grid>
 </Window>

@@ -26,8 +26,8 @@
         </ScrollViewer>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
             <Button x:Name="AcceptButton" Content="Mit dieser AAC-Spur schneiden" Padding="12,8"
-                    Margin="0,0,10,0" IsEnabled="False" IsDefault="True" Click="AcceptClick" />
-            <Button Content="Abbrechen" Padding="12,8" IsCancel="True" />
+                    Margin="0,0,10,0" IsEnabled="False" IsDefault="True" Click="AcceptClick" ToolTip="Mit dieser AAC-Spur schneiden (Enter)" />
+            <Button Content="Abbrechen" Padding="12,8" IsCancel="True" ToolTip="Abbrechen (Esc)" />
         </StackPanel>
     </Grid>
 </Window>

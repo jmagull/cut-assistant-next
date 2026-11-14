@@ -389,13 +389,13 @@ public sealed class CutPlanViewModelTests
             viewModel.SelectedRemoveSegment);
     }
 
-    [Fact]
-    public void SetEnd_WhenSegmentIsSelected_ReplacesEndAndClearsSelection()
+    [Theory]
+    [InlineData(CutEditingMode.Remove)]
+    [InlineData(CutEditingMode.Keep)]
+    public void CorrectingSelectedEndKeepsShuffleAndAllowsNewCutAfterDeselect(CutEditingMode mode)
     {
         var viewModel = new CutPlanViewModel();
-
-        viewModel.Initialize(
-            TimeSpan.FromMinutes(60));
+        viewModel.Initialize(TimeSpan.FromMinutes(60), mode);
 
         viewModel.SetStart(
             TimeSpan.FromMinutes(10));
@@ -406,11 +406,8 @@ public sealed class CutPlanViewModelTests
         var originalSegment =
             Assert.Single(viewModel.RemoveSegments);
 
-        viewModel.SelectedRemoveSegment =
-            originalSegment;
-
-        viewModel.SetEnd(
-            TimeSpan.FromMinutes(22));
+        viewModel.SelectEdge(originalSegment, CutEdgeSide.End);
+        viewModel.SetEnd(TimeSpan.FromMinutes(22));
 
         var replacementSegment =
             Assert.Single(viewModel.RemoveSegments);
@@ -423,8 +420,24 @@ public sealed class CutPlanViewModelTests
             TimeSpan.FromMinutes(22),
             replacementSegment.End);
 
-        Assert.Null(
-            viewModel.SelectedRemoveSegment);
+        Assert.Same(replacementSegment, viewModel.SelectedRemoveSegment);
+        Assert.True(viewModel.CanShuffleSelectedSegment);
+        Assert.Equal(CutEdgeSide.End, viewModel.SelectedEdgeSide);
+
+        viewModel.SetStart(TimeSpan.FromMinutes(11));
+        Assert.Equal(TimeSpan.FromMinutes(11), viewModel.SelectedRemoveSegment!.Start);
+        Assert.True(viewModel.CanShuffleSelectedSegment);
+        Assert.Null(viewModel.PendingStart);
+        Assert.Throws<ArgumentOutOfRangeException>(() => viewModel.SetEnd(TimeSpan.FromMinutes(8)));
+        Assert.Equal(TimeSpan.FromMinutes(22), viewModel.SelectedEdgePosition);
+
+        viewModel.ToggleSegmentSelection(viewModel.SelectedRemoveSegment!);
+        Assert.False(viewModel.CanShuffleSelectedSegment);
+        viewModel.SetStart(TimeSpan.FromMinutes(30));
+        viewModel.SetEnd(TimeSpan.FromMinutes(35));
+        Assert.Equal(2, viewModel.RemoveSegments.Count);
+        Assert.Null(viewModel.SelectedRemoveSegment);
+        Assert.Null(viewModel.PendingStart);
     }
 
     [Fact]
@@ -642,4 +655,5 @@ public sealed class CutPlanViewModelTests
         Assert.Equal(
             2,
             viewModel.RemoveSegments.Count);
-    }}
+    }
+}
