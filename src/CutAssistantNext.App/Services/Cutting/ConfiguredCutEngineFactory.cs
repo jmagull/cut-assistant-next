@@ -98,5 +98,7 @@ internal sealed class ConfiguredCutEngineFactory
             if (results.Any(r => !r.IsAvailable))
                 throw new InvalidOperationException(string.Join(Environment.NewLine,
                     results.Where(r => !r.IsAvailable).Select(r => $"{r.Name}: {r.Message}")));
+            await new ToolFunctionChecks().EnsureNoKnownFailureAsync(ToolFunction.FfmpegStreamcopy,
+                [paths.Ffmpeg, paths.Ffprobe], token).ConfigureAwait(false);
         }, retainedAudioStreamIndex: legacyIndex, verifiedAudioStreamIndices: verifiedIndices);
 }

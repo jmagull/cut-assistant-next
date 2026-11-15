@@ -89,6 +89,9 @@
                          Padding="8,4"
                          Text="{Binding Options, UpdateSourceTrigger=PropertyChanged}" />
 
+                <Button x:Name="FunctionCheckButton" Margin="0,12,0,0" Height="34" Width="190"
+                        HorizontalAlignment="Left" Click="CheckFunctionButton_Click" Content="MP4Box-Funktion prüfen" />
+                <TextBlock x:Name="FunctionStatus" Margin="0,8,0,0" TextWrapping="Wrap" MaxHeight="105" />
                 <TextBlock Margin="0,14,0,0"
                            FontSize="12"
                            Foreground="#6B7280"

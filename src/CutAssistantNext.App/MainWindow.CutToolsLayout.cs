@@ -86,6 +86,9 @@ public partial class MainWindow
             RemoveCutSegmentButton.HorizontalAlignment = HorizontalAlignment.Right;
             MoveCutTool(CutMp4BoxButton, PowerCutEnginesGrid, 0, 0);
             MoveCutTool(CutOtrCanButton, PowerCutEnginesGrid, 0, 2);
+            MoveCutTool(ReopenCutReviewButton, PowerCutEnginesGrid, 1);
+            Grid.SetColumnSpan(ReopenCutReviewButton, 3);
+            ReopenCutReviewButton.Margin = new Thickness(0, 6, 0, 0);
             CutMp4BoxButton.Content = "MP4Box (schnell)";
             CutOtrCanButton.Content = "otr-can (framegenau)";
             CutMp4BoxButton.ToolTip = _standardToolAppearance[CutMp4BoxButton].Content;
@@ -152,7 +155,7 @@ public partial class MainWindow
         // If the fixed tools need more space, the surrounding viewport scrolls instead of clipping.
         var markersHeight = PowerCutMarkersGrid.Visibility == Visibility.Visible ? PowerCutMarkersGrid.DesiredSize.Height : 0;
         var minimum = PowerCutHeader.DesiredSize.Height + markersHeight +
-            PowerCutActionsGrid.DesiredSize.Height + RemoveSegmentsGrid.MinHeight + RemoveSegmentsGrid.Margin.Top;
+            PowerCutActionsGrid.DesiredSize.Height + CutEngineRecommendationText.DesiredSize.Height + RemoveSegmentsGrid.MinHeight + RemoveSegmentsGrid.Margin.Top;
         var height = Math.Max(minimum, CutContentScrollViewer.ViewportHeight);
         if (!double.IsFinite(height)) return;
         if (double.IsNaN(CutContentGrid.Height) || Math.Abs(CutContentGrid.Height - height) > 0.5)

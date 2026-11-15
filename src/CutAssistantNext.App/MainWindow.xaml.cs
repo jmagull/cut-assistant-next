@@ -87,7 +87,7 @@ public partial class MainWindow : Window
             new PlaybackViewModel(_mediaPlayerService);
         _playbackViewModel.RestoreJumpSeconds(_windowSettingsStore.Load()?.SeekStepSeconds);
         _cutReviewController = new CutReviewController(this, _logger, centralPlayback: _playbackViewModel);
-        _secondsJump = new SecondsJumpRepeat(JumpSecondsAsync);
+        _secondsJump = new SecondsJumpRepeat(ExecuteNavigationAsync);
 
         _keyframeNavigation = new KeyframeNavigationViewModel(_playbackViewModel);
         _playerFrameSearch = new PlayerFrameSearchViewModel(_playbackViewModel);
@@ -122,6 +122,8 @@ public partial class MainWindow : Window
         Closing += MainWindow_Closing;
         PreviewKeyDown += MainWindow_PreviewKeyDown;
         InitializeSecondsJump();
+        UpdateShortcutTooltips();
+        InitializeCutEngineRecommendation();
 
         InitializeAppearance();
         InitializeMediaInput(startupArguments ?? [], startupDirectory ?? Environment.CurrentDirectory);
@@ -428,91 +430,60 @@ public partial class MainWindow : Window
         object sender,
         KeyEventArgs e)
     {
-        if (e.Key == Key.Escape && Keyboard.Modifiers == ModifierKeys.None &&
-            !_mediaLoadInProgress && !_isClosed && IsEnabled &&
-            e.OriginalSource is not TextBoxBase && _cutPlanViewModel.PendingStart.HasValue)
+        if (e.Handled || IsPlaybackTextInput(e.OriginalSource as DependencyObject) ||
+            IsPlaybackTextInput(Keyboard.FocusedElement as DependencyObject)) return;
+
+        var modifiers = Keyboard.Modifiers;
+        bool sDown = Keyboard.IsKeyDown(Key.S);
+        if (TryHandleSecondsJumpKey(e, modifiers, sDown))
+        {
+            e.Handled = true;
+            return;
+        }
+
+        var action = _shortcuts.Match(e.Key, modifiers, sDown);
+        if (action == PlaybackShortcut.CancelCut && !_mediaLoadInProgress && !_isClosed &&
+            IsEnabled && _cutPlanViewModel.PendingStart.HasValue)
         {
             _cutPlanViewModel.CancelPendingStart();
             e.Handled = true;
             return;
         }
-        // Arrow keys in text/selection inputs belong to the focused control.
-        if (IsPlaybackTextInput(e.OriginalSource as DependencyObject)) return;
-        var modifiers = Keyboard.Modifiers;
-        if (TryHandleSecondsJumpKey(e, modifiers, Keyboard.IsKeyDown(Key.S)))
+
+        if (_playerFrameSearch.IsNavigating || action is null) return;
+        if (action is PlaybackShortcut.KeyframeBackward or PlaybackShortcut.KeyframeForward)
+        {
+            await (TryHandleKeyframeShortcutAsync(e, modifiers) ?? Task.CompletedTask);
+            return;
+        }
+        if (action is PlaybackShortcut.FrameBackward or PlaybackShortcut.FrameForward)
+        {
+            if (!CanNavigate(action.Value)) return;
+            e.Handled = true;
+            if (!e.IsRepeat) await HoldNavigationKeyAsync(action.Value, e.Key);
+            return;
+        }
+        if (action == PlaybackShortcut.FrameLoupe)
         {
             e.Handled = true;
-            return;
+            if (!e.IsRepeat) await OpenFrameLoupeAsync();
         }
-        if (_playerFrameSearch.IsNavigating) return;
-
-        if (e.Key == Key.F && modifiers == ModifierKeys.Shift &&
-            e.OriginalSource is not System.Windows.Controls.Primitives.TextBoxBase)
+        if (action == PlaybackShortcut.TogglePlayback && _playbackViewModel.CanTogglePlayback)
         {
             e.Handled = true;
-            await OpenFrameLoupeAsync();
-            return;
+            if (!e.IsRepeat) await ExecutePlaybackActionAsync(() => _playbackViewModel.TogglePlaybackAsync());
         }
-
-        if (e.Key == Key.Space &&
-            modifiers == ModifierKeys.None &&
-            _playbackViewModel.CanTogglePlayback)
-        {
-            e.Handled = true;
-
-            await ExecutePlaybackActionAsync(
-                () => _playbackViewModel.TogglePlaybackAsync());
-
-            return;
-        }
-
-        var keyframeJump = TryHandleKeyframeShortcutAsync(e, modifiers);
-        if (keyframeJump is not null)
-        {
-            await keyframeJump;
-            return;
-        }
-
-        if (!_playbackViewModel.CanStepFrame)
-        {
-            return;
-        }
-
-        if (e.Key == Key.Left &&
-            modifiers == ModifierKeys.None)
-        {
-            e.Handled = true;
-
-            await ExecutePlaybackActionAsync(
-                () => _playbackViewModel.StepBackwardAsync());
-
-            return;
-        }
-
-        if (e.Key == Key.Right &&
-            modifiers == ModifierKeys.None)
-        {
-            e.Handled = true;
-
-            await ExecutePlaybackActionAsync(
-                () => _playbackViewModel.StepForwardAsync());
-
-            return;
-        }
-
     }
 
     internal Task? TryHandleKeyframeShortcutAsync(KeyEventArgs e, ModifierKeys modifiers)
     {
-        if (e.Handled || modifiers != ModifierKeys.Control || e.Key is not (Key.Left or Key.Right) ||
-            _isClosed || _mediaLoadInProgress || _frameLoupeOpening || !IsEnabled || !PlaybackControls.IsEnabled ||
-            _playerFrameSearch.IsNavigating || IsPlaybackTextInput(e.OriginalSource as DependencyObject) ||
+        if (e.Handled || IsPlaybackTextInput(e.OriginalSource as DependencyObject) ||
             IsPlaybackTextInput(Keyboard.FocusedElement as DependencyObject)) return null;
-        var direction = e.Key == Key.Left ? -1 : 1;
-        if (!(direction < 0 ? _keyframeNavigation.CanPrevious : _keyframeNavigation.CanNext)) return null;
-        // Mark the routed event before the asynchronous jump yields to the dispatcher.
+        var action = _shortcuts.Match(e.Key, modifiers, Keyboard.IsKeyDown(Key.S));
+        if (action is not (PlaybackShortcut.KeyframeBackward or PlaybackShortcut.KeyframeForward) ||
+            !CanNavigate(action.Value)) return null;
         e.Handled = true;
-        return _keyframeNavigation.JumpAsync(direction);
+        return e.IsRepeat ? Task.CompletedTask : HoldNavigationKeyAsync(action.Value, e.Key);
     }
 
     internal static bool IsPlaybackTextInput(DependencyObject? source)
@@ -529,22 +500,6 @@ public partial class MainWindow : Window
     {
         await ExecutePlaybackActionAsync(
             () => _playbackViewModel.TogglePlaybackAsync());
-    }
-
-    private async void StepBackwardButton_Click(
-        object sender,
-        RoutedEventArgs e)
-    {
-        await ExecutePlaybackActionAsync(
-            () => _playbackViewModel.StepBackwardAsync());
-    }
-
-    private async void StepForwardButton_Click(
-        object sender,
-        RoutedEventArgs e)
-    {
-        await ExecutePlaybackActionAsync(
-            () => _playbackViewModel.StepForwardAsync());
     }
 
     private async void RemoveSegmentsDataGrid_PreviewMouseLeftButtonDown(
@@ -900,12 +855,6 @@ public partial class MainWindow : Window
                 new FfmpegFramePreviewRunner(resolver.Resolve(BundledToolKind.Ffmpeg, tools.FfmpegExecutablePath)), media.FormatName);
         }, settings.InitialSearchFrames);
     }
-
-    private async void PreviousKeyframe_Click(object sender, RoutedEventArgs e) =>
-        await _keyframeNavigation.JumpAsync(-1);
-
-    private async void NextKeyframe_Click(object sender, RoutedEventArgs e) =>
-        await _keyframeNavigation.JumpAsync(1);
 
     private async Task LoadKeyframesAsync(string path)
     {
@@ -1482,6 +1431,7 @@ public partial class MainWindow : Window
                     var cutEngine = await Task.Run(() => cutEngineFactory.Create(engineKind, selection, progress));
                     if (!dialog.IsVisible) return;
 
+                    ClearRepeatableCutReview();
                     progressViewModel.MarkRunning();
 
                     progressDialog.Show();
@@ -1527,6 +1477,8 @@ public partial class MainWindow : Window
                         completionViewModel = new CutCompletionViewModel(cutResult);
 
                         cutSucceeded = true;
+                        _repeatableCutReview = completionViewModel;
+                        ReopenCutReviewButton.Visibility = Visibility.Visible;
                         _lastSuccessfulCutMediaPath = originalFilePath;
                         _lastSuccessfulCutEngine = cutEngine is OtrCanMp4BoxFallbackCutService { UsedMp4Box: true }
                             ? CutEngineKind.Mp4Box : engineKind;
@@ -2274,6 +2226,7 @@ public partial class MainWindow : Window
         if (_isClosed || _mediaInputCancellation.IsCancellationRequested) return;
         _cutlistRatings.Clear();
         ++_cutlistMediaGeneration;
+        ClearRepeatableCutReview();
         _logger.Information($"Mediendatei wurde ausgewählt: {mediaPath}");
 
         _playerFrameSearch.SetMedia(null);

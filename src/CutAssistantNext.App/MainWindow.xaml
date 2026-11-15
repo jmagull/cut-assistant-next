@@ -12,6 +12,7 @@
         Background="#F4F6F8">
 
     <Window.Resources>
+        <controls:KeyframeBoundaryVisibilityConverter x:Key="KeyframeBoundaryVisibility" />
         <BooleanToVisibilityConverter
             x:Key="BooleanToVisibilityConverter" />
 
@@ -59,6 +60,7 @@
               Background="White">
             <MenuItem Header="Einstellungen">
                 <MenuItem Header="Darstellung und Schnittbearbeitung …" Click="AppearanceSettingsMenuItem_Click" />
+                <MenuItem Header="Tastenkürzel …" Click="ShortcutSettingsMenuItem_Click" />
                 <MenuItem Header="Standardordner …"
                           Click="VideoFolderSettingsMenuItem_Click" />
 
@@ -361,7 +363,8 @@
                                 Margin="0,0,10,8"
                                 Padding="14,0"
                                 IsEnabled="{Binding CanStepFrame}"
-                                Click="StepBackwardButton_Click"
+                                Click="NavigationButton_Click" ClickMode="Press"
+                                PreviewMouseLeftButtonUp="SecondsJumpButton_MouseUp" LostMouseCapture="SecondsJumpButton_LostMouseCapture"
                                 ToolTip="Ein Bild zurück (←)"
                                 Content="Bild zurück" />
 
@@ -371,18 +374,21 @@
                                 Margin="0,0,10,8"
                                 Padding="14,0"
                                 IsEnabled="{Binding CanStepFrame}"
-                                Click="StepForwardButton_Click"
+                                Click="NavigationButton_Click" ClickMode="Press"
+                                PreviewMouseLeftButtonUp="SecondsJumpButton_MouseUp" LostMouseCapture="SecondsJumpButton_LostMouseCapture"
                                 ToolTip="Ein Bild vor (→)"
                                 Content="Bild vor" />
 
                         <StackPanel x:Name="KeyframeButtons" Orientation="Horizontal" Margin="0,0,8,8"
                                     Visibility="{Binding IsSupported, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Button Content="◀ K" Width="48" Height="36" Margin="0,0,4,0"
-                                    IsEnabled="{Binding CanPrevious}" Click="PreviousKeyframe_Click"
+                            <Button x:Name="PreviousKeyframeButton" Content="◀ K" Width="48" Height="36" Margin="0,0,4,0"
+                                    IsEnabled="{Binding PreviousButtonEnabled}" Click="NavigationButton_Click" ClickMode="Press"
+                                PreviewMouseLeftButtonUp="SecondsJumpButton_MouseUp" LostMouseCapture="SecondsJumpButton_LostMouseCapture"
                                     ToolTip="{Binding PreviousToolTip}"
                                     ToolTipService.ShowOnDisabled="True" />
-                            <Button Content="K ▶" Width="48" Height="36"
-                                    IsEnabled="{Binding CanNext}" Click="NextKeyframe_Click"
+                            <Button x:Name="NextKeyframeButton" Content="K ▶" Width="48" Height="36"
+                                    IsEnabled="{Binding NextButtonEnabled}" Click="NavigationButton_Click" ClickMode="Press"
+                                PreviewMouseLeftButtonUp="SecondsJumpButton_MouseUp" LostMouseCapture="SecondsJumpButton_LostMouseCapture"
                                     ToolTip="{Binding NextToolTip}"
                                     ToolTipService.ShowOnDisabled="True" />
                         </StackPanel>
@@ -568,6 +574,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <TextBlock x:Name="StandardCutHeader" Grid.Row="0"
@@ -675,25 +682,44 @@
                           PreviewMouseLeftButtonDown="RemoveSegmentsDataGrid_PreviewMouseLeftButtonDown"
                           PreviewMouseRightButtonDown="RemoveSegmentsDataGrid_PreviewMouseRightButtonDown"
                           SelectedItem="{Binding SelectedRemoveSegment, Mode=TwoWay}"
-                          ItemsSource="{Binding MarkedSegments}">
+                          ItemsSource="{Binding MarkedSegments}"
+                          Tag="{Binding DataContext, ElementName=KeyframeButtons}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn x:Name="RemoveSegmentStartColumn"
-                                            Header="Anfang"
-                                            Width="*">
-                            <DataGridTextColumn.Binding>
-                                <Binding Path="Start"
-                                         StringFormat="hh\:mm\:ss\.fff" />
-                            </DataGridTextColumn.Binding>
-                        </DataGridTextColumn>
+                        <DataGridTemplateColumn x:Name="RemoveSegmentStartColumn" Header="Anfang" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Start, StringFormat=hh\:mm\:ss\.fff}" />
+                                        <TextBlock Text="K" Foreground="#1D4ED8" FontWeight="SemiBold" Margin="5,0,0,0">
+                                            <TextBlock.Visibility>
+                                                <MultiBinding Converter="{StaticResource KeyframeBoundaryVisibility}">
+                                                    <Binding Path="Start" />
+                                                    <Binding Path="Tag.Index" RelativeSource="{RelativeSource AncestorType=DataGrid}" />
+                                                </MultiBinding>
+                                            </TextBlock.Visibility>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                        <DataGridTextColumn x:Name="RemoveSegmentEndColumn"
-                                            Header="Ende"
-                                            Width="*">
-                            <DataGridTextColumn.Binding>
-                                <Binding Path="End"
-                                         StringFormat="hh\:mm\:ss\.fff" />
-                            </DataGridTextColumn.Binding>
-                        </DataGridTextColumn>
+                        <DataGridTemplateColumn x:Name="RemoveSegmentEndColumn" Header="Ende" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding End, StringFormat=hh\:mm\:ss\.fff}" />
+                                        <TextBlock Text="K" Foreground="#1D4ED8" FontWeight="SemiBold" Margin="5,0,0,0">
+                                            <TextBlock.Visibility>
+                                                <MultiBinding Converter="{StaticResource KeyframeBoundaryVisibility}">
+                                                    <Binding Path="End" />
+                                                    <Binding Path="Tag.Index" RelativeSource="{RelativeSource AncestorType=DataGrid}" />
+                                                </MultiBinding>
+                                            </TextBlock.Visibility>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
                         <DataGridTextColumn Header="Dauer"
                                             Width="*">
@@ -705,7 +731,9 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <WrapPanel x:Name="CutActionsPanel" Grid.Row="3" Margin="0,12,0,0">
+                <TextBlock x:Name="CutEngineRecommendationText" Grid.Row="3" Visibility="Collapsed"
+                           Margin="0,8,0,0" TextWrapping="Wrap" />
+                <WrapPanel x:Name="CutActionsPanel" Grid.Row="4" Margin="0,12,0,0">
                     <Button x:Name="RemoveCutSegmentButton" MinWidth="110"
                             Height="36"
                             Margin="0,0,8,6"
@@ -743,6 +771,10 @@
                             Click="CutOtrCanButton_Click"
                             Content="Schneiden otr-can (framegenau, langsam)" />
 
+                    <Button x:Name="ReopenCutReviewButton" Height="36" Margin="0,0,8,6" Padding="10,0"
+                            Visibility="Collapsed" Click="ReopenCutReviewButton_Click"
+                            Content="Schnittprüfung erneut öffnen" />
+
                     <Button x:Name="GenerateCutlistButton" MinWidth="110"
                             Height="36"
                             Margin="0,0,8,6"
@@ -764,7 +796,7 @@
                             Click="NamingSettingsButton_Click"
                             Content="Namensmaske" />
                 </WrapPanel>
-                <Grid x:Name="PowerCutActionsGrid" Grid.Row="3" Margin="0,12,0,0" Visibility="Collapsed">
+                <Grid x:Name="PowerCutActionsGrid" Grid.Row="4" Margin="0,12,0,0" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
@@ -773,6 +805,9 @@
                     <Border Grid.Row="1" Height="1" Background="#E5E7EB" Margin="0,16,0,14" />
                     <TextBlock Grid.Row="2" Text="Film schneiden" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8" />
                     <Grid x:Name="PowerCutEnginesGrid" Grid.Row="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" /><ColumnDefinition Width="8" /><ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>

@@ -7,6 +7,8 @@ namespace CutAssistantNext.App.Settings;
 
 internal sealed class CutlistServerSettings
 {
+    public bool IncludeOtherQualities { get; init; }
+
     public string PersonalServerUrl { get; init; } =
         string.Empty;
 

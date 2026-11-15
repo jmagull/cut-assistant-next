@@ -18,10 +18,22 @@ internal sealed class KeyframeNavigationViewModel : INotifyPropertyChanged, IDis
         _playback.PropertyChanged += PlaybackChanged;
     }
     public event PropertyChangedEventHandler? PropertyChanged;
+    public VideoKeyframeIndex? Index => _index;
     public IReadOnlyList<TimeSpan> Positions => _index?.Positions ?? [];
     public string Status { get; private set; } = "Keyframe-Informationen noch nicht verfügbar.";
-    public string PreviousToolTip => $"Vorheriger Keyframe (Strg + ←){Environment.NewLine}{Status}";
-    public string NextToolTip => $"Nächster Keyframe (Strg + →){Environment.NewLine}{Status}";
+    private string _previousCaption = "Vorheriger Keyframe (Strg + ←)";
+    private string _nextCaption = "Nächster Keyframe (Strg + →)";
+    public string PreviousToolTip => $"{_previousCaption}{Environment.NewLine}{Status}";
+    public string NextToolTip => $"{_nextCaption}{Environment.NewLine}{Status}";
+    public bool PreviousButtonEnabled => IsNavigating || CanPrevious;
+    public bool NextButtonEnabled => IsNavigating || CanNext;
+
+    internal void UpdateShortcutCaptions(string previous, string next)
+    {
+        _previousCaption = previous;
+        _nextCaption = next;
+        Publish();
+    }
     public bool IsSupported { get; private set; }
     public bool IsLoading { get; private set; }
     public bool IsNavigating { get; private set; }
@@ -37,6 +49,7 @@ internal sealed class KeyframeNavigationViewModel : INotifyPropertyChanged, IDis
         _lifetime?.Dispose();
         _lifetime = null;
         _index = null;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Index)));
         IsSupported = false;
         IsLoading = false;
         IsNavigating = false;
@@ -74,7 +87,8 @@ internal sealed class KeyframeNavigationViewModel : INotifyPropertyChanged, IDis
                 media.VideoStreams[0].Index, duration, (decimal)(media.StartTimeSeconds ?? 0)), token);
             if (_disposed || !ReferenceEquals(_lifetime, lifetime) || token.IsCancellationRequested) return;
             _index = index;
-            Status = $"{index.Positions.Count:N0} Keyframes · Original-Zeitstempel. Blaue Bereiche: Keyframes; rote Flächen: Entfernbereiche.";
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Index)));
+            Status = $"{index.Positions.Count:N0} Keyframes · Original-Zeitstempel. Blaue Markierungen: Keyframes.";
         }
         catch (OperationCanceledException) when (token.IsCancellationRequested) { }
         catch (Exception exception)
@@ -138,7 +152,7 @@ internal sealed class KeyframeNavigationViewModel : INotifyPropertyChanged, IDis
     private void Publish()
     {
         foreach (string property in new[] { nameof(Positions), nameof(Status), nameof(PreviousToolTip), nameof(NextToolTip), nameof(IsSupported), nameof(IsLoading), nameof(IsNavigating),
-            nameof(CanPrevious), nameof(CanNext), nameof(Indicator) })
+            nameof(CanPrevious), nameof(CanNext), nameof(PreviousButtonEnabled), nameof(NextButtonEnabled), nameof(Indicator) })
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
     }
     public void Dispose()

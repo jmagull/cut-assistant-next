@@ -3,7 +3,7 @@ using CutAssistantNext.Media.Tools;
 
 namespace CutAssistantNext.App.Settings;
 
-internal sealed record FfmpegToolCheckResult(string Name, bool IsAvailable, string Message);
+internal sealed record FfmpegToolCheckResult(string Name, bool IsAvailable, string Message, string? BuildIdentity = null);
 
 internal sealed class FfmpegToolChecker
 {
@@ -26,6 +26,10 @@ internal sealed class FfmpegToolChecker
         ];
     }
 
+    internal static bool IsMatchingPair(IReadOnlyList<FfmpegToolCheckResult> results) =>
+        results is [{ IsAvailable: true, BuildIdentity: { } first }, { IsAvailable: true, BuildIdentity: { } second }] &&
+        string.Equals(first, second, StringComparison.OrdinalIgnoreCase);
+
     private async Task<FfmpegToolCheckResult> CheckOneAsync(
         BundledToolKind kind, string configuredPath, CancellationToken cancellationToken)
     {
@@ -43,7 +47,7 @@ internal sealed class FfmpegToolChecker
             if (result.ExitCode != 0)
                 return new(name, false, "Programmstart oder Versionsprüfung fehlgeschlagen. Bitte das vollständige Werkzeugpaket einschließlich seiner DLLs prüfen.");
             var assessment = FfmpegVersionPolicy.Assess(result.StandardOutput + "\n" + result.StandardError, program);
-            return new(name, assessment.IsSupported, assessment.Message);
+            return new(name, assessment.IsSupported, assessment.Message, assessment.BuildIdentity);
         }
         catch (OperationCanceledException) { throw; }
         catch (Exception error) when (error is IOException or UnauthorizedAccessException or ArgumentException or

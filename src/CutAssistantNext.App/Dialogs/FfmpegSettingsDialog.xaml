@@ -107,7 +107,10 @@
                     Orientation="Horizontal">
 
             <Button MinWidth="100" Height="36" Margin="0,0,10,0" Padding="14,0"
-                    IsEnabled="{Binding CanEdit}" Click="CheckButton_Click" Content="Prüfen" />
+                    IsEnabled="{Binding CanEdit}" Click="CheckButton_Click" Content="Version prüfen" />
+
+            <Button MinWidth="125" Height="36" Margin="0,0,10,0" Padding="10,0"
+                    IsEnabled="{Binding CanEdit}" Click="CheckFunctionButton_Click" Content="Funktion prüfen" />
 
             <Button MinWidth="130" IsEnabled="{Binding CanEdit}"
                     Height="36"

@@ -11,6 +11,7 @@ internal sealed class CutlistResultRow
     internal string? ServerUrl { get; private init; }
     internal LocalCutlistCandidate? Local { get; private init; }
     internal CutlistDocument? Document { get; private init; }
+    internal bool IsAlternativeQuality { get; private init; }
     public string Source => Local is null ? "Server" : "Lokal";
     public int SourceOrder => Local is null ? 0 : 1;
     public long ServerOrder => long.TryParse(Server?.Id, out var id) ? id : long.MinValue;
@@ -52,13 +53,21 @@ internal sealed class CutlistResultRow
     public string UserComment => Server?.UserComment ?? Document?.Info.UserComment ?? string.Empty;
     public string Finding { get; private init; } = "Noch nicht geprüft";
     public string Details => Local is null
-        ? "Server · Prüfung der Cutlist nach dem Herunterladen. " + Server?.Errors
+        ? (IsAlternativeQuality ? _reason + " " : "") + "Server · Prüfung der Cutlist nach dem Herunterladen. " + Server?.Errors
         : string.Join(Environment.NewLine, Local.Paths) + Environment.NewLine + _reason;
     private string _reason = string.Empty;
     public bool CanLoad { get; private init; } = true;
 
-    internal static CutlistResultRow FromServer(CutlistSearchResult result, string serverUrl) => new()
-    { Server = result, ServerUrl = serverUrl, CutlistFileName = result.CutlistFileName };
+    internal static CutlistResultRow FromServer(CutlistSearchResult result, string serverUrl, string? quality = null) => new()
+    {
+        Server = result,
+        ServerUrl = serverUrl,
+        CutlistFileName = result.CutlistFileName,
+        IsAlternativeQuality = quality is not null,
+        Finding = quality is null ? "Noch nicht geprüft" : $"Alternative: {quality}",
+        _reason = quality is null ? "" :
+            "Andere Aufnahmequalität. Eine andere Dateigröße ist erwartbar; Bildrate, Zeitbasis und Schnittgrenzen können abweichen."
+    };
 
     internal static CutlistResultRow FromLocal(LocalCutlistCandidate candidate, CutlistMediaContext context)
     {

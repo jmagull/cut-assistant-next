@@ -1,5 +1,14 @@
 # Cut Assistant Next 1.0.3 Build 60
 
+## Build 61 – Prüffassung
+
+- Persönliche Tastenkürzel im Hauptfenster und wiederholbare Navigation nach Sekunden, Keyframes und Einzelbildern.
+- Blaue Keyframe-Markierung an den Schnittgrenzen, korrigierter Keyframe-Hinweis und wiederaufrufbare Schnittprüfung.
+- Empfehlung für einen geeigneten Schnittmotor und optionale Server-Cutlists anderer OTR-Aufnahmequalitäten.
+- Getrennte Versions- und Funktionsprüfung für FFmpeg/ffprobe sowie MP4Box mit SHA-256-gebundenen Testergebnissen.
+
+
+
 ## Hinweis zu FFmpeg
 
 Für Cut Assistant Next 1.0.3 Build 60 empfehlen wir vorerst den erfolgreich geprüften **FFmpeg-Git-Build vom 12.10.2026 (Gyan.dev, `615b07170e`)**. FFmpeg und ffprobe müssen aus demselben Paket stammen.

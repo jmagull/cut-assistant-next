@@ -156,7 +156,15 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
     public string FrameLoupeToolTip => AnalysisResult is { } analysis && AviSourceWarningDetector.IsAvi(analysis)
         ? AviSourceWarningDetector.FrameLoupeUnavailableMessage
-        : "Frame-Lupe öffnen (Shift+F)";
+        : _frameLoupeCaption;
+
+    private string _frameLoupeCaption = "Frame-Lupe öffnen (Shift+F)";
+
+    internal void UpdateFrameLoupeCaption(string caption)
+    {
+        _frameLoupeCaption = caption;
+        OnPropertyChanged(nameof(FrameLoupeToolTip));
+    }
 
     public string VideoCodec
     {

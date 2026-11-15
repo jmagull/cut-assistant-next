@@ -34,6 +34,8 @@ internal sealed class OtrCanToolChecker
         var ffmpegResults = await new FfmpegToolChecker(_probe, _resolver).CheckAsync(ffmpeg, cancellationToken);
         results.AddRange(ffmpegResults.Select(result =>
             new OtrCanToolCheckResult(result.Name, result.IsAvailable, result.Message)));
+        if (ffmpegResults.All(result => result.IsAvailable) && !FfmpegToolChecker.IsMatchingPair(ffmpegResults))
+            results.Add(new("FFmpeg/ffprobe", false, "Die beiden Dateien stammen aus unterschiedlichen Builds. Bitte ein zusammengehöriges Paar auswählen."));
         if (requireMp3 && results[0].IsAvailable)
         {
             var capability = await CheckOneAsync("OTR-CAN MP3", normalized.ExecutablePath, ["capabilities"],

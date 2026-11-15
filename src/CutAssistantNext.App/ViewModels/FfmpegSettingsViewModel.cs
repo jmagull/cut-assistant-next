@@ -45,22 +45,50 @@ internal sealed class FfmpegSettingsViewModel : INotifyPropertyChanged, IDisposa
         FfmpegExecutablePath = FfmpegExecutablePath
     };
 
-    public async Task CheckAsync()
+    public Task CheckAsync() => CheckCoreAsync(function: false);
+
+    public Task CheckFunctionAsync() => CheckCoreAsync(function: true);
+
+    private async Task CheckCoreAsync(bool function)
     {
         if (!CanEdit) return;
         var settings = CreateSettings();
         using var operation = new CancellationTokenSource();
         _operation = operation;
         IsBusy = true;
-        StatusMessage = "Versionen werden geprüft …";
+        StatusMessage = function ? "H.264/AAC-Streamcopy wird geprüft …" : "Versionen werden geprüft …";
         PublishState();
         try
         {
             // Resolving paths and launching external tools must not block the WPF thread.
-            var results = await Task.Run(() => _check(settings, operation.Token), operation.Token);
-            if (!_disposed)
-                StatusMessage = string.Join(Environment.NewLine, results.Select(result =>
-                    $"{result.Name}: {(result.IsAvailable ? "OK – " : string.Empty)}{result.Message}"));
+            if (function)
+            {
+                var result = await Task.Run(() => new ToolFunctionChecks().CheckFfmpegAsync(settings,
+                    force: true, operation.Token), operation.Token);
+                if (!_disposed) StatusMessage = result.Message;
+            }
+            else
+            {
+                var results = await Task.Run(() => _check(settings, operation.Token), operation.Token);
+                if (!_disposed)
+                {
+                    StatusMessage = string.Join(Environment.NewLine, results.Select(result =>
+                        $"{result.Name}: {(result.IsAvailable ? "OK – " : string.Empty)}{result.Message}"));
+                    if (results.All(result => result.IsAvailable && result.BuildIdentity is not null))
+                    {
+                        if (!FfmpegToolChecker.IsMatchingPair(results))
+                            StatusMessage += Environment.NewLine + "FFmpeg und ffprobe stammen aus unterschiedlichen Builds.";
+                        else
+                        {
+                            var checks = new ToolFunctionChecks();
+                            var known = await checks.GetKnownResultAsync(ToolFunction.FfmpegStreamcopy,
+                                checks.FfmpegPaths(settings), operation.Token);
+                            if (!_disposed) StatusMessage += Environment.NewLine + "Funktionsstatus: " +
+                                (known is null ? "noch nicht geprüft." : known.Message);
+                        }
+                    }
+                }
+            }
         }
         catch (OperationCanceledException)
         {

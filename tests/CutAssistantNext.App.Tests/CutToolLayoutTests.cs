@@ -48,6 +48,8 @@ public sealed class CutToolLayoutTests
         Assert.Equal(HorizontalAlignment.Right, Get<Button>(window, "RemoveCutSegmentButton").HorizontalAlignment);
         AssertCell(window, "CutMp4BoxButton", "PowerCutEnginesGrid", 0, 0);
         AssertCell(window, "CutOtrCanButton", "PowerCutEnginesGrid", 0, 2);
+        AssertCell(window, "ReopenCutReviewButton", "PowerCutEnginesGrid", 1, 0);
+        Assert.Equal(3, Grid.GetColumnSpan(Get<Button>(window, "ReopenCutReviewButton")));
         AssertCell(window, "LoadCutlistButton", "PowerCutlistsGrid", 0, 0);
         AssertCell(window, "LoadServerCutlistButton", "PowerCutlistsGrid", 0, 2);
         AssertCell(window, "GenerateCutlistButton", "PowerCutlistsGrid", 2, 0);

@@ -134,6 +134,9 @@
                                    Visibility="Collapsed"
                                    Text="Bitte bei einem Verbindungsfehler auch die Schreibweise prüfen:&#10;http://cutlist.at/&lt;dein FRED&gt;/ – ohne www, mit http:// und abschließendem /.&#10;&lt;dein FRED&gt; durch deinen persönlichen 64-stelligen FRED ersetzen. Angefügte Parameter (?…) oder Sprungmarken (#…) entfernen." />
 
+                        <CheckBox Margin="0,12,0,0" IsChecked="{Binding IncludeOtherQualities}"
+                                  Content="Auch Cutlists anderer Aufnahmequalitäten anzeigen" />
+
                         <Button x:Name="TestConnectionButton"
                                 Width="160"
                                 Height="34"

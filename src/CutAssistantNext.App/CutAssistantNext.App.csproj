@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <EmbeddedResource Include="Settings/ToolFixtures/*.mp4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../external/spotlight-can/src/SpotlightCan.Wpf/SpotlightCan.Wpf.csproj" />
     <ProjectReference Include="..\CutAssistantNext.Core\CutAssistantNext.Core.csproj" />
     <ProjectReference Include="..\CutAssistantNext.Media\CutAssistantNext.Media.csproj" />

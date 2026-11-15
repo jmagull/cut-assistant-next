@@ -59,6 +59,12 @@ public partial class MainWindow
             await search;
             if (!accepted || dialog.SelectedResult is not { } selected || !IsCurrentCutlistContext(context)) return;
 
+            if (selected.IsAlternativeQuality &&
+                MessageBox.Show(this, "Die Cutlist stammt aus einer anderen Aufnahmequalität. " +
+                    "Eine abweichende Dateigröße ist dabei erwartbar. Bitte kontrolliere Bildrate und Schnittgrenzen.\n\nCutlist laden?",
+                    "Alternative Cutlist", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes)
+                return;
+
             // The selected document is re-read or downloaded without touching any local cutlist for writing.
             var imported = await CutlistSelectionReader.ReadAsync(selected, client.DownloadBytesAsync, _mediaInputCancellation.Token);
             if (IsCurrentCutlistContext(context))
@@ -85,9 +91,29 @@ public partial class MainWindow
             if (string.IsNullOrWhiteSpace(settings?.PersonalServerUrl)) return new([], "Nicht eingerichtet");
             if (!CutlistServerSettingsValidator.TryValidatePersonalServerUrl(settings.PersonalServerUrl, out _))
                 return new([], "Serveradresse in den Einstellungen ungültig.", true);
-            var results = await client.SearchAsync(settings.PersonalServerUrl, Path.GetFileName(context.FilePath), token);
-            return new(results.Select(result => CutlistResultRow.FromServer(result, settings.PersonalServerUrl)).ToArray(),
-                $"{results.Count} Treffer");
+            var url = settings.PersonalServerUrl;
+            var fileName = Path.GetFileName(context.FilePath);
+            var results = await client.SearchAsync(url, fileName, token);
+            var rows = results.Select(result => CutlistResultRow.FromServer(result, url)).ToList();
+            if (!settings.IncludeOtherQualities) return new(rows, $"{rows.Count} Treffer");
+
+            var ids = results.Select(result => result.Id).ToHashSet(StringComparer.Ordinal);
+            var searches = CutlistQualityAlternatives.GetQueries(fileName).Select(async query =>
+            {
+                try { return (query, Results: await client.SearchAsync(url, query.FileName, token), Failed: false); }
+                catch (Exception error) when (!token.IsCancellationRequested &&
+                    error is HttpRequestException or OperationCanceledException or System.Xml.XmlException)
+                { return (query, Results: (IReadOnlyList<CutlistSearchResult>)[], Failed: true); }
+            });
+            var alternatives = await Task.WhenAll(searches);
+            foreach (var (query, found, _) in alternatives)
+                foreach (var result in found)
+                    if (CutlistQualityAlternatives.Matches(result, query.FileName) && ids.Add(result.Id))
+                        rows.Add(CutlistResultRow.FromServer(result, url, query.Quality));
+
+            bool partial = alternatives.Any(item => item.Failed);
+            return new(rows, $"{rows.Count} Treffer ({rows.Count - results.Count} alternativ)" +
+                (partial ? " · Alternative Suche unvollständig" : ""), partial);
         }
 
         Task<CutlistSourceResult> SearchLocalAsync(CancellationToken token) => Task.Run(async () =>

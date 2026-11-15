@@ -1,5 +1,16 @@
 # Nutzeranleitung – Cut Assistant Next
 
+## Bedienung in Build 61
+
+- **Einstellungen → Tastenkürzel …** zeigt Standard und persönliche Belegung für die Befehle des Hauptfensters. Eine Zeile auswählen und **Tastenkürzel ändern** anklicken. Beispielsweise lässt sich die Frame-Lupe auf **F8** legen. **Standard** stellt die ausgewählte Belegung wieder her. Änderungen gelten nach **Speichern** in allen drei Ansichten.
+- Ein kurzer Klick auf eine Navigationstaste bewegt um einen Schritt. Halte **Bild vor**, **K ▶** oder die zugeordnete Taste gedrückt, um weiterzuspringen. Auch die vorhandenen Sekundensprünge bleiben wiederholbar. Loslassen und Fokusverlust beenden die Wiederholung.
+- Ein blaues **K** neben einer Schnittzeit kennzeichnet diese Grenze als Keyframe. CAN zeigt bei einem geeigneten Schnittplan eine begründete Empfehlung für MP4Box oder otr-can an. Die Auswahl erfolgt weiterhin über die jeweilige Motorschaltfläche.
+- Unter **Cutlist-Einstellungen** lässt sich die Suche nach anderen Aufnahmequalitäten einschalten. Alternative Treffer stehen in derselben Ergebnistabelle. CAN fragt vor dem Import nach und prüft anschließend unter anderem Bildrate und Schnittgrenzen.
+- **Schnittprüfung erneut öffnen** lädt die zuletzt fertiggestellte MP4 und dieselben Prüfstellen für die laufende Sitzung. Beim Medienwechsel oder Beginn eines weiteren Schnittlaufs verfällt der Eintrag.
+- In **FFmpeg-Werkzeuge** prüfen **Version prüfen** und **Funktion prüfen** unterschiedliche Eigenschaften. Der Funktionslauf testet die Videokopie mit H.264, B-Frames und AAC. Unter **Schnittanwendung** prüft **MP4Box-Funktion prüfen** das Ausschneiden und Zusammenfügen zweier Bereiche mit zwei AAC-Spuren. Gespeicherte Prüfergebnisse beziehen sich auf den SHA-256-Inhalt der beteiligten EXE-Dateien und auf die aktuelle Testrevision.
+
+
+
 ## Cut Assistant Next 1.0.3 Build 60
 
 **Bedienverbesserungen aus Build 59**

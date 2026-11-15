@@ -31,7 +31,14 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public string EditingDescription => IsKeepMode
         ? "Das soll bleiben: Grün markierte Bereiche werden behalten. Nur diese Bereiche werden ausgegeben; unmarkierte Teile werden weggelassen."
         : "Das kann weg: Rot markierte Bereiche werden entfernt.";
-    public string MarkingHelp => EditingDescription + " Schnittanfang und Schnittende setzen; Esc verwirft einen offenen Anfang.";
+    private string _cancelCutGesture = "Esc";
+    public string MarkingHelp => EditingDescription + $" Schnittanfang und Schnittende setzen. {_cancelCutGesture} verwirft einen offenen Anfang.";
+
+    internal void UpdateCancelCutGesture(string gesture)
+    {
+        _cancelCutGesture = gesture;
+        OnPropertyChanged(nameof(MarkingHelp));
+    }
     public string StartButtonText => IsKeepMode ? "Behalteanfang setzen" : "Schnittanfang setzen";
     public string EndButtonText => IsKeepMode ? "Behalteende setzen" : "Schnittende setzen";
     public string KeepResultConfirmation =>

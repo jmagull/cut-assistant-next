@@ -78,7 +78,8 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
                 progress);
 
         return new Mp4BoxCutService(
-            runner, new ConfiguredCutOutputAnalyzer());
+            runner, new ConfiguredCutOutputAnalyzer(),
+            token => new ToolFunctionChecks().EnsureMp4BoxNoKnownFailureAsync(executablePath, token));
     }
 
     internal async Task<Mp4BoxCutService> CreateCheckedAsync(IProgress<CutProgressUpdate>? progress,
@@ -86,7 +87,8 @@ internal sealed class ConfiguredMp4BoxCutServiceFactory
     {
         var path = await ResolveAvailableAsync(token, probe).ConfigureAwait(false);
         progress?.Report(new(CutProgressKind.Output, "MP4Box ist verfügbar; der bestätigte neue Schnitt wird gestartet."));
-        return new Mp4BoxCutService(_runnerFactory(path, progress), new ConfiguredCutOutputAnalyzer());
+        return new Mp4BoxCutService(_runnerFactory(path, progress), new ConfiguredCutOutputAnalyzer(),
+            checkTools: token => new ToolFunctionChecks().EnsureMp4BoxNoKnownFailureAsync(path, token));
     }
     internal async Task<(bool Available, string? Reason)> CheckAvailabilityAsync(CancellationToken token)
     {

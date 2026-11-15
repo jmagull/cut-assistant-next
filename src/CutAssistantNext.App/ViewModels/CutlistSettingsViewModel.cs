@@ -52,6 +52,7 @@ internal sealed class CutlistSettingsViewModel
 
         QuickText6 = settings.QuickText6 ?? string.Empty;
 
+        IncludeOtherQualities = serverSettings.IncludeOtherQualities;
         PersonalServerUrl =
             serverSettings.PersonalServerUrl;
     }
@@ -69,6 +70,8 @@ internal sealed class CutlistSettingsViewModel
     public string QuickText5 { get; set; }
 
     public string QuickText6 { get; set; }
+
+    public bool IncludeOtherQualities { get; set; }
 
     public string PersonalServerUrl { get; set; }
 
@@ -120,6 +123,7 @@ internal sealed class CutlistSettingsViewModel
     {
         return new CutlistServerSettings
         {
+            IncludeOtherQualities = IncludeOtherQualities,
             PersonalServerUrl =
                 PersonalServerUrl
         };

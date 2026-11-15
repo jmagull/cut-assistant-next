@@ -3,7 +3,10 @@ using System.Text.RegularExpressions;
 
 namespace CutAssistantNext.Media.Tools;
 
-public sealed record FfmpegVersionAssessment(bool IsSupported, bool MeetsRecommendation, string Message);
+public sealed record FfmpegVersionAssessment(bool IsSupported, bool MeetsRecommendation, string Message)
+{
+    public string? BuildIdentity { get; init; }
+}
 
 /// <summary>Assesses the program version, never mistaking library or build dates for release versions.</summary>
 public static class FfmpegVersionPolicy
@@ -39,7 +42,7 @@ public static class FfmpegVersionPolicy
                 !Regex.IsMatch(token, @"[-+](?:rc|alpha|beta|dev|git)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
             return new(true, recommended, recommended
                 ? $"Version {token} erfüllt die Empfehlung ab 9.0.2."
-                : $"Version {token} ist unterstützt. Empfohlen: ab 9.0.2.");
+                : $"Version {token} ist unterstützt. Empfohlen: ab 9.0.2.") { BuildIdentity = token };
         }
 
         // Git snapshots have no comparable release number. A codec ABI from FFmpeg 6 or later
@@ -53,8 +56,13 @@ public static class FfmpegVersionPolicy
                 int.TryParse(codec.Groups["runtime"].Value, NumberStyles.None, CultureInfo.InvariantCulture, out int runtime) &&
                 major >= 60 && runtime >= 60)
             {
-                return new(true, false,
-                    $"Entwicklungsbuild {token}: Bibliotheksstand neuer als 5.1. Eine Releaseversion ab 9.0.2 ist nicht nachweisbar.");
+                var date = Regex.Match(token, @"\d{4}-\d{2}-\d{2}");
+                var commit = Regex.Match(token, @"(?:-git-|-g)(?<sha>[a-f0-9]+)", RegexOptions.IgnoreCase);
+                var label = date.Success && DateOnly.TryParseExact(date.Value, "yyyy-MM-dd",
+                    CultureInfo.InvariantCulture, DateTimeStyles.None, out var day)
+                    ? day.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) + " · " : "";
+                return new(true, false, $"Git-Build {label}{commit.Groups["sha"].Value}")
+                    { BuildIdentity = token };
             }
         }
 

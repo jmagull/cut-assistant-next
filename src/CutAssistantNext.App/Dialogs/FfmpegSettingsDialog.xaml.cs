@@ -18,6 +18,11 @@ public partial class FfmpegSettingsDialog : Window
         Closed += (_, _) => viewModel.Dispose();
     }
 
+    private async void CheckFunctionButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is FfmpegSettingsViewModel model) await model.CheckFunctionAsync();
+    }
+
     private void BrowseFfprobeButton_Click(
         object sender,
         RoutedEventArgs e)

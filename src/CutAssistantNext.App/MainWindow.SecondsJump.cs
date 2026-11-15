@@ -1,24 +1,24 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CutAssistantNext.App.Dialogs;
+using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.ViewModels;
 
 namespace CutAssistantNext.App;
 
 public partial class MainWindow
 {
+    private PlaybackShortcuts _shortcuts = PlaybackShortcuts.Load(PlaybackShortcuts.DefaultPath);
     private readonly HashSet<Key> _secondsJumpKeys = [];
-    private Key _secondsJumpKey;
-    private Button? _secondsJumpButton;
+    private Key _navigationKey;
+    private ShortcutGesture _heldGesture;
+    private Button? _navigationButton;
 
     private void InitializeSecondsJump()
     {
-        PreviewKeyUp += SecondsJump_PreviewKeyUp;
-        PreviewLostKeyboardFocus += (_, e) =>
-        {
-            if (_secondsJumpKey != Key.None && (e.NewFocus is null || IsPlaybackTextInput(e.NewFocus as DependencyObject)))
-                StopSecondsJump();
-        };
+        PreviewKeyUp += Navigation_PreviewKeyUp;
+        PreviewLostKeyboardFocus += (_, _) => StopSecondsJump();
         Deactivated += (_, _) =>
         {
             _secondsJumpKeys.Clear();
@@ -35,78 +35,93 @@ public partial class MainWindow
         };
     }
 
-    private bool CanJumpSeconds => !_isClosed && !_mediaLoadInProgress && !_frameLoupeOpening &&
-        IsEnabled && PlaybackControls.IsEnabled && _playbackViewModel.CanSeek &&
-        !_playerFrameSearch.IsNavigating && !_keyframeNavigation.IsNavigating;
+    private bool CanNavigate(PlaybackShortcut action) => !_isClosed && !_mediaLoadInProgress && !_frameLoupeOpening &&
+        IsEnabled && PlaybackControls.IsEnabled && !_playerFrameSearch.IsNavigating && !_keyframeNavigation.IsNavigating &&
+        !_playbackViewModel.IsSeeking && (action switch
+        {
+            PlaybackShortcut.FrameBackward or PlaybackShortcut.FrameForward => _playbackViewModel.CanStepFrame,
+            PlaybackShortcut.KeyframeBackward => _keyframeNavigation.CanPrevious,
+            PlaybackShortcut.KeyframeForward => _keyframeNavigation.CanNext,
+            _ => _playbackViewModel.CanSeek
+        });
 
     internal bool TryHandleSecondsJumpKey(KeyEventArgs e, ModifierKeys modifiers, bool sDown)
     {
         if (e.Handled || IsPlaybackTextInput(e.OriginalSource as DependencyObject) ||
             IsPlaybackTextInput(Keyboard.FocusedElement as DependencyObject)) return false;
-
-        var key = e.Key;
-        if (modifiers != ModifierKeys.None)
-        {
-            if (_secondsJumpKey != Key.None) StopSecondsJump();
-            return false;
-        }
-
-        // A chord's arrow must be released before it can become an ordinary frame step.
-        if (_secondsJumpKeys.Contains(key))
-            return true;
-
-        if (!sDown || key is not (Key.Left or Key.Right))
-            return false;
-
+        if (_secondsJumpKeys.Contains(e.Key)) return true;
+        var action = _shortcuts.Match(e.Key, modifiers, sDown);
+        if (action is not (PlaybackShortcut.SecondsBackward or PlaybackShortcut.SecondsForward)) return false;
         if (!e.IsRepeat)
         {
-            _secondsJumpKeys.Add(key);
-            if (CanJumpSeconds && !_playbackViewModel.IsSeeking && _secondsJumpButton is null && _secondsJumpKey == Key.None)
-            {
-                _secondsJumpKey = key;
-                _ = HoldSecondsJumpAsync(key == Key.Left ? -1 : 1, () =>
-                    Keyboard.Modifiers == ModifierKeys.None && Keyboard.IsKeyDown(Key.S) && Keyboard.IsKeyDown(key) &&
-                    !IsPlaybackTextInput(Keyboard.FocusedElement as DependencyObject));
-            }
+            _secondsJumpKeys.Add(e.Key);
+            if (CanNavigate(action.Value)) _ = HoldNavigationKeyAsync(action.Value, e.Key);
         }
-
         return true;
     }
 
-    private void SecondsJump_PreviewKeyUp(object sender, KeyEventArgs e)
+    private async Task HoldNavigationKeyAsync(PlaybackShortcut action, Key key)
+    {
+        if (_navigationKey != Key.None || _navigationButton is not null) return;
+        _navigationKey = key;
+        _heldGesture = _shortcuts[action];
+        try
+        {
+            await _secondsJump.HoldAsync((int)action, () => _navigationKey == key &&
+                Keyboard.IsKeyDown(key) && Keyboard.Modifiers == _heldGesture.Modifiers &&
+                (!_heldGesture.WithS || Keyboard.IsKeyDown(Key.S)) &&
+                !IsPlaybackTextInput(Keyboard.FocusedElement as DependencyObject) && CanRepeatNavigation(action));
+        }
+        finally
+        {
+            if (_navigationKey == key) _navigationKey = Key.None;
+        }
+    }
+
+    private void Navigation_PreviewKeyUp(object sender, KeyEventArgs e)
     {
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
         _secondsJumpKeys.Remove(key);
-        if (_secondsJumpKey != Key.None && (key == Key.S || key == _secondsJumpKey))
-            StopSecondsJump();
+        if (_navigationKey != Key.None && (key == _navigationKey || (_heldGesture.WithS && key == Key.S) ||
+            Keyboard.Modifiers != _heldGesture.Modifiers)) StopSecondsJump();
     }
+
+    private bool CanRepeatNavigation(PlaybackShortcut action) => CanNavigate(action) &&
+        ((int)action < 0 ? _playbackViewModel.Position > TimeSpan.Zero : _playbackViewModel.Position < _playbackViewModel.Duration);
 
     private void SecondsJumpButton_MouseUp(object sender, MouseButtonEventArgs e)
     {
-        if (ReferenceEquals(sender, _secondsJumpButton)) StopSecondsJump();
+        if (ReferenceEquals(sender, _navigationButton)) StopSecondsJump();
     }
 
     private void SecondsJumpButton_LostMouseCapture(object sender, MouseEventArgs e)
     {
-        if (ReferenceEquals(sender, _secondsJumpButton)) StopSecondsJump();
+        if (ReferenceEquals(sender, _navigationButton)) StopSecondsJump();
     }
-
-    private Task HoldSecondsJumpAsync(int direction, Func<bool> isHeld) =>
-        _secondsJump.HoldAsync(direction, () => CanJumpSeconds && isHeld() &&
-            (direction < 0 ? _playbackViewModel.Position > TimeSpan.Zero : _playbackViewModel.Position < _playbackViewModel.Duration));
 
     private void StopSecondsJump()
     {
         _secondsJump.Stop();
-        _secondsJumpKey = Key.None;
-        var button = _secondsJumpButton;
-        _secondsJumpButton = null;
+        _navigationKey = Key.None;
+        var button = _navigationButton;
+        _navigationButton = null;
         if (button?.IsMouseCaptured == true) button.ReleaseMouseCapture();
     }
 
-    private Task JumpSecondsAsync(int direction) => ExecutePlaybackActionAsync(async () =>
+    private Task ExecuteNavigationAsync(int code) => ExecutePlaybackActionAsync(async () =>
     {
-        try { await _playbackViewModel.JumpAsync(direction, _mediaInputCancellation.Token); }
+        try
+        {
+            var token = _mediaInputCancellation.Token;
+            switch ((PlaybackShortcut)code)
+            {
+                case PlaybackShortcut.FrameBackward: await _playbackViewModel.StepBackwardAsync(token); break;
+                case PlaybackShortcut.FrameForward: await _playbackViewModel.StepForwardAsync(token); break;
+                case PlaybackShortcut.KeyframeBackward:
+                case PlaybackShortcut.KeyframeForward: await _keyframeNavigation.JumpAsync(Math.Sign(code)); break;
+                default: await _playbackViewModel.JumpAsync(Math.Sign(code), token); break;
+            }
+        }
         catch
         {
             StopSecondsJump();
@@ -114,19 +129,56 @@ public partial class MainWindow
         }
     });
 
-    private async void SecondsJumpButton_Click(object sender, RoutedEventArgs e)
+    private void SecondsJumpButton_Click(object sender, RoutedEventArgs e) => NavigationButton_Click(sender, e);
+
+    private async void NavigationButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!CanJumpSeconds || _playbackViewModel.IsSeeking || sender is not Button button) return;
-        var direction = ReferenceEquals(button, JumpBackwardButton) ? -1 : 1;
+        if (sender is not Button button) return;
+        var action = button == JumpBackwardButton ? PlaybackShortcut.SecondsBackward :
+            button == JumpForwardButton ? PlaybackShortcut.SecondsForward :
+            button == StepBackwardButton ? PlaybackShortcut.FrameBackward :
+            button == StepForwardButton ? PlaybackShortcut.FrameForward :
+            button == PreviousKeyframeButton ? PlaybackShortcut.KeyframeBackward : PlaybackShortcut.KeyframeForward;
+
+        if (!CanNavigate(action)) return;
         if (!button.IsMouseCaptured || Mouse.LeftButton != MouseButtonState.Pressed)
         {
-            await _secondsJump.JumpOnceAsync(direction);
+            await _secondsJump.JumpOnceAsync((int)action);
             return;
         }
+        if (_navigationButton is not null || _navigationKey != Key.None) return;
+        _navigationButton = button;
+        await _secondsJump.HoldAsync((int)action, () => button.IsMouseCaptured &&
+            Mouse.LeftButton == MouseButtonState.Pressed && CanRepeatNavigation(action));
+    }
 
-        if (_secondsJumpButton is not null) return;
+    private void ShortcutSettingsMenuItem_Click(object sender, RoutedEventArgs e)
+    {
         StopSecondsJump();
-        _secondsJumpButton = button;
-        await HoldSecondsJumpAsync(direction, () => button.IsMouseCaptured && Mouse.LeftButton == MouseButtonState.Pressed);
+        var dialog = new ShortcutSettingsDialog(_shortcuts) { Owner = this };
+        if (dialog.ShowDialog() != true) return;
+        _shortcuts = dialog.Shortcuts;
+        UpdateShortcutTooltips();
+    }
+
+    private void UpdateShortcutTooltips()
+    {
+        string Caption(PlaybackShortcut action)
+        {
+            var definition = PlaybackShortcuts.Definitions.First(d => d.Action == action);
+            var binding = _shortcuts[action];
+            return binding.Key == Key.None ? definition.Name : $"{definition.Name} ({binding})";
+        }
+        var cancel = _shortcuts[PlaybackShortcut.CancelCut].ToString();
+        _cutPlanViewModel.UpdateCancelCutGesture(cancel);
+        PendingStartLabel.ToolTip = $"{cancel} verwirft den offenen Anfang samt Vorschau.";
+        PlayPauseButton.ToolTip = Caption(PlaybackShortcut.TogglePlayback);
+        JumpBackwardButton.ToolTip = Caption(PlaybackShortcut.SecondsBackward);
+        JumpForwardButton.ToolTip = Caption(PlaybackShortcut.SecondsForward);
+        StepBackwardButton.ToolTip = Caption(PlaybackShortcut.FrameBackward);
+        StepForwardButton.ToolTip = Caption(PlaybackShortcut.FrameForward);
+        _keyframeNavigation.UpdateShortcutCaptions(Caption(PlaybackShortcut.KeyframeBackward), Caption(PlaybackShortcut.KeyframeForward));
+        _viewModel.UpdateFrameLoupeCaption(_shortcuts[PlaybackShortcut.FrameLoupe] == new ShortcutGesture(Key.F, ModifierKeys.Shift)
+            ? "Frame-Lupe öffnen (Shift+F)" : Caption(PlaybackShortcut.FrameLoupe));
     }
 }

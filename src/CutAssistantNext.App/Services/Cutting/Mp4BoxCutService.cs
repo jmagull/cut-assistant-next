@@ -8,12 +8,14 @@ internal sealed class Mp4BoxCutService : ICutEngine
 {
     private readonly Mp4BoxCutWorkflow _workflow;
     private readonly ICutOutputAnalyzer? _outputAnalyzer;
+    private readonly Func<CancellationToken, Task>? _checkTools;
     private const string ImageNotice = "MP4Box kann Schnittgrenzen verschieben. Geprüfte Prüfpositionen stellen fehlende Bilder nicht wieder her.";
 
     public Mp4BoxCutService(
-        IMp4BoxRunner runner, ICutOutputAnalyzer? outputAnalyzer = null)
+        IMp4BoxRunner runner, ICutOutputAnalyzer? outputAnalyzer = null, Func<CancellationToken, Task>? checkTools = null)
     {
         _outputAnalyzer = outputAnalyzer;
+        _checkTools = checkTools;
         ArgumentNullException.ThrowIfNull(
             runner);
 
@@ -34,6 +36,7 @@ internal sealed class Mp4BoxCutService : ICutEngine
     {
         ArgumentNullException.ThrowIfNull(request);
         cancellationToken.ThrowIfCancellationRequested();
+        if (_checkTools is not null) await _checkTools(cancellationToken).ConfigureAwait(false);
         var framesPerSecond = request.FramesPerSecond
             ?? throw new InvalidOperationException("Für den MP4Box-Schnitt ist eine Bildrate erforderlich.");
         var planned = CutResult.Planned(request.OutputFilePath, request.KeepSegments);

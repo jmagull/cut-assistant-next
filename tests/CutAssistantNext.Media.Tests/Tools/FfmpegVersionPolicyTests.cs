@@ -42,7 +42,8 @@ public sealed class FfmpegVersionPolicyTests
         var result = FfmpegVersionPolicy.Assess($"ffmpeg version {token}\nlibavcodec {compiled}. 1.102 / {runtime}. 1.102", "ffmpeg");
         Assert.Equal(supported, result.IsSupported);
         Assert.False(result.MeetsRecommendation);
-        Assert.Contains("9.0.2", result.Message);
+        if (supported) Assert.Contains("Git-Build", result.Message);
+        else Assert.Contains("9.0.2", result.Message);
     }
 
     [Theory]
