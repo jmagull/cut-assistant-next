@@ -1,0 +1,10 @@
+# Freigabeprüfung – Cut Assistant Next 1.0.3 Build 60
+
+Abnahme am 15.11.2026 unter Windows 11. Ausgelieferter Quellcommit `6d7c7e7ceb0f6d0e6d54a0722550c53560c94b7b`.
+
+Die persönliche Abnahme unter Windows 11 umfasste das Setup auf dem Arbeitsrechner sowie Setup und frisch entpacktes Portable-ZIP in der VM. Bestätigt sind Schnitte mit MP4Box und otr-can, der AVI-Test „Teufelsbrigade“, die Cutlist-Bewertung, der Kontrollplayer mit zentraler Lautstärke und die Sekundensprünge. Bei der Deinstallation in der VM blieben die Benutzereinstellungen erhalten. Die otr-can-Werkzeugpfade mussten anschließend erneut gesetzt werden. Für Windows 10 liegt keine persönliche Prüfung von Build 60 vor.
+
+- **FFmpeg und ffprobe:** Gyan.dev vom 12.10.2026 (`615b07170e`) bestand den Realfilmtest und bleibt die empfohlene Referenz. Das Paar muss aus demselben Build stammen. Gyan.dev vom 11.11.2026 (`23c4540053`) reproduzierte den vorzeitigen Abbruch beim Videokopieren. Nach der FFmpeg-Seek-Korrektur bestand der Entwicklungsbuild `N-128909-g604ef3784d-20261114` den „Grey’s Anatomy – Durchs Feuer“-Gegentest in der VM. otr-can prüfte **60.651 Videopakete**, **116.449.920 Audiosamples** und die fertige MP4. Der ausgelieferte Motor bleibt **0.1.6-audio-diag.1**.
+- **GPAC/MP4Box:** Der Schnitt von „Grey’s Anatomy – Durchs Feuer“ bestand in der Windows-11-VM sowohl mit **26.07 Stable** als auch mit dem getesteten **26.08-Entwicklungsbuild**.
+- **Setup und Portable:** otr-can wurde in beiden Varianten über `tools/otr-can/otr_can.exe` verwendet. FFMS2 und die zugehörigen DLLs bleiben externe Werkzeuge. Im vom Anwender eingerichteten Pfad wurde FFMS2 im VM-Schnitt erfolgreich zum Indexieren eingesetzt. Die vier nativen libmpv-DLLs und sämtliche 105 Dateien des Motorpakets sind in Setup und ZIP vorgesehen.
+- **Automatisierte Freigabe:** 2.114 CAN- und 78 Spotlight-Tests erneut bestanden. Die automatisierten Tests wurden am eingefrorenen Quellstand ausgeführt. Windows 10 wurde nicht persönlich getestet.

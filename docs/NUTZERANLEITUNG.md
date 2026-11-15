@@ -19,6 +19,16 @@ Das x64-Setup installiert unter dem gewohnten Namen **Cut Assistant Next**. Alte
 
 Unter **Einstellungen → FFmpeg-Werkzeuge**, **Schnittanwendung** und **OTR-CAN-Werkzeuge** die passenden externen Programme prüfen. Der Schnittauftrag wählt **Schneiden MP4Box (schnell)** oder **Schneiden otr-can (framegenau, langsam)**. Der otr-can-Auftrag verwendet den passenden mitgelieferten Motor; der gespeicherte ffmsindex-Pfad bleibt erhalten.
 
+## Hinweis zu FFmpeg
+
+Für Cut Assistant Next 1.0.3 Build 60 empfehlen wir vorerst den erfolgreich geprüften **FFmpeg-Git-Build vom 12.10.2026 (Gyan.dev, `615b07170e`)**. FFmpeg und ffprobe müssen aus demselben Paket stammen.
+
+Der Gyan.dev-Entwicklungsbuild vom **11.11.2026 (`23c4540053`)** kann beim otr-can-Videokopieren durch ein geändertes Seek-Verhalten unvollständige Segmente erzeugen. otr-can erkennt das und bricht den Schnitt ab. Für diesen Schnittweg bitte den empfohlenen Build verwenden.
+
+Das Seek-Verhalten wurde im FFmpeg-Entwicklungszweig korrigiert. Ein Build eines anderen Anbieters vom **14.11.2026 (`604ef3784d`)** bestand den Praxistest mit dem vorhandenen otr-can-Motor. Ein aktualisierter Gyan.dev-Build kann nach erfolgreicher praktischer Prüfung als neue Referenz dienen.
+
+[Download und Versionsinformationen bei Gyan.dev](https://www.gyan.dev/ffmpeg/builds/)
+
 ## Tonspur-Abwahl
 
 Wenn otr-can bei einer Mehrspurdatei abbricht, prüft CAN die Spuren einzeln. Sobald die beschädigte Spur eindeutig feststeht und alle übrigen Spuren die Behaltebereiche vollständig abdecken, zeigt der Dialog, welche Spur entfällt und welche bleiben. **Mit intakter Tonspur erneut schneiden** startet den kompletten Schnitt nach deiner Bestätigung. Die experimentelle AAC-Reparatur und MP4Box bleiben als eigene Optionen im selben Dialog. [Voraussetzungen](AUDIO-SPURABWAHL-BUILD52.md)

@@ -2,9 +2,11 @@
 
 Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Die Oberfläche verwendet WPF, die Wiedergabe mpv/libmpv – ohne DirectShow und ohne zusätzliche Windows-Codec-Pakete.
 
-## Cut Assistant Next 1.0.3 Build 60 – lokaler Releasekandidat
+## Cut Assistant Next 1.0.3 Build 60 – aktuelle stabile Version
 
-Dateiversion **1.0.3.60**. Nebeneinander vorbereitet sind Windows-x64-Setup, Portable-ZIP und das vollständige Quellarchiv. Die Usability und der korrigierte Import wurden mit den Entwicklungsfassungen unter Windows 11 persönlich geprüft.
+Dateiversion **1.0.3.60**. Setup und Portable-ZIP wurden unter Windows 11 auf dem Arbeitsrechner beziehungsweise in der VM persönlich geprüft.
+
+[Setup für Windows x64](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build60/CutAssistantNext-1.0.3-Build60-win-x64-Setup.exe) · [Portable-ZIP](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build60/CutAssistantNext-1.0.3-Build60-win-x64.zip) · [Vollständige Quellen](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build60/CutAssistantNext-1.0.3-Build60-source.zip) · [SHA-256-Prüfsummen](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build60/SHA256SUMS.txt) · [Nutzeranleitung](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build60/NUTZERANLEITUNG.md) · [Paket- und Testbericht](https://github.com/jmagull/cut-assistant-next/releases/download/v1.0.3-build60/PAKETBERICHT.md)
 
 - **Sekundensprünge:** S und Pfeiltaste oder den vorhandenen Sprungbutton gedrückt halten. Die eingestellte Sprungweite wird wiederholt angewendet. Keyframe- und Einzelbildkürzel bleiben verfügbar.
 - **Schnittshuffle:** Der aktive Schnitt bleibt nach der Korrektur ausgewählt.
@@ -48,7 +50,7 @@ Das Setup installiert unter dem gewohnten Namen **Cut Assistant Next**. Alternat
 
 Enthalten sind **libmpv 0.41.0** und **otr-can 0.1.6-audio-diag.1** samt Hinweisen/Quellen. Separat benötigt werden:
 
-- **FFmpeg und ffprobe:** Medienanalyse/-vorbereitung und Motor; neuer als 5.1, ab 9.0.2 empfohlen. Git-Entwicklungsbuilds prüft CAN anhand ihres Bibliotheksstands.
+- **FFmpeg und ffprobe:** Medienanalyse/-vorbereitung und Motor; neuer als 5.1, für otr-can in Build 60 ist der geprüfte Gyan.dev-Build vom 12.10.2026 (`615b07170e`) die Referenz. Der Gyan.dev-Build vom 11.11.2026 (`23c4540053`) kann beim Videokopieren abbrechen. [Hinweis und getestete Stände](docs/RELEASE-NOTES-1.0.3.md#hinweis-zu-ffmpeg).
 - **GPAC/MP4Box:** schneller MP4Box-Schnitt und angebotene Alternative.
 - **FFMS2/ffmsindex:** für den otr-can-Schnitt, einschließlich seiner DLLs.
 
@@ -64,7 +66,7 @@ Für Build 54 sind **1857 CAN- und 78 Spotlight-Tests** sowie native Audio-/Fens
 
 ## Entwickeln, Quellen und Danksagung
 
-C#, .NET 10, WPF und Windows x64. Das vollständige Release-Quellarchiv enthält die exakten CAN- und angehefteten Spotlight-Quellen sowie die passenden Motorquellen. GitHubs automatisch erzeugtes Quellarchiv enthält Submodule nicht vollständig; für einen vollständigen Build das ausdrücklich angebotene **Build54-source.zip** verwenden. [Buildhinweise und Architektur](docs/ARCHITECTURE.md).
+C#, .NET 10, WPF und Windows x64. Das vollständige Release-Quellarchiv enthält die exakten CAN- und angehefteten Spotlight-Quellen sowie die passenden Motorquellen. GitHubs automatisch erzeugtes Quellarchiv enthält Submodule nicht vollständig; für einen vollständigen Build das ausdrücklich angebotene **CutAssistantNext-1.0.3-Build60-source.zip** verwenden. [Buildhinweise und Architektur](docs/ARCHITECTURE.md).
 
 Lizenz: [GPL-3.0-or-later](LICENSE); Drittanbieter behalten ihre eigenen Lizenzbedingungen. Die bewährten libmpv-Quellen-/Relink-Archive werden unverändert mit ausgeliefert. [Lizenzen und Herkunft](docs/libmpv/v0.41.0/THIRD-PARTY-NOTICES.md) · [.NET-/NuGet-Hinweise](docs/DOTNET-LICENSING.md) · [Danksagung](docs/DANKSAGUNG.md).
 
