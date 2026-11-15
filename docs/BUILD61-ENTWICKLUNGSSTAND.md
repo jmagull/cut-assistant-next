@@ -13,9 +13,21 @@ Der Branch `codex/build61` basiert auf `91a84267910f7154978b75bafc771b01fe67d9d9
 | 7 Qualitätsalternativen | Optionale Suche nach OTR-Standard-, HQ- und HD-Dateinamen derselben Aufnahme, Markierung in der gemeinsamen Tabelle und Bestätigung vor dem Import. Dateigrößen-, Bildraten- und Endgrenzenprüfungen bleiben im Importpfad. |
 | 8 Schnittprüfung | Der Wiederaufruf übergibt die fertiggestellte MP4 und ihre ursprünglichen Prüfpositionen an den bestehenden Kontrollplayer. Medienwechsel und Beginn eines weiteren Schnittlaufs löschen den Eintrag. |
 
+## Korrektur der Schnittlistenanzeige nach dem ersten persönlichen Test
+
+In der ersten Prüffassung blieben die Zellen **Anfang** und **Ende** leer. Die **Dauer** war sichtbar. Das unabhängig gebundene blaue K erschien weiterhin an passenden Grenzen.
+
+Ursache war die Inline-Syntax der beiden WPF-Bindungen in den neuen Zelltemplates. Die XAML-Markuperweiterung verarbeitete die Escape-Zeichen der TimeSpan-Formatierung beim Parsen, sodass dem Formatierer die für die Zeit-Trennzeichen erforderlichen Backslashes fehlten. Die Spalte **Dauer** nutzte bereits ein explizites Binding-Element und war deshalb nicht betroffen.
+
+Die Zeittexte in beiden Zelltemplates verwenden nun das explizite Binding-Element mit derselben Formatierung wie **Dauer**. Das K bleibt ein eigener Textblock neben der Zeit, dessen Sichtbarkeit vom vorhandenen Keyframe-Index abhängt. Die Schnittdaten, Schnittlogik und Cutlist-Serialisierung sind unverändert.
+
+Der Regressionstest arbeitet mit dem tatsächlich gerenderten Hauptfenster-DataGrid. Die ursprünglichen Templates zeigten im Test für einen vorhandenen Zeitwert einen leeren Text. Die korrigierte Fassung besteht alle sechs Kombinationen aus Rot-/Entfernen- und Grün-/Behalten-Modus mit Standard, Power-User 1 und Power-User 2. Je Kombination werden mehrere Zeilen, die drei Zeitspalten, beide Zustände der Keyframe-Markierung, eine Grenzkorrektur und das Laden einer bestehenden Cutlist geprüft.
+
+Geänderte Dateien für diese Korrektur: MainWindow.xaml, CutToolLayoutTests.cs und dieser Entwicklungsbericht.
+
 ## Prüfungen
 
-- Release-Kompilierung unter Windows mit .NET SDK 10.0.303, 0 Warnungen und 0 Fehler. Die Gesamtsuite umfasst 2.130 bestandene Tests (Core 200, Media 402, App 1.448, Cutlists 80), ohne Fehlversuche oder übersprungene Fälle im abschließenden Lauf.
+- Release-Kompilierung unter Windows mit .NET SDK 10.0.303, 0 Warnungen und 0 Fehler. Die Gesamtsuite umfasst 2.136 bestandene Tests (Core 200, Media 402, App 1.454, Cutlists 80), ohne Fehlversuche oder übersprungene Fälle im abschließenden Lauf.
 - FFmpeg/ffprobe 12.10.2026 (`615b07170e`) und 14.11.2026 (`604ef3784d`) liefern je 200 sichtbare Videopakete. Die Paketdaten, Reihenfolge und Zeitstempel entsprechen dem unabhängigen Sollwert. Der Build 11.11.2026 (`23c4540053`) liefert trotz Exitcode 0 nur 50 sichtbare Pakete und wird abgelehnt. Das aus einem guten und einem betroffenen Build gemischte Werkzeugpaar wird erkannt.
 - GPAC 26.07 (`a07cbfff`) erzeugt für zwei definierte Bereiche die erwarteten H.264- und AAC-Pakete. Die mit `-add/-cat/-new` zusammengefügte MP4 enthält alle drei Spuren in richtiger Reihenfolge. Die bestehende native Matrix deckt zusätzlich AAC/AC-3, AAC/AAC, AC-3/AC-3 und kurze Endsegmente ab.
 - Native synthetische Schnitte mit MP4Box und dem gebündelten otr-can 0.1.6-audio-diag.1 einschließlich FFMS2 ergaben jeweils eine vier Sekunden lange MP4 mit zwei AAC-Spuren. Sechs Kontrollplayer-Gruppen sowie Spotlight, Videoende und Schnittshuffle liefen erfolgreich.

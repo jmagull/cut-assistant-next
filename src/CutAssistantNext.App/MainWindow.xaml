@@ -689,7 +689,11 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Start, StringFormat=hh\:mm\:ss\.fff}" />
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <Binding Path="Start" StringFormat="hh\:mm\:ss\.fff" />
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                         <TextBlock Text="K" Foreground="#1D4ED8" FontWeight="SemiBold" Margin="5,0,0,0">
                                             <TextBlock.Visibility>
                                                 <MultiBinding Converter="{StaticResource KeyframeBoundaryVisibility}">
@@ -707,7 +711,11 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding End, StringFormat=hh\:mm\:ss\.fff}" />
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <Binding Path="End" StringFormat="hh\:mm\:ss\.fff" />
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                         <TextBlock Text="K" Foreground="#1D4ED8" FontWeight="SemiBold" Margin="5,0,0,0">
                                             <TextBlock.Visibility>
                                                 <MultiBinding Converter="{StaticResource KeyframeBoundaryVisibility}">

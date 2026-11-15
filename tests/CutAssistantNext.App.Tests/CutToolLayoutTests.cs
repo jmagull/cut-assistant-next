@@ -1,10 +1,17 @@
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using CutAssistantNext.App.Controls;
+using CutAssistantNext.App.Settings;
+using CutAssistantNext.Core.Media;
+using CutAssistantNext.Cutlists.Editing;
+using CutAssistantNext.Cutlists.Serialization;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Media.Playback;
 
@@ -149,6 +156,120 @@ public sealed class CutToolLayoutTests
         Assert.Equal("Schneiden otr-can (framegenau, langsam)", Get<Button>(window, "CutOtrCanButton").ToolTip);
     });
 
+    [Theory]
+    [InlineData(false, 0)]
+    [InlineData(false, 1)]
+    [InlineData(false, 2)]
+    [InlineData(true, 0)]
+    [InlineData(true, 1)]
+    [InlineData(true, 2)]
+    public void RenderedCutCellsKeepTimesAndMarkOnlyMatchingBoundaries(bool keep, int layout) => OnUiThread(window =>
+    {
+        var mode = keep ? CutEditingMode.Keep : CutEditingMode.Remove;
+        var plan = Field<CutPlanViewModel>(window, "_cutPlanViewModel");
+        var duration = TimeSpan.FromSeconds(12);
+        var keyframeTimes = new[] { 0, 1200, 3000, 7280 };
+        var timeline = new VideoFrameWindow(0, new VideoTimeBase(1, 1000), 0, 0,
+            keyframeTimes.Select(pts => new VideoFrameInfo(0, pts, null, null, null, true, "I")).ToArray());
+        var keyframes = VideoKeyframeIndex.Create(timeline, 0, duration, 0);
+        var navigation = Field<KeyframeNavigationViewModel>(window, "_keyframeNavigation");
+        typeof(KeyframeNavigationViewModel).GetField("_index", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(navigation, keyframes);
+
+        // Exercise the production XAML and the actual layout without showing a window to the user.
+        window.ApplyCutToolLayout((InterfaceLayout)layout);
+        window.ShowActivated = false;
+        window.ShowInTaskbar = false;
+        window.WindowStartupLocation = WindowStartupLocation.Manual;
+        window.Left = -10000;
+        window.Top = -10000;
+        window.Width = 1340;
+        window.Height = 950;
+        window.Show();
+        Pump();
+
+        var grid = Get<DataGrid>(window, "RemoveSegmentsGrid");
+        plan.Initialize(duration, mode);
+        plan.SetStart(TimeSpan.FromMilliseconds(1200));
+        plan.SetEnd(TimeSpan.FromMilliseconds(2440));
+        plan.SetStart(TimeSpan.FromMilliseconds(4360));
+        plan.SetEnd(TimeSpan.FromMilliseconds(7280));
+        VerifyRows(2);
+
+        var previous = plan.MarkedSegments[0];
+        plan.Replace(previous, TimeSpan.FromMilliseconds(1240), TimeSpan.FromMilliseconds(3000));
+        VerifyRows(2);
+
+        var saved = CutlistParser.Parse("""
+            [General]
+            NoOfCuts=2
+            FramesPerSecond=25
+            [Cut0]
+            Start=1.2
+            Duration=1.24
+            [Cut1]
+            Start=3
+            Duration=4.28
+            [Info]
+            RatingByAuthor=0
+            """);
+        plan.LoadCutPlan(CutlistCutPlanBuilder.Build(saved, duration));
+        VerifyRows(keep ? 2 : 3);
+
+        void VerifyRows(int expected)
+        {
+            Pump();
+            Assert.Equal(expected, grid.Items.Count);
+            foreach (var row in plan.MarkedSegments)
+            {
+                grid.ScrollIntoView(row);
+                grid.UpdateLayout();
+                Pump();
+                for (int col = 0; col < grid.Columns.Count; col++)
+                {
+                    var cell = grid.Columns[col].GetCellContent(row);
+                    Assert.NotNull(cell);
+                    var present = cell is ContentPresenter presenter ? VisualTreeHelper.GetChild(presenter, 0) : cell;
+                    var (value, isBoundary) = col switch
+                    {
+                        0 => (row.Start, true),
+                        1 => (row.End, true),
+                        _ => (row.Duration, false)
+                    };
+                    if (isBoundary)
+                    {
+                        var panel = Assert.IsType<StackPanel>(present);
+                        var time = Assert.IsType<TextBlock>(panel.Children[0]);
+                        var marker = Assert.IsType<TextBlock>(panel.Children[1]);
+                        VerifyTime(time, value);
+                        Assert.Equal("K", marker.Text);
+                        Assert.Equal(keyframes.Contains(value) ? Visibility.Visible : Visibility.Collapsed, marker.Visibility);
+                        if (marker.Visibility == Visibility.Visible)
+                        {
+                            Assert.True(marker.ActualWidth > 0);
+                            Assert.True(marker.TranslatePoint(new Point(), panel).X >= time.ActualWidth);
+                            Assert.Equal(Color.FromRgb(0x1D, 0x4E, 0xD8), Assert.IsType<SolidColorBrush>(marker.Foreground).Color);
+                        }
+                    }
+                    else
+                    {
+                        VerifyTime(Assert.IsType<TextBlock>(present), value);
+                    }
+
+                    var bitmap = new RenderTargetBitmap((int)Math.Ceiling(cell.ActualWidth),
+                        (int)Math.Ceiling(cell.ActualHeight), 96, 96, PixelFormats.Pbgra32);
+                    bitmap.Render(cell);
+                }
+            }
+        }
+
+        static void VerifyTime(TextBlock time, TimeSpan value)
+        {
+            Assert.Equal(value.ToString(@"hh\:mm\:ss\.fff", CultureInfo.InvariantCulture), time.Text);
+            Assert.True(time.IsVisible && time.ActualWidth > 0);
+        }
+    });
+
     private static void AssertCell(MainWindow window, string element, string parent, int row, int column)
     {
         var control = Get<FrameworkElement>(window, element);
@@ -181,7 +302,7 @@ public sealed class CutToolLayoutTests
             {
                 if (window is not null)
                 {
-                    // The unshown window has no native player. Avoid writing the user's window settings.
+                    // Avoid writing the user's window settings, including for off-screen render tests.
                     var closing = window.GetType().GetMethod("MainWindow_Closing", BindingFlags.Instance | BindingFlags.NonPublic)!;
                     window.Closing -= (System.ComponentModel.CancelEventHandler)closing.CreateDelegate(
                         typeof(System.ComponentModel.CancelEventHandler), window);
