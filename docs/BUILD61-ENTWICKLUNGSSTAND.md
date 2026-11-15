@@ -30,6 +30,7 @@ Der Branch `codex/build61` basiert auf `91a84267910f7154978b75bafc771b01fe67d9d9
 - `docs/NUTZERANLEITUNG.md`
 - `docs/PRUEFHINWEISE-BUILD61.md`
 - `docs/RELEASE-NOTES-1.0.3.md`
+- `installer/HINWEIS-DOTNET-UND-WERKZEUGE.txt`
 - `src/CutAssistantNext.App/Controls/KeyframeBoundaryVisibilityConverter.cs`
 - `src/CutAssistantNext.App/CutAssistantNext.App.csproj`
 - `src/CutAssistantNext.App/Dialogs/CutApplicationSettingsDialog.xaml`

@@ -1,6 +1,6 @@
 Cut Assistant Next – Einmalig benötigte Programme
 
-Cut Assistant Next 1.0.3 Build 60 – lokaler Releasekandidat.
+Cut Assistant Next 1.0.3 Build 61 – lokale Prüffassung.
 Windows 11 x64 ist die geprüfte Zielplattform; Windows 10 ist nicht persönlich validiert.
 Audio-Fehlerbehandlung und Spotlight-CAN sind Funktionen dieser einen Anwendung.
 
@@ -15,12 +15,13 @@ FFmpeg einschließlich ffprobe (nicht im CAN-Paket enthalten):
 https://ffmpeg.org/download.html
 Auf dieser Seite sind Links zu fertigen Windows-Versionen angegeben.
 FFmpeg und ffprobe: Version größer als 5.1 erforderlich, ab 9.0.2 empfohlen.
-Unter Einstellungen > FFmpeg-Werkzeuge mit "Prüfen" kontrollieren.
+Unter Einstellungen > FFmpeg-Werkzeuge "Version prüfen" und "Funktion prüfen" verwenden.
 Git-Entwicklungsbuilds werden anhand ihres Bibliotheksstands gesondert bewertet.
 
 GPAC einschließlich MP4Box (nicht im CAN-Paket enthalten):
 https://gpac.io/downloads/gpac-nightly-builds/
 Im Abschnitt "Current Stable Installers" die stabile Windows-64-Bit-Version wählen.
+Unter Einstellungen > Schnittanwendung "MP4Box-Funktion prüfen" verwenden.
 
 Optionaler Schnittmotor otr-can 0.1.6-audio-diag.1:
 Im Paket unter tools\otr-can\otr_can.exe enthalten und von CAN automatisch
