@@ -17,7 +17,9 @@ public partial class MainWindow
     private void InitializeAppearance()
     {
         InitializeCutToolLayout();
-        _preferredLayout = new AppearanceSettingsStore().Load().Layout;
+        var settings = new AppearanceSettingsStore().Load();
+        _preferredLayout = settings.Layout;
+        _secondsJump.Configure(settings);
         MainContentScrollViewer.SizeChanged += (_, _) => ApplyInterfaceLayout();
         Power2ToolStrip.RequiredMarkerWidthChanged += (_, _) =>
         {
@@ -44,6 +46,7 @@ public partial class MainWindow
         var dialog = new AppearanceSettingsDialog(new AppearanceSettingsStore()) { Owner = this };
         if (dialog.ShowDialog() != true) return;
         _preferredLayout = dialog.Selection.Layout;
+        _secondsJump.Configure(dialog.Selection);
         ApplyInterfaceLayout();
     }
 

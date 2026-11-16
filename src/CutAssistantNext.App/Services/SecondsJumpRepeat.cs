@@ -1,3 +1,5 @@
+using CutAssistantNext.App.Settings;
+
 namespace CutAssistantNext.App.Services;
 
 // Used on the UI thread. Releasing the input cancels the delay, while an
@@ -6,8 +8,19 @@ internal sealed class SecondsJumpRepeat(
     Func<int, Task> jump,
     Func<TimeSpan, CancellationToken, Task>? delay = null)
 {
-    internal static readonly TimeSpan InitialDelay = TimeSpan.FromMilliseconds(350);
-    internal static readonly TimeSpan RepeatInterval = TimeSpan.FromMilliseconds(200);
+    internal static readonly TimeSpan InitialDelay = TimeSpan.FromMilliseconds(AppearanceSettings.DefaultInitialDelayMs);
+    internal static readonly TimeSpan RepeatInterval = TimeSpan.FromMilliseconds(AppearanceSettings.DefaultRepeatIntervalMs);
+
+    private TimeSpan _initialDelay = InitialDelay;
+    private TimeSpan _repeatInterval = RepeatInterval;
+
+    internal void Configure(AppearanceSettings settings)
+    {
+        if (!settings.HasValidNavigationTiming) throw new ArgumentOutOfRangeException(nameof(settings));
+        Stop();
+        _initialDelay = TimeSpan.FromMilliseconds(settings.NavigationInitialDelayMs);
+        _repeatInterval = TimeSpan.FromMilliseconds(settings.NavigationRepeatIntervalMs);
+    }
 
     private CancellationTokenSource? _hold;
     private bool _jumpInProgress;
@@ -32,11 +45,11 @@ internal sealed class SecondsJumpRepeat(
         _hold = hold;
         try
         {
-            await Task.WhenAll(WaitAsync(InitialDelay, hold.Token), RunJumpAsync(direction));
+            await Task.WhenAll(WaitAsync(_initialDelay, hold.Token), RunJumpAsync(direction));
 
             while (!hold.IsCancellationRequested && canRepeat())
             {
-                await Task.WhenAll(WaitAsync(RepeatInterval, hold.Token), RunJumpAsync(direction));
+                await Task.WhenAll(WaitAsync(_repeatInterval, hold.Token), RunJumpAsync(direction));
             }
         }
         catch (OperationCanceledException) when (hold.IsCancellationRequested) { }

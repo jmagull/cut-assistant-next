@@ -48,6 +48,48 @@ public sealed class AppearanceSettingsStoreTests : IDisposable
     public void InvalidLayoutIsNotSaved() => Assert.Throws<ArgumentOutOfRangeException>(() =>
         new AppearanceSettingsStore(SettingsPath).Save(new((InterfaceLayout)999)));
 
+    [Fact]
+    public void CustomTimingPersistsAlongWithLayout()
+    {
+        var settings = new AppearanceSettings(InterfaceLayout.PowerUser2)
+        {
+            NavigationInitialDelayMs = 480,
+            NavigationRepeatIntervalMs = 130
+        };
+        var store = new AppearanceSettingsStore(SettingsPath);
+        Assert.True(store.Save(settings));
+        Assert.Equal(settings, new AppearanceSettingsStore(SettingsPath).Load());
+    }
+
+    [Fact]
+    public void OlderSettingsRetainDefaultRepeatSpeed()
+    {
+        Directory.CreateDirectory(_directory);
+        File.WriteAllText(SettingsPath, "{\"Layout\":1}");
+        var settings = new AppearanceSettingsStore(SettingsPath).Load();
+        Assert.Equal(InterfaceLayout.PowerUser, settings.Layout);
+        Assert.Equal(350, settings.NavigationInitialDelayMs);
+        Assert.Equal(200, settings.NavigationRepeatIntervalMs);
+    }
+
+    [Fact]
+    public void LoadBoundsUnsafeValues()
+    {
+        Directory.CreateDirectory(_directory);
+        File.WriteAllText(SettingsPath, "{\"NavigationInitialDelayMs\":1,\"NavigationRepeatIntervalMs\":5000}");
+        var settings = new AppearanceSettingsStore(SettingsPath).Load();
+        Assert.Equal(150, settings.NavigationInitialDelayMs);
+        Assert.Equal(1000, settings.NavigationRepeatIntervalMs);
+    }
+
+    [Fact]
+    public void InvalidTimingIsNotSaved()
+    {
+        var store = new AppearanceSettingsStore(SettingsPath);
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            store.Save(new() { NavigationRepeatIntervalMs = 99 }));
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_directory)) Directory.Delete(_directory, recursive: true);

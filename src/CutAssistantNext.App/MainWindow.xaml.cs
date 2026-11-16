@@ -206,12 +206,11 @@ public partial class MainWindow : Window
             return;
         }
 
+        StopSecondsJump();
         if (!await ConfirmRatingDepartureAsync()) return;
 
         _shutdownStarted = true;
         _isClosed = true;
-
-        StopSecondsJump();
         _mediaInputCancellation.Cancel();
         _videoDropTarget?.Dispose();
         SaveWindowSettings();

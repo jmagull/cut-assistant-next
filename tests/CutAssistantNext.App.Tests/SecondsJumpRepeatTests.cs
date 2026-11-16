@@ -1,3 +1,4 @@
+using CutAssistantNext.App.Settings;
 using System.Threading.Channels;
 using CutAssistantNext.App.Services;
 
@@ -77,6 +78,36 @@ public sealed class SecondsJumpRepeatTests
         Assert.Equal([1], jumps);
         await repeat.JumpOnceAsync(-1);
         Assert.Equal([1, -1], jumps);
+    }
+
+    [Theory]
+    [InlineData(-3)]
+    [InlineData(-2)]
+    [InlineData(-1)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    public async Task CustomDelaysApplyToEveryNavigationAction(int action)
+    {
+        var clock = new TestClock();
+        var jumps = new List<int>();
+        var repeat = new SecondsJumpRepeat(code =>
+        {
+            jumps.Add(code);
+            return Task.CompletedTask;
+        }, clock.Delay);
+        repeat.Configure(new() { NavigationInitialDelayMs = 500, NavigationRepeatIntervalMs = 120 });
+
+        var hold = repeat.HoldAsync(action, () => true);
+        var first = await clock.NextAsync();
+        Assert.Equal(TimeSpan.FromMilliseconds(500), first.Interval);
+        first.Elapsed.SetResult();
+
+        var second = await clock.NextAsync();
+        Assert.Equal(TimeSpan.FromMilliseconds(120), second.Interval);
+        repeat.Stop();
+        await hold;
+        Assert.Equal([action, action], jumps);
     }
 
     private sealed class TestClock
