@@ -1,5 +1,14 @@
 # Setup-Merkliste
 
+## Offen – Schnittshuffle über alle Schnittgrenzen
+
+Die bisher vorgemerkten Buttons „Vorheriger Schnitt“ und „Nächster Schnitt“ werden durch die Erweiterung der vorhandenen Schnittshuffle-Pfeile ersetzt. Rechts geht chronologisch zur nächsten Grenze, links zur vorherigen. Innerhalb eines Bereichs bleiben Anfang und Ende die Stationen. Am Bereichswechsel folgen Schnittliste und Timeline der gemeinsamen Auswahl. An den äußeren Grenzen bleibt die Navigation stehen.
+
+Technisch kann WPF die vorhandene zeitlich geordnete Sammlung und die gemeinsame Schnittauswahl wiederverwenden. Als Navigationsanker eignet sich die zuletzt angesprungene Grenze, damit zwischenzeitliche Einzelbildschritte den nächsten Shuffle-Sprung nicht verschieben. Vor dem ersten Sprung Auswahl und aktuelle Position auswerten. Ohne Schnittbereiche gibt es kein Sprungziel. Gleichzeitige Grenzen benachbarter Bereiche brauchen eine feste Reihenfolge. Exklusive Endgrenzen und der bestehende Seek am Dateiende bleiben beim Sprung maßgeblich.
+
+Mausklicks auf die vorhandenen Pfeile sollen den Tastaturfokus für die Einzelbildtasten erhalten. Dazu den Mausfokus der WPF-Buttons prüfen und die Tastaturbedienbarkeit der Shuffle-Befehle separat absichern. Tooltips an die fortlaufende Navigation anpassen. Abnahme in beiden Schnittmodi mit leerer Liste, Bereichswechseln, äußeren Grenzen und abwechselndem Mausklick und Einzelbildschritt. Die Navigation liest Schnittgrenzen und verändert nur Auswahl und Wiedergabeposition. Die Umsetzung ist für einen späteren Entwicklungsstand vorgemerkt.
+
+
 ## Cut Assistant Next 1.0.3 Build 54 – stabile Version
 
 Aktueller gemeinsamer Stand im ursprünglichen Repository **cut-assistant-next**; nach ausdrücklicher persönlicher Freigabe vom **08.11.2026** in `main` übernommen und als stabile [GitHub-Latest-Version](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) veröffentlicht. Dateiversion **1.0.3.54**, libmpv **0.41.0**, mitgelieferter otr-can **0.1.6-audio-diag.1**. Alte Funktionszweige sind historische Quellen; es gibt eine gemeinsame CAN-Version.
