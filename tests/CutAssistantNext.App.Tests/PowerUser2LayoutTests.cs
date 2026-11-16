@@ -336,58 +336,68 @@ public sealed class PowerUser2LayoutTests
         plan.SetStart(TimeSpan.FromSeconds(40));
         plan.SetEnd(duration);
         Pump();
-        Assert.Equal(Visibility.Hidden, group.Visibility);
+        Assert.Equal(Visibility.Visible, group.Visibility);
 
         var first = plan.MarkedSegments[0];
         var second = plan.MarkedSegments[1];
         var savedRanges = plan.CreateCutPlanSnapshot().RemoveSegments.Select(x => (x.Start, x.End)).ToArray();
-        plan.SelectEdge(first, CutEdgeSide.End);
-        Apply(window, layout, 1900);
-        Assert.Equal(Visibility.Visible, group.Visibility);
-        Assert.Same(first, table.SelectedItem);
-        FocusManager.SetFocusedElement(window, start);
-        foreach (var button in new[] { start, end, start, end })
-        {
-            button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            Pump();
-            Assert.Same(first, table.SelectedItem);
-            Assert.Same(first, plan.SelectedRemoveSegment);
-            Assert.Equal(CutEdgeSide.End, plan.SelectedEdgeSide);
-            Assert.Equal(mode, plan.EditingMode);
-            Assert.Equal(player.Position.TotalSeconds, slider.Value, 5);
-        }
-        Assert.Equal(new[] { 10d, 20d, 10d, 20d }, player.SeekPositions.Select(x => x.TotalSeconds));
+        using var keySource = new System.Windows.Interop.HwndSource(
+            new System.Windows.Interop.HwndSourceParameters("CAN Schnittshuffle") { Width = 1, Height = 1, WindowStyle = 0 });
+
+        Click(end, first, CutEdgeSide.Start, 10);
+        PressFrameKey(System.Windows.Input.Key.Right);
+        PressFrameKey(System.Windows.Input.Key.Left);
+        Assert.Equal(1, player.StepForwardCallCount);
+        Assert.Equal(1, player.StepBackwardCallCount);
+        // Simulate inspecting several frames past the current boundary. The next jump must still be its end.
+        player.Position = TimeSpan.FromSeconds(21);
+        player.RaisePositionChanged();
+        Click(end, first, CutEdgeSide.End, 20);
+        Click(end, second, CutEdgeSide.Start, 40);
+        Click(end, second, CutEdgeSide.End, 99.96);
+        Click(end, second, CutEdgeSide.End, 99.96, expectSeek: false);
+        Click(start, second, CutEdgeSide.Start, 40);
+        Click(start, first, CutEdgeSide.End, 20);
+        Click(start, first, CutEdgeSide.Start, 10);
+        Click(start, first, CutEdgeSide.Start, 10, expectSeek: false);
+        Assert.Equal(savedRanges, plan.CreateCutPlanSnapshot().RemoveSegments.Select(x => (x.Start, x.End)));
+        Assert.Equal(mode, plan.EditingMode);
 
         table.SelectedItem = second;
         Pump();
-        start.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-        end.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-        Pump();
-        Assert.Equal(TimeSpan.FromSeconds(40), player.SeekPositions[^2]);
-        Assert.Equal(TimeSpan.FromSeconds(99.96), player.SeekPositions[^1]);
-        Assert.Same(second, table.SelectedItem);
-        Assert.Equal(duration, second.End);
-        Assert.Equal(savedRanges, plan.CreateCutPlanSnapshot().RemoveSegments.Select(x => (x.Start, x.End)));
+        Assert.Null(plan.SelectedEdgeSide);
+        Click(end, second, CutEdgeSide.Start, 40);
 
-        plan.SelectEdge(second, CutEdgeSide.End);
-        plan.SetEnd(TimeSpan.FromSeconds(90));
-        plan.SetStart(TimeSpan.FromSeconds(41));
-        Pump();
-        Assert.Equal(Visibility.Visible, group.Visibility);
-        Assert.Equal(CutEdgeSide.End, plan.SelectedEdgeSide);
-        Assert.Same(plan.SelectedRemoveSegment, table.SelectedItem);
-        end.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-        Pump();
-        Assert.Equal(TimeSpan.FromSeconds(90), player.SeekPositions[^1]);
-        start.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-        Pump();
-        Assert.Equal(TimeSpan.FromSeconds(41), player.SeekPositions[^1]);
-        Assert.Same(plan.SelectedRemoveSegment, table.SelectedItem);
+        void Click(Button button, RemoveSegment expected, CutEdgeSide side, double seconds, bool expectSeek = true)
+        {
+            var before = player.SeekPositions.Count;
+            button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Pump();
+            Assert.Equal(before + (expectSeek ? 1 : 0), player.SeekPositions.Count);
+            Assert.Equal(TimeSpan.FromSeconds(seconds), player.SeekPositions[^1]);
+            Assert.Same(expected, table.SelectedItem);
+            Assert.Same(expected, Get<CutTimelineTrack>(window, "CutTimelineTrack").SelectedRemoveSegment);
+            Assert.Same(expected, plan.SelectedRemoveSegment);
+            Assert.Equal(side, plan.SelectedEdgeSide);
+            Assert.Equal(player.Position.TotalSeconds, slider.Value, 5);
+        }
 
-        table.SelectedItem = null;
-        Pump();
-        Assert.Equal(Visibility.Hidden, group.Visibility);
-        plan.SelectEdge(first, CutEdgeSide.Start);
+        void PressFrameKey(System.Windows.Input.Key key)
+        {
+            var keyboard = System.Windows.Input.Keyboard.PrimaryDevice;
+            var down = new System.Windows.Input.KeyEventArgs(keyboard, keySource, 0, key)
+            {
+                RoutedEvent = System.Windows.Input.Keyboard.PreviewKeyDownEvent
+            };
+            end.RaiseEvent(down);
+            Assert.True(down.Handled);
+            end.RaiseEvent(new System.Windows.Input.KeyEventArgs(keyboard, keySource, 0, key)
+            {
+                RoutedEvent = System.Windows.Input.Keyboard.PreviewKeyUpEvent
+            });
+            Pump();
+        }
+
         player.State = MediaPlayerState.Empty;
         player.RaiseStateChanged();
         Pump();
@@ -432,7 +442,7 @@ public sealed class PowerUser2LayoutTests
             Assert.Equal(layout, Field<InterfaceLayout?>(window, "_activeLayout"));
             var previousPosition = search.TransformToAncestor(nav).Transform(new Point());
             var previousSizes = (nav.ActualHeight, search.RenderSize, step.RenderSize, loupe.RenderSize, markers.RenderSize);
-            Assert.Equal(Visibility.Hidden, shuffle.Visibility);
+            Assert.Equal(Visibility.Visible, shuffle.Visibility);
             plan.SelectedRemoveSegment = plan.MarkedSegments.Single();
             Apply(window, layout, width, 900);
             Assert.Equal(Visibility.Visible, shuffle.Visibility);

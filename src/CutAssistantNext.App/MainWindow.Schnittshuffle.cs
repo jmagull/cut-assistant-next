@@ -1,61 +1,66 @@
 using System.Windows;
+using System.Windows.Input;
 using CutAssistantNext.Core.Editing;
 
 namespace CutAssistantNext.App;
 
 public partial class MainWindow
 {
-    private bool _schnittshufflePausing;
+    private bool _schnittshuffleSeeking;
+
+    private void Schnittshuffle_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+    {
+        if (Mouse.LeftButton == MouseButtonState.Pressed && ReferenceEquals(e.NewFocus, sender) &&
+            e.OldFocus is DependencyObject previous && ReferenceEquals(Window.GetWindow(previous), this) &&
+            !IsPlaybackTextInput(previous))
+            e.Handled = true;
+    }
 
     private async void SchnittshuffleStart_Click(object sender, RoutedEventArgs e) =>
-        await SeekSchnittshuffleAsync(CutEdgeSide.Start);
+        await SeekSchnittshuffleAsync(forward: false);
 
     private async void SchnittshuffleEnd_Click(object sender, RoutedEventArgs e) =>
-        await SeekSchnittshuffleAsync(CutEdgeSide.End);
+        await SeekSchnittshuffleAsync(forward: true);
 
-    private async Task SeekSchnittshuffleAsync(CutEdgeSide side)
+    private async Task SeekSchnittshuffleAsync(bool forward)
     {
-        if (_isClosed || _mediaLoadInProgress || _schnittshufflePausing ||
+        if (_isClosed || _mediaLoadInProgress || _schnittshuffleSeeking ||
             _keyframeNavigation.IsNavigating || _playerFrameSearch.IsNavigating ||
             !_playbackViewModel.CanSeek || _playbackViewModel.IsSeeking ||
-            !_cutPlanViewModel.CanShuffleSelectedSegment ||
-            _cutPlanViewModel.SelectedRemoveSegment is not { } segment ||
             _cutPlanViewModel.MediaDuration is not { } mediaDuration ||
-            _playbackViewModel.Duration is not { } playerDuration)
-        {
+            _playbackViewModel.Duration is not { } playerDuration ||
+            _cutPlanViewModel.FindShuffleBoundary(forward, _playbackViewModel.Position) is not { } next)
             return;
-        }
 
-        var boundary = side == CutEdgeSide.Start ? segment.Start : segment.End;
+        var previousSegment = _cutPlanViewModel.SelectedRemoveSegment;
+        var previousEdge = _cutPlanViewModel.SelectedEdgeSide;
+        var boundary = next.Side == CutEdgeSide.Start ? next.Segment.Start : next.Segment.End;
         var end = mediaDuration < playerDuration ? mediaDuration : playerDuration;
         var fps = _viewModel.AnalysisResult?.VideoStreams.FirstOrDefault()?.FramesPerSecond;
         var target = GetSchnittshuffleSeekPosition(boundary, end, fps);
 
-        await ExecutePlaybackActionAsync(async () =>
+        _schnittshuffleSeeking = true;
+        try
         {
-            // Keep the final picture available for inspection when jumping to the file boundary.
-            if (boundary >= end && _playbackViewModel.CanPause)
+            await ExecutePlaybackActionAsync(async () =>
             {
-                _schnittshufflePausing = true;
-                try
-                {
+                if (_playbackViewModel.CanPause)
                     await _playbackViewModel.PauseAsync(_mediaInputCancellation.Token);
-                }
-                finally
-                {
-                    _schnittshufflePausing = false;
-                }
-            }
 
-            if (_isClosed || _mediaLoadInProgress ||
-                !_cutPlanViewModel.CanShuffleSelectedSegment ||
-                !ReferenceEquals(segment, _cutPlanViewModel.SelectedRemoveSegment))
-            {
-                return;
-            }
+                if (!CanCompleteJump()) return;
+                await _playbackViewModel.SeekToAsync(target, _mediaInputCancellation.Token);
+                if (CanCompleteJump()) _cutPlanViewModel.SelectEdge(next.Segment, next.Side);
+            });
+        }
+        finally
+        {
+            _schnittshuffleSeeking = false;
+        }
 
-            await _playbackViewModel.SeekToAsync(target, _mediaInputCancellation.Token);
-        });
+        bool CanCompleteJump() => !_isClosed && !_mediaLoadInProgress && _cutPlanViewModel.CanShuffleBoundaries &&
+            ReferenceEquals(previousSegment, _cutPlanViewModel.SelectedRemoveSegment) &&
+            previousEdge == _cutPlanViewModel.SelectedEdgeSide &&
+            _cutPlanViewModel.MarkedSegments.Any(segment => ReferenceEquals(segment, next.Segment));
     }
 
     internal static TimeSpan GetSchnittshuffleSeekPosition(TimeSpan boundary, TimeSpan end, double? framesPerSecond)

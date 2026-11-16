@@ -495,7 +495,7 @@
                                     <Style.Triggers>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding CanShuffleSelectedSegment}" Value="True" />
+                                                <Condition Binding="{Binding CanShuffleBoundaries}" Value="True" />
                                                 <Condition Binding="{Binding DataContext.CanSeek, ElementName=PlaybackControls}" Value="True" />
                                             </MultiDataTrigger.Conditions>
                                             <Setter Property="Visibility" Value="Visible" />
@@ -505,13 +505,13 @@
                             </StackPanel.Style>
                             <TextBlock Text="Schnittshuffle" VerticalAlignment="Center" Margin="0,0,8,0" />
                             <Button x:Name="SchnittshuffleStartButton" Width="34" Height="30" Margin="0,0,4,0"
-                                    Padding="0" FontSize="15" Content="←" Click="SchnittshuffleStart_Click"
-                                    AutomationProperties.Name="Schnittshuffle: Zum Anfang des ausgewählten Schnittbereichs springen"
-                                    ToolTip="Schnittshuffle: Zum Anfang des ausgewählten Schnittbereichs springen" />
+                                    Padding="0" FontSize="15" Content="←" Click="SchnittshuffleStart_Click" PreviewGotKeyboardFocus="Schnittshuffle_PreviewGotKeyboardFocus"
+                                    AutomationProperties.Name="Schnittshuffle: Zur vorherigen markierten Schnittgrenze springen"
+                                    ToolTip="Schnittshuffle: Zur vorherigen markierten Schnittgrenze springen" />
                             <Button x:Name="SchnittshuffleEndButton" Width="34" Height="30"
-                                    Padding="0" FontSize="15" Content="→" Click="SchnittshuffleEnd_Click"
-                                    AutomationProperties.Name="Schnittshuffle: Zum Ende des ausgewählten Schnittbereichs springen"
-                                    ToolTip="Schnittshuffle: Zum Ende des ausgewählten Schnittbereichs springen" />
+                                    Padding="0" FontSize="15" Content="→" Click="SchnittshuffleEnd_Click" PreviewGotKeyboardFocus="Schnittshuffle_PreviewGotKeyboardFocus"
+                                    AutomationProperties.Name="Schnittshuffle: Zur nächsten markierten Schnittgrenze springen"
+                                    ToolTip="Schnittshuffle: Zur nächsten markierten Schnittgrenze springen" />
                         </StackPanel>
                         <WrapPanel x:Name="PlayerFrameSearchControls"
                                    Visibility="{Binding DataContext.IsPlayerFrameSearchVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToVisibilityConverter}}"

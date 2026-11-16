@@ -45,4 +45,4 @@ Die persönliche Funktionsabnahme umfasst beide Arbeitspakete.
 
 ## Gemeinsames Prüfergebnis
 
-Release-Build mit 0 Warnungen und 0 Fehlern. Vollständige Suite mit **2.150 bestandenen Tests**, 0 fehlgeschlagen und 0 übersprungen. Core 200, Media 402, App 1.468, Cutlists 80. Beide Arbeitspakete sind durch getrennte lokale Commits unabhängig prüf- und übernehmbar. Die Schnittshuffle-Erweiterung steht als späterer Punkt in der [Setup-Merkliste](SETUP-MERKLISTE.md#offen--schnittshuffle-über-alle-schnittgrenzen).
+Release-Build mit 0 Warnungen und 0 Fehlern. Vollständige Suite mit **2.150 bestandenen Tests**, 0 fehlgeschlagen und 0 übersprungen. Core 200, Media 402, App 1.468, Cutlists 80. Beide Arbeitspakete sind durch getrennte lokale Commits unabhängig prüf- und übernehmbar. Die fortlaufende Schnittshuffle-Navigation wird in der [separaten Prüffassung](SCHNITTSHUFFLE-PRUEFFASSUNG.md) dokumentiert.

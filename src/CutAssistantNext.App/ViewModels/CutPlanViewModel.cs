@@ -18,6 +18,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
 
     public CutPlanViewModel()
     {
+        _removeSegments.CollectionChanged += (_, _) => OnPropertyChanged(nameof(CanShuffleBoundaries));
         RemoveSegments =
             new ReadOnlyObservableCollection<RemoveSegment>(
                 _removeSegments);
@@ -89,6 +90,51 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
     public bool CanShuffleSelectedSegment =>
         PendingStart is null && MediaDuration is { } duration &&
         SelectedRemoveSegment is { } segment && segment.End <= duration && RemoveSegments.Contains(segment);
+
+    public bool CanShuffleBoundaries =>
+        PendingStart is null && MediaDuration.HasValue && MarkedSegments.Count != 0;
+
+    internal (RemoveSegment Segment, CutEdgeSide Side)? FindShuffleBoundary(bool forward, TimeSpan position)
+    {
+        if (!CanShuffleBoundaries) return null;
+
+        if (SelectedRemoveSegment is { } selected && MarkedSegments.IndexOf(selected) is var index && index >= 0)
+        {
+            if (SelectedEdgeSide is { } edge)
+            {
+                if (forward && edge == CutEdgeSide.Start) return (selected, CutEdgeSide.End);
+                if (!forward && edge == CutEdgeSide.End) return (selected, CutEdgeSide.Start);
+                var nextIndex = index + (forward ? 1 : -1);
+                return nextIndex >= 0 && nextIndex < MarkedSegments.Count
+                    ? (MarkedSegments[nextIndex], forward ? CutEdgeSide.Start : CutEdgeSide.End)
+                    : null;
+            }
+
+            if (position > selected.Start && position < selected.End)
+                return (selected, forward ? CutEdgeSide.End : CutEdgeSide.Start);
+
+            return (selected, forward ? CutEdgeSide.Start : CutEdgeSide.End);
+        }
+
+        if (forward)
+        {
+            foreach (var segment in MarkedSegments)
+            {
+                if (segment.Start >= position) return (segment, CutEdgeSide.Start);
+                if (segment.End >= position) return (segment, CutEdgeSide.End);
+            }
+        }
+        else
+        {
+            for (var i = MarkedSegments.Count - 1; i >= 0; i--)
+            {
+                var segment = MarkedSegments[i];
+                if (segment.End <= position) return (segment, CutEdgeSide.End);
+                if (segment.Start <= position) return (segment, CutEdgeSide.Start);
+            }
+        }
+        return null;
+    }
 
     public CutEdgeSide? SelectedEdgeSide { get; private set; }
 
@@ -238,6 +284,7 @@ public sealed class CutPlanViewModel : INotifyPropertyChanged
             OnPropertyChanged();
             OnPropertyChanged(nameof(PendingStartText));
             OnPropertyChanged(nameof(CanShuffleSelectedSegment));
+            OnPropertyChanged(nameof(CanShuffleBoundaries));
             OnPropertyChanged(nameof(CanSetEnd));
         }
     }
