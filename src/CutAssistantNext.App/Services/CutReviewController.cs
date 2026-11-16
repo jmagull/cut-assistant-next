@@ -23,7 +23,14 @@ internal sealed class CutReviewController(Window owner, IAppLogger logger,
         {
             var window = createWindow?.Invoke() ?? new CutReviewWindow(new MpvMediaPlayerService(logger), logger, centralPlayback);
             window.Owner = owner;
-            window.Closed += (_, _) => { if (ReferenceEquals(_window, window)) _window = null; };
+            window.Closed += (_, _) =>
+            {
+                if (!ReferenceEquals(_window, window)) return;
+                _window = null;
+                if (!_closed && window.ReturnActivationToOwner && owner.IsVisible && owner.IsEnabled &&
+                    !owner.IsActive && owner.WindowState != WindowState.Minimized)
+                    owner.Activate();
+            };
             _window = window;
             try { window.Show(); }
             catch

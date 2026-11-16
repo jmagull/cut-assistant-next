@@ -27,6 +27,7 @@ internal partial class CutReviewWindow : Window
         if (VideoHost.IsVideoWindowReady) VideoHost_HandleCreated(null, EventArgs.Empty);
     }
 
+    internal bool ReturnActivationToOwner { get; private set; }
     internal bool IsClosing => _viewModel.IsClosing;
     internal Task ReviewAsync(CutCompletionViewModel completion, int index) => RunAsync(async () =>
     {
@@ -131,12 +132,12 @@ internal partial class CutReviewWindow : Window
     {
         if (_allowClose) return;
         e.Cancel = true;
-        await CloseSafelyAsync();
+        await (_closeTask ??= CloseCoreAsync(wasActive: IsActive));
     }
 
-    internal Task CloseSafelyAsync() => _closeTask ??= CloseCoreAsync();
+    internal Task CloseSafelyAsync() => _closeTask ??= CloseCoreAsync(wasActive: false);
 
-    private async Task CloseCoreAsync()
+    private async Task CloseCoreAsync(bool wasActive)
     {
         try
         {
@@ -153,6 +154,8 @@ internal partial class CutReviewWindow : Window
         {
             VideoHost.VideoWindowHandleCreated -= VideoHost_HandleCreated;
             Closing -= Window_Closing;
+            // Check again after disposal: the user may have activated another window in the meantime.
+            ReturnActivationToOwner = wasActive && IsActive;
             _allowClose = true;
             Close();
         }

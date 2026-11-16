@@ -532,6 +532,7 @@ public sealed partial class CutReviewViewModelTests
         public Task StepForwardAsync(CancellationToken t = default) => Task.CompletedTask;
         public Task StepFramesAsync(int f, CancellationToken t = default) => Task.CompletedTask;
         public Task StepBackwardAsync(CancellationToken t = default) => Task.CompletedTask;
-        public ValueTask DisposeAsync() { DisposeCount++; DisposedWhileCommandRunning = _running; return ValueTask.CompletedTask; }
+        internal Task Disposal { get; init; } = Task.CompletedTask;
+        public ValueTask DisposeAsync() { DisposeCount++; DisposedWhileCommandRunning = _running; return new ValueTask(Disposal); }
     }
 }
