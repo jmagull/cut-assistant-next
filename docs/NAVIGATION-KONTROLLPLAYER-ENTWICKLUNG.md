@@ -36,6 +36,13 @@ Die Mehrfenster-Regression verwendet tatsächliche WPF-Fenster und eine kontroll
 3. Den Kontrollplayer erneut öffnen, die Freigabe beim Schließen mit einem schnellen Wechsel zu einer anderen Anwendung überlappen lassen. Das andere Programm soll aktiv bleiben. Zusätzlich ein geöffnetes modales CAN-Abschlussfenster und ein minimiertes Hauptfenster ausprobieren.
 4. Dieselbe Schnittprüfung anschließend erneut öffnen. Prüfposition und Tonspur prüfen. Die Schritte unter Windows 11 und bei vorhandener Gelegenheit auch unter Windows 10 wiederholen.
 
+## Persönliche Abnahme am 16.11.2026
+
+- **Wiederholtempo unter Windows 11 bestanden.** 550 ms Startverzögerung und 120 ms Wiederholabstand wurden gespeichert und blieben nach Neustart erhalten. Gedrückte Maus- und Tastaturtasten wiederholen wie gewünscht. Loslassen stoppt die Wiederholung.
+- **Fensteraktivierung unter Windows 11 bestanden.** Mit mehreren geöffneten Fenstern erhielt CAN nach dem Schließen des Kontrollplayers zuverlässig den Fokus zurück.
+
+Die persönliche Funktionsabnahme umfasst beide Arbeitspakete.
+
 ## Gemeinsames Prüfergebnis
 
 Release-Build mit 0 Warnungen und 0 Fehlern. Vollständige Suite mit **2.150 bestandenen Tests**, 0 fehlgeschlagen und 0 übersprungen. Core 200, Media 402, App 1.468, Cutlists 80. Beide Arbeitspakete sind durch getrennte lokale Commits unabhängig prüf- und übernehmbar. Die Schnittshuffle-Erweiterung steht als späterer Punkt in der [Setup-Merkliste](SETUP-MERKLISTE.md#offen--schnittshuffle-über-alle-schnittgrenzen).
