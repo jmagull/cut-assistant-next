@@ -21,3 +21,17 @@ Auf Windows 11 am Arbeitsrechner beziehungsweise in der VM testen. Die SHA-256-W
 5. Eine andere Quelldatei öffnen oder einen weiteren Schnitt ausführen. CAN darf die alten Prüfstellen keinem anderen Film zuordnen.
 
 **Aktualisierung 17.11.2026:** Acht persönliche Realfilmschnitte (vier Filme, jeweils beide Motoren) sind für Bild, Ton/Synchronität, Übergänge und Drei-Sekunden-Vorschau bestanden. Der Wiederaufruf der Schnittprüfung wurde ebenfalls persönlich erfolgreich bestätigt. Die obigen Schritte bleiben als Testanleitung erhalten und sind keine pauschale Liste unerledigter Prüfungen. Die noch offenen Abnahmepunkte stehen im [Praxisbericht](PRAXISTESTS-BUILD61-20261117.md).
+
+## Abnahmestand des lokalen Releasekandidaten vom 17.11.2026
+
+Bestanden: acht Realfilmschnitte, Wiederholtempo mit Speicherung nach Neustart, Kontrollplayer-Fokus und fortlaufender Schnittshuffle in der dokumentierten Windows-11-Umgebung. Für sieben Motorläufe liegen Protokolle vor; MP4Box bei der Weihnachtsfee ist persönlich nachbestätigt, ohne separates Protokoll.
+
+Offen bleiben:
+
+1. Eigene Tastenkombinationen mit Konflikten, Neustart und allen drei Layouts.
+2. Reale Serversuche nach anderen Qualitäten, Kennzeichnung und Qualitätswarnungen.
+3. Fachliche Schlussbewertung der Empfehlung, besonders Keyframe-Anfänge bei exklusiven Nicht-Keyframe-Enden.
+4. Freie Namen in MP4Box, otr-can und Cutlist erzeugen: tatsächliche Dateinamen, Speicherung, Wiederladen, Erhalt nach Metadatenänderung und bewusste Neugenerierung. Siehe EDITIERBARE-FILMNAMEN-BUILD61.md.
+5. Frisches Setup und ZIP in der Windows-11-VM einschließlich Upgrade, Verknüpfungen und Deinstallation. Keine automatische Installation auf dem Arbeitsrechner. Externe Werkzeugpfade prüfen; persönliche Einstellungen erhalten.
+
+Die acht Filmschnitte müssen ohne konkreten Anlass nicht wiederholt werden. Keine persönliche Windows-10-Abnahme. Veröffentlichung bleibt gesondert freizugeben.

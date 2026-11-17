@@ -2,9 +2,19 @@
 
 Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten klassischer Cutlists und Schneiden mit MP4Box oder otr-can. Die Oberfläche verwendet WPF, die Wiedergabe mpv/libmpv – ohne DirectShow und ohne zusätzliche Windows-Codec-Pakete.
 
-## Cut Assistant Next 1.0.3 Build 61 – Entwicklungsstand
+## Cut Assistant Next 1.0.3 Build 61 – lokaler Releasekandidat
 
-Build 61 ergänzt konfigurierbare Tastenkürzel, wiederholbare Navigation, Keyframe-Markierungen in der Schnittliste, eine Schnittmotor-Empfehlung, optionale Cutlists anderer Aufnahmequalitäten, wiederaufrufbare Schnittprüfungen und Werkzeug-Selbsttests. [Prüfanleitung für Build 61](docs/PRUEFHINWEISE-BUILD61.md).
+Stand 17.11.2026. Ausschließlich zur lokalen Prüfung; keine Veröffentlichungsfreigabe. Die stabile öffentliche Ausgabe bleibt Build 60.
+
+- **Tastatur und Navigation:** persönliche Tastenkürzel mit Konfliktprüfung und Speicherung. Sekunden-, Keyframe- und Einzelbildsprünge wiederholen bei gehaltener Taste oder Maus. Startverzögerung und Wiederholabstand sind unter Darstellung und Schnittbearbeitung einstellbar.
+- **Fortlaufender Schnittshuffle:** von Anfang zu Ende und weiter zum nächsten Bereich; rückwärts entsprechend. Schnittliste und Timeline folgen der ausgewählten Grenze, auch nach Einzelbildkorrekturen. An den äußeren Grenzen endet die Folge.
+- **Keyframes und Motorwahl:** blaues K an Anfang und exklusivem Ende, korrigierte Tooltips und begründete Empfehlung für MP4Box oder otr-can. Die Motorwahl bleibt manuell; die Empfehlung garantiert keine unauffälligen Übergänge.
+- **Cutlists:** optionale Suche nach anderen Aufnahmequalitäten mit Kennzeichnung und bewusster Übernahme. Rot/Entfernen, Grün/Behalten, lokale Cutlists und Bewertung bleiben verfügbar.
+- **Freie Namen:** endgültigen Ausgabenamen bei beiden Motoren und vorgeschlagenen Filmnamen unter Cutlist erzeugen unabhängig von der Maske bearbeiten. Manuelle Namen bleiben bei Metadatenänderungen erhalten; nur „Aus obigen Eingaben neu erzeugen“ setzt den Maskenvorschlag neu. Originaldatei und Cutlist-Zuordnung bleiben erhalten.
+- **Kontrollplayer:** zuletzt erzeugten Film in derselben Sitzung erneut prüfen, ohne neu zu schneiden; Fokus kehrt nach aktivem Schließen zuverlässig zu CAN zurück.
+- **Werkzeugprüfung:** getrennte Versions- und Funktionsprüfungen, einschließlich Streamcopy und MP4Box-Mehrspurtest.
+
+Acht persönliche Realfilmschnitte unter Windows 11 sind bestanden. Tastenkürzel, Qualitätsalternativen, fachliche Schlussbewertung der Empfehlung und neue Namensbearbeitung haben noch offene persönliche Prüfpunkte. Die frischen Setup-/Portable-Pakete benötigen ihre eigene Paketabnahme. [Prüfhinweise](docs/PRUEFHINWEISE-BUILD61.md) · [Persönliche Realfilmabnahme](docs/PRAXISTESTS-BUILD61-20261117.md).
 
 ## Cut Assistant Next 1.0.3 Build 60 – aktuelle stabile Version
 

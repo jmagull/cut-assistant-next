@@ -1,8 +1,12 @@
 # Dokumentation – Cut Assistant Next
 
-## Cut Assistant Next 1.0.3 Build 58 – vorbereiteter Release-Kandidat
+## Cut Assistant Next 1.0.3 Build 61 – lokaler Releasekandidat
 
-Die lokale Prüffassung hat die Dateiversion **1.0.3.58** und ist für die abschließende Paketfreigabe vorbereitet. Die öffentliche GitHub-Latest-Version ist weiterhin [Build 54](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54).
+[Nutzeranleitung](NUTZERANLEITUNG.md) · [Release Notes](RELEASE-NOTES-1.0.3.md) · [Offene Paketabnahme](PRUEFHINWEISE-BUILD61.md) · [Acht Realfilmschnitte](PRAXISTESTS-BUILD61-20261117.md) · [Freie Namen](EDITIERBARE-FILMNAMEN-BUILD61.md). Keine Veröffentlichung freigegeben; öffentliche stabile Ausgabe bleibt Build 60.
+
+## Historischer Kandidatenstand Build 58
+
+Die damalige lokale Prüffassung hatte die Dateiversion **1.0.3.58** und ist für die abschließende Paketfreigabe vorbereitet. Die damalige öffentliche GitHub-Latest-Version war [Build 54](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54).
 
 - **MP4Box:** CAN importiert das erste Segment mit `-add`, hängt weitere mit `-cat` an und erzeugt die Ausgabe mit `-new`. Zuvor konnte GPAC bei gleichartigen AAC-Spuren beide Eingabespuren einer Zielspur zuordnen. Geprüft sind AAC, AAC+AC-3, AAC+AAC und AC-3+AC-3. Die bekannten Keyframe-Werbeblitzer können weiterhin auftreten. [Ursache, Paketvergleich und Praxistests](MP4BOX-WILD-CARD-ZUSAMMENFUEHRUNG-BUILD56.md)
 - **Spotlight-CAN:** Einen offenen Entfernen-Bereich mit **Schnitt bis Videoende abschließen** bis zur tatsächlichen Dateidauer schließen. **Videoanfang** in CAN setzt die Grenze auf **00:00:00.000**. [Bedienung](SPOTLIGHT-README.md)

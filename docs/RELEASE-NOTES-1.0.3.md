@@ -1,13 +1,22 @@
-# Cut Assistant Next 1.0.3 Build 60
+# Cut Assistant Next 1.0.3 Build 61 – lokaler Releasekandidat
 
-## Build 61 – Prüffassung
+Stand 17.11.2026. Gegenüber dem veröffentlichten Build 60:
 
-- Persönliche Tastenkürzel im Hauptfenster und wiederholbare Navigation nach Sekunden, Keyframes und Einzelbildern.
-- Blaue Keyframe-Markierung an den Schnittgrenzen, korrigierter Keyframe-Hinweis und wiederaufrufbare Schnittprüfung.
-- Empfehlung für einen geeigneten Schnittmotor und optionale Server-Cutlists anderer OTR-Aufnahmequalitäten.
-- Getrennte Versions- und Funktionsprüfung für FFmpeg/ffprobe sowie MP4Box mit SHA-256-gebundenen Testergebnissen.
+- Persönliche Tastenkürzel mit Konfliktprüfung, dauerhaftem Speichern und passenden Tooltips.
+- Wiederholung von Sekunden-, Keyframe- und Einzelbildsprüngen per Maus und Tastatur; Startverzögerung und Abstand einstellbar und gespeichert.
+- Fortlaufender Schnittshuffle über alle Bereichsgrenzen mit synchroner Schnittauswahl und unveränderter Reihenfolge nach Einzelbildkontrollen.
+- Blaue K-Markierungen an beiden Grenzen und korrigierte Keyframe-Tooltips. Die nach dem ersten Test fehlenden Anfangs-/Endzeittexte sind wieder sichtbar.
+- Schnittmotor-Empfehlung für unterstützte H.264-MP4-Konstellationen; manuelle Wahl und bekannte MP4Box-Grenzen bleiben bestehen.
+- Optionale Suche nach anderen OTR-Aufnahmequalitäten mit Kennzeichnung und ausdrücklicher Übernahme.
+- Erneutes Öffnen der letzten Schnittprüfung ohne neuen Schnitt sowie verbesserte Fokusrückgabe nach Schließen des Kontrollplayers.
+- Frei editierbarer endgültiger Ausgabename für MP4Box und otr-can; gemeinsamer Name beim Dialogwechsel. Frei editierbarer vorgeschlagener Filmname beim Cutlist-Erzeugen. Manuelle Titel bleiben bis zur bewussten Neugenerierung erhalten; Originalzuordnung bleibt unverändert.
+- Getrennte Versions- und Funktionsprüfungen für FFmpeg/ffprobe und MP4Box einschließlich Streamcopy-Regression und zwei AAC-Tonspuren.
 
+**Abnahme:** Acht persönliche Realfilmschnitte unter Windows 11 bestanden. Diese Rückmeldungen stammen aus den dokumentierten Entwicklungsfassungen. Neue Setup-/Portable-Abnahme, persönliche Tastenkürzel, reale Qualitätsalternativen, fachliche Schlussbewertung der Empfehlung und freie Namen bleiben gesondert zu prüfen. Keine persönliche Windows-10-Abnahme. Automatisierte Ergebnisse des neuen Paketlaufs stehen im Paketbericht.
 
+**Status:** ausschließlich lokal vorbereitet. Kein Veröffentlichungsauftrag; öffentliche stabile Version bleibt Build 60.
+
+## Übernommene Funktionen aus Build 60
 
 ## Hinweis zu FFmpeg
 
@@ -40,7 +49,7 @@ Windows 11 x64 und .NET 10 Desktop Runtime x64 vorausgesetzt. Für otr-can wird 
 
 Enthalten sind libmpv 0.41.0 und otr-can 0.1.6-audio-diag.1 unter `tools/otr-can/otr_can.exe`. FFmpeg, ffprobe, MP4Box und FFMS2 bleiben externe Werkzeuge. Bezugsquellen und Pfadeinstellungen stehen in `VORAUSSETZUNGEN.txt`. Die vollständigen Quellen, das libmpv-Relink-Archiv und SHA-256-Prüfsummen werden separat bereitgestellt.
 
-## Prüfbasis
+## Historische Prüfbasis Build 60
 
 Die persönliche Abnahme unter Windows 11 umfasste das Setup auf dem Arbeitsrechner sowie Setup und frisch entpacktes Portable-ZIP in der VM. Bestätigt sind Schnitte mit MP4Box und otr-can, der AVI-Test „Teufelsbrigade“, die Cutlist-Bewertung, der Kontrollplayer mit zentraler Lautstärke und die Sekundensprünge. Bei der Deinstallation in der VM blieben die Benutzereinstellungen erhalten. Die otr-can-Werkzeugpfade mussten anschließend erneut gesetzt werden. Für Windows 10 liegt keine persönliche Prüfung von Build 60 vor.
 

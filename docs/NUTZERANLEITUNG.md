@@ -1,15 +1,46 @@
 # Nutzeranleitung – Cut Assistant Next
 
-## Bedienung in Build 61
+## Bedienung in Build 61 – lokaler Releasekandidat
 
-- **Einstellungen → Tastenkürzel …** zeigt Standard und persönliche Belegung für die Befehle des Hauptfensters. Eine Zeile auswählen und **Tastenkürzel ändern** anklicken. Beispielsweise lässt sich die Frame-Lupe auf **F8** legen. **Standard** stellt die ausgewählte Belegung wieder her. Änderungen gelten nach **Speichern** in allen drei Ansichten.
-- Ein kurzer Klick auf eine Navigationstaste bewegt um einen Schritt. Halte **Bild vor**, **K ▶** oder die zugeordnete Taste gedrückt, um weiterzuspringen. Auch die vorhandenen Sekundensprünge bleiben wiederholbar. Loslassen und Fokusverlust beenden die Wiederholung.
-- Ein blaues **K** neben einer Schnittzeit kennzeichnet diese Grenze als Keyframe. CAN zeigt bei einem geeigneten Schnittplan eine begründete Empfehlung für MP4Box oder otr-can an. Die Auswahl erfolgt weiterhin über die jeweilige Motorschaltfläche.
-- Unter **Cutlist-Einstellungen** lässt sich die Suche nach anderen Aufnahmequalitäten einschalten. Alternative Treffer stehen in derselben Ergebnistabelle. CAN fragt vor dem Import nach und prüft anschließend unter anderem Bildrate und Schnittgrenzen.
-- **Schnittprüfung erneut öffnen** lädt die zuletzt fertiggestellte MP4 und dieselben Prüfstellen für die laufende Sitzung. Beim Medienwechsel oder Beginn eines weiteren Schnittlaufs verfällt der Eintrag.
-- In **FFmpeg-Werkzeuge** prüfen **Version prüfen** und **Funktion prüfen** unterschiedliche Eigenschaften. Der Funktionslauf testet die Videokopie mit H.264, B-Frames und AAC. Unter **Schnittanwendung** prüft **MP4Box-Funktion prüfen** das Ausschneiden und Zusammenfügen zweier Bereiche mit zwei AAC-Spuren. Gespeicherte Prüfergebnisse beziehen sich auf den SHA-256-Inhalt der beteiligten EXE-Dateien und auf die aktuelle Testrevision.
+Diese Fassung ist für die persönliche Paketprüfung vorbereitet und noch nicht veröffentlicht. Die folgenden Funktionen sind implementiert; offene persönliche Prüfungen stehen in PRUEFHINWEISE-BUILD61.md.
 
+### Tastenkürzel und Wiederholung
 
+Unter **Einstellungen → Tastenkürzel …** eine Funktion auswählen, **Tastenkürzel ändern** anklicken und die gewünschte Kombination drücken. **Speichern** übernimmt sie dauerhaft für Standard, Power-User 1 und Power-User 2. Doppelte Kombinationen werden als Konflikt gemeldet. **Standard** stellt die ausgewählte Belegung zurück. In Texteingabefeldern bleiben die üblichen Eingaben möglich.
+
+Kurzer Druck oder Klick springt einmal. Gedrückt halten wiederholt Sekunden-, Keyframe- oder Einzelbildsprünge. Unter **Einstellungen → Darstellung und Schnittbearbeitung → Wiederholung beim Halten** stellst du den Beginn (150–1.500 ms, Standard 350 ms) und den Abstand weiterer Wiederholungen (100–1.000 ms, Standard 200 ms) ein. Die Werte gelten sofort für Maus und Tastatur und bleiben nach Neustart erhalten. Loslassen oder Fokusverlust beendet die Wiederholung; ein bereits gestarteter Sprung kann noch auslaufen.
+
+### Schnittshuffle und Keyframes
+
+Die Shuffle-Pfeile laufen durch sämtliche vollständigen Bereiche: **rechts** vom Anfang zum Ende, dann zum Anfang des nächsten Bereichs; **links** in umgekehrter Reihenfolge. Am ersten und letzten Eintrag endet die Navigation. Schnittliste und Timeline zeigen die zugehörige Auswahl. Einzelbildschritte zur Kontrolle ändern die Reihenfolge nicht. Bei einem offenen Schnittanfang zuerst die Markierung abschließen oder mit Esc verwerfen.
+
+Ein blaues **K** neben einer Zeit zeigt einen im vorhandenen Index erkannten Keyframe. Anfang und exklusives Ende werden getrennt markiert. Das Ende ist die Grenze hinter dem letzten behaltenen Bild. Ohne fertige Keyframe-Analyse erscheint keine Markierung. Rot markiert entfernte, Grün behaltene Bereiche; die Arbeitsweise wird unter Darstellung und Schnittbearbeitung für den nächsten geöffneten Film gewählt.
+
+### Schnittmotor wählen und erneut prüfen
+
+**MP4Box** schneidet schnell ohne Neukodierung, kann an Schnittgrenzen aber Keyframe-bedingte Abweichungen oder Werbeblitzer zeigen. **otr-can** verarbeitet Video-Schnittgrenzen bildgenau mit Neukodierung und kodiert den Ton neu; das dauert länger.
+
+Die Empfehlung berücksichtigt bei unterstütztem H.264 in MP4 die Behalteanfänge, exklusiven Enden, AAC-/AC-3-Tonspuren und verfügbaren Werkzeuge. Liegen die Grenzen auf Keyframes, wird MP4Box bevorzugt; bei Grenzen dazwischen otr-can. Das tatsächliche Dateiende gilt dabei als zulässiger Abschluss. Für andere Konstellationen kann die Empfehlung entfallen. Sie ist eine Entscheidungshilfe und ersetzt die persönliche Bild-/Tonprüfung nicht. Die Schaltflächen lassen beide Motoren weiterhin manuell wählen.
+
+**Schnittprüfung erneut öffnen** öffnet die zuletzt fertiggestellte MP4 mit denselben Prüfstellen, ohne erneut zu schneiden. Dies gilt für die laufende Sitzung; Medienwechsel oder Beginn eines weiteren Schnitts löscht den Eintrag. Beim aktiven Schließen des Kontrollplayers kehrt der Fokus zum Hauptfenster zurück. Die Lautstärke folgt dem Hauptfenster.
+
+### Cutlists und Aufnahmequalitäten
+
+Lokale und Server-Cutlists erscheinen gemeinsam. Unter **Cutlist-Einstellungen** lässt sich die zusätzliche Suche nach Standard-, HQ- und HD-Varianten derselben Aufnahme aktivieren. Alternative Treffer sind gekennzeichnet und werden erst nach einer Warnung bewusst übernommen. Bildraten und Schnittgrenzen werden weiterhin geprüft. Andere Qualität kann andere Grenzen bedeuten; deshalb im eigenen Film nachkontrollieren. Fremde übernommene Cutlists können beim Wechsel oder Beenden mit 0–5 bewertet, übersprungen oder der Vorgang abgebrochen werden.
+
+### Freie Namen und Masken
+
+Die Namensmaske liefert den Vorschlag. **%Name%** steht für den bearbeitbaren Namen aus den Namensangaben, **%OriginalName%** für den ursprünglichen Aufnahmenamen. Auch bei einer Maske mit %OriginalName% kannst du den endgültigen Namen frei ändern.
+
+Im MP4Box- und otr-can-Dialog den **Ausgabedateinamen** direkt überschreiben. Der eingegebene Name wird tatsächlich für die MP4 verwendet; fehlt .mp4, wird die Endung ergänzt. Der Name bleibt während derselben Sitzung beim Wechsel zwischen beiden Motordialogen erhalten. Ein Medienwechsel verwirft diese Auswahl. Der Ausgabename wird unabhängig vom vorgeschlagenen Cutlist-Titel verwaltet.
+
+Unter **Cutlist erzeugen** das Feld **Vorgeschlagener Filmname (frei editierbar)** überschreiben. Beim Speichern wird dieser Titel als SuggestedMovieName in die Cutlist geschrieben und beim Wiederladen übernommen. Metadatenänderungen überschreiben einen manuellen oder geladenen Namen nicht. Nur **Aus obigen Eingaben neu erzeugen** ersetzt ihn bewusst durch die aktuelle Maske. Danach ist erneute Bearbeitung möglich. Leere oder unter Windows ungültige Namen werden beim Speichern abgewiesen.
+
+Das Umbenennen verändert weder die Quelldatei noch OriginalName, ApplyToFile oder Schnittbereiche. Persönliche Namensprüfung einschließlich tatsächlicher Dateinamen, Wiederladen und Neugenerierung steht noch aus.
+
+### Werkzeuge prüfen
+
+**Version prüfen** und **Funktion prüfen** unter FFmpeg-Werkzeuge prüfen unterschiedliche Eigenschaften. Der Funktionslauf verwendet H.264 mit B-Frames und AAC und erkennt das bekannte fehlerhafte Seek-/Audio-Preroll-Verhalten. **MP4Box-Funktion prüfen** unter Schnittanwendung testet Ausschneiden und Zusammenfügen zweier Bereiche mit zwei AAC-Spuren. Ergebnisse sind an den SHA-256-Inhalt der EXE-Dateien und die Testrevision gebunden. FFmpeg, ffprobe, MP4Box und FFMS2 bleiben externe Werkzeuge. Der passende otr-can-Motor liegt im Paket unter tools/otr-can/otr_can.exe.
 
 ## Cut Assistant Next 1.0.3 Build 60
 
@@ -60,7 +91,7 @@ Bei zu schmalem Fenster verwendet CAN vorübergehend Standard und kehrt bei ausr
 
 ## Geltungsstand
 
-Diese Anleitung beschreibt die lokale Prüffassung **1.0.3 Build 58**. Für die veröffentlichte Ausgabe **Build 54** gilt der Funktionsstand ihrer Release-Dokumentation. Die datierten Angaben „ab Build …“ kennzeichnen die Einführung einer weiterhin enthaltenen Funktion. Alte Praxis- und Paketberichte bleiben historische Nachweise. Für die aktuelle Installation sind die oben genannten Voraussetzungen, `tools/otr-can` und die mitgelieferte `VORAUSSETZUNGEN.txt` maßgeblich.
+Diese Anleitung beschreibt den lokalen Releasekandidaten **1.0.3 Build 61**. Die veröffentlichte stabile Ausgabe bleibt **Build 60**; frühere Abnahmeangaben beziehen sich auf die jeweilige damalige Fassung. Die datierten Angaben „ab Build …“ kennzeichnen die Einführung einer weiterhin enthaltenen Funktion. Alte Praxis- und Paketberichte bleiben historische Nachweise. Für die aktuelle Installation sind die oben genannten Voraussetzungen, `tools/otr-can` und die mitgelieferte `VORAUSSETZUNGEN.txt` maßgeblich.
 
 Unter **Einstellungen → Darstellung und Schnittbearbeitung …** die Arbeitsweise wählen, übernehmen und den Film neu öffnen. Rot markiert zu entfernende, Grün zu behaltende Teile. Eine begonnene Markierung folgt dem Slider; **Esc** verwirft nur diesen offenen Anfang. Kapitel 3 bis 5 erläutern gemeinsame Cutlist-Auswahl und sicheres Speichern.
 
