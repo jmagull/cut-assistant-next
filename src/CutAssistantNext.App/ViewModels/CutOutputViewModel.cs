@@ -12,6 +12,7 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
     private string _suggestedMovieName;
     private string _outputMovieName;
     private string _defaultNameTemplate;
+    private bool _preserveSuggestedMovieName;
 
     public CutOutputViewModel(
         string nameTemplate,
@@ -57,7 +58,8 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
         _suggestedMovieName =
             namingState.SuggestedMovieName;
 
-        _outputMovieName = _suggestedMovieName;
+        _outputMovieName = namingState.OutputMovieName ?? _suggestedMovieName;
+        _preserveSuggestedMovieName = namingState.PreserveSuggestedMovieName;
     }
 
     public CutOutputViewModel(
@@ -82,7 +84,8 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
         _suggestedMovieName =
             namingState.SuggestedMovieName;
 
-        _outputMovieName = _suggestedMovieName;
+        _outputMovieName = namingState.OutputMovieName ?? _suggestedMovieName;
+        _preserveSuggestedMovieName = namingState.PreserveSuggestedMovieName;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -169,6 +172,7 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
 
         // Rebuilding the suggestion deliberately replaces any manual output name.
         OutputMovieName = suggestedMovieName;
+        _preserveSuggestedMovieName = false;
     }
 
     public CutNamingState CreateNamingState()
@@ -176,11 +180,14 @@ public sealed class CutOutputViewModel : INotifyPropertyChanged
         return new CutNamingState(
             _nameTemplate,
             _nameContext)
+        {
+            OutputMovieName = _outputMovieName
+        }
             .UseSuggestedMovieName(
-                _suggestedMovieName);
+                _suggestedMovieName, _preserveSuggestedMovieName);
     }
 
-    /// <summary>The name for this output only; it is not stored in cutlist naming state.</summary>
+    /// <summary>The session output choice; independent of the cutlist SuggestedMovieName.</summary>
     public string OutputMovieName
     {
         get => _outputMovieName;

@@ -40,6 +40,10 @@ Auf dem weiterführenden Branch codex/continuous-schnittshuffle sind Wiederholte
 - Der Kontrollplayer öffnete die frisch geschnittene otr-can-Ausgabe zweimal mit beiden Tonspuren und ihren Prüfpositionen. Der SHA-256-Wert der MP4 blieb gleich. Zwanzig zusätzliche native Audioregressionen liefen erfolgreich, darunter AAC-Zeitlückenreparatur, AC-3, mehrere Tonspuren und Rückfallpfade.
 - Die persönliche Realfilm-Sicht- und Hörkontrolle am Windows-11-Arbeitsrechner ist für die acht oben genannten Schnitte bestanden. Eine persönliche VM-Abnahme dieser Fassung ist nicht bestätigt. Persönliche Tastenkürzel, alternative Cutlist-Qualitäten, fachliche Schlussbewertung der Motor-Empfehlung und finale Paketprüfung bleiben laut [aktualisiertem Praxisbericht](PRAXISTESTS-BUILD61-20261117.md) offen.
 
+## Freie Filmnamen – Entwicklungsstand 17.11.2026
+
+Der vorgeschlagene Filmname in „Cutlist erzeugen“ ist direkt editierbar und vor automatischem Überschreiben geschützt. MP4Box und otr-can verwenden denselben, beim Dialog-/Motorwechsel erhaltenen Ausgabenamen. Originalzuordnung und Schnittwerte bleiben unverändert. **2.167 Tests bestanden**, Release-Build ohne Warnungen/Fehler. Die persönliche Abnahme dieser neuen Funktion steht noch aus. [Umsetzung, Nachweise und Testanleitung](EDITIERBARE-FILMNAMEN-BUILD61.md).
+
 ## Geänderte Dateien
 
 - `README.md`

@@ -52,6 +52,17 @@ public sealed class CutNamingState
 
     public bool PreserveSuggestedMovieName { get; }
 
+    // Session-only output choice, independent of the cutlist suggestion and source identity.
+    public string? OutputMovieName { get; init; }
+
+    public CutNamingState UseOutputMovieName(string outputMovieName)
+    {
+        return new CutNamingState(NameTemplate, NameContext, SuggestedMovieName, PreserveSuggestedMovieName)
+        {
+            OutputMovieName = outputMovieName
+        };
+    }
+
     public CutNamingState UseSuggestedMovieName(
         string suggestedMovieName,
         bool preserveSuggestedMovieName = false)
@@ -60,7 +71,10 @@ public sealed class CutNamingState
             NameTemplate,
             NameContext,
             suggestedMovieName,
-            preserveSuggestedMovieName || PreserveSuggestedMovieName);
+            preserveSuggestedMovieName || PreserveSuggestedMovieName)
+        {
+            OutputMovieName = OutputMovieName
+        };
     }
 
     public CutNamingState UseNaming(

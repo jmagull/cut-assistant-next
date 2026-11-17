@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CutAssistantNext.App.Settings;
+using CutAssistantNext.App.Services.Cutting;
 using CutAssistantNext.App.State;
 using CutAssistantNext.Core.Editing;
 using CutAssistantNext.Core.Media;
@@ -105,9 +106,11 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
 
         _preserveSuggestedMovieName =
             namingState.PreserveSuggestedMovieName;
+        _outputMovieName = namingState.OutputMovieName;
     }
 
     private bool _preserveSuggestedMovieName;
+    private string? _outputMovieName;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -430,6 +433,8 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
         ArgumentNullException.ThrowIfNull(
             analysis);
 
+        _ = OutputFileNameBuilder.BuildExactMovieFileName(SuggestedMovieName);
+
         var keepSegments =
             CutlistKeepSegmentBuilder.Build(
                 cutPlan);
@@ -471,7 +476,10 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
         var namingState =
             new CutNamingState(
                 _nameTemplate,
-                _nameContext);
+                _nameContext)
+            {
+                OutputMovieName = _outputMovieName
+            };
 
         return _preserveSuggestedMovieName
             ? namingState.UseSuggestedMovieName(
@@ -480,8 +488,18 @@ public sealed class CutlistGenerationViewModel : INotifyPropertyChanged
             : namingState;
     }
 
-    public string SuggestedMovieName =>
-        _suggestedMovieName;
+    public string SuggestedMovieName
+    {
+        get => _suggestedMovieName;
+        set
+        {
+            var name = value ?? string.Empty;
+            if (_suggestedMovieName == name) return;
+            _suggestedMovieName = name;
+            _preserveSuggestedMovieName = true;
+            OnPropertyChanged();
+        }
+    }
 
     public void GenerateSuggestedMovieName()
     {

@@ -1273,6 +1273,14 @@ public partial class MainWindow : Window
                 Title = engineKind == CutEngineKind.Mp4Box ? "Schneiden – MP4Box" : "Schneiden – otr-can"
             };
 
+        dialog.Closed += (_, _) =>
+        {
+            if (ReferenceEquals(analysis, _viewModel.AnalysisResult) && _cutNamingState is not null)
+            {
+                _cutNamingState = _cutNamingState.UseOutputMovieName(viewModel.OutputMovieName);
+            }
+        };
+
         dialog.CutRequested +=
             async (_, _) =>
             {

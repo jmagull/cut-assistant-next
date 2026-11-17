@@ -237,3 +237,8 @@ Stapelverarbeitung und Smart Rendering bleiben weitere spätere Wünsche ohne fe
 ## Korrigierter Voraussetzungstext – Build 40
 
 Hinweis nennt jetzt korrekt Motor 0.1.6; tatsächlicher Motor war auch in Build 39 bereits 0.1.6. Neue Pakete und Quellen geprüft; Klebecenter unverändert. Setup-Test auf dem Arbeits-PC vom Nutzer begonnen, Abschluss noch nicht bestätigt. Neue Build-40-/Portable-/VM-Abnahme offen.
+
+## Freie Filmnamen und spätere Batchverwendung – 17.11.2026
+
+- [x] Fertigen vorgeschlagenen Filmnamen in „Cutlist erzeugen“ frei editierbar machen, manuelle Eingaben schützen und Ausgabe-Dateinamen bei Motorwechsel erhalten. Technisch geprüft, persönliche Abnahme offen. [Bericht](EDITIERBARE-FILMNAMEN-BUILD61.md).
+- [ ] Späteres Batchcenter: individueller editierbarer Titel je Auftrag; beim Einreihen Namen einfrieren. Eindeutige Batch-ID bis zur erfolgreichen Kontrolle und Freigabe automatisch außerhalb des Filmtitels ergänzen; danach nur kollisionssicher entfernen und intern erhalten. Ausschließlich Architekturvorgabe, hier keine Batchimplementierung.
