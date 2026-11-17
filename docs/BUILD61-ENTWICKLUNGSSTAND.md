@@ -25,6 +25,12 @@ Der Regressionstest arbeitet mit dem tatsächlich gerenderten Hauptfenster-DataG
 
 Geänderte Dateien für diese Korrektur: MainWindow.xaml, CutToolLayoutTests.cs und dieser Entwicklungsbericht.
 
+## Persönliche Abnahme – aktualisiert am 17.11.2026
+
+**Acht von acht Realfilmschnitten persönlich bestanden:** Yaiba S01E07, Wild Kat S01E01, Die zauberhafte Weihnachtsfee und Meine zauberhaften Weihnachtsschuhe, jeweils mit MP4Box und otr-can unter Windows 11. Bild, Ton/Synchronität, Übergänge und Drei-Sekunden-Vorschau wurden positiv bestätigt. MP4Box bei Weihnachtsfee ist persönlich bestanden; das separate Motorprotokoll wurde nicht übergeben. [Vollständiger Praxisbericht und offene Abnahmepunkte](PRAXISTESTS-BUILD61-20261117.md).
+
+Auf dem weiterführenden Branch codex/continuous-schnittshuffle sind Wiederholtempo und Fokus persönlich abgenommen; der erweiterte Shuffle wurde ebenfalls persönlich erfolgreich gemeldet. Die zuletzt dokumentierte gemeinsame Suite umfasst 2.153 bestandene Tests. Die folgenden technischen Ergebnisse mit 2.136 Tests gehören zur früheren Build-61-Basis.
+
 ## Prüfungen
 
 - Release-Kompilierung unter Windows mit .NET SDK 10.0.303, 0 Warnungen und 0 Fehler. Die Gesamtsuite umfasst 2.136 bestandene Tests (Core 200, Media 402, App 1.454, Cutlists 80), ohne Fehlversuche oder übersprungene Fälle im abschließenden Lauf.
@@ -32,7 +38,7 @@ Geänderte Dateien für diese Korrektur: MainWindow.xaml, CutToolLayoutTests.cs 
 - GPAC 26.07 (`a07cbfff`) erzeugt für zwei definierte Bereiche die erwarteten H.264- und AAC-Pakete. Die mit `-add/-cat/-new` zusammengefügte MP4 enthält alle drei Spuren in richtiger Reihenfolge. Die bestehende native Matrix deckt zusätzlich AAC/AC-3, AAC/AAC, AC-3/AC-3 und kurze Endsegmente ab.
 - Native synthetische Schnitte mit MP4Box und dem gebündelten otr-can 0.1.6-audio-diag.1 einschließlich FFMS2 ergaben jeweils eine vier Sekunden lange MP4 mit zwei AAC-Spuren. Sechs Kontrollplayer-Gruppen sowie Spotlight, Videoende und Schnittshuffle liefen erfolgreich.
 - Der Kontrollplayer öffnete die frisch geschnittene otr-can-Ausgabe zweimal mit beiden Tonspuren und ihren Prüfpositionen. Der SHA-256-Wert der MP4 blieb gleich. Zwanzig zusätzliche native Audioregressionen liefen erfolgreich, darunter AAC-Zeitlückenreparatur, AC-3, mehrere Tonspuren und Rückfallpfade.
-- Die Sicht- und Hörkontrolle am Arbeitsrechner und in der VM bleibt offen. Die Bedienprüfung mit echtem Tastendruck und die alternative Cutlist-Suche auf einem persönlichen Server stehen in den [Prüfhinweisen](PRUEFHINWEISE-BUILD61.md).
+- Die persönliche Realfilm-Sicht- und Hörkontrolle am Windows-11-Arbeitsrechner ist für die acht oben genannten Schnitte bestanden. Eine persönliche VM-Abnahme dieser Fassung ist nicht bestätigt. Persönliche Tastenkürzel, alternative Cutlist-Qualitäten, fachliche Schlussbewertung der Motor-Empfehlung und finale Paketprüfung bleiben laut [aktualisiertem Praxisbericht](PRAXISTESTS-BUILD61-20261117.md) offen.
 
 ## Geänderte Dateien
 

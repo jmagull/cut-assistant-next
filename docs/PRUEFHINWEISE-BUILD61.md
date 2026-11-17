@@ -20,4 +20,4 @@ Auf Windows 11 am Arbeitsrechner beziehungsweise in der VM testen. Die SHA-256-W
 4. Die Prüfung mehrfach öffnen und schließen. Änderungszeit oder SHA-256 der fertigen MP4 vor und nach der Kontrolle vergleichen. Für die Fehlerprüfung die fertige Testdatei umbenennen und den Button erneut wählen.
 5. Eine andere Quelldatei öffnen oder einen weiteren Schnitt ausführen. CAN darf die alten Prüfstellen keinem anderen Film zuordnen.
 
-Die persönliche Sicht- und Hörkontrolle ist noch offen.
+**Aktualisierung 17.11.2026:** Acht persönliche Realfilmschnitte (vier Filme, jeweils beide Motoren) sind für Bild, Ton/Synchronität, Übergänge und Drei-Sekunden-Vorschau bestanden. Der Wiederaufruf der Schnittprüfung wurde ebenfalls persönlich erfolgreich bestätigt. Die obigen Schritte bleiben als Testanleitung erhalten und sind keine pauschale Liste unerledigter Prüfungen. Die noch offenen Abnahmepunkte stehen im [Praxisbericht](PRAXISTESTS-BUILD61-20261117.md).
