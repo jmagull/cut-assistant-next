@@ -2,7 +2,7 @@
 
 ## Cut Assistant Next 1.0.3 Build 61 – lokaler Releasekandidat
 
-[Nutzeranleitung](NUTZERANLEITUNG.md) · [Release Notes](RELEASE-NOTES-1.0.3.md) · [Offene Paketabnahme](PRUEFHINWEISE-BUILD61.md) · [Acht Realfilmschnitte](PRAXISTESTS-BUILD61-20261117.md) · [Freie Namen](EDITIERBARE-FILMNAMEN-BUILD61.md). Keine Veröffentlichung freigegeben; öffentliche stabile Ausgabe bleibt Build 60.
+[Paket- und Prüfbericht Build 61](RELEASE-1.0.3-BUILD61-RESULT.md) · [Nutzeranleitung](NUTZERANLEITUNG.md) · [Release Notes](RELEASE-NOTES-1.0.3.md) · [Offene Paketabnahme](PRUEFHINWEISE-BUILD61.md) · [Acht Realfilmschnitte](PRAXISTESTS-BUILD61-20261117.md) · [Freie Namen](EDITIERBARE-FILMNAMEN-BUILD61.md). Keine Veröffentlichung freigegeben; öffentliche stabile Ausgabe bleibt Build 60.
 
 ## Historischer Kandidatenstand Build 58
 
