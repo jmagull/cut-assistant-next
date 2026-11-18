@@ -35,3 +35,12 @@ Offen bleiben:
 5. Frisches Setup und ZIP in der Windows-11-VM einschließlich Upgrade, Verknüpfungen und Deinstallation. Keine automatische Installation auf dem Arbeitsrechner. Externe Werkzeugpfade prüfen; persönliche Einstellungen erhalten.
 
 Die acht Filmschnitte müssen ohne konkreten Anlass nicht wiederholt werden. Keine persönliche Windows-10-Abnahme. Veröffentlichung bleibt gesondert freizugeben.
+
+## Neue Pakete vom 18.11.2026 – persönliche Abnahme
+
+1. Vorheriges CAN schließen. Neues Setup installieren beziehungsweise vorhandene Installation aktualisieren. Version 1.0.3 Build 61, Verknüpfungen, Start und erhaltene Einstellungen prüfen. Installation/Deinstallation in der Windows-11-VM prüfen.
+2. Neues Portable-ZIP vollständig in einen frischen Ordner entpacken. Start, Motorpfad und wesentliche Build-61-Funktionen kontrollieren.
+3. Bei reproduzierbarer ausdrücklicher EAC3-Ablehnung Titel und Wortlaut kontrollieren. Nur „Mit MP4Box schneiden“ und „Abbrechen“; Abbrechen als Standard. Einmal abbrechen und prüfen, dass kein MP4Box-Lauf beginnt. Anschließend nur bei gewünschtem neuen Testschnitt ausdrücklich MP4Box bestätigen. Den bereits persönlich bestandenen MP4Box-Referenzschnitt nicht unnötig wiederholen oder überschreiben.
+4. EAC3 wird weiterhin nicht vom otr-can-Motor unterstützt. Die allgemeine Motor-Empfehlung und der 40-ms-Rasterbefund sind unverändert. MP4Box ist kein allgemeines Audioreparaturverfahren.
+
+Automatisierte Tests und technische Startprüfungen ersetzen diese persönliche Abnahme nicht. Die Qualitätsalternativsuche und der MP4Box-Wetterfee-Schnitt vom 18.11.2026 sind als bestehende persönliche Referenzen dokumentiert.

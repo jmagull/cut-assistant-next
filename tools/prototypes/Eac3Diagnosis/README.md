@@ -1,5 +1,7 @@
 # EAC3-Diagnose für Cut Assistant Next Build 61
 
+Historischer Diagnoseharness für den Kandidaten vor der EAC3-Dialogkorrektur vom 18.11.2026. Seine Erwartung eines generischen EAC3-Dialogs bezieht sich ausschließlich auf die alten Paket-DLLs. Die neuen Dialogregressionen liegen in tests/CutAssistantNext.App.Tests/Eac3FallbackTests.cs.
+
 Dieses separate Diagnoseprogramm verändert keine Produktfunktion. Es verwendet die gebündelten Produkt-DLLs über CanAssemblyDirectory und den vorhandenen Motor. Keine neuen NuGet-Produktabhängigkeiten.
 
 ## Voraussetzungen

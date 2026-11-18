@@ -1,6 +1,11 @@
 # Testplan – aktueller Funktionsstand
 
-## Cut Assistant Next 1.0.3 Build 54 – stabile Version
+## Lokale Build-61-Pakete vom 18.11.2026
+
+Gezielte EAC3-Dialogkorrektur und neue vollständige Setup-/Portable-Pakete, unverändert Version 1.0.3.61. [Benutzerführung und Testumfang](EAC3-DIALOG-BUILD61.md). Der vorherige Kandidat bleibt erhalten. Persönliche Abnahme der neuen Pakete ist offen, Veröffentlichung nicht freigegeben. Die folgenden datierten Einträge bewahren ihre jeweiligen historischen Ergebnisse.
+
+
+## Historischer Teststand: Cut Assistant Next 1.0.3 Build 54
 
 Aktueller gemeinsamer Stand im ursprünglichen Repository **cut-assistant-next**; nach ausdrücklicher persönlicher Freigabe vom **08.11.2026** in `main` übernommen und als stabile [GitHub-Latest-Version](https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build54) veröffentlicht. Dateiversion **1.0.3.54**, libmpv **0.41.0**, mitgelieferter otr-can **0.1.6-audio-diag.1**. Alte Funktionszweige sind historische Quellen; es gibt eine gemeinsame CAN-Version.
 

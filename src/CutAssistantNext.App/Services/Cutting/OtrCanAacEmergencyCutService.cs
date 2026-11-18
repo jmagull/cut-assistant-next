@@ -40,6 +40,24 @@ internal sealed class OtrCanAudioFailureException(
         "otr-can konnte den Ton nicht sicher verarbeiten. Die strenge Audioverarbeitung wurde abgebrochen. " +
         "Die Ursache ist nicht eindeutig als reparierbare Zeitlücke nachgewiesen. Technische Einzelheiten stehen im Protokoll.", inner)
 {
+    internal bool IsUnsupportedEac3 { get; } = HasUnsupportedEac3Reason(inner);
+
+    private static bool HasUnsupportedEac3Reason(Exception error)
+    {
+        const string reason = "Unsupported audio codec eac3";
+        for (Exception? current = error; current is not null; current = current.InnerException)
+        {
+            foreach (var line in current.Message.Split('\n'))
+            {
+                var text = line.TrimEnd('\r', ' ', '\t');
+                if (text.Equals(reason, StringComparison.Ordinal) ||
+                    text.EndsWith(": " + reason, StringComparison.Ordinal))
+                    return true;
+            }
+        }
+        return false;
+    }
+
     internal OtrCanAudioDiagnostic? Diagnostic { get; } = diagnostic;
     internal int SourceAudioTrackCount { get; } = source.AudioStreams.Count;
     internal AacEmergencyOffer? Offer { get; } = allowAacEmergency && IsLegacyProcessingFailure(inner.Message)

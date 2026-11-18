@@ -20,7 +20,7 @@
                     Text="Nachgewiesene Audiolücken werden gezielt mit Stille überbrückt. Vorhandener Ton bleibt zeitlich unverändert. Der Schnitt wird anschließend vollständig überprüft. Die ursprünglichen fehlenden Audiodaten können nicht wiederhergestellt werden." />
                 <TextBlock x:Name="Mp4BoxStatusText" TextWrapping="Wrap" Margin="0,0,0,12"
                            Text="Du kannst den vollständigen Schnitt mit MP4Box erneut starten. CAN verwendet die MP4Box-Konfiguration aus Deinen Einstellungen und dieselben Schnittbereiche. Falls nötig, wird das Video zuvor ohne Neukodierung in eine MP4-Arbeitskopie umgepackt." />
-                <TextBlock TextWrapping="Wrap" FontWeight="SemiBold"
+                <TextBlock x:Name="Mp4BoxHintText" TextWrapping="Wrap" FontWeight="SemiBold"
                            Text="MP4Box ist eine alternative Schnittmethode. Fehlende oder zerstörte Audiodaten werden dadurch nicht wiederhergestellt. Bitte anschließend Bild, Ton, Synchronität und alle Übergänge persönlich kontrollieren." />
             </StackPanel>
         </ScrollViewer>

@@ -73,3 +73,6 @@ benötigt. Beim Schneiden werden die Werkzeuge des gewählten Motors benötigt.
 Veröffentlichter Vorgänger (Build 58):
 https://github.com/jmagull/cut-assistant-next/releases/tag/v1.0.3-build58
 Die AAC-Zeitlückenreparatur bleibt experimentell und benötigt Zustimmung.
+
+EAC3-Tonspuren:
+Der mitgelieferte otr-can-Motor unterstützt EAC3 derzeit nicht. Bei ausdrücklicher Codec-Ablehnung erklärt CAN dies und bietet einen vollständigen MP4Box-Neustart ausschließlich nach Bestätigung an. Abbrechen bleibt möglich. MP4Box ist kein allgemeines Reparaturverfahren für beschädigten Ton. Die Motorunterstützung wurde durch den neuen Hinweis nicht erweitert.

@@ -42,8 +42,10 @@ internal sealed class OtrCanMp4BoxFallbackCutService : ICutEngine
             if (choose is not null)
             {
                 // Normal cleanup has ended before any preflight, decision or restart.
-                await using var assessment = await repair!.AssessAsync(request, failure, progress, cancellationToken).ConfigureAwait(false);
-                using var tracks = trackRecovery is null ? null :
+                await using var assessment = failure.IsUnsupportedEac3
+                    ? new AacGapRepairOffer("EAC3 wird vom verwendeten otr-can-Schnittmotor derzeit nicht unterstützt.")
+                    : await repair!.AssessAsync(request, failure, progress, cancellationToken).ConfigureAwait(false);
+                using var tracks = failure.IsUnsupportedEac3 || trackRecovery is null ? null :
                     await trackRecovery.AssessAsync(request, failure, progress, cancellationToken).ConfigureAwait(false);
                 var mp4 = await availability!(cancellationToken).ConfigureAwait(false);
                 var offer = new AudioRecoveryOffer(failure, assessment, mp4.Available, mp4.Reason, TrackRecovery: tracks);

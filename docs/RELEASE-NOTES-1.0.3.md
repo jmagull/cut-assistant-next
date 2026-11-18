@@ -1,7 +1,8 @@
 # Cut Assistant Next 1.0.3 Build 61 – lokaler Releasekandidat
 
-Stand 17.11.2026. Gegenüber dem veröffentlichten Build 60:
+Stand 18.11.2026. Gegenüber dem veröffentlichten Build 60:
 
+- **Gezielte EAC3-Meldung:** Bei der ausdrücklichen otr-can-Ablehnung „Unsupported audio codec eac3“ erscheint „otr-can – EAC3-Tonspur erkannt“ mit „Mit MP4Box schneiden“ und „Abbrechen“. MP4Box startet ausschließlich nach Bestätigung; keine zusätzliche aufwendige Vorprüfung. Auch AAC+EAC3 wird korrekt erkannt. Andere Audiofehler behalten ihre Abläufe. Der Motor und sein EAC3-Unterstützungsumfang bleiben unverändert; MP4Box ist keine allgemeine Audioreparatur.
 - Persönliche Tastenkürzel mit Konfliktprüfung, dauerhaftem Speichern und passenden Tooltips.
 - Wiederholung von Sekunden-, Keyframe- und Einzelbildsprüngen per Maus und Tastatur; Startverzögerung und Abstand einstellbar und gespeichert.
 - Fortlaufender Schnittshuffle über alle Bereichsgrenzen mit synchroner Schnittauswahl und unveränderter Reihenfolge nach Einzelbildkontrollen.
@@ -13,6 +14,8 @@ Stand 17.11.2026. Gegenüber dem veröffentlichten Build 60:
 - Getrennte Versions- und Funktionsprüfungen für FFmpeg/ffprobe und MP4Box einschließlich Streamcopy-Regression und zwei AAC-Tonspuren.
 
 **Abnahme:** Acht persönliche Realfilmschnitte unter Windows 11 bestanden. Diese Rückmeldungen stammen aus den dokumentierten Entwicklungsfassungen. Neue Setup-/Portable-Abnahme, persönliche Tastenkürzel, reale Qualitätsalternativen, fachliche Schlussbewertung der Empfehlung und freie Namen bleiben gesondert zu prüfen. Keine persönliche Windows-10-Abnahme. Automatisierte Ergebnisse des neuen Paketlaufs stehen im Paketbericht.
+
+Die Einschränkung der allgemeinen Empfehlung bei EAC3 und der separate 40-ms-Rasterbefund sind nicht Teil dieser Dialogkorrektur. Der persönlich erfolgreiche MP4Box-Schnitt der EAC3-Aufnahme „Wetterfee sucht Weihnachtswunder“ bleibt Referenz; er wurde für die Korrektur nicht wiederholt. Neue Pakete erfordern eine eigene persönliche Windows-11-Abnahme.
 
 **Status:** ausschließlich lokal vorbereitet. Kein Veröffentlichungsauftrag; öffentliche stabile Version bleibt Build 60.
 

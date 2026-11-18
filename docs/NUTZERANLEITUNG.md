@@ -71,6 +71,20 @@ Das Seek-Verhalten wurde im FFmpeg-Entwicklungszweig korrigiert. Ein Build eines
 
 [Download und Versionsinformationen bei Gyan.dev](https://www.gyan.dev/ffmpeg/builds/)
 
+## EAC3-Tonspur beim otr-can-Schnitt
+
+Der verwendete otr-can-Motor unterstützt EAC3 derzeit nicht. Bricht er ausdrücklich mit dieser Codec-Ablehnung ab, erscheint **otr-can – EAC3-Tonspur erkannt**:
+
+> Eine EAC3-Tonspur wurde erkannt. Der verwendete otr-can-Schnittmotor unterstützt dieses Audioformat derzeit noch nicht.
+>
+> Möchtest du den Film stattdessen mit MP4Box schneiden?
+
+**Mit MP4Box schneiden** startet nach deiner bewussten Zustimmung den vorhandenen vollständigen MP4Box-Ausweichpfad mit denselben Schnittbereichen und Ausgabeeinstellungen. **Abbrechen** beendet den Vorgang ohne Motorwechsel und bleibt die Voreinstellung. Ist MP4Box nicht verfügbar, ist die Schaltfläche gesperrt und der Grund wird genannt.
+
+Bei dieser bekannten Codec-Ablehnung werden keine AAC-Reparatur oder automatische Tonspur-Abwahl angeboten. Andere Audiofehler behalten ihre bisherigen Entscheidungen. Eine AAC+EAC3-Aufnahme fällt ebenfalls unter diesen Hinweis. EAC3 wird weder entfernt noch automatisch nach AAC umgewandelt.
+
+MP4Box ist eine alternative Schnittmethode und kein allgemeines Reparaturverfahren für beschädigte Tonspuren. Bild, alle Tonspuren und Übergänge anschließend prüfen. Diese Dialogkorrektur erweitert die EAC3-Unterstützung des Motors nicht; die allgemeine Motor-Empfehlung und die 40-ms-Recovery-Prüfung bleiben unverändert.
+
 ## Tonspur-Abwahl
 
 Wenn otr-can bei einer Mehrspurdatei abbricht, prüft CAN die Spuren einzeln. Sobald die beschädigte Spur eindeutig feststeht und alle übrigen Spuren die Behaltebereiche vollständig abdecken, zeigt der Dialog, welche Spur entfällt und welche bleiben. **Mit intakter Tonspur erneut schneiden** startet den kompletten Schnitt nach deiner Bestätigung. Die experimentelle AAC-Reparatur und MP4Box bleiben als eigene Optionen im selben Dialog. [Voraussetzungen](AUDIO-SPURABWAHL-BUILD52.md)

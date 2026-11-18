@@ -1,5 +1,10 @@
 # Dokumentation – Cut Assistant Next
 
+## Lokale Build-61-Pakete vom 18.11.2026
+
+Gezielte EAC3-Dialogkorrektur und neue vollständige Setup-/Portable-Pakete, unverändert Version 1.0.3.61. [Benutzerführung und Testumfang](EAC3-DIALOG-BUILD61.md). Der vorherige Kandidat bleibt erhalten. Persönliche Abnahme der neuen Pakete ist offen, Veröffentlichung nicht freigegeben. Die folgenden datierten Einträge bewahren ihre jeweiligen historischen Ergebnisse.
+
+
 ## Cut Assistant Next 1.0.3 Build 61 – lokaler Releasekandidat
 
 [Paket- und Prüfbericht Build 61](RELEASE-1.0.3-BUILD61-RESULT.md) · [Nutzeranleitung](NUTZERANLEITUNG.md) · [Release Notes](RELEASE-NOTES-1.0.3.md) · [Offene Paketabnahme](PRUEFHINWEISE-BUILD61.md) · [Acht Realfilmschnitte](PRAXISTESTS-BUILD61-20261117.md) · [Freie Namen](EDITIERBARE-FILMNAMEN-BUILD61.md). Keine Veröffentlichung freigegeben; öffentliche stabile Ausgabe bleibt Build 60.

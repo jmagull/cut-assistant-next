@@ -78,6 +78,8 @@ Invoke-Step 'build' $dotnet @('build', $solution, '-c', 'Release', '--no-restore
 Invoke-Step 'tests' $dotnet @('test', $solution, '-c', 'Release', '--no-build', '--no-restore', '--logger', 'trx', '--results-directory', (Join-Path $output 'test-results'))
 Invoke-Step 'publish' $dotnet @('publish', $app, '-c', 'Release', '-r', 'win-x64', '--self-contained', 'false', "-p:CanBuildNumber=$BuildNumber", "-p:CanCandidate=$Candidate", '-p:RestoreLockedMode=true', '-o', $publish)
 
+# Debug symbols are retained in build output, never in the distribution.
+Get-ChildItem -LiteralPath $publish -File -Recurse -Filter *.pdb | ForEach-Object { Remove-Item -LiteralPath $_.FullName }
 $forbidden = @(Get-ChildItem -LiteralPath $publish -File -Recurse | Where-Object {
     $_.Name -match '^(coreclr|hostfxr|hostpolicy|PresentationNative_cor3|wpfgfx_cor3|vcruntime140_cor3|D3DCompiler_47_cor3|Microsoft\.DiaSymReader\.Native\..+|ffms2)\.dll$|^(createdump|ffmpeg|ffprobe|mp4box|ffmsindex)\.exe$'
 })
@@ -94,6 +96,7 @@ foreach ($name in @('LICENSE', 'third-party\DOTNET-LICENSING.md', 'third-party\l
 }
 $fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $publish 'CutAssistantNext.App.exe')).FileVersion
 if ($fileVersion -ne "$version.$BuildNumber") { throw "Unexpected file version: $fileVersion" }
+Copy-Item -LiteralPath (Join-Path $repo 'README.md') -Destination (Join-Path $publish 'README.md')
 Copy-Item -LiteralPath (Join-Path $repo 'docs\NUTZERANLEITUNG.md') -Destination (Join-Path $publish 'NUTZERANLEITUNG.md')
 Copy-Item -LiteralPath $releaseNotes -Destination (Join-Path $publish 'RELEASE-NOTES.md')
 Copy-Item -LiteralPath (Join-Path $repo 'docs\SPOTLIGHT-README.md') -Destination (Join-Path $publish 'README-Spotlight.md')
@@ -107,6 +110,14 @@ if ($BuildNumber -eq 58) {
     foreach ($name in @('PRUEFHINWEISE-BUILD58.md', 'SCHNITTSHUFFLE-BUILD57.md', 'PLAYER-FILMENDE-BUILD58.md',
         'MP4BOX-WILD-CARD-ZUSAMMENFUEHRUNG-BUILD56.md', 'CUTLIST-BEWERTUNG-BUILD55.md', 'SPOTLIGHT-VIDEOENDE-BUILD55.md')) {
         Copy-Item -LiteralPath (Join-Path $repo "docs\$name") -Destination (Join-Path $publish $name)
+    }
+}
+if ($BuildNumber -eq 61) {
+    $packageDocs = Join-Path $publish 'docs'
+    [System.IO.Directory]::CreateDirectory($packageDocs) | Out-Null
+    foreach ($name in @('README.md', 'NUTZERANLEITUNG.md', 'RELEASE-NOTES-1.0.3.md', 'PRUEFHINWEISE-BUILD61.md',
+        'EAC3-DIALOG-BUILD61.md', 'PRAXISTESTS-BUILD61-20261117.md', 'EDITIERBARE-FILMNAMEN-BUILD61.md', 'SPOTLIGHT-README.md')) {
+        Copy-Item -LiteralPath (Join-Path $repo "docs\$name") -Destination $packageDocs
     }
 }
 Copy-Item -LiteralPath (Join-Path $repo 'docs\DANKSAGUNG.md') -Destination (Join-Path $publish 'DANKSAGUNG.md')

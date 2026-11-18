@@ -1,5 +1,10 @@
 # Setup-Merkliste
 
+## Lokale Build-61-Pakete vom 18.11.2026
+
+Gezielte EAC3-Dialogkorrektur und neue vollständige Setup-/Portable-Pakete, unverändert Version 1.0.3.61. [Benutzerführung und Testumfang](EAC3-DIALOG-BUILD61.md). Der vorherige Kandidat bleibt erhalten. Persönliche Abnahme der neuen Pakete ist offen, Veröffentlichung nicht freigegeben. Die folgenden datierten Einträge bewahren ihre jeweiligen historischen Ergebnisse.
+
+
 ## Lokal umgesetzt – Schnittshuffle über alle Schnittgrenzen
 
 Die vorhandenen Pfeile laufen chronologisch über alle markierten Anfangs- und Endgrenzen. Tabelle und Timeline folgen der Auswahl. Einzelbildkontrolle zwischen zwei Klicks lässt die zuletzt angesprungene Grenze als Anker stehen. Angrenzende Bereiche haben zwei Stationen am gleichen Zeitpunkt. Die äußeren Grenzen beenden den Lauf.
