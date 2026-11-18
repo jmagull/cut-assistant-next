@@ -9,13 +9,14 @@ internal partial class ShortcutSettingsDialog : Window
 {
     private sealed record Row(PlaybackShortcut Action, string Group, string Name, string Standard, string Binding);
     private PlaybackShortcut? _capturing;
-    private bool _sPending;
+    private Key _pendingLetter;
     internal PlaybackShortcuts Shortcuts { get; private set; }
 
     internal ShortcutSettingsDialog(PlaybackShortcuts shortcuts)
     {
         Shortcuts = shortcuts.Clone();
         InitializeComponent();
+        Deactivated += (_, _) => _pendingLetter = Key.None;
         Refresh();
     }
 
@@ -31,8 +32,10 @@ internal partial class ShortcutSettingsDialog : Window
     {
         if (Rows.SelectedItem is not Row row) return;
         _capturing = row.Action;
-        _sPending = false;
-        Status.Text = "Neue Kombination drücken. Esc beendet die Eingabe.";
+        _pendingLetter = Key.None;
+        Status.Text = row.Action is PlaybackShortcut.SecondsBackward or PlaybackShortcut.SecondsForward
+            ? "Taste drücken. Für einen Sekundensprung mit zwei Tasten den Buchstaben halten und die Pfeiltaste drücken. Esc bricht die Zuweisung ab."
+            : "Neue Kombination drücken. Esc bricht die Zuweisung ab.";
     }
 
     private void CaptureKey(object sender, KeyEventArgs e)
@@ -42,30 +45,30 @@ internal partial class ShortcutSettingsDialog : Window
         if (e.IsRepeat) return;
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
         if (key is Key.LeftCtrl or Key.RightCtrl or Key.LeftShift or Key.RightShift or Key.LeftAlt or Key.RightAlt or Key.LWin or Key.RWin) return;
-        if (key == Key.S && Keyboard.Modifiers == ModifierKeys.None)
+        var modifiers = Keyboard.Modifiers;
+        if (modifiers == ModifierKeys.None && PlaybackShortcuts.IsLetter(key))
         {
-            _sPending = true;
+            _pendingLetter = key;
             return;
         }
         if (key == Key.Escape)
         {
+            _pendingLetter = Key.None;
             _capturing = null;
             Status.Text = "";
             return;
         }
-        var modifiers = Keyboard.Modifiers;
-        var withS = _sPending && Keyboard.IsKeyDown(Key.S) && modifiers == ModifierKeys.None &&
-            key is Key.Left or Key.Right or Key.Up or Key.Down;
-        _sPending = false;
-        AssignCaptured(action, new(key, modifiers, withS));
+        var prefix = modifiers == ModifierKeys.None && PlaybackShortcuts.IsArrow(key) ? _pendingLetter : Key.None;
+        _pendingLetter = Key.None;
+        AssignCaptured(action, new(key, modifiers, prefix));
     }
 
     private void CaptureKeyUp(object sender, KeyEventArgs e)
     {
-        if (_capturing is not { } action || e.Key != Key.S || !_sPending) return;
+        if (_capturing is not { } action || e.Key != _pendingLetter) return;
         e.Handled = true;
-        _sPending = false;
-        if (Keyboard.Modifiers == ModifierKeys.None) AssignCaptured(action, new(Key.S));
+        _pendingLetter = Key.None;
+        if (Keyboard.Modifiers == ModifierKeys.None) AssignCaptured(action, new(e.Key));
     }
 
     private void AssignCaptured(PlaybackShortcut action, ShortcutGesture gesture)

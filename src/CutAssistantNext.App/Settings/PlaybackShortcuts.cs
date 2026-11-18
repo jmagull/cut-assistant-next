@@ -13,7 +13,7 @@ internal enum PlaybackShortcut
     TogglePlayback, FrameLoupe, CancelCut
 }
 
-internal readonly record struct ShortcutGesture(Key Key, ModifierKeys Modifiers = ModifierKeys.None, bool WithS = false)
+internal readonly record struct ShortcutGesture(Key Key, ModifierKeys Modifiers = ModifierKeys.None, Key Prefix = Key.None)
 {
     public override string ToString()
     {
@@ -22,7 +22,7 @@ internal readonly record struct ShortcutGesture(Key Key, ModifierKeys Modifiers 
         if (Modifiers.HasFlag(ModifierKeys.Control)) parts.Add("Strg");
         if (Modifiers.HasFlag(ModifierKeys.Shift)) parts.Add("Umschalt");
         if (Modifiers.HasFlag(ModifierKeys.Alt)) parts.Add("Alt");
-        if (WithS) parts.Add("S");
+        if (Prefix != Key.None) parts.Add(KeyLabel(Prefix));
         parts.Add(Key switch
         {
             Key.Left => "←",
@@ -55,12 +55,14 @@ internal readonly record struct ShortcutGesture(Key Key, ModifierKeys Modifiers 
 
 internal sealed class PlaybackShortcuts
 {
+    private sealed record SavedShortcut(Key Key, ModifierKeys Modifiers, Key Prefix, bool WithS);
+
     internal sealed record Definition(PlaybackShortcut Action, string Group, string Name, ShortcutGesture Standard);
     internal static readonly IReadOnlyList<Definition> Definitions =
     [
         new(PlaybackShortcut.TogglePlayback, "Wiedergabe", "Wiedergabe starten oder pausieren", new(Key.Space)),
-        new(PlaybackShortcut.SecondsBackward, "Navigation", "Sekundensprung zurück", new(Key.Left, WithS: true)),
-        new(PlaybackShortcut.SecondsForward, "Navigation", "Sekundensprung vor", new(Key.Right, WithS: true)),
+        new(PlaybackShortcut.SecondsBackward, "Navigation", "Sekundensprung zurück", new(Key.Left, Prefix: Key.S)),
+        new(PlaybackShortcut.SecondsForward, "Navigation", "Sekundensprung vor", new(Key.Right, Prefix: Key.S)),
         new(PlaybackShortcut.FrameBackward, "Navigation", "Ein Bild zurück", new(Key.Left)),
         new(PlaybackShortcut.FrameForward, "Navigation", "Ein Bild vor", new(Key.Right)),
         new(PlaybackShortcut.KeyframeBackward, "Navigation", "Vorheriger Keyframe", new(Key.Left, ModifierKeys.Control)),
@@ -78,11 +80,21 @@ internal sealed class PlaybackShortcuts
         return copy;
     }
 
-    internal PlaybackShortcut? Match(Key key, ModifierKeys modifiers, bool sDown)
+    internal PlaybackShortcut? Match(Key key, ModifierKeys modifiers, Func<Key, bool>? isDown = null)
     {
-        if (sDown && modifiers == ModifierKeys.None && Find(new(key, WithS: true)) is { } chord) return chord;
+        if (modifiers == ModifierKeys.None && IsArrow(key) && isDown is not null)
+        {
+            foreach (var (action, binding) in _bindings)
+                if (binding.Key == key && binding.Prefix != Key.None && isDown(binding.Prefix)) return action;
+        }
         return Find(new(key, modifiers));
     }
+
+    internal bool IsArrowPrefix(Key key) => key != Key.None && _bindings.Values.Any(binding => binding.Prefix == key);
+
+    internal static bool IsArrow(Key key) => key is Key.Left or Key.Right or Key.Up or Key.Down;
+
+    internal static bool IsLetter(Key key) => key is (>= Key.A and <= Key.Z) or Key.Oem1 or Key.Oem3 or Key.Oem7;
 
     private PlaybackShortcut? Find(ShortcutGesture gesture)
     {
@@ -93,7 +105,10 @@ internal sealed class PlaybackShortcuts
 
     internal string? Assign(PlaybackShortcut action, ShortcutGesture gesture)
     {
-        if (!IsAllowed(action, gesture)) return "Diese Taste ist für Windows, die Texteingabe oder Dialoge reserviert.";
+        if (!IsAllowed(action, gesture))
+            return gesture.Prefix != Key.None
+                ? "Buchstabentaste und Pfeiltaste lassen sich als Kombination für Sekundensprünge belegen."
+                : "Diese Taste ist für Windows, die Texteingabe oder Dialoge reserviert.";
         if (Find(gesture) is { } other && other != action)
             return "Bereits belegt durch „" + Definitions.First(d => d.Action == other).Name + "“.";
         _bindings[action] = gesture;
@@ -104,15 +119,17 @@ internal sealed class PlaybackShortcuts
 
     private static bool IsAllowed(PlaybackShortcut action, ShortcutGesture gesture)
     {
-        var (key, modifiers, withS) = gesture;
+        var (key, modifiers, prefix) = gesture;
+        if (prefix != Key.None)
+            return (action is PlaybackShortcut.SecondsBackward or PlaybackShortcut.SecondsForward) &&
+                IsLetter(prefix) && IsArrow(key) && modifiers == ModifierKeys.None;
         if (key == Key.None) return action != PlaybackShortcut.CancelCut;
-        if (key == Key.Escape) return action == PlaybackShortcut.CancelCut && modifiers == ModifierKeys.None && !withS;
-        if (withS) return (action is PlaybackShortcut.SecondsBackward or PlaybackShortcut.SecondsForward) && (key is Key.Left or Key.Right or Key.Up or Key.Down) && modifiers == ModifierKeys.None;
+        if (key == Key.Escape) return action == PlaybackShortcut.CancelCut && modifiers == ModifierKeys.None;
         if ((modifiers & (ModifierKeys.Windows | ModifierKeys.Alt)) != 0) return false;
-        if (key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Space) return true;
+        if (IsArrow(key) || key == Key.Space) return true;
         if (key is >= Key.F2 and <= Key.F12) return true;
         if (modifiers == ModifierKeys.Control && key is Key.A or Key.C or Key.V or Key.X or Key.Y or Key.Z) return false;
-        return key is (>= Key.A and <= Key.Z) or Key.Oem1 or Key.Oem3 or Key.Oem7;
+        return IsLetter(key);
     }
 
     internal static string DefaultPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -122,11 +139,14 @@ internal sealed class PlaybackShortcuts
     {
         try
         {
-            var saved = JsonSerializer.Deserialize<Dictionary<PlaybackShortcut, ShortcutGesture>>(File.ReadAllText(path));
+            var saved = JsonSerializer.Deserialize<Dictionary<PlaybackShortcut, SavedShortcut>>(File.ReadAllText(path));
             if (saved is null) return new();
             var shortcuts = new PlaybackShortcuts();
-            foreach (var (action, gesture) in saved)
+            foreach (var (action, entry) in saved)
             {
+                if (entry is null) return new();
+                var prefix = entry.WithS && entry.Prefix == Key.None ? Key.S : entry.Prefix;
+                var gesture = new ShortcutGesture(entry.Key, entry.Modifiers, prefix);
                 if (!shortcuts._bindings.ContainsKey(action) || !IsAllowed(action, gesture)) return new();
                 shortcuts._bindings[action] = gesture;
             }

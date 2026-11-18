@@ -426,24 +426,24 @@ public partial class MainWindow : Window
     }
 
     private async void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e) =>
-        await HandlePlaybackKeyDownAsync(e, Keyboard.Modifiers, Keyboard.IsKeyDown(Key.S));
+        await HandlePlaybackKeyDownAsync(e, Keyboard.Modifiers, Keyboard.IsKeyDown);
 
-    internal async Task HandlePlaybackKeyDownAsync(KeyEventArgs e, ModifierKeys modifiers, bool sDown)
+    internal async Task HandlePlaybackKeyDownAsync(KeyEventArgs e, ModifierKeys modifiers, Func<Key, bool>? isDown = null)
     {
-        if (e.Key != Key.S || modifiers != ModifierKeys.None) _standaloneSPending = false;
+        if (e.Key != _pendingStandaloneKey || modifiers != ModifierKeys.None) _pendingStandaloneKey = Key.None;
         if (e.Handled || IsPlaybackTextInput(e.OriginalSource as DependencyObject) ||
             IsPlaybackTextInput(Keyboard.FocusedElement as DependencyObject)) return;
 
-        var action = _shortcuts.Match(e.Key, modifiers, sDown);
-        if (e.Key == Key.S && modifiers == ModifierKeys.None && action is not null)
+        var action = _shortcuts.Match(e.Key, modifiers, isDown);
+        if (modifiers == ModifierKeys.None && action is not null && _shortcuts.IsArrowPrefix(e.Key))
         {
-            // Wait for release so S can still act as the prefix for a seconds jump.
-            if (!e.IsRepeat) _standaloneSPending = true;
+            // Give the arrow chord priority when its prefix also has a standalone binding.
+            if (!e.IsRepeat) _pendingStandaloneKey = e.Key;
             e.Handled = true;
             return;
         }
 
-        if (TryHandleSecondsJumpKey(e, modifiers, sDown))
+        if (TryHandleSecondsJumpKey(e, modifiers, isDown))
         {
             e.Handled = true;
             return;
@@ -493,7 +493,7 @@ public partial class MainWindow : Window
     {
         if (e.Handled || IsPlaybackTextInput(e.OriginalSource as DependencyObject) ||
             IsPlaybackTextInput(Keyboard.FocusedElement as DependencyObject)) return null;
-        var action = _shortcuts.Match(e.Key, modifiers, Keyboard.IsKeyDown(Key.S));
+        var action = _shortcuts.Match(e.Key, modifiers, Keyboard.IsKeyDown);
         if (action is not (PlaybackShortcut.KeyframeBackward or PlaybackShortcut.KeyframeForward) ||
             !CanNavigate(action.Value)) return null;
         e.Handled = true;

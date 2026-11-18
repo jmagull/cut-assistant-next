@@ -10,9 +10,9 @@ public sealed class PlaybackShortcutsTests
     public void DefaultChordTakesPrecedenceOverSingleFrame()
     {
         var shortcuts = new PlaybackShortcuts();
-        Assert.Equal(PlaybackShortcut.SecondsForward, shortcuts.Match(Key.Right, ModifierKeys.None, true));
-        Assert.Equal(PlaybackShortcut.FrameForward, shortcuts.Match(Key.Right, ModifierKeys.None, false));
-        Assert.Equal(PlaybackShortcut.KeyframeForward, shortcuts.Match(Key.Right, ModifierKeys.Control, false));
+        Assert.Equal(PlaybackShortcut.SecondsForward, shortcuts.Match(Key.Right, ModifierKeys.None, key => key == Key.S));
+        Assert.Equal(PlaybackShortcut.FrameForward, shortcuts.Match(Key.Right, ModifierKeys.None));
+        Assert.Equal(PlaybackShortcut.KeyframeForward, shortcuts.Match(Key.Right, ModifierKeys.Control));
     }
 
     [Fact]
@@ -49,9 +49,9 @@ public sealed class PlaybackShortcutsTests
 
             var restored = PlaybackShortcuts.Load(file);
             Assert.Equal(gesture, restored[action]);
-            Assert.Equal(action, restored.Match(key, modifiers, sDown: key == Key.S));
-            Assert.Equal(PlaybackShortcut.SecondsForward, restored.Match(Key.Right, ModifierKeys.None, sDown: true));
-            Assert.Equal(PlaybackShortcut.KeyframeForward, restored.Match(Key.Right, ModifierKeys.Control, sDown: false));
+            Assert.Equal(action, restored.Match(key, modifiers, isDown: pressed => pressed == key));
+            Assert.Equal(PlaybackShortcut.SecondsForward, restored.Match(Key.Right, ModifierKeys.None, isDown: key => key == Key.S));
+            Assert.Equal(PlaybackShortcut.KeyframeForward, restored.Match(Key.Right, ModifierKeys.Control));
         }
         finally
         {
@@ -67,7 +67,63 @@ public sealed class PlaybackShortcutsTests
         for (var key = Key.A; key <= Key.Z; key++)
         {
             Assert.Null(shortcuts.Assign(PlaybackShortcut.FrameForward, new(key)));
-            Assert.Equal(PlaybackShortcut.FrameForward, shortcuts.Match(key, ModifierKeys.None, sDown: key == Key.S));
+            Assert.Equal(PlaybackShortcut.FrameForward, shortcuts.Match(key, ModifierKeys.None, isDown: pressed => pressed == key));
+        }
+    }
+
+
+    [Fact]
+    public void LetterAndArrowBindingsSurviveReloadWithExactConflicts()
+    {
+        var directory = Directory.CreateTempSubdirectory("can-shortcuts-");
+        var file = Path.Combine(directory.FullName, "shortcuts.json");
+        try
+        {
+            var shortcuts = new PlaybackShortcuts();
+            var right = new ShortcutGesture(Key.Right, Prefix: Key.U);
+            var left = new ShortcutGesture(Key.Left, Prefix: Key.U);
+            Assert.Null(shortcuts.Assign(PlaybackShortcut.SecondsForward, right));
+            Assert.Contains("Bereits belegt", shortcuts.Assign(PlaybackShortcut.SecondsBackward, right));
+            Assert.Null(shortcuts.Assign(PlaybackShortcut.SecondsBackward, left));
+            Assert.Null(shortcuts.Assign(PlaybackShortcut.FrameForward, new(Key.U)));
+            shortcuts.Save(file);
+
+            var restored = PlaybackShortcuts.Load(file);
+            Assert.Equal("U + →", restored[PlaybackShortcut.SecondsForward].ToString());
+            Assert.Equal("U + ←", restored[PlaybackShortcut.SecondsBackward].ToString());
+            Assert.Equal(PlaybackShortcut.SecondsForward, restored.Match(Key.Right, ModifierKeys.None, key => key == Key.U));
+            Assert.Equal(PlaybackShortcut.SecondsBackward, restored.Match(Key.Left, ModifierKeys.None, key => key == Key.U));
+            Assert.Equal(PlaybackShortcut.FrameBackward, restored.Match(Key.Left, ModifierKeys.None, key => key == Key.S));
+            Assert.Equal(PlaybackShortcut.FrameForward, restored.Match(Key.U, ModifierKeys.None));
+        }
+        finally
+        {
+            directory.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public void LoadsLegacyWithSSettingsAndOtherSavedBindings()
+    {
+        var directory = Directory.CreateTempSubdirectory("can-shortcuts-");
+        var file = Path.Combine(directory.FullName, "shortcuts.json");
+        try
+        {
+            var saved = new
+            {
+                SecondsForward = new { Key = Key.Up, Modifiers = ModifierKeys.None, WithS = true },
+                FrameForward = new { Key = Key.Q, Modifiers = ModifierKeys.None, WithS = false }
+            };
+            File.WriteAllText(file, System.Text.Json.JsonSerializer.Serialize(saved));
+
+            var restored = PlaybackShortcuts.Load(file);
+            Assert.Equal(new ShortcutGesture(Key.Up, Prefix: Key.S), restored[PlaybackShortcut.SecondsForward]);
+            Assert.Equal(PlaybackShortcut.SecondsForward, restored.Match(Key.Up, ModifierKeys.None, key => key == Key.S));
+            Assert.Equal(new ShortcutGesture(Key.Q), restored[PlaybackShortcut.FrameForward]);
+        }
+        finally
+        {
+            directory.Delete(recursive: true);
         }
     }
 
@@ -83,10 +139,10 @@ public sealed class PlaybackShortcutsTests
             shortcuts.Save(path);
 
             var loaded = PlaybackShortcuts.Load(path);
-            Assert.Equal(PlaybackShortcut.FrameForward, loaded.Match(Key.F8, ModifierKeys.None, false));
-            Assert.Null(loaded.Match(Key.Right, ModifierKeys.Control, false));
+            Assert.Equal(PlaybackShortcut.FrameForward, loaded.Match(Key.F8, ModifierKeys.None));
+            Assert.Null(loaded.Match(Key.Right, ModifierKeys.Control));
             Assert.Null(loaded.Reset(PlaybackShortcut.KeyframeForward));
-            Assert.Equal(PlaybackShortcut.KeyframeForward, loaded.Match(Key.Right, ModifierKeys.Control, false));
+            Assert.Equal(PlaybackShortcut.KeyframeForward, loaded.Match(Key.Right, ModifierKeys.Control));
         }
         finally
         {

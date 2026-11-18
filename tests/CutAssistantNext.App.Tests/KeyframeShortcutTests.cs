@@ -195,11 +195,11 @@ public sealed class KeyframeShortcutTests
             Assert.Contains(shortcut, Assert.IsType<string>(button.ToolTip));
         }
 
-        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.Right), ModifierKeys.None, sDown: false));
-        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.F), ModifierKeys.Shift, sDown: true));
-        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.Space), ModifierKeys.None, sDown: true));
-        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.Left), ModifierKeys.Control, sDown: true));
-        Assert.True(window.TryHandleSecondsJumpKey(fixture.Key(Key.Left), ModifierKeys.None, sDown: true));
+        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.Right), ModifierKeys.None));
+        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.F), ModifierKeys.Shift, isDown: key => key == Key.S));
+        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.Space), ModifierKeys.None, isDown: key => key == Key.S));
+        Assert.False(window.TryHandleSecondsJumpKey(fixture.Key(Key.Left), ModifierKeys.Control, isDown: key => key == Key.S));
+        Assert.True(window.TryHandleSecondsJumpKey(fixture.Key(Key.Left), ModifierKeys.None, isDown: key => key == Key.S));
         Assert.Equal(TimeSpan.FromSeconds(95), player.Position);
 
         var controls = (Grid)window.FindName("PlaybackControls");
@@ -229,7 +229,7 @@ public sealed class KeyframeShortcutTests
         foreach (var key in new[] { Key.Left, Key.Right })
         {
             var args = fixture.Key(key, input);
-            Assert.False(fixture.Window.TryHandleSecondsJumpKey(args, ModifierKeys.None, sDown: true));
+            Assert.False(fixture.Window.TryHandleSecondsJumpKey(args, ModifierKeys.None, isDown: key => key == Key.S));
             Assert.False(args.Handled);
         }
         Assert.Empty(fixture.Player.SeekPositions);
@@ -258,19 +258,19 @@ public sealed class KeyframeShortcutTests
             var captured = fixture.Key(key, dialog);
             dialog.RaiseEvent(captured);
             Assert.True(captured.Handled);
-            if (key == Key.S) dialog.RaiseEvent(fixture.KeyUp(key, dialog));
+            dialog.RaiseEvent(fixture.KeyUp(key, dialog));
             Assert.Equal(new ShortcutGesture(key), dialog.Shortcuts[PlaybackShortcut.FrameForward]);
             fixture.Set("_shortcuts", dialog.Shortcuts);
 
             var input = new TextBox();
             var textKey = fixture.Key(key, input);
-            await fixture.Window.HandlePlaybackKeyDownAsync(textKey, ModifierKeys.None, sDown: key == Key.S);
+            await fixture.Window.HandlePlaybackKeyDownAsync(textKey, ModifierKeys.None, isDown: pressed => pressed == key);
             await fixture.Window.HandlePlaybackKeyUpAsync(fixture.KeyUp(key, input), ModifierKeys.None);
             Assert.False(textKey.Handled);
             Assert.Equal(0, fixture.Player.StepForwardCallCount);
 
             var playerKey = fixture.Key(key);
-            await fixture.Window.HandlePlaybackKeyDownAsync(playerKey, ModifierKeys.None, sDown: key == Key.S);
+            await fixture.Window.HandlePlaybackKeyDownAsync(playerKey, ModifierKeys.None, isDown: pressed => pressed == key);
             Assert.True(playerKey.Handled);
             if (key == Key.S)
             {
@@ -282,27 +282,73 @@ public sealed class KeyframeShortcutTests
         finally { dialog.Close(); }
     });
 
+
     [Fact]
-    public Task SecondsChordSuppressesStandaloneSAndControlArrowStillJumpsToKeyframe() => Sta(async () =>
+    public Task DialogCapturesUWithArrowAndPlayerKeepsTextInputPriority() => Sta(async () =>
+    {
+        await using var fixture = new Fixture();
+        await fixture.Load();
+        var dialog = new ShortcutSettingsDialog(new PlaybackShortcuts());
+        try
+        {
+            var rows = (DataGrid)dialog.FindName("Rows");
+            rows.SelectedIndex = PlaybackShortcuts.Definitions.ToList().FindIndex(d => d.Action == PlaybackShortcut.SecondsForward);
+            typeof(ShortcutSettingsDialog).GetMethod("Capture_Click", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .Invoke(dialog, [dialog, new RoutedEventArgs()]);
+            dialog.RaiseEvent(fixture.Key(Key.U, dialog));
+            dialog.RaiseEvent(fixture.Key(Key.Escape, dialog));
+            dialog.RaiseEvent(fixture.KeyUp(Key.U, dialog));
+            Assert.Equal(new ShortcutGesture(Key.Right, Prefix: Key.S), dialog.Shortcuts[PlaybackShortcut.SecondsForward]);
+
+            typeof(ShortcutSettingsDialog).GetMethod("Capture_Click", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .Invoke(dialog, [dialog, new RoutedEventArgs()]);
+            dialog.RaiseEvent(fixture.Key(Key.U, dialog));
+            Assert.Equal(new ShortcutGesture(Key.Right, Prefix: Key.S), dialog.Shortcuts[PlaybackShortcut.SecondsForward]);
+            dialog.RaiseEvent(fixture.Key(Key.Right, dialog));
+            dialog.RaiseEvent(fixture.KeyUp(Key.U, dialog));
+            Assert.Equal(new ShortcutGesture(Key.Right, Prefix: Key.U), dialog.Shortcuts[PlaybackShortcut.SecondsForward]);
+            fixture.Set("_shortcuts", dialog.Shortcuts);
+            fixture.Playback.JumpSecondsText = "2";
+
+            var textArrow = fixture.Key(Key.Right, new TextBox());
+            await fixture.Window.HandlePlaybackKeyDownAsync(textArrow, ModifierKeys.None, key => key == Key.U);
+            Assert.False(textArrow.Handled);
+            Assert.Empty(fixture.Player.SeekPositions);
+
+            var playerArrow = fixture.Key(Key.Right);
+            await fixture.Window.HandlePlaybackKeyDownAsync(playerArrow, ModifierKeys.None, key => key == Key.U);
+            await fixture.Window.HandlePlaybackKeyUpAsync(fixture.KeyUp(Key.U), ModifierKeys.None);
+            await fixture.Window.HandlePlaybackKeyUpAsync(fixture.KeyUp(Key.Right), ModifierKeys.None);
+            Assert.True(playerArrow.Handled);
+            Assert.Equal(TimeSpan.FromSeconds(5), fixture.Player.SeekPositions.Single());
+        }
+        finally { dialog.Close(); }
+    });
+
+    [Theory]
+    [InlineData(Key.S)]
+    [InlineData(Key.U)]
+    public Task SecondsChordSuppressesStandalonePrefixAndControlArrowStillJumpsToKeyframe(Key prefix) => Sta(async () =>
     {
         await using var fixture = new Fixture();
         await fixture.Load();
         var shortcuts = new PlaybackShortcuts();
-        Assert.Null(shortcuts.Assign(PlaybackShortcut.FrameForward, new(Key.S)));
+        Assert.Null(shortcuts.Assign(PlaybackShortcut.FrameForward, new(prefix)));
+        Assert.Null(shortcuts.Assign(PlaybackShortcut.SecondsForward, new(Key.Right, Prefix: prefix)));
         fixture.Set("_shortcuts", shortcuts);
         fixture.Playback.JumpSecondsText = "2";
 
-        await fixture.Window.HandlePlaybackKeyDownAsync(fixture.Key(Key.S), ModifierKeys.None, sDown: true);
+        await fixture.Window.HandlePlaybackKeyDownAsync(fixture.Key(prefix), ModifierKeys.None);
         var arrow = fixture.Key(Key.Right);
-        await fixture.Window.HandlePlaybackKeyDownAsync(arrow, ModifierKeys.None, sDown: true);
-        await fixture.Window.HandlePlaybackKeyUpAsync(fixture.KeyUp(Key.S), ModifierKeys.None);
+        await fixture.Window.HandlePlaybackKeyDownAsync(arrow, ModifierKeys.None, isDown: key => key == prefix);
+        await fixture.Window.HandlePlaybackKeyUpAsync(fixture.KeyUp(prefix), ModifierKeys.None);
         await fixture.Window.HandlePlaybackKeyUpAsync(fixture.KeyUp(Key.Right), ModifierKeys.None);
         Assert.True(arrow.Handled);
         Assert.Equal(TimeSpan.FromSeconds(5), fixture.Player.SeekPositions.Single());
         Assert.Equal(0, fixture.Player.StepForwardCallCount);
 
         var controlArrow = fixture.Key(Key.Left);
-        await fixture.Window.HandlePlaybackKeyDownAsync(controlArrow, ModifierKeys.Control, sDown: false);
+        await fixture.Window.HandlePlaybackKeyDownAsync(controlArrow, ModifierKeys.Control);
         Assert.True(controlArrow.Handled);
         Assert.Equal(TimeSpan.FromSeconds(4), fixture.Player.SeekPositions.Last());
     });
@@ -313,10 +359,10 @@ public sealed class KeyframeShortcutTests
         await using var fixture = new Fixture();
         fixture.Set("_shortcuts", new PlaybackShortcuts());
         var textKey = fixture.Key(Key.F, new TextBox());
-        await fixture.Window.HandlePlaybackKeyDownAsync(textKey, ModifierKeys.Shift, sDown: false);
+        await fixture.Window.HandlePlaybackKeyDownAsync(textKey, ModifierKeys.Shift);
         Assert.False(textKey.Handled);
         var playerKey = fixture.Key(Key.F);
-        await fixture.Window.HandlePlaybackKeyDownAsync(playerKey, ModifierKeys.Shift, sDown: false);
+        await fixture.Window.HandlePlaybackKeyDownAsync(playerKey, ModifierKeys.Shift);
         Assert.True(playerKey.Handled);
     });
 
