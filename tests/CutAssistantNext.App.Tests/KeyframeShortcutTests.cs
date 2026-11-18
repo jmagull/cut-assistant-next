@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CutAssistantNext.App.Dialogs;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.ViewModels;
 using CutAssistantNext.Core.Media;
@@ -234,6 +235,91 @@ public sealed class KeyframeShortcutTests
         Assert.Empty(fixture.Player.SeekPositions);
     });
 
+    [Theory]
+    [InlineData(0x51, Key.Q)]
+    [InlineData(0x53, Key.S)]
+    [InlineData(0xDE, Key.Oem7)] // German Ä
+    [InlineData(0xC0, Key.Oem3)] // German Ö
+    [InlineData(0xBA, Key.Oem1)] // German Ü
+    public Task DialogCapturesWindowsKeyAndPlayerExecutesTheBinding(int virtualKey, Key expectedKey) => Sta(async () =>
+    {
+        await using var fixture = new Fixture();
+        await fixture.Load();
+        var key = KeyInterop.KeyFromVirtualKey(virtualKey);
+        Assert.Equal(expectedKey, key);
+
+        var dialog = new ShortcutSettingsDialog(new PlaybackShortcuts());
+        try
+        {
+            var rows = (DataGrid)dialog.FindName("Rows");
+            rows.SelectedIndex = PlaybackShortcuts.Definitions.ToList().FindIndex(d => d.Action == PlaybackShortcut.FrameForward);
+            typeof(ShortcutSettingsDialog).GetMethod("Capture_Click", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .Invoke(dialog, [dialog, new RoutedEventArgs()]);
+            var captured = fixture.Key(key, dialog);
+            dialog.RaiseEvent(captured);
+            Assert.True(captured.Handled);
+            if (key == Key.S) dialog.RaiseEvent(fixture.KeyUp(key, dialog));
+            Assert.Equal(new ShortcutGesture(key), dialog.Shortcuts[PlaybackShortcut.FrameForward]);
+            fixture.Set("_shortcuts", dialog.Shortcuts);
+
+            var input = new TextBox();
+            var textKey = fixture.Key(key, input);
+            await fixture.Window.HandlePlaybackKeyDownAsync(textKey, ModifierKeys.None, sDown: key == Key.S);
+            await fixture.Window.HandlePlaybackKeyUpAsync(fixture.KeyUp(key, input), ModifierKeys.None);
+            Assert.False(textKey.Handled);
+            Assert.Equal(0, fixture.Player.StepForwardCallCount);
+
+            var playerKey = fixture.Key(key);
+            await fixture.Window.HandlePlaybackKeyDownAsync(playerKey, ModifierKeys.None, sDown: key == Key.S);
+            Assert.True(playerKey.Handled);
+            if (key == Key.S)
+            {
+                Assert.Equal(0, fixture.Player.StepForwardCallCount);
+                await fixture.Window.HandlePlaybackKeyUpAsync(fixture.KeyUp(key), ModifierKeys.None);
+            }
+            Assert.Equal(1, fixture.Player.StepForwardCallCount);
+        }
+        finally { dialog.Close(); }
+    });
+
+    [Fact]
+    public Task SecondsChordSuppressesStandaloneSAndControlArrowStillJumpsToKeyframe() => Sta(async () =>
+    {
+        await using var fixture = new Fixture();
+        await fixture.Load();
+        var shortcuts = new PlaybackShortcuts();
+        Assert.Null(shortcuts.Assign(PlaybackShortcut.FrameForward, new(Key.S)));
+        fixture.Set("_shortcuts", shortcuts);
+        fixture.Playback.JumpSecondsText = "2";
+
+        await fixture.Window.HandlePlaybackKeyDownAsync(fixture.Key(Key.S), ModifierKeys.None, sDown: true);
+        var arrow = fixture.Key(Key.Right);
+        await fixture.Window.HandlePlaybackKeyDownAsync(arrow, ModifierKeys.None, sDown: true);
+        await fixture.Window.HandlePlaybackKeyUpAsync(fixture.KeyUp(Key.S), ModifierKeys.None);
+        await fixture.Window.HandlePlaybackKeyUpAsync(fixture.KeyUp(Key.Right), ModifierKeys.None);
+        Assert.True(arrow.Handled);
+        Assert.Equal(TimeSpan.FromSeconds(5), fixture.Player.SeekPositions.Single());
+        Assert.Equal(0, fixture.Player.StepForwardCallCount);
+
+        var controlArrow = fixture.Key(Key.Left);
+        await fixture.Window.HandlePlaybackKeyDownAsync(controlArrow, ModifierKeys.Control, sDown: false);
+        Assert.True(controlArrow.Handled);
+        Assert.Equal(TimeSpan.FromSeconds(4), fixture.Player.SeekPositions.Last());
+    });
+
+    [Fact]
+    public Task ShiftFIsHandledByThePlayerButNotInsideAnInputField() => Sta(async () =>
+    {
+        await using var fixture = new Fixture();
+        fixture.Set("_shortcuts", new PlaybackShortcuts());
+        var textKey = fixture.Key(Key.F, new TextBox());
+        await fixture.Window.HandlePlaybackKeyDownAsync(textKey, ModifierKeys.Shift, sDown: false);
+        Assert.False(textKey.Handled);
+        var playerKey = fixture.Key(Key.F);
+        await fixture.Window.HandlePlaybackKeyDownAsync(playerKey, ModifierKeys.Shift, sDown: false);
+        Assert.True(playerKey.Handled);
+    });
+
     private sealed class Fixture : IAsyncDisposable
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
@@ -257,6 +343,8 @@ public sealed class KeyframeShortcutTests
         public void Set(string name, object value) => typeof(MainWindow).GetField(name, Private)!.SetValue(Window, value);
         public KeyEventArgs Key(Key key, DependencyObject? source = null) => new(Keyboard.PrimaryDevice, _source, 0, key)
         { RoutedEvent = Keyboard.PreviewKeyDownEvent, Source = source ?? Window };
+        public KeyEventArgs KeyUp(Key key, DependencyObject? source = null) => new(Keyboard.PrimaryDevice, _source, 0, key)
+        { RoutedEvent = Keyboard.PreviewKeyUpEvent, Source = source ?? Window };
         public Task Load(string format = "mp4", bool fail = false) => Keys.LoadAsync("synthetic.mp4",
             new(format, null, null, TimeSpan.FromSeconds(10), [new VideoStreamInfo(0, "h264", null, 320, 180, null, null, 25, null)], []), new Runner(fail));
         public async Task Layout(string name)

@@ -6,7 +6,7 @@ Cut Assistant Next ist ein Windows-Programm zum Abspielen von Videos, Bearbeiten
 
 Stand 18.11.2026. Ausschließlich zur lokalen Prüfung; keine Veröffentlichungsfreigabe. Die stabile öffentliche Ausgabe bleibt Build 60.
 
-- **Tastatur und Navigation:** persönliche Tastenkürzel mit Konfliktprüfung und Speicherung. Sekunden-, Keyframe- und Einzelbildsprünge wiederholen bei gehaltener Taste oder Maus. Startverzögerung und Wiederholabstand sind unter Darstellung und Schnittbearbeitung einstellbar.
+- **Tastatur und Navigation:** persönliche Tastenkürzel mit Konfliktprüfung und Speicherung. A bis Z sowie Ä, Ö und Ü sind auf deutscher Tastatur einzeln belegbar. In Eingabefeldern hat die Texteingabe Vorrang. Sekunden-, Keyframe- und Einzelbildsprünge wiederholen bei gehaltener Taste oder Maus. Startverzögerung und Wiederholabstand sind unter Darstellung und Schnittbearbeitung einstellbar.
 - **Fortlaufender Schnittshuffle:** von Anfang zu Ende und weiter zum nächsten Bereich; rückwärts entsprechend. Schnittliste und Timeline folgen der ausgewählten Grenze, auch nach Einzelbildkorrekturen. An den äußeren Grenzen endet die Folge.
 - **Keyframes und Motorwahl:** blaues K an Anfang und exklusivem Ende, korrigierte Tooltips und begründete Empfehlung für MP4Box oder otr-can. Die Motorwahl bleibt manuell; die Empfehlung garantiert keine unauffälligen Übergänge.
 - **Cutlists:** optionale Suche nach anderen Aufnahmequalitäten mit Kennzeichnung und bewusster Übernahme. Rot/Entfernen, Grün/Behalten, lokale Cutlists und Bewertung bleiben verfügbar.

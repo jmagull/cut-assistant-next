@@ -1,4 +1,5 @@
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Windows.Input;
 using CutAssistantNext.Core;
@@ -22,10 +23,34 @@ internal readonly record struct ShortcutGesture(Key Key, ModifierKeys Modifiers 
         if (Modifiers.HasFlag(ModifierKeys.Shift)) parts.Add("Umschalt");
         if (Modifiers.HasFlag(ModifierKeys.Alt)) parts.Add("Alt");
         if (WithS) parts.Add("S");
-        parts.Add(Key switch { Key.Left => "←", Key.Right => "→", Key.Up => "↑", Key.Down => "↓",
-            Key.Space => "Leertaste", Key.Escape => "Esc", _ => Key.ToString() });
+        parts.Add(Key switch
+        {
+            Key.Left => "←",
+            Key.Right => "→",
+            Key.Up => "↑",
+            Key.Down => "↓",
+            Key.Space => "Leertaste",
+            Key.Escape => "Esc",
+            _ => KeyLabel(Key)
+        });
         return string.Join(" + ", parts);
     }
+
+    private static string KeyLabel(Key key)
+    {
+        if (key is not (Key.Oem1 or Key.Oem3 or Key.Oem7)) return key.ToString();
+
+        // Use the active Windows layout for display only. Store and match the WPF key.
+        const uint virtualKeyToCharacter = 2;
+        var character = MapVirtualKeyEx((uint)KeyInterop.VirtualKeyFromKey(key), virtualKeyToCharacter, GetKeyboardLayout(0));
+        return character is > 32 and <= char.MaxValue ? ((char)character).ToString() : key.ToString();
+    }
+
+    [DllImport("user32.dll", EntryPoint = "MapVirtualKeyExW", ExactSpelling = true)]
+    private static extern uint MapVirtualKeyEx(uint code, uint mapType, nint layout);
+
+    [DllImport("user32.dll", ExactSpelling = true)]
+    private static extern nint GetKeyboardLayout(uint threadId);
 }
 
 internal sealed class PlaybackShortcuts
@@ -86,8 +111,8 @@ internal sealed class PlaybackShortcuts
         if ((modifiers & (ModifierKeys.Windows | ModifierKeys.Alt)) != 0) return false;
         if (key is Key.Left or Key.Right or Key.Up or Key.Down or Key.Space) return true;
         if (key is >= Key.F2 and <= Key.F12) return true;
-        return key is >= Key.A and <= Key.Z && key != Key.S &&
-            (modifiers == (ModifierKeys.Control | ModifierKeys.Shift) || action == PlaybackShortcut.FrameLoupe && key == Key.F && modifiers == ModifierKeys.Shift);
+        if (modifiers == ModifierKeys.Control && key is Key.A or Key.C or Key.V or Key.X or Key.Y or Key.Z) return false;
+        return key is (>= Key.A and <= Key.Z) or Key.Oem1 or Key.Oem3 or Key.Oem7;
     }
 
     internal static string DefaultPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),

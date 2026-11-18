@@ -11,7 +11,7 @@ Der Anwender bestätigt mit „windows 11 setup check“ den persönlichen Setup
 
 Damit sind der persönlich bestätigte Windows-11-Setup-Test und die sichtbare neue EAC3-Benutzerführung dokumentiert. Die anschließende Ausweichverarbeitung ist im folgenden Nachtrag dokumentiert. Der zuvor persönlich bestandene MP4Box-Wetterfee-Schnitt bleibt als eigenständige Referenz erhalten.
 
-Eine zusätzliche VM-, Upgrade-, Deinstallations- oder Portable-Abnahme wird aus dieser Meldung nicht abgeleitet. Die weiteren Prüfpunkte stehen in PRUEFHINWEISE-BUILD61.md.
+Die anschließend gemeldete VM-Abnahme steht unten. Weitere Prüfpunkte stehen in PRUEFHINWEISE-BUILD61.md.
 
 ## Bestätigter MP4Box-Ausweichlauf: persönlich bestanden
 
@@ -29,6 +29,12 @@ Ausgabedatei: C:\Users\joerg\Desktop\down\Wetterfee sucht Weihnachtswunder (2024
 | 01:24:27.282 | Ende |
 
 Der Anwender bestätigt anschließend ausdrücklich „bild ton alles perfekt“. Damit sind Bild und Ton sowie das Gesamtergebnis der persönlichen Kontrolle dieser konkreten Ausgabe positiv bestätigt. Der Realfilm-Ausweichlauf über den neuen EAC3-Dialog ist damit persönlich bestanden. Die Abschlussmeldung ist keine allgemeine Garantie unveränderter MP4Box-Schnittgrenzen und kein Nachweis einer Audioreparatur. Der früher persönlich bestandene MP4Box-Referenzschnitt bleibt davon getrennt bestehen.
+
+## Weitere persönliche Tests des Kandidaten mit EAC3-Dialog
+
+In der Windows-11-VM bestanden Setup, FFmpeg-Prüfung, der otr-can-Schnitt von „Grey’s Anatomy – Durchs Feuer“ mit einwandfreiem Bild und Ton, das erneute Öffnen der Schnittprüfung sowie die Deinstallation. Das Protokoll weist 60.651 verifizierte Videopakete und 116.449.920 dekodierte AAC-Samples mit durchgehenden Zeitstempeln aus. Schnittshuffle, Sekunden- und Einzelbildsprünge sowie das Gedrückthalten mit Maus und S + Pfeiltaste wurden bestätigt. In der entpackten ZIP-Fassung bestanden Klebecenter (QUICK AND COPY), Schnittshuffle und Schnittsprung. Beim Kleben blieben AAC und AC-3 erhalten.
+
+Die anschließende Prüfung der Tastenzuweisung zeigte die Sperre für einzelne Buchstaben und Umlaute. Die Prüffassung mit der Tastaturkorrektur erhält eine eigene Paketprüfung.
 
 ## Zugeordneter Paketstand
 

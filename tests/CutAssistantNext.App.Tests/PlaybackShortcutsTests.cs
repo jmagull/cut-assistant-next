@@ -25,6 +25,52 @@ public sealed class PlaybackShortcutsTests
         Assert.Equal(new ShortcutGesture(Key.Right), shortcuts[PlaybackShortcut.FrameForward]);
     }
 
+    [Theory]
+    [InlineData(Key.Q, ModifierKeys.None)]
+    [InlineData(Key.S, ModifierKeys.None)]
+    [InlineData(Key.Oem1, ModifierKeys.None)] // German Ü
+    [InlineData(Key.Oem3, ModifierKeys.None)] // German Ö
+    [InlineData(Key.Oem7, ModifierKeys.None)] // German Ä
+    [InlineData(Key.F, ModifierKeys.Shift)]
+    [InlineData(Key.Q, ModifierKeys.Control)]
+    [InlineData(Key.Oem7, ModifierKeys.Control | ModifierKeys.Shift)]
+    public void LetterBindingsSurviveReloadAndRejectDuplicates(Key key, ModifierKeys modifiers)
+    {
+        var directory = Directory.CreateTempSubdirectory("can-shortcuts-");
+        var file = Path.Combine(directory.FullName, "shortcuts.json");
+        try
+        {
+            var shortcuts = new PlaybackShortcuts();
+            var action = key == Key.F ? PlaybackShortcut.FrameLoupe : PlaybackShortcut.FrameForward;
+            var gesture = new ShortcutGesture(key, modifiers);
+            Assert.Null(shortcuts.Assign(action, gesture));
+            Assert.Contains("Bereits belegt", shortcuts.Assign(PlaybackShortcut.TogglePlayback, gesture));
+            shortcuts.Save(file);
+
+            var restored = PlaybackShortcuts.Load(file);
+            Assert.Equal(gesture, restored[action]);
+            Assert.Equal(action, restored.Match(key, modifiers, sDown: key == Key.S));
+            Assert.Equal(PlaybackShortcut.SecondsForward, restored.Match(Key.Right, ModifierKeys.None, sDown: true));
+            Assert.Equal(PlaybackShortcut.KeyframeForward, restored.Match(Key.Right, ModifierKeys.Control, sDown: false));
+        }
+        finally
+        {
+            File.Delete(file);
+            directory.Delete();
+        }
+    }
+
+    [Fact]
+    public void EveryLetterFromAToZCanBeAssignedIndividually()
+    {
+        var shortcuts = new PlaybackShortcuts();
+        for (var key = Key.A; key <= Key.Z; key++)
+        {
+            Assert.Null(shortcuts.Assign(PlaybackShortcut.FrameForward, new(key)));
+            Assert.Equal(PlaybackShortcut.FrameForward, shortcuts.Match(key, ModifierKeys.None, sDown: key == Key.S));
+        }
+    }
+
     [Fact]
     public void PersonalBindingsAndRemovedGesturesSurviveReload()
     {

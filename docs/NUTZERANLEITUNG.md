@@ -6,7 +6,9 @@ Diese Fassung ist für die persönliche Paketprüfung vorbereitet und noch nicht
 
 ### Tastenkürzel und Wiederholung
 
-Unter **Einstellungen → Tastenkürzel …** eine Funktion auswählen, **Tastenkürzel ändern** anklicken und die gewünschte Kombination drücken. **Speichern** übernimmt sie dauerhaft für Standard, Power-User 1 und Power-User 2. Doppelte Kombinationen werden als Konflikt gemeldet. **Standard** stellt die ausgewählte Belegung zurück. In Texteingabefeldern bleiben die üblichen Eingaben möglich.
+Unter **Einstellungen → Tastenkürzel …** eine Funktion auswählen, **Tastenkürzel ändern** anklicken und die gewünschte Kombination drücken. **Speichern** übernimmt sie dauerhaft für Standard, Power-User 1 und Power-User 2. Doppelte Kombinationen werden als Konflikt gemeldet. **Standard** stellt die ausgewählte Belegung zurück. Einzeln belegbar sind A bis Z sowie Ä, Ö und Ü auf deutscher Tastatur. Die Namen der OEM-Tasten richten sich nach dem aktiven Windows-Tastaturlayout. Außerhalb von Eingabefeldern führt CAN die zugewiesene Aktion aus. In Eingabefeldern wie der Namensmaske hat die Texteingabe Vorrang.
+
+**S einzeln belegen:** S drücken und wieder loslassen. Die zugewiesene Aktion wird im Player beim Loslassen einmal ausgelöst. Für **S + Pfeiltaste** S gedrückt halten und die Pfeiltaste drücken. Dabei löst S beim anschließenden Loslassen keine Einzelaktion aus. Umschalt- und Strg-Kombinationen wie **Umschalt + F** oder **Strg + Pfeiltaste** sind weiterhin verfügbar. Windows-/Alt-Kombinationen sowie übliche Strg-Befehle für die Textbearbeitung bleiben reserviert.
 
 Kurzer Druck oder Klick springt einmal. Gedrückt halten wiederholt Sekunden-, Keyframe- oder Einzelbildsprünge. Unter **Einstellungen → Darstellung und Schnittbearbeitung → Wiederholung beim Halten** stellst du den Beginn (150–1.500 ms, Standard 350 ms) und den Abstand weiterer Wiederholungen (100–1.000 ms, Standard 200 ms) ein. Die Werte gelten sofort für Maus und Tastatur und bleiben nach Neustart erhalten. Loslassen oder Fokusverlust beendet die Wiederholung; ein bereits gestarteter Sprung kann noch auslaufen.
 

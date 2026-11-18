@@ -425,22 +425,35 @@ public partial class MainWindow : Window
                 e.NewValue));
     }
 
-    private async void MainWindow_PreviewKeyDown(
-        object sender,
-        KeyEventArgs e)
+    private async void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e) =>
+        await HandlePlaybackKeyDownAsync(e, Keyboard.Modifiers, Keyboard.IsKeyDown(Key.S));
+
+    internal async Task HandlePlaybackKeyDownAsync(KeyEventArgs e, ModifierKeys modifiers, bool sDown)
     {
+        if (e.Key != Key.S || modifiers != ModifierKeys.None) _standaloneSPending = false;
         if (e.Handled || IsPlaybackTextInput(e.OriginalSource as DependencyObject) ||
             IsPlaybackTextInput(Keyboard.FocusedElement as DependencyObject)) return;
 
-        var modifiers = Keyboard.Modifiers;
-        bool sDown = Keyboard.IsKeyDown(Key.S);
+        var action = _shortcuts.Match(e.Key, modifiers, sDown);
+        if (e.Key == Key.S && modifiers == ModifierKeys.None && action is not null)
+        {
+            // Wait for release so S can still act as the prefix for a seconds jump.
+            if (!e.IsRepeat) _standaloneSPending = true;
+            e.Handled = true;
+            return;
+        }
+
         if (TryHandleSecondsJumpKey(e, modifiers, sDown))
         {
             e.Handled = true;
             return;
         }
 
-        var action = _shortcuts.Match(e.Key, modifiers, sDown);
+        if (action is { } shortcut) await ExecutePlaybackShortcutAsync(e, shortcut, single: false);
+    }
+
+    private async Task ExecutePlaybackShortcutAsync(KeyEventArgs e, PlaybackShortcut action, bool single)
+    {
         if (action == PlaybackShortcut.CancelCut && !_mediaLoadInProgress && !_isClosed &&
             IsEnabled && _cutPlanViewModel.PendingStart.HasValue)
         {
@@ -449,19 +462,21 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (_playerFrameSearch.IsNavigating || action is null) return;
-        if (action is PlaybackShortcut.KeyframeBackward or PlaybackShortcut.KeyframeForward)
+        if (_playerFrameSearch.IsNavigating) return;
+        if (action is PlaybackShortcut.FrameBackward or PlaybackShortcut.FrameForward or
+            PlaybackShortcut.KeyframeBackward or PlaybackShortcut.KeyframeForward or
+            PlaybackShortcut.SecondsBackward or PlaybackShortcut.SecondsForward)
         {
-            await (TryHandleKeyframeShortcutAsync(e, modifiers) ?? Task.CompletedTask);
-            return;
-        }
-        if (action is PlaybackShortcut.FrameBackward or PlaybackShortcut.FrameForward)
-        {
-            if (!CanNavigate(action.Value)) return;
+            if (!CanNavigate(action)) return;
             e.Handled = true;
-            if (!e.IsRepeat) await HoldNavigationKeyAsync(action.Value, e.Key);
+            if (!e.IsRepeat)
+            {
+                if (single) await _secondsJump.JumpOnceAsync((int)action);
+                else await HoldNavigationKeyAsync(action, e.Key);
+            }
             return;
         }
+
         if (action == PlaybackShortcut.FrameLoupe)
         {
             e.Handled = true;

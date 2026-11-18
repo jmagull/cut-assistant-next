@@ -12,6 +12,7 @@ public partial class MainWindow
     private PlaybackShortcuts _shortcuts = PlaybackShortcuts.Load(PlaybackShortcuts.DefaultPath);
     private readonly HashSet<Key> _secondsJumpKeys = [];
     private Key _navigationKey;
+    private bool _standaloneSPending;
     private ShortcutGesture _heldGesture;
     private Button? _navigationButton;
 
@@ -78,12 +79,23 @@ public partial class MainWindow
         }
     }
 
-    private void Navigation_PreviewKeyUp(object sender, KeyEventArgs e)
+    private async void Navigation_PreviewKeyUp(object sender, KeyEventArgs e) =>
+        await HandlePlaybackKeyUpAsync(e, Keyboard.Modifiers);
+
+    internal async Task HandlePlaybackKeyUpAsync(KeyEventArgs e, ModifierKeys modifiers)
     {
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
         _secondsJumpKeys.Remove(key);
         if (_navigationKey != Key.None && (key == _navigationKey || (_heldGesture.WithS && key == Key.S) ||
-            Keyboard.Modifiers != _heldGesture.Modifiers)) StopSecondsJump();
+            modifiers != _heldGesture.Modifiers)) StopSecondsJump();
+
+        if (key != Key.S || !_standaloneSPending) return;
+        _standaloneSPending = false;
+        if (e.Handled || modifiers != ModifierKeys.None ||
+            IsPlaybackTextInput(e.OriginalSource as DependencyObject) ||
+            IsPlaybackTextInput(Keyboard.FocusedElement as DependencyObject)) return;
+        if (_shortcuts.Match(Key.S, ModifierKeys.None, sDown: false) is { } action)
+            await ExecutePlaybackShortcutAsync(e, action, single: true);
     }
 
     private bool CanRepeatNavigation(PlaybackShortcut action) => CanNavigate(action) &&
@@ -101,6 +113,7 @@ public partial class MainWindow
 
     private void StopSecondsJump()
     {
+        _standaloneSPending = false;
         _secondsJump.Stop();
         _navigationKey = Key.None;
         var button = _navigationButton;

@@ -9,6 +9,7 @@ internal partial class ShortcutSettingsDialog : Window
 {
     private sealed record Row(PlaybackShortcut Action, string Group, string Name, string Standard, string Binding);
     private PlaybackShortcut? _capturing;
+    private bool _sPending;
     internal PlaybackShortcuts Shortcuts { get; private set; }
 
     internal ShortcutSettingsDialog(PlaybackShortcuts shortcuts)
@@ -30,6 +31,7 @@ internal partial class ShortcutSettingsDialog : Window
     {
         if (Rows.SelectedItem is not Row row) return;
         _capturing = row.Action;
+        _sPending = false;
         Status.Text = "Neue Kombination drücken. Esc beendet die Eingabe.";
     }
 
@@ -39,14 +41,36 @@ internal partial class ShortcutSettingsDialog : Window
         e.Handled = true;
         if (e.IsRepeat) return;
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
-        if (key is Key.LeftCtrl or Key.RightCtrl or Key.LeftShift or Key.RightShift or Key.LeftAlt or Key.RightAlt or Key.S) return;
+        if (key is Key.LeftCtrl or Key.RightCtrl or Key.LeftShift or Key.RightShift or Key.LeftAlt or Key.RightAlt or Key.LWin or Key.RWin) return;
+        if (key == Key.S && Keyboard.Modifiers == ModifierKeys.None)
+        {
+            _sPending = true;
+            return;
+        }
         if (key == Key.Escape)
         {
             _capturing = null;
             Status.Text = "";
             return;
         }
-        var error = Shortcuts.Assign(action, new(key, Keyboard.Modifiers, Keyboard.IsKeyDown(Key.S)));
+        var modifiers = Keyboard.Modifiers;
+        var withS = _sPending && Keyboard.IsKeyDown(Key.S) && modifiers == ModifierKeys.None &&
+            key is Key.Left or Key.Right or Key.Up or Key.Down;
+        _sPending = false;
+        AssignCaptured(action, new(key, modifiers, withS));
+    }
+
+    private void CaptureKeyUp(object sender, KeyEventArgs e)
+    {
+        if (_capturing is not { } action || e.Key != Key.S || !_sPending) return;
+        e.Handled = true;
+        _sPending = false;
+        if (Keyboard.Modifiers == ModifierKeys.None) AssignCaptured(action, new(Key.S));
+    }
+
+    private void AssignCaptured(PlaybackShortcut action, ShortcutGesture gesture)
+    {
+        var error = Shortcuts.Assign(action, gesture);
         Status.Text = error ?? "";
         if (error is null) { _capturing = null; Refresh(); }
     }

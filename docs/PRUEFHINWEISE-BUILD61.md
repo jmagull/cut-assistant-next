@@ -4,7 +4,7 @@ Auf Windows 11 am Arbeitsrechner beziehungsweise in der VM testen. Die SHA-256-W
 
 | Prüfung | Ablauf und erwartetes Ergebnis |
 | --- | --- |
-| Tastenkürzel | Frame-Lupe auf F8 legen, speichern, CAN neu starten und F8 in allen drei Ansichten prüfen. Dieselbe Taste einer anderen Funktion zuweisen. Die Konfliktmeldung nennt die vorhandene Funktion. In einem Eingabefeld Pfeiltasten und Leertaste prüfen. |
+| Tastenkürzel | Bei aktivem deutschen Windows-Tastaturlayout Q, S, Ä, Ö und Ü nacheinander einer Player-Aktion zuweisen. Im Player jede Aktion ausführen, speichern und nach CAN-Neustart erneut prüfen. Bei S einzeln auf die Auslösung beim Loslassen achten. S + Pfeiltaste springt weiterhin in Sekunden und löst beim Loslassen keine S-Einzelaktion aus. Umschalt + F, Strg + Pfeiltaste und F8 in allen drei Ansichten prüfen. Dieselbe Taste einer anderen Funktion zuweisen und die Konfliktmeldung prüfen. In der Namensmaske Buchstaben, Umlaute, Pfeiltasten und Leertaste eingeben oder verwenden und auf ausbleibende Player-Aktionen achten. |
 | Navigation | Im pausierten Film Einzelbild- und Keyframesprung mit kurzem Klick, gedrückt gehaltener Maus und persönlicher Taste prüfen. Loslassen, Fokuswechsel und Ende der Datei beenden die Wiederholung. S + Pfeiltasten auf Sekundensprünge prüfen. |
 | Schnittliste und Hinweis | Eine Grenze am Keyframe und eine daneben setzen. Das K muss an der zugehörigen Zeit stehen. In Rot und Grün, bei der exklusiven Endgrenze, nach Änderung des Plans und nach Laden einer gespeicherten Cutlist wiederholen. Der Keyframe-Tooltip benennt die blauen Markierungen. |
 | Motor-Empfehlung | Bei einer H.264-MP4 mit AAC-Tonspuren zuerst geeignete Keyframe-Grenzen und anschließend eine Grenze dazwischen setzen. Die Schaltflächen für die manuelle Wahl beider Motoren bleiben erreichbar. |
@@ -48,3 +48,7 @@ Automatisierte Tests und technische Startprüfungen ersetzen diese persönliche 
 ## Persönliche Rückmeldung vom 18.11.2026
 
 **Windows-11-Setup-Test und sichtbarer neuer EAC3-Dialog persönlich bestanden.** Anwenderbestätigung und Screenshot sind im [Abnahmenachtrag](ABNAHME-BUILD61-20261118.md) eingeordnet. Weitere Paket-/Bedienprüfungen bleiben getrennt zu bestätigen. Die Paketdateien werden durch diesen Dokumentationsnachtrag nicht verändert.
+
+## Tastaturprüfung für das neue Build-61-Paket
+
+Die automatisierten WPF-Regressionen prüfen den Einstellungsdialog, die Windows-Tastencodes, die Aktionsauslösung im Player und den Vorrang der Textfelder. Weitere Tests prüfen Speicherung, Laden und Konflikte. Die persönliche Prüfung mit deutscher Tastatur nach der Korrektur steht in der Tabelle oben.

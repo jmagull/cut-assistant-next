@@ -3,7 +3,7 @@
 Stand 18.11.2026. Gegenüber dem veröffentlichten Build 60:
 
 - **Gezielte EAC3-Meldung:** Bei der ausdrücklichen otr-can-Ablehnung „Unsupported audio codec eac3“ erscheint „otr-can – EAC3-Tonspur erkannt“ mit „Mit MP4Box schneiden“ und „Abbrechen“. MP4Box startet ausschließlich nach Bestätigung; keine zusätzliche aufwendige Vorprüfung. Auch AAC+EAC3 wird korrekt erkannt. Andere Audiofehler behalten ihre Abläufe. Der Motor und sein EAC3-Unterstützungsumfang bleiben unverändert; MP4Box ist keine allgemeine Audioreparatur.
-- Persönliche Tastenkürzel mit Konfliktprüfung, dauerhaftem Speichern und passenden Tooltips.
+- Persönliche Tastenkürzel mit Konfliktprüfung, dauerhaftem Speichern und passenden Tooltips. Einzeltasten A bis Z und deutsche OEM-Tasten Ä, Ö und Ü lassen sich zuweisen. Einzeln belegtes S löst beim Loslassen aus, S + Pfeiltaste bleibt der Sekundensprung. In Eingabefeldern hat die Texteingabe Vorrang.
 - Wiederholung von Sekunden-, Keyframe- und Einzelbildsprüngen per Maus und Tastatur; Startverzögerung und Abstand einstellbar und gespeichert.
 - Fortlaufender Schnittshuffle über alle Bereichsgrenzen mit synchroner Schnittauswahl und unveränderter Reihenfolge nach Einzelbildkontrollen.
 - Blaue K-Markierungen an beiden Grenzen und korrigierte Keyframe-Tooltips. Die nach dem ersten Test fehlenden Anfangs-/Endzeittexte sind wieder sichtbar.
