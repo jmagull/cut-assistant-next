@@ -13,7 +13,7 @@ Damit sind der persönlich bestätigte Windows-11-Setup-Test und die sichtbare n
 
 Eine zusätzliche VM-, Upgrade-, Deinstallations- oder Portable-Abnahme wird aus dieser Meldung nicht abgeleitet. Die weiteren Prüfpunkte stehen in PRUEFHINWEISE-BUILD61.md.
 
-## Bestätigter MP4Box-Ausweichlauf: Verarbeitung abgeschlossen
+## Bestätigter MP4Box-Ausweichlauf: persönlich bestanden
 
 Der Anwender übergibt anschließend Abschlussmeldung und Screenshot für **Wetterfee sucht Weihnachtswunder (2024).mp4**. CAN meldet „Schneiden abgeschlossen“ und „Zeitangaben im fertigen Film geprüft“. Der Abschlusshinweis bezeichnet ausdrücklich den nach dem otr-can-Tonfehler gewählten MP4Box-Fallback. Damit ist der vollständige Ausweichlauf aus der neuen EAC3-Benutzerführung bis zum fertigen Film dokumentiert.
 
@@ -28,7 +28,7 @@ Ausgabedatei: C:\Users\joerg\Desktop\down\Wetterfee sucht Weihnachtswunder (2024
 | 01:19:55.042 | Übergang 4 |
 | 01:24:27.282 | Ende |
 
-Das ist ein positiver technischer Abschlussbefund des persönlich ausgeführten Ausweichlaufs. Eine neue ausdrückliche Bestätigung von Bild, allen Tonspuren, Synchronität und Drei-Sekunden-/Übergangsvorschau für genau diese Ausgabe liegt mit dieser Meldung noch nicht vor. Die Abschlussmeldung ist keine allgemeine Garantie unveränderter MP4Box-Schnittgrenzen und kein Nachweis einer Audioreparatur. Der früher persönlich bestandene MP4Box-Referenzschnitt bleibt davon getrennt bestehen.
+Der Anwender bestätigt anschließend ausdrücklich „bild ton alles perfekt“. Damit sind Bild und Ton sowie das Gesamtergebnis der persönlichen Kontrolle dieser konkreten Ausgabe positiv bestätigt. Der Realfilm-Ausweichlauf über den neuen EAC3-Dialog ist damit persönlich bestanden. Die Abschlussmeldung ist keine allgemeine Garantie unveränderter MP4Box-Schnittgrenzen und kein Nachweis einer Audioreparatur. Der früher persönlich bestandene MP4Box-Referenzschnitt bleibt davon getrennt bestehen.
 
 ## Zugeordneter Paketstand
 
