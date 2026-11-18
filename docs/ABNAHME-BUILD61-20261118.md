@@ -9,9 +9,26 @@ Der Anwender bestätigt mit „windows 11 setup check“ den persönlichen Setup
 - Frage: **Möchtest du den Film stattdessen mit MP4Box schneiden?**
 - Genau die vorgesehenen sichtbaren Schaltflächen: **Abbrechen** und **Mit MP4Box schneiden**. Abbrechen ist im Screenshot hervorgehoben.
 
-Damit sind der persönlich bestätigte Windows-11-Setup-Test und die sichtbare neue EAC3-Benutzerführung dokumentiert. Die konkrete Wahl einer der Schaltflächen und ein danach abgeschlossener Schnitt werden durch diese Rückmeldung noch nicht bestätigt. Der zuvor persönlich bestandene MP4Box-Wetterfee-Schnitt bleibt als eigenständige Referenz erhalten.
+Damit sind der persönlich bestätigte Windows-11-Setup-Test und die sichtbare neue EAC3-Benutzerführung dokumentiert. Die anschließende Ausweichverarbeitung ist im folgenden Nachtrag dokumentiert. Der zuvor persönlich bestandene MP4Box-Wetterfee-Schnitt bleibt als eigenständige Referenz erhalten.
 
 Eine zusätzliche VM-, Upgrade-, Deinstallations- oder Portable-Abnahme wird aus dieser Meldung nicht abgeleitet. Die weiteren Prüfpunkte stehen in PRUEFHINWEISE-BUILD61.md.
+
+## Bestätigter MP4Box-Ausweichlauf: Verarbeitung abgeschlossen
+
+Der Anwender übergibt anschließend Abschlussmeldung und Screenshot für **Wetterfee sucht Weihnachtswunder (2024).mp4**. CAN meldet „Schneiden abgeschlossen“ und „Zeitangaben im fertigen Film geprüft“. Der Abschlusshinweis bezeichnet ausdrücklich den nach dem otr-can-Tonfehler gewählten MP4Box-Fallback. Damit ist der vollständige Ausweichlauf aus der neuen EAC3-Benutzerführung bis zum fertigen Film dokumentiert.
+
+Ausgabedatei: C:\Users\joerg\Desktop\down\Wetterfee sucht Weihnachtswunder (2024).mp4.
+
+| Prüfposition | Bedeutung |
+| --- | --- |
+| 00:00:00.000 | Anfang |
+| 00:19:12.320 | Übergang 1 |
+| 00:37:37.442 | Übergang 2 |
+| 00:59:53.522 | Übergang 3 |
+| 01:19:55.042 | Übergang 4 |
+| 01:24:27.282 | Ende |
+
+Das ist ein positiver technischer Abschlussbefund des persönlich ausgeführten Ausweichlaufs. Eine neue ausdrückliche Bestätigung von Bild, allen Tonspuren, Synchronität und Drei-Sekunden-/Übergangsvorschau für genau diese Ausgabe liegt mit dieser Meldung noch nicht vor. Die Abschlussmeldung ist keine allgemeine Garantie unveränderter MP4Box-Schnittgrenzen und kein Nachweis einer Audioreparatur. Der früher persönlich bestandene MP4Box-Referenzschnitt bleibt davon getrennt bestehen.
 
 ## Zugeordneter Paketstand
 
