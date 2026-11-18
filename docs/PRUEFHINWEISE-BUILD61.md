@@ -44,3 +44,7 @@ Die acht Filmschnitte müssen ohne konkreten Anlass nicht wiederholt werden. Kei
 4. EAC3 wird weiterhin nicht vom otr-can-Motor unterstützt. Die allgemeine Motor-Empfehlung und der 40-ms-Rasterbefund sind unverändert. MP4Box ist kein allgemeines Audioreparaturverfahren.
 
 Automatisierte Tests und technische Startprüfungen ersetzen diese persönliche Abnahme nicht. Die Qualitätsalternativsuche und der MP4Box-Wetterfee-Schnitt vom 18.11.2026 sind als bestehende persönliche Referenzen dokumentiert.
+
+## Persönliche Rückmeldung vom 18.11.2026
+
+**Windows-11-Setup-Test und sichtbarer neuer EAC3-Dialog persönlich bestanden.** Anwenderbestätigung und Screenshot sind im [Abnahmenachtrag](ABNAHME-BUILD61-20261118.md) eingeordnet. Weitere Paket-/Bedienprüfungen bleiben getrennt zu bestätigen. Die Paketdateien werden durch diesen Dokumentationsnachtrag nicht verändert.
