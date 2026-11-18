@@ -18,9 +18,9 @@ MP4Box ist kein allgemeines Reparaturverfahren für beschädigte Tonspuren. Die 
 
 Neue Tests prüfen vollständige Fehlerzeilen, CRLF/Whitespace, verschachtelte Fehler, ähnliche Codec-Namen, AAC+EAC3, exakten WPF-Text, ausschließlich zwei sichtbare Entscheidungen, Abbrechen als Standard, fehlendes MP4Box und die Bestätigung mit identischem Schnittauftrag. Andere Audiofehler müssen ihre bisherigen Recovery-Assessments weiter aufrufen. Die vollständigen CAN-/Spotlight-Ergebnisse und die neue Paketprüfung stehen im abschließenden Paketbericht vom 18.11.2026; frühere Zahlen werden nicht als neuer Lauf übernommen.
 
-## Persönliche Referenzen und offene Abnahme
+## Persönliche Referenzen und abgeschlossene Abnahme
 
-Die acht Realfilmschnitte vom 17.11.2026 bleiben bestätigt. Am 18.11.2026 sind die Suche nach einer HQ-Cutlist bei geladener HD-Aufnahme, die Größenwarnung, die bewusste Übernahme und der MP4Box-Schnitt der Wetterfee persönlich bestanden. Es liegt dafür kein separates MP4Box-Protokoll vor. Die neue Dialog- und Paketfassung ist damit noch nicht persönlich abgenommen.
+Die acht Realfilmschnitte vom 17.11.2026 bleiben bestätigt. Am 18.11.2026 sind die Suche nach einer HQ-Cutlist bei geladener HD-Aufnahme, die Größenwarnung, die bewusste Übernahme und der MP4Box-Schnitt der Wetterfee persönlich bestanden. Es liegt dafür kein separates MP4Box-Protokoll vor. Der anschließend über den neuen EAC3-Dialog ausdrücklich gewählte MP4Box-Ausweichschnitt wurde ebenfalls persönlich mit einwandfreiem Bild und Ton bestätigt. Die persönliche Funktions- und Windows-11-Paketabnahme ist abgeschlossen, einschließlich Setup-Upgrade, Portable-Start und Installation/Deinstallation in der VM.
 
 Die Diagnose DIAGNOSE-BUILD61-EAC3-20261118.md dokumentiert den vorherigen unveränderten Kandidaten. Ihre Feststellung zum damaligen generischen Dialog ist historisch; dieser Auftrag ersetzt ausschließlich jene EAC3-Darstellung. Ihre Codec-/Empfehlungs-/Rasterbefunde bleiben bestehen.
 
@@ -28,4 +28,4 @@ Die Diagnose DIAGNOSE-BUILD61-EAC3-20261118.md dokumentiert den vorherigen unver
 
 Neue vollständige Pakete in einer datierten separaten Kandidatenablage, Produktversion 1.0.3, Dateiversion 1.0.3.61. Frühere Pakete bleiben unverändert. Paketbau entfernt PDB-Dateien aus dem Programmordner, enthält README und aktuelle Anwenderhinweise und verwendet weiterhin den unveränderten Motor unter tools/otr-can/otr_can.exe. Die .NET-Desktop-Runtime und externen Werkzeuge bleiben separat erforderlich.
 
-Keine Veröffentlichung, kein Push oder Merge nach main und keine automatische Installation auf dem Arbeitsrechner. Setup-/Upgrade-/Deinstallationsprüfung, Portable-Nutzung und der neue EAC3-Dialog werden für die persönliche Windows-11-Abnahme vorbereitet.
+Keine Veröffentlichung, kein Push oder Merge nach main und keine automatische Installation auf dem Arbeitsrechner. Setup-Upgrade, Portable-Nutzung, VM-Installation/-Deinstallation und der neue EAC3-Dialog sind persönlich unter Windows 11 abgenommen.

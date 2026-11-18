@@ -13,9 +13,9 @@ Stand 18.11.2026. Gegenüber dem veröffentlichten Build 60:
 - Frei editierbarer endgültiger Ausgabename für MP4Box und otr-can; gemeinsamer Name beim Dialogwechsel. Frei editierbarer vorgeschlagener Filmname beim Cutlist-Erzeugen. Manuelle Titel bleiben bis zur bewussten Neugenerierung erhalten; Originalzuordnung bleibt unverändert.
 - Getrennte Versions- und Funktionsprüfungen für FFmpeg/ffprobe und MP4Box einschließlich Streamcopy-Regression und zwei AAC-Tonspuren.
 
-**Abnahme:** Acht persönliche Realfilmschnitte unter Windows 11 bestanden. Diese Rückmeldungen stammen aus den dokumentierten Entwicklungsfassungen. Neue Setup-/Portable-Abnahme, persönliche Tastenkürzel, reale Qualitätsalternativen, fachliche Schlussbewertung der Empfehlung und freie Namen bleiben gesondert zu prüfen. Keine persönliche Windows-10-Abnahme. Automatisierte Ergebnisse des neuen Paketlaufs stehen im Paketbericht.
+**Abnahme:** Die persönliche Funktions- und Installationsabnahme unter Windows 11 ist abgeschlossen. Bestätigt sind die Realfilmschnitte mit beiden Motoren, der EAC3-Hinweis mit bestätigtem MP4Box-Ausweichschnitt, die oben genannten Build-61-Funktionen, deutsche Tastenkürzel einschließlich U + Pfeiltaste und Neustart, Setup-Upgrade, Portable-Start sowie VM-Installation/-Deinstallation. Die automatisierten Ergebnisse des abschließenden Laufs stehen im Paketbericht.
 
-Die Einschränkung der allgemeinen Empfehlung bei EAC3 und der separate 40-ms-Rasterbefund sind nicht Teil dieser Dialogkorrektur. Der persönlich erfolgreiche MP4Box-Schnitt der EAC3-Aufnahme „Wetterfee sucht Weihnachtswunder“ bleibt Referenz; er wurde für die Korrektur nicht wiederholt. Neue Pakete erfordern eine eigene persönliche Windows-11-Abnahme.
+Die Einschränkung der allgemeinen Empfehlung bei EAC3 und der separate 40-ms-Rasterbefund sind nicht Teil dieser Dialogkorrektur. Der persönlich erfolgreiche MP4Box-Schnitt der EAC3-Aufnahme „Wetterfee sucht Weihnachtswunder“ bleibt Referenz; er wurde für die Korrektur nicht wiederholt. Die abschließende Aktualisierung der Dokumentation übernimmt die abgeschlossene persönliche Windows-11-Abnahme des unveränderten Programmstands.
 
 **Status:** ausschließlich lokal vorbereitet. Kein Veröffentlichungsauftrag; öffentliche stabile Version bleibt Build 60.
 
@@ -200,3 +200,5 @@ Der Anwender bestätigt die gemeinsame Tabelle, Dauer und Downloadbeschriftung m
 
 </details>
 </details>
+
+Die geplante EAC3-Motorerweiterung, das Batchcenter und Skriptunterstützung in Namensmaske II sind künftige Vorhaben außerhalb des Build-61-Funktionsumfangs.

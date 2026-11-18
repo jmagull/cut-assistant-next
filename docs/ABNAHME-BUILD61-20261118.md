@@ -34,10 +34,16 @@ Der Anwender bestätigt anschließend ausdrücklich „bild ton alles perfekt“
 
 In der Windows-11-VM bestanden Setup, FFmpeg-Prüfung, der otr-can-Schnitt von „Grey’s Anatomy – Durchs Feuer“ mit einwandfreiem Bild und Ton, das erneute Öffnen der Schnittprüfung sowie die Deinstallation. Das Protokoll weist 60.651 verifizierte Videopakete und 116.449.920 dekodierte AAC-Samples mit durchgehenden Zeitstempeln aus. Schnittshuffle, Sekunden- und Einzelbildsprünge sowie das Gedrückthalten mit Maus und S + Pfeiltaste wurden bestätigt. In der entpackten ZIP-Fassung bestanden Klebecenter (QUICK AND COPY), Schnittshuffle und Schnittsprung. Beim Kleben blieben AAC und AC-3 erhalten.
 
-Die anschließende Prüfung der Tastenzuweisung zeigte die Sperre für einzelne Buchstaben und Umlaute. Die Prüffassung mit der Tastaturkorrektur erhält eine eigene Paketprüfung.
+Die anschließende Prüfung der Tastenzuweisung zeigte die Sperre für einzelne Buchstaben und Umlaute. Die anschließende Korrektur wurde mit der persönlichen Rückmeldung „alles check“ bestätigt. Der abschließende Auftrag bestätigt ausdrücklich auch deutsche Sondertasten, Speicherung über Neustart, Setup-Upgrade, Portable-Start und Installation/Deinstallation in der Windows-11-VM.
 
-## Zugeordneter Paketstand
+## Historischer Paketstand des EAC3-Ausweichlaufs
 
 Paketquellcommit 009ca79cdd35e7527c1e7d816b1e4b0611be2112, Zweig codex/build61-eac3-dialog. Neue Kandidatenablage: artifacts/release-1.0.3-build61-candidate-20261118.
 
 Die erzeugten Setup-/ZIP-Dateien und ihre Integritätsnachweise bleiben unverändert. Dieser Nachtrag ergänzt ausschließlich den persönlichen Abnahmestand. Keine Veröffentlichung oder Freigabe zum Merge nach main.
+
+## Abschließende persönliche Abnahme
+
+Die persönliche Funktions- und Installationsabnahme von Build 61 ist abgeschlossen. Der Anwender bestätigt auch die überarbeitete Navigation, konfigurierbare Wiederholung, fortlaufenden Shuffle, Keyframe-Markierungen, Motor-Empfehlung innerhalb des Unterstützungsumfangs, Qualitätsalternativsuche, erneute Schnittprüfung und freie Ausgabedateinamen.
+
+Der zuletzt persönlich geprüfte Stand umfasst beide Tastaturkorrekturen und den EAC3-Dialog. Quellcommit 04a0dd609e30c545c88a40bcd9ba5ca30a25022b auf codex/build61-shortcuts, Pakete unter artifacts/release-1.0.3-build61-candidate-20261118-shortcuts-pfeiltasten. Eine abschließende Aktualisierung der Dokumentation ändert diesen Programmstand nicht. Die bereits bestätigten Tests müssen dafür nicht wiederholt werden.

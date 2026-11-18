@@ -1,4 +1,10 @@
-# Cut Assistant Next 1.0.3 Build 61 – lokaler Paket- und Prüfbericht
+# Cut Assistant Next 1.0.3 Build 61 – Paket- und Prüfberichte
+
+## Abschlussstand vom 18.11.2026
+
+Die persönliche Funktions- und Installationsabnahme ist abgeschlossen, einschließlich der EAC3- und Tastaturkorrekturen. Der geprüfte Programmstand liegt auf codex/build61-shortcuts im Commit 04a0dd609e30c545c88a40bcd9ba5ca30a25022b. Die abschließende Dokumentationsaktualisierung wird lokal committet und in die Releasepakete übernommen. Der finale Paketquellcommit, die neu ausgeführten Tests, Prüfsummen und Paketgrößen stehen in PAKETBERICHT.md und PACKAGE-MANIFEST.json unter artifacts/release-1.0.3-build61-final-20261118. [Persönliche Abnahme](ABNAHME-BUILD61-20261118.md). Veröffentlichung bedarf einer gesonderten Freigabe.
+
+## Historischer Kandidatenbericht vom 17.11.2026
 
 Stand: 17.11.2026. **Releasekandidat technisch erstellt. Keine Freigabe zur Veröffentlichung.** Setup und ZIP bleiben zur persönlichen Abnahme unverändert erhalten. Es erfolgten kein Merge nach main, kein Push, kein Tag, kein Upload, kein GitHub-Release und keine Installation beim Anwender. Die öffentliche stabile Ausgabe bleibt Build 60.
 

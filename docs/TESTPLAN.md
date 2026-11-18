@@ -1,8 +1,8 @@
 # Testplan – aktueller Funktionsstand
 
-## Lokale Build-61-Pakete vom 18.11.2026
+## Build 61 – Abschlussstand vom 18.11.2026
 
-Gezielte EAC3-Dialogkorrektur und neue vollständige Setup-/Portable-Pakete, unverändert Version 1.0.3.61. [Benutzerführung und Testumfang](EAC3-DIALOG-BUILD61.md). Der vorherige Kandidat bleibt erhalten. Persönliche Abnahme der neuen Pakete ist offen, Veröffentlichung nicht freigegeben. Die folgenden datierten Einträge bewahren ihre jeweiligen historischen Ergebnisse.
+Build 61 enthält die EAC3-Dialogkorrektur und die abgeschlossene Tastaturkorrektur für A bis Z, Ä/Ö/Ü und Buchstabe + Pfeiltaste. Die persönliche Funktions- und Installationsabnahme unter Windows 11 ist abgeschlossen. Version 1.0.3, Build 61 und Dateiversion 1.0.3.61 bleiben konsistent. [Abnahmenachweis](ABNAHME-BUILD61-20261118.md). Die technische Abschlussprüfung und neue Paketnachweise stehen im finalen Paketbericht. Veröffentlichung bedarf einer gesonderten Freigabe. Die folgenden datierten Einträge bewahren ihre historischen Ergebnisse.
 
 
 ## Historischer Teststand: Cut Assistant Next 1.0.3 Build 54

@@ -1,6 +1,6 @@
 Cut Assistant Next – Einmalig benötigte Programme
 
-Cut Assistant Next 1.0.3 Build 61 – lokale Prüffassung.
+Cut Assistant Next 1.0.3 Build 61 – zur Veröffentlichungsfreigabe vorbereitet.
 Windows 11 x64 ist die geprüfte Zielplattform; Windows 10 ist nicht persönlich validiert.
 Audio-Fehlerbehandlung und Spotlight-CAN sind Funktionen dieser einen Anwendung.
 

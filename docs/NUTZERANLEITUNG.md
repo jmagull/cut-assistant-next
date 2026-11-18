@@ -2,7 +2,7 @@
 
 ## Bedienung in Build 61 – lokaler Releasekandidat
 
-Diese Fassung ist für die persönliche Paketprüfung vorbereitet und noch nicht veröffentlicht. Die folgenden Funktionen sind implementiert; offene persönliche Prüfungen stehen in PRUEFHINWEISE-BUILD61.md.
+Die persönliche Windows-11-Abnahme von Build 61 ist abgeschlossen. Die Veröffentlichung bedarf einer gesonderten Freigabe. PRUEFHINWEISE-BUILD61.md und ABNAHME-BUILD61-20261118.md dokumentieren die abgeschlossenen Prüfungen.
 
 ### Tastenkürzel und Wiederholung
 
