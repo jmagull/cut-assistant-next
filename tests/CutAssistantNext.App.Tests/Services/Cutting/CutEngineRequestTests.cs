@@ -60,7 +60,8 @@ public sealed class CutEngineRequestTests : IDisposable
 
         Assert.Same(progress, runnerProgress);
         Assert.Contains(updates, update => update.Kind == CutProgressKind.Output && update.Message == "runner output");
-        Assert.Equal("Fertig.", updates[^1].Message);
+        Assert.Equal("Fertig.", updates.Last(update => update.Kind == CutProgressKind.Status).Message);
+        Assert.Contains(updates, update => update.Message.StartsWith("Temporärer Arbeitsordner bereinigt:"));
     }
 
     [Fact]

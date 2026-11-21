@@ -46,7 +46,8 @@ public sealed class Mp4BoxCutWorkflow
         IProgress<CutProgressUpdate>? progress,
         CancellationToken cancellationToken = default,
         bool overwriteExistingOutput = false,
-        ICutOutputAnalyzer? analyzer = null)
+        ICutOutputAnalyzer? analyzer = null,
+        string? workingDirectory = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(
             sourceFilePath);
@@ -101,6 +102,9 @@ public sealed class Mp4BoxCutWorkflow
                 $"Die Zieldatei existiert bereits: {fullOutputFilePath}");
         }
 
+        var expectedTarget = outputFileExists
+            ? await Analysis.CutOutputIdentityVerifier.ReadAsync(fullOutputFilePath, cancellationToken).ConfigureAwait(false) : null;
+
         var outputDirectoryPath =
             Path.GetDirectoryName(
                 fullOutputFilePath)
@@ -108,9 +112,17 @@ public sealed class Mp4BoxCutWorkflow
                 "Das Zielverzeichnis konnte nicht bestimmt werden.");
 
 
+        using var workspace = CutWorkspace.Create(fullOutputFilePath, workingDirectory, progress);
+        if (File.Exists(fullSourceFilePath))
+            CutStoragePreflight.EnsureSufficient(fullSourceFilePath, workspace.DirectoryPath, fullOutputFilePath,
+                CutStorageEstimate.Mp4Box(new FileInfo(fullSourceFilePath).Length), progress);
+        else
+            progress?.Report(new(CutProgressKind.Output, "Speicherplatzschätzung nicht möglich: Quelldatei nicht erreichbar."));
+        var workDirectoryPath = workspace.DirectoryPath;
+
         var concatOutputFilePath =
             Path.Combine(
-                outputDirectoryPath,
+                workDirectoryPath,
                 $".cut-assistant-next-{Guid.NewGuid():N}-output.mp4");
 
         var segmentFilePaths =
@@ -128,7 +140,7 @@ public sealed class Mp4BoxCutWorkflow
 
                 var segmentFilePath =
                     Path.Combine(
-                        outputDirectoryPath,
+                        workDirectoryPath,
                         $".cut-assistant-next-{Guid.NewGuid():N}-{index + 1:D4}.mp4");
 
                 segmentFilePaths.Add(
@@ -184,9 +196,21 @@ public sealed class Mp4BoxCutWorkflow
                 cancellationToken.ThrowIfCancellationRequested();
             }
 
-            File.Move(pendingOutput, fullOutputFilePath, overwrite: outputFileExists && overwriteExistingOutput);
+            // A canceled optional review keeps the completed film, as in Build 61.
+            var publicationToken = analyzer is not null && warning is not null && cancellationToken.IsCancellationRequested
+                ? CancellationToken.None : cancellationToken;
+            await CutOutputPublisher.PublishAsync(pendingOutput, fullOutputFilePath,
+                outputFileExists && overwriteExistingOutput, progress, publicationToken, expectedTarget).ConfigureAwait(false);
+            if (timeline?.Identity is { } identity)
+                timeline = new(timeline.Duration, timeline.Transitions,
+                    identity with { LastWriteUtcTicks = File.GetLastWriteTimeUtc(fullOutputFilePath).Ticks }, timeline.HasOverlappingPresentationTimes);
             progress?.Report(new(CutProgressKind.Status, "Fertig."));
             return new(timeline, warning);
+        }
+        catch (Exception error) when (error is not OperationCanceledException and not OutOfMemoryException)
+        {
+            CutStoragePreflight.ReportFailure(error, workDirectoryPath, fullOutputFilePath, progress);
+            throw;
         }
         finally
         {

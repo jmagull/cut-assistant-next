@@ -70,9 +70,9 @@ public partial class MainWindow
             }
             // Reuse only the existing cutting tools. The player and table never change parents.
             MoveCutTool(VideoStartButton, PowerCutMarkersGrid, 0, 0);
-            MoveCutTool(CutStartButton, PowerCutMarkersGrid, 0, 2);
-            MoveCutTool(CutEndButton, PowerCutMarkersGrid, 2, 0);
-            MoveCutTool(VideoEndButton, PowerCutMarkersGrid, 2, 2);
+            MoveCutTool(VideoEndButton, PowerCutMarkersGrid, 0, 2);
+            MoveCutTool(CutStartButton, PowerCutMarkersGrid, 2, 0);
+            MoveCutTool(CutEndButton, PowerCutMarkersGrid, 2, 2);
             MoveCutTool(PendingStartLabel, PowerPendingGrid, 0, 0);
             MoveCutTool(PendingStartTime, PowerPendingGrid, 0, 1);
             MoveCutTool(FrameLoupeButton, PowerPendingGrid, 0, 2);

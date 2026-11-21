@@ -462,6 +462,23 @@ public partial class MainWindow : Window
             return;
         }
 
+        if (action is PlaybackShortcut.CutStart or PlaybackShortcut.CutEnd or PlaybackShortcut.VideoStart or PlaybackShortcut.VideoEnd)
+        {
+            e.Handled = true;
+            if (e.IsRepeat || _isClosed || _mediaLoadInProgress || _frameLoupeOpening || !IsEnabled ||
+                _playerFrameSearch.IsNavigating || _keyframeNavigation.IsNavigating || _playbackViewModel.IsSeeking) return;
+            var button = action switch
+            {
+                PlaybackShortcut.CutStart => CutStartButton,
+                PlaybackShortcut.CutEnd => CutEndButton,
+                PlaybackShortcut.VideoStart => VideoStartButton,
+                _ => VideoEndButton
+            };
+            // Invoke the same guarded action as the existing button, independent of its layout host.
+            if (button.IsEnabled) button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            return;
+        }
+
         if (_playerFrameSearch.IsNavigating) return;
         if (action is PlaybackShortcut.FrameBackward or PlaybackShortcut.FrameForward or
             PlaybackShortcut.KeyframeBackward or PlaybackShortcut.KeyframeForward or
@@ -1458,13 +1475,29 @@ public partial class MainWindow : Window
 
                     progressDialog.Show();
 
-                    string? temporaryVideo = null;
+                    CutWorkspace? preparationWorkspace = null;
                     try
                     {
+                        var workingRoot = await Task.Run(() => new VideoFolderSettingsStore().Load()
+                            .ResolveWorkingDirectory(outputTarget.FilePath));
+                        cutRequest = cutRequest.WithWorkingDirectory(workingRoot);
                         var sourceForCut = cutRequest.OriginalFilePath;
                         if (requiresPreparation)
                         {
-                            temporaryVideo = Path.Combine(Path.GetTempPath(), $"can-{Guid.NewGuid():N}.mp4");
+                            preparationWorkspace = await Task.Run(() => CutWorkspace.Create(outputTarget.FilePath,
+                                workingRoot, progress), cancellationTokenSource.Token);
+                            await Task.Run(() =>
+                            {
+                                var bytes = new FileInfo(sourceForCut).Length;
+                                var estimate = engineKind == CutEngineKind.OtrCan
+                                    ? CutStorageEstimate.OtrCan(bytes, TimeSpan.FromTicks(cutRequest.KeepSegments.Sum(s => s.Duration.Ticks)),
+                                        analysis.AudioStreams.Sum(s => (long)(s.SampleRate ?? 48000) * (s.Channels ?? 2) * 8), analysis.Duration)
+                                    : CutStorageEstimate.Mp4Box(bytes);
+                                CutStoragePreflight.EnsureSufficient(sourceForCut, preparationWorkspace.DirectoryPath,
+                                    outputTarget.FilePath, estimate with { WorkingBytes = checked(estimate.WorkingBytes + bytes * 2),
+                                        Basis = "Zusätzliche MP4-Vorbereitung plus folgende Verarbeitung. " + estimate.Basis }, progress);
+                            }, cancellationTokenSource.Token);
+                            var temporaryVideo = Path.Combine(preparationWorkspace.DirectoryPath, "prepared-source.mp4");
                             var tools =
                                 new FfmpegSettingsStore().Load()
                                 ?? FfmpegSettings.CreateDefault();
@@ -1530,25 +1563,20 @@ public partial class MainWindow : Window
                     }
                     catch (Exception exception)
                     {
+                        if (preparationWorkspace is not null)
+                            await Task.Run(() => CutStoragePreflight.ReportFailure(exception, preparationWorkspace.DirectoryPath,
+                                outputTarget.FilePath, progress));
                         progress.Flush();
-                        progressViewModel.MarkFailed(exception.Message);
+                        progressViewModel.MarkFailedException(exception);
 
                         progressDialog.MarkOperationCompleted(
                             startAutoClose: false);
                     }
                     finally
                     {
-                        if (temporaryVideo is not null)
-                        {
-                            try { File.Delete(temporaryVideo); }
-                            catch (Exception cleanupError)
-                            {
-                                progressViewModel.ApplyProgress(new CutProgressUpdate(
-                                    CutProgressKind.Output,
-                                    $"Temporäre Datei konnte nicht gelöscht werden: {temporaryVideo} ({cleanupError.Message})"));
-                                _logger.Error($"Temporäre MP4-Datei konnte nicht gelöscht werden: {cleanupError.Message}");
-                            }
-                        }
+                        if (preparationWorkspace is not null) await Task.Run(preparationWorkspace.Dispose);
+                        progress.Flush();
+
                     }
 
                     if (cutSucceeded && completionViewModel is not null)

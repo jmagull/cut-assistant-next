@@ -1,4 +1,5 @@
 using System.IO;
+using CutAssistantNext.Media.Cutting;
 using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Media;
 
@@ -20,7 +21,10 @@ internal sealed class Mp4BoxFallbackPreparation(ICutEngine engine,
         var analysis = await analyze(request.SourceFilePath, cancellationToken).ConfigureAwait(false);
         if (VideoPreparation.IsMp4(analysis))
             return await engine.RunWithResultAsync(request, progress, cancellationToken).ConfigureAwait(false);
-        var parent = Path.GetDirectoryName(request.OutputFilePath)!;
+        using var workspace = CutWorkspace.Create(request.OutputFilePath, request.WorkingDirectory, progress);
+        CutStoragePreflight.EnsureSufficient(request.SourceFilePath, workspace.DirectoryPath, request.OutputFilePath,
+            CutStorageEstimate.Mp4Box(new FileInfo(request.SourceFilePath).Length), progress);
+        var parent = workspace.DirectoryPath;
         var name = ".can-mp4box-fallback-" + Guid.NewGuid().ToString("N");
         var work = Path.Combine(parent, name);
         Directory.CreateDirectory(work);

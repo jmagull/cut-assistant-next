@@ -46,6 +46,10 @@ public sealed class OtrCanCutServiceTests : IDisposable
         var args = runner.Calls[1].Args;
         Assert.Equal(request.OriginalFilePath, Value(args, "--input"));
         Assert.Equal(runner.Calls[0].Args[3], Value(args, "--index"));
+        var nativeWork = Value(args, "--temp-dir");
+        var pendingOutput = Value(args, "--output");
+        Assert.Equal(Path.GetDirectoryName(nativeWork), Path.GetDirectoryName(pendingOutput));
+        Assert.NotEqual(nativeWork, Path.GetDirectoryName(pendingOutput));
         Assert.Equal(_tools.Ffmpeg, Value(args, "--ffmpeg"));
         Assert.Equal(_tools.Ffprobe, Value(args, "--ffprobe"));
         Assert.Equal("times:[00:00:00.1200000,00:00:01.2800000][00:00:02.0400000,00:00:02.7200000]", Value(args, "--cutlist"));

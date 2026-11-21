@@ -1,4 +1,19 @@
-# Cut Assistant Next 1.0.3 Build 61 – lokaler Releasekandidat
+# Cut Assistant Next 1.0.3 Build 62 – lokale Prüffassung
+
+19.11.2026. Ausgangsbasis: Build 61 (`4a599f3fcc9a5434123ce11059a6d789dd37deaf`).
+
+- **Ergänzung 19.11.:** Werkseinstellungen A, E, Umschalt+A und Umschalt+E einschließlich Standardspalte und Zurücksetzen. Gespeicherte individuelle Belegungen haben Vorrang; neue Standards verdrängen keine vorhandenen Tasten.
+- **Ergänzung 19.11.:** TEMP-Einstellungen mit tatsächlichem Pfad, gemeldeter Datenträgerkapazität, freiem Platz und separat berechneter Größe der Dateiinhalte. Hintergrundabfrage mit Aktualisieren, Abbruch und Schutz vor veralteten Ergebnissen; keine Löschung. Die Prüfung vor Schnittbeginn bleibt unverändert.
+- **Persönliche Teilabnahme:** Power-User-1-Sichtprüfung, individuelle Tastenkürzel-Konfiguration, gespeicherte Windows-TEMP-Auswahl, Wetterfee mit MP4Box (Bild/Ton/Übergänge), technischer EAC3-Ausweichablauf und Setup-Upgrade am Arbeitsrechner bestätigt. Gesamt-/Nachabnahme und persönliche Fallback-Sicht-/Hörprüfung offen. [Nachweis](PRAXISTESTS-BUILD62-20261119.md).
+- Nur Power-User 1: Videoanfang/Videoende über Schnittanfang/Schnittende; dieselben Schaltflächen und Schnittfunktionen.
+- Vier zusätzliche frei konfigurierbare Schnittmarken-Shortcuts; vorhandene Speicherung, Konfliktprüfung und Eingabefeldbeachtung. Keine Wiederholung der Markierungsaktionen; Navigationswiederholung unverändert.
+- Gemeinsame Wahl des Arbeitsordners für MP4Box/otr-can, einschließlich Vorbereitungsdateien. Schreibprüfung, Messwerte für Arbeits-/Zielverzeichnis und gekennzeichnete Bedarfsabschätzung vor dem Schnitt. MP4Box nutzt `-tmp` ausdrücklich. Absehbarer geschätzter Platzmangel stoppt vor der Verarbeitung.
+- Sichere Übernahme über eine temporäre Zielkopie und anschließendes Umbenennen auf dem Ziellaufwerk; Abbruch und konkurrierende Zieländerungen schützen vorhandene Dateien. Bereinigung und technische Fehler werden protokolliert.
+- Vollständiges vertikal/horizontal scrollbareres Protokoll ohne gekürzten Anzeigepuffer. Kopierfunktion erhalten. Fehler rot/fett und ohne automatisches Schließen; vollständige Ausnahmekette und spätere Speicherplatzmessung verfügbar. Allgemeine Schreibfehler werden nicht als bewiesene Audio-/Quelldefekte ausgegeben.
+
+Persönliche Windows-11-Abnahme offen. Keine Veröffentlichung, kein Eingriff in das stabile Build-61-Release. [Prüfhinweise](PRUEFHINWEISE-BUILD62.md).
+
+## Historisch: Build 61 – damaliger lokaler Releasekandidat
 
 Stand 18.11.2026. Gegenüber dem veröffentlichten Build 60:
 

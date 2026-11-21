@@ -112,13 +112,17 @@ if ($BuildNumber -eq 58) {
         Copy-Item -LiteralPath (Join-Path $repo "docs\$name") -Destination (Join-Path $publish $name)
     }
 }
-if ($BuildNumber -eq 61) {
+if ($BuildNumber -ge 61) {
     $packageDocs = Join-Path $publish 'docs'
     [System.IO.Directory]::CreateDirectory($packageDocs) | Out-Null
     foreach ($name in @('README.md', 'NUTZERANLEITUNG.md', 'RELEASE-NOTES-1.0.3.md', 'PRUEFHINWEISE-BUILD61.md',
         'EAC3-DIALOG-BUILD61.md', 'PRAXISTESTS-BUILD61-20261117.md', 'EDITIERBARE-FILMNAMEN-BUILD61.md', 'SPOTLIGHT-README.md',
         'ABNAHME-BUILD61-20261118.md', 'TESTPLAN.md', 'SETUP-MERKLISTE.md', 'RELEASE-1.0.3-BUILD61-RESULT.md')) {
         Copy-Item -LiteralPath (Join-Path $repo "docs\$name") -Destination $packageDocs
+    }
+    if ($BuildNumber -eq 62) {
+        Copy-Item -LiteralPath (Join-Path $repo 'docs\PRUEFHINWEISE-BUILD62.md') -Destination $packageDocs
+        Copy-Item -LiteralPath (Join-Path $repo 'docs\PRAXISTESTS-BUILD62-20261119.md') -Destination $packageDocs
     }
 }
 Copy-Item -LiteralPath (Join-Path $repo 'docs\DANKSAGUNG.md') -Destination (Join-Path $publish 'DANKSAGUNG.md')

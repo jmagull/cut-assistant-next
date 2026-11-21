@@ -3,6 +3,7 @@ using System.IO;
 using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Media;
 using CutAssistantNext.Media.Analysis;
+using CutAssistantNext.Media.Cutting;
 using CutAssistantNext.Media.Tools;
 
 namespace CutAssistantNext.App.Services.Cutting;
@@ -52,6 +53,8 @@ internal sealed class OtrCanCutService : ICutEngine
         if (!Directory.Exists(parent)) throw new DirectoryNotFoundException("Der Ausgabeordner fehlt.");
         var existed = File.Exists(request.OutputFilePath);
         if (existed && !request.OverwriteExistingOutput) throw new IOException("Die Ausgabedatei existiert bereits.");
+        var expectedTarget = existed
+            ? await CutOutputIdentityVerifier.ReadAsync(request.OutputFilePath, token).ConfigureAwait(false) : null;
         if (!File.Exists(request.SourceFilePath)) throw new FileNotFoundException("Die Schnittquelle fehlt.", request.SourceFilePath);
         Report(CutProgressKind.Status, "OTR-CAN-Werkzeuge werden geprüft …");
         var original = await _analyze(request.OriginalFilePath, token).ConfigureAwait(false);
@@ -69,13 +72,15 @@ internal sealed class OtrCanCutService : ICutEngine
         if (source.Duration is { } duration && request.KeepSegments[^1].End > duration + TimeSpan.FromMilliseconds(100))
             throw new ArgumentException("Die Behaltebereiche reichen über die Videolaufzeit hinaus.");
         var cutlist = BuildCutlist(request);
-        var id = Guid.NewGuid().ToString("N");
-        var work = Path.Combine(parent, $".can-otr-{id}");
-        var pending = Path.Combine(parent, $".can-otr-{id}-output.mp4");
-        if (Directory.Exists(work) || File.Exists(work) || File.Exists(pending))
-            throw new IOException("Der private Arbeitsbereich existiert bereits.");
-        // Work and result are siblings on the same volume; neither is the user's target.
+        using var workspace = CutWorkspace.Create(request.OutputFilePath, request.WorkingDirectory, progress);
+        var pcmRate = source.AudioStreams.Sum(track => (long)(track.SampleRate ?? 48000) * (track.Channels ?? 2) * 8);
+        CutStoragePreflight.EnsureSufficient(request.SourceFilePath, workspace.DirectoryPath, request.OutputFilePath,
+            CutStorageEstimate.OtrCan(new FileInfo(request.SourceFilePath).Length,
+                TimeSpan.FromTicks(request.KeepSegments.Sum(segment => segment.Duration.Ticks)), pcmRate, source.Duration), progress);
+        var work = Path.Combine(workspace.DirectoryPath, "engine");
+        var pending = Path.Combine(workspace.DirectoryPath, "output.mp4");
         Directory.CreateDirectory(work);
+        Report(CutProgressKind.Output, "otr-can-Arbeitsverzeichnis: " + work);
         try
         {
             var index = Path.Combine(work, "source.ffindex");
@@ -131,32 +136,18 @@ internal sealed class OtrCanCutService : ICutEngine
             Report(CutProgressKind.Status, "MP4-Ausgabe und Tonspuren werden geprüft …");
             ValidateOutput(expectedOriginal, await _analyze(pending, token).ConfigureAwait(false));
             token.ThrowIfCancellationRequested();
-            File.Move(pending, request.OutputFilePath, overwrite: existed && request.OverwriteExistingOutput);
+            await CutOutputPublisher.PublishAsync(pending, request.OutputFilePath,
+                existed && request.OverwriteExistingOutput, progress, token, expectedTarget).ConfigureAwait(false);
             Report(CutProgressKind.Status, "OTR-CAN-Schnitt abgeschlossen.");
             Report(CutProgressKind.Output, "Bitte alle Schnittübergänge und die Tonsynchronität jeder Tonspur kontrollieren.");
         }
-        finally
+        catch (Exception error) when (error is not OperationCanceledException and not OutOfMemoryException)
         {
-            Clean(() => File.Delete(pending), pending);
-            Clean(() =>
-            {
-                var resolved = Path.GetFullPath(work);
-                if (!string.Equals(Path.GetDirectoryName(resolved), parent, StringComparison.OrdinalIgnoreCase) ||
-                    Path.GetFileName(resolved) != $".can-otr-{id}" || new DirectoryInfo(resolved).LinkTarget is not null)
-                    throw new IOException("Der Arbeitsbereich hat sich verändert; bitte manuell prüfen.");
-                Directory.Delete(resolved, recursive: true);
-            }, work);
+            CutStoragePreflight.ReportFailure(error, workspace.DirectoryPath, request.OutputFilePath, progress);
+            throw;
         }
 
         void Report(CutProgressKind kind, string message) => progress?.Report(new(kind, message));
-        void Clean(Action remove, string path)
-        {
-            try { remove(); }
-            catch (Exception error) when (error is IOException or UnauthorizedAccessException)
-            {
-                Report(CutProgressKind.Output, $"Arbeitsdateien konnten nicht vollständig gelöscht werden: {path} ({error.Message})");
-            }
-        }
     }
 
     internal static MediaAnalysisResult ExpectedOriginal(MediaAnalysisResult original, int? selected)

@@ -15,10 +15,6 @@ public sealed class Mp4BoxProgressViewModel :
     private readonly StringBuilder _protocolBuilder =
         new();
 
-    private const int DisplayProtocolLimit = 32768;
-    private readonly StringBuilder _displayProtocolBuilder = new();
-    private bool _displayTruncated;
-
     private string _statusText =
         "Bereit.";
 
@@ -105,9 +101,8 @@ public sealed class Mp4BoxProgressViewModel :
     public string ProtocolText =>
         _protocolBuilder.ToString();
 
-    public string DisplayProtocolText =>
-        (_displayTruncated ? "… Ältere Meldungen sind über „In Zwischenablage“ vollständig verfügbar." + Environment.NewLine : "")
-        + _displayProtocolBuilder.ToString();
+    public string DisplayProtocolText => ProtocolText;
+    public bool HasFailed => _hasFailed;
 
     public bool CanCancel
     {
@@ -207,28 +202,13 @@ public sealed class Mp4BoxProgressViewModel :
         _protocolBuilder.Append(
             update.Message);
 
-        if (update.Message.Length > DisplayProtocolLimit)
-        {
-            _displayProtocolBuilder.Clear();
-            _displayProtocolBuilder.Append(update.Message.AsSpan(update.Message.Length - DisplayProtocolLimit));
-            _displayTruncated = true;
-        }
-        else
-        {
-            if (_displayProtocolBuilder.Length > 0) _displayProtocolBuilder.AppendLine();
-            _displayProtocolBuilder.Append(update.Message);
-        }
-        if (_displayProtocolBuilder.Length > DisplayProtocolLimit)
-        {
-            _displayProtocolBuilder.Remove(0, _displayProtocolBuilder.Length - DisplayProtocolLimit);
-            _displayTruncated = true;
-        }
         OnPropertyChanged(nameof(DisplayProtocolText));
     }
 
     public void MarkRunning()
     {
         _hasFailed = false;
+        OnPropertyChanged(nameof(HasFailed));
         _completed = false;
         _cancelRequested = false;
         _running = true;
@@ -253,11 +233,20 @@ public sealed class Mp4BoxProgressViewModel :
         ShouldAutoClose = true;
     }
 
+    public void MarkFailedException(Exception error)
+    {
+        ArgumentNullException.ThrowIfNull(error);
+        MarkFailed(error.ToString());
+    }
+
     public void MarkFailed(string? reason = null)
     {
         StopActivity("Fehlgeschlagen");
         _hasFailed = true;
+        OnPropertyChanged(nameof(HasFailed));
         var detail = reason?.Trim();
+        var category = CutFailureDiagnosis.Explain(detail);
+        if (category is not null) detail = category + Environment.NewLine + detail;
         var summary = detail;
         if (summary?.Length > 500) summary = summary[..500] + " … (Details im Protokoll)";
         StatusText = string.IsNullOrWhiteSpace(summary)

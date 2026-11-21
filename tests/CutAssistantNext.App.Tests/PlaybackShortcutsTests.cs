@@ -64,6 +64,8 @@ public sealed class PlaybackShortcutsTests
     public void EveryLetterFromAToZCanBeAssignedIndividually()
     {
         var shortcuts = new PlaybackShortcuts();
+        Assert.Null(shortcuts.Assign(PlaybackShortcut.CutStart, new(Key.None)));
+        Assert.Null(shortcuts.Assign(PlaybackShortcut.CutEnd, new(Key.None)));
         for (var key = Key.A; key <= Key.Z; key++)
         {
             Assert.Null(shortcuts.Assign(PlaybackShortcut.FrameForward, new(key)));

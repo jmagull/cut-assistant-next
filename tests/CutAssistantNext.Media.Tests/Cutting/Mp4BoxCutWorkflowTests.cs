@@ -206,7 +206,7 @@ public sealed class Mp4BoxCutWorkflowTests : IDisposable
             progress);
 
         Assert.Collection(
-            updates,
+            updates.Where(update => update.Kind == CutProgressKind.Status),
             update =>
             {
                 Assert.Equal(
@@ -237,6 +237,7 @@ public sealed class Mp4BoxCutWorkflowTests : IDisposable
                     "Segmente werden zusammengefügt …",
                     update.Message);
             },
+            update => Assert.Contains("sicher ins Zielverzeichnis", update.Message),
             update =>
             {
                 Assert.Equal(

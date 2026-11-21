@@ -97,6 +97,9 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
         startInfo.ArgumentList.Add(
             fullOutputFilePath);
 
+        startInfo.ArgumentList.Add("-tmp");
+        startInfo.ArgumentList.Add(Path.GetDirectoryName(fullOutputFilePath)!);
+
         var commandLine =
             Mp4BoxCommandLineFormatter.Format(
                 _executablePath,
@@ -291,6 +294,9 @@ public sealed class Mp4BoxRunner : IMp4BoxRunner
         startInfo.ArgumentList.Add("-new");
         startInfo.ArgumentList.Add(
             fullOutputFilePath);
+
+        startInfo.ArgumentList.Add("-tmp");
+        startInfo.ArgumentList.Add(Path.GetDirectoryName(fullOutputFilePath)!);
 
         var commandLine =
             Mp4BoxCommandLineFormatter.Format(

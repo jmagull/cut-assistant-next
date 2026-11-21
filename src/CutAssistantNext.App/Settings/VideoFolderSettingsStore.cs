@@ -5,8 +5,21 @@ using CutAssistantNext.Core;
 
 namespace CutAssistantNext.App.Settings;
 
+internal enum CutWorkingDirectoryMode { OutputDirectory, WindowsTemp, Custom }
+
 internal sealed record VideoFolderSettings
 {
+    public CutWorkingDirectoryMode WorkingDirectoryMode { get; init; }
+    public string CustomWorkingDirectory { get; init; } = string.Empty;
+
+    internal string ResolveWorkingDirectory(string outputPath) => WorkingDirectoryMode switch
+    {
+        CutWorkingDirectoryMode.OutputDirectory => Path.GetDirectoryName(Path.GetFullPath(outputPath))!,
+        CutWorkingDirectoryMode.WindowsTemp => Path.TrimEndingDirectorySeparator(Path.GetTempPath()),
+        CutWorkingDirectoryMode.Custom when Path.IsPathFullyQualified(CustomWorkingDirectory) => Path.GetFullPath(CustomWorkingDirectory),
+        _ => throw new IOException("Bitte in den Standardordner-Einstellungen einen vollständigen temporären Arbeitsordner auswählen.")
+    };
+
     public string OriginalVideosDirectory { get; init; } = string.Empty;
     public string CutVideosDirectory { get; init; } = string.Empty;
 
@@ -14,6 +27,8 @@ internal sealed record VideoFolderSettings
 
     internal VideoFolderSettings Normalize() => this with
     {
+        WorkingDirectoryMode = Enum.IsDefined(WorkingDirectoryMode) ? WorkingDirectoryMode : CutWorkingDirectoryMode.OutputDirectory,
+        CustomWorkingDirectory = CustomWorkingDirectory?.Trim() ?? string.Empty,
         OriginalVideosDirectory = OriginalVideosDirectory?.Trim() ?? string.Empty,
         CutVideosDirectory = CutVideosDirectory?.Trim() ?? string.Empty,
         OwnCutlistsDirectory = OwnCutlistsDirectory?.Trim() ?? string.Empty

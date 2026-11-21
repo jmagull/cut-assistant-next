@@ -10,7 +10,7 @@ internal enum PlaybackShortcut
 {
     SecondsBackward = -3, KeyframeBackward = -2, FrameBackward = -1,
     FrameForward = 1, KeyframeForward = 2, SecondsForward = 3,
-    TogglePlayback, FrameLoupe, CancelCut
+    TogglePlayback, FrameLoupe, CancelCut, CutStart, CutEnd, VideoStart, VideoEnd
 }
 
 internal readonly record struct ShortcutGesture(Key Key, ModifierKeys Modifiers = ModifierKeys.None, Key Prefix = Key.None)
@@ -68,7 +68,11 @@ internal sealed class PlaybackShortcuts
         new(PlaybackShortcut.KeyframeBackward, "Navigation", "Vorheriger Keyframe", new(Key.Left, ModifierKeys.Control)),
         new(PlaybackShortcut.KeyframeForward, "Navigation", "Nächster Keyframe", new(Key.Right, ModifierKeys.Control)),
         new(PlaybackShortcut.FrameLoupe, "Schnittbearbeitung", "Frame-Lupe öffnen", new(Key.F, ModifierKeys.Shift)),
-        new(PlaybackShortcut.CancelCut, "Schnittbearbeitung", "Vorgemerkten Anfang verwerfen", new(Key.Escape))
+        new(PlaybackShortcut.CancelCut, "Schnittbearbeitung", "Vorgemerkten Anfang verwerfen", new(Key.Escape)),
+        new(PlaybackShortcut.CutStart, "Schnittbearbeitung", "Schnittanfang setzen", new(Key.A)),
+        new(PlaybackShortcut.CutEnd, "Schnittbearbeitung", "Schnittende setzen", new(Key.E)),
+        new(PlaybackShortcut.VideoStart, "Schnittbearbeitung", "Videoanfang setzen", new(Key.A, ModifierKeys.Shift)),
+        new(PlaybackShortcut.VideoEnd, "Schnittbearbeitung", "Videoende setzen", new(Key.E, ModifierKeys.Shift))
     ];
 
     private readonly Dictionary<PlaybackShortcut, ShortcutGesture> _bindings = Definitions.ToDictionary(d => d.Action, d => d.Standard);
@@ -142,13 +146,21 @@ internal sealed class PlaybackShortcuts
             var saved = JsonSerializer.Deserialize<Dictionary<PlaybackShortcut, SavedShortcut>>(File.ReadAllText(path));
             if (saved is null) return new();
             var shortcuts = new PlaybackShortcuts();
+            // Saved bindings, including explicitly disabled actions, take priority over added defaults.
+            foreach (var definition in Definitions) shortcuts._bindings[definition.Action] = new(Key.None);
             foreach (var (action, entry) in saved)
             {
                 if (entry is null) return new();
                 var prefix = entry.WithS && entry.Prefix == Key.None ? Key.S : entry.Prefix;
                 var gesture = new ShortcutGesture(entry.Key, entry.Modifiers, prefix);
                 if (!shortcuts._bindings.ContainsKey(action) || !IsAllowed(action, gesture)) return new();
+                if (gesture.Key != Key.None && shortcuts.Find(gesture) is not null) return new();
                 shortcuts._bindings[action] = gesture;
+            }
+            foreach (var definition in Definitions)
+            {
+                if (!saved.ContainsKey(definition.Action) && shortcuts.Find(definition.Standard) is null)
+                    shortcuts._bindings[definition.Action] = definition.Standard;
             }
             var assigned = shortcuts._bindings.Values.Where(g => g.Key != Key.None).ToArray();
             return assigned.Distinct().Count() == assigned.Length ? shortcuts : new();

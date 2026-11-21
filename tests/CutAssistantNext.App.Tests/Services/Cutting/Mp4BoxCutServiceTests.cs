@@ -138,7 +138,7 @@ public sealed class Mp4BoxCutServiceTests : IDisposable
             progress);
 
         Assert.Collection(
-            updates,
+            updates.Where(update => update.Kind == CutProgressKind.Status),
             update =>
                 Assert.Equal(
                     "Segment 1 von 2 wird geschnitten …",
@@ -151,6 +151,7 @@ public sealed class Mp4BoxCutServiceTests : IDisposable
                 Assert.Equal(
                     "Segmente werden zusammengefügt …",
                     update.Message),
+            update => Assert.Contains("sicher ins Zielverzeichnis", update.Message),
             update =>
                 Assert.Equal(
                     "Fertig.",

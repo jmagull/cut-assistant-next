@@ -103,6 +103,47 @@
                         </Grid>
                     </StackPanel>
                 </Border>
+                <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="12" Padding="18" Margin="0,14,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Temporärer Arbeitsordner" FontSize="16" FontWeight="SemiBold" Foreground="#1F2937" />
+                        <TextBlock Text="Gemeinsam für MP4Box und otr-can. Vor jedem Schnitt werden Schreibzugriff und freier Speicherplatz geprüft. Der Platzbedarf wird geschätzt; eine Garantie ist nicht möglich."
+                                   Foreground="#6B7280" TextWrapping="Wrap" Margin="0,5,0,12" />
+                        <ComboBox x:Name="WorkingDirectoryModeBox" SelectedIndex="{Binding WorkingDirectoryModeIndex}" Padding="8" AutomationProperties.Name="Temporären Arbeitsordner wählen">
+                            <ComboBoxItem Content="Ausgabeordner (Standard)" />
+                            <ComboBoxItem Content="Windows-TEMP-Verzeichnis" />
+                            <ComboBoxItem Content="Benutzerdefinierter Arbeitsordner" />
+                        </ComboBox>
+                        <Grid Margin="0,10,0,0" IsEnabled="{Binding IsCustomWorkingDirectory}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding CustomWorkingDirectory, UpdateSourceTrigger=PropertyChanged}" Padding="8" AutomationProperties.Name="Benutzerdefinierter Arbeitsordner" />
+                            <Button Grid.Column="1" Margin="8,0,0,0" Content="Ordner wählen …" Click="BrowseWork_Click" />
+                        </Grid>
+                        <Border Margin="0,14,0,0" Padding="12" Background="#F4F6F8" CornerRadius="8">
+                            <StackPanel>
+                                <TextBlock Text="Tatsächlich verwendeter Arbeitsordner" FontWeight="SemiBold" />
+                                <TextBlock x:Name="ResolvedWorkingPath" Text="{Binding StorageInfo.ResolvedPath}" TextWrapping="Wrap" Margin="0,4,0,12" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                                    <TextBlock Text="Datenträgerkapazität" TextWrapping="Wrap" Margin="0,0,12,7" />
+                                    <TextBlock x:Name="WorkDriveCapacity" Grid.Column="1" Text="{Binding StorageInfo.CapacityText}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Row="1" Text="Freier Platz auf dem Datenträger" TextWrapping="Wrap" Margin="0,0,12,7" />
+                                    <TextBlock x:Name="WorkDriveFree" Grid.Row="1" Grid.Column="1" Text="{Binding StorageInfo.FreeText}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Row="2" Text="Ordnergröße (Dateiinhalte)" TextWrapping="Wrap" Margin="0,0,12,0" />
+                                    <TextBlock x:Name="WorkFolderSize" Grid.Row="2" Grid.Column="1" Text="{Binding StorageInfo.FolderSizeText}" TextWrapping="Wrap" MaxWidth="240" />
+                                </Grid>
+                                <TextBlock Text="Die Ordnergröße ist die Summe der Dateigrößen, nicht der freie Speicherplatz. Komprimierung und Dateisystem können die tatsächliche Datenträgerbelegung verändern. Laufende TEMP-Dateien können sich während der Messung ändern."
+                                           Foreground="#6B7280" FontSize="12" TextWrapping="Wrap" Margin="0,10,0,0" />
+                                <TextBlock x:Name="WorkStorageNotice" Text="{Binding StorageInfo.Notice}" TextWrapping="Wrap" Foreground="#92400E" Margin="0,7,0,0" AutomationProperties.LiveSetting="Polite" />
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding StorageInfo.UpdatedText}" FontSize="12" Foreground="#6B7280" VerticalAlignment="Center" />
+                                    <Button x:Name="RefreshWorkStorageButton" Grid.Column="1" Content="Aktualisieren" Click="RefreshStorage_Click" AutomationProperties.Name="Speicherinformationen des Arbeitsordners aktualisieren" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
                 <TextBlock Text="Zum Schneiden und zum Speichern eigener Cutlists muss der jeweilige Ordner eingerichtet und beschreibbar sein. Beim Laden kannst Du im Dateidialog einen anderen Ordner wählen."
                            TextWrapping="Wrap" Foreground="#6B7280" Margin="0,16,0,0" />
             </StackPanel>

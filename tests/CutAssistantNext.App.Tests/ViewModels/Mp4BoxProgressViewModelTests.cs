@@ -212,7 +212,7 @@ public sealed class Mp4BoxProgressViewModelTests
     }
 
     [Fact]
-    public void LargeProtocolKeepsFullCopyButBoundsDisplayedTailAndFailure()
+    public void LargeProtocolKeepsEveryEntryVisibleAndBoundsOnlyFailureSummary()
     {
         var viewModel = new Mp4BoxProgressViewModel();
         viewModel.MarkRunning();
@@ -222,8 +222,10 @@ public sealed class Mp4BoxProgressViewModelTests
         viewModel.MarkFailed(failure);
         Assert.Contains("Warning 0" + Environment.NewLine, viewModel.ProtocolText);
         Assert.Contains(failure, viewModel.ProtocolText);
-        Assert.True(viewModel.DisplayProtocolText.Length <= 33000);
-        Assert.Contains("Zwischenablage", viewModel.DisplayProtocolText);
+        Assert.Equal(viewModel.ProtocolText, viewModel.DisplayProtocolText);
+        Assert.Contains("Warning 0" + Environment.NewLine, viewModel.DisplayProtocolText);
+        Assert.Contains(failure, viewModel.DisplayProtocolText);
+        Assert.True(viewModel.HasFailed);
         Assert.True(viewModel.StatusText.Length < 700);
         Assert.Contains("Code 1", viewModel.StatusText);
         Assert.Contains("Protokoll", viewModel.StatusText);

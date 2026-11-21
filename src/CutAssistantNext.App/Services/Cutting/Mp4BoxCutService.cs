@@ -31,7 +31,11 @@ internal sealed class Mp4BoxCutService : ICutEngine
         IProgress<CutProgressUpdate>? progress = null, CancellationToken cancellationToken = default) =>
         RunWithTailRangeAsync(request, null, progress, cancellationToken);
 
-    internal async Task<CutResult> RunWithTailRangeAsync(CutRequest request, Mp4BoxSplitRange? tail,
+    internal Task<CutResult> RunWithTailRangeAsync(CutRequest request, Mp4BoxSplitRange? tail,
+        IProgress<CutProgressUpdate>? progress, CancellationToken cancellationToken) =>
+        Task.Run(() => RunCoreAsync(request, tail, progress, cancellationToken), cancellationToken);
+
+    private async Task<CutResult> RunCoreAsync(CutRequest request, Mp4BoxSplitRange? tail,
         IProgress<CutProgressUpdate>? progress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -43,7 +47,7 @@ internal sealed class Mp4BoxCutService : ICutEngine
         var ranges = CutPlanMp4BoxRangeBuilder.Build(request.KeepSegments, framesPerSecond).ToArray();
         if (tail is not null) ranges[^1] = tail;
         var result = await _workflow.RunWithAnalysisAsync(request.SourceFilePath, request.OutputFilePath, ranges,
-            progress, cancellationToken, request.OverwriteExistingOutput, _outputAnalyzer).ConfigureAwait(false);
+            progress, cancellationToken, request.OverwriteExistingOutput, _outputAnalyzer, request.WorkingDirectory).ConfigureAwait(false);
         return result.Timeline is { } timeline
             ? new(request.OutputFilePath, timeline,
                 timeline.HasOverlappingPresentationTimes ? CutReviewTimingKind.Located : CutReviewTimingKind.Measured,

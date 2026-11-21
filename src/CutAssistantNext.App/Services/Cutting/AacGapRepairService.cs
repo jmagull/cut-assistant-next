@@ -6,6 +6,7 @@ using System.Text.Json;
 using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Media;
 using CutAssistantNext.Media.Analysis;
+using CutAssistantNext.Media.Cutting;
 using CutAssistantNext.Media.Tools;
 namespace CutAssistantNext.App.Services.Cutting;
 
@@ -48,7 +49,7 @@ internal sealed class AacGapRepairService : IAacGapRepair
         {
             sourceLock?.Dispose(); sourceLock = null; engineLock?.Dispose(); engineLock = null;
             if (!ownsRoot || root is null || !Directory.Exists(root)) return;
-            var resolved = Path.GetFullPath(root); var parent = Path.GetDirectoryName(request.OutputFilePath)!;
+            var resolved = Path.GetFullPath(root); var parent = (request.WorkingDirectory ?? Path.GetDirectoryName(request.OutputFilePath)!);
             if (!string.Equals(Path.GetDirectoryName(resolved), parent, StringComparison.OrdinalIgnoreCase) ||
                 !Path.GetFileName(resolved).StartsWith(".can-aac-", StringComparison.Ordinal) || new DirectoryInfo(resolved).LinkTarget is not null)
                 throw new IOException("Der Reparaturarbeitsbereich hat sich verändert und wird nicht automatisch gelöscht.");
@@ -71,7 +72,7 @@ internal sealed class AacGapRepairService : IAacGapRepair
             { CleanSafely(); return new("Unterstützt wird derzeit genau eine AAC-LC-Stereospur mit 48 kHz. Mehrspurdateien, andere Formate und fehlender Endton sind nicht freigegeben."); }
             var keeps = request.KeepSegments.Select(k => new { Start = SampleTick(k.Start), End = SampleTick(k.End) }).ToArray();
             if (keeps.Any(k => k.Start % 1920 != 0 || k.End % 1920 != 0)) { CleanSafely(); return new("Die Behaltebereiche liegen nicht auf dem unterstützten 25-fps-Bildraster."); }
-            var parent = Path.GetDirectoryName(request.OutputFilePath)!;
+            var parent = (request.WorkingDirectory ?? Path.GetDirectoryName(request.OutputFilePath)!);
             var id = Guid.NewGuid().ToString("N"); root = Path.Combine(parent, ".can-aac-" + id);
             if (Directory.Exists(root) || File.Exists(root)) throw new IOException("Der neue Reparaturarbeitsbereich existiert bereits.");
             Directory.CreateDirectory(root);
@@ -154,7 +155,8 @@ internal sealed class AacGapRepairService : IAacGapRepair
                     if (File.Exists(request.OutputFilePath) != existed || existed && await IdentifyAsync(request.OutputFilePath, cancel).ConfigureAwait(false) != oldTarget)
                         throw new IOException("Die Zieldatei hat sich während des Auftrags verändert und wird nicht ersetzt.");
                     cancel.ThrowIfCancellationRequested();
-                    File.Move(pending, request.OutputFilePath, overwrite: existed && request.OverwriteExistingOutput);
+                    await CutOutputPublisher.PublishAsync(pending, request.OutputFilePath,
+                        existed && request.OverwriteExistingOutput, updates, cancel).ConfigureAwait(false);
                     updates?.Report(new(CutProgressKind.Output, $"Experimentelle Reparatur unabhängig geprüft: {expected} Nutzsamples, {missing} bestätigte Stillevektoren; Ausgabe-SHA-256 {outputIdentity.Sha256}."));
                     updates?.Report(new(CutProgressKind.Output, Notice));
                     return CutResult.Planned(request.OutputFilePath, request.KeepSegments, Notice);

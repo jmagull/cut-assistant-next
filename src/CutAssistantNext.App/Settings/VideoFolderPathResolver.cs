@@ -26,7 +26,12 @@ internal static class VideoFolderPathResolver
         ArgumentNullException.ThrowIfNull(settings);
         return Validate(settings.OriginalVideosDirectory, "Originalvideos", directoryExists)
             ?? Validate(settings.CutVideosDirectory, "Geschnittene Videos", directoryExists)
-            ?? Validate(settings.OwnCutlistsDirectory, "Eigene Cutlists", directoryExists);
+            ?? Validate(settings.OwnCutlistsDirectory, "Eigene Cutlists", directoryExists)
+            ?? (settings.WorkingDirectoryMode == CutWorkingDirectoryMode.Custom
+                ? string.IsNullOrWhiteSpace(settings.CustomWorkingDirectory)
+                    ? "Temporärer Arbeitsordner: Bitte einen vorhandenen Ordner wählen."
+                    : Validate(settings.CustomWorkingDirectory, "Temporärer Arbeitsordner", directoryExists)
+                : null);
     }
 
     private static string? Validate(string? directory, string label, Func<string, bool>? directoryExists)

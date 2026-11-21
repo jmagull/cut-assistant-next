@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using CutAssistantNext.App.Dialogs;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.ViewModels;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Media;
 using CutAssistantNext.Media.Analysis;
 using CutAssistantNext.Media.Playback;
@@ -364,6 +365,114 @@ public sealed class KeyframeShortcutTests
         var playerKey = fixture.Key(Key.F);
         await fixture.Window.HandlePlaybackKeyDownAsync(playerKey, ModifierKeys.Shift);
         Assert.True(playerKey.Handled);
+    });
+
+    [Theory]
+    [InlineData("Standard", CutEditingMode.Remove)]
+    [InlineData("Standard", CutEditingMode.Keep)]
+    [InlineData("PowerUser", CutEditingMode.Remove)]
+    [InlineData("PowerUser", CutEditingMode.Keep)]
+    [InlineData("PowerUser2", CutEditingMode.Remove)]
+    [InlineData("PowerUser2", CutEditingMode.Keep)]
+    public Task FourCutShortcutsUseExistingButtonsInEveryLayoutAndMode(string layout, CutEditingMode mode) => Sta(async () =>
+    {
+        await using var fixture = new Fixture(); await fixture.Load(); await fixture.Layout(layout);
+        var plan = fixture.Field<CutPlanViewModel>("_cutPlanViewModel");
+        plan.Initialize(TimeSpan.FromSeconds(10), mode);
+        var shortcuts = new PlaybackShortcuts();
+        foreach (var (action, key) in new[] { (PlaybackShortcut.CutStart, Key.F6), (PlaybackShortcut.CutEnd, Key.F7),
+            (PlaybackShortcut.VideoStart, Key.F8), (PlaybackShortcut.VideoEnd, Key.F9) })
+            Assert.Null(shortcuts.Assign(action, new(key)));
+        fixture.Set("_shortcuts", shortcuts);
+        async Task Press(Key key)
+        {
+            await Dispatcher.Yield(DispatcherPriority.DataBind);
+            var args = fixture.Key(key);
+            await fixture.Window.HandlePlaybackKeyDownAsync(args, ModifierKeys.None);
+            Assert.True(args.Handled);
+        }
+        await Press(Key.F6); Assert.Equal(TimeSpan.FromSeconds(3), plan.PendingStart);
+        fixture.Player.Position = TimeSpan.FromSeconds(4);
+        await Press(Key.F7);
+        var first = Assert.Single(plan.MarkedSegments);
+        Assert.Equal(TimeSpan.FromSeconds(3), first.Start); Assert.Equal(TimeSpan.FromSeconds(4), first.End);
+        plan.Initialize(TimeSpan.FromSeconds(10), mode);
+        await Press(Key.F8); Assert.Equal(TimeSpan.Zero, plan.PendingStart);
+        await Press(Key.F9);
+        var full = Assert.Single(plan.MarkedSegments); Assert.Equal(TimeSpan.Zero, full.Start); Assert.Equal(TimeSpan.FromSeconds(10), full.End);
+        Assert.Empty(fixture.Player.SeekPositions); Assert.Equal(mode, plan.EditingMode);
+    });
+
+    [Theory]
+    [InlineData(Key.F6)]
+    [InlineData(Key.F7)]
+    [InlineData(Key.F8)]
+    [InlineData(Key.F9)]
+    public Task CutShortcutsRespectTextInputsAndDoNotRepeat(Key key) => Sta(async () =>
+    {
+        await using var fixture = new Fixture(); await fixture.Load();
+        var plan = fixture.Field<CutPlanViewModel>("_cutPlanViewModel"); plan.Initialize(TimeSpan.FromSeconds(10));
+        plan.SetStart(TimeSpan.FromSeconds(1));
+        var shortcuts = new PlaybackShortcuts();
+        var action = key switch
+        {
+            Key.F6 => PlaybackShortcut.CutStart,
+            Key.F7 => PlaybackShortcut.CutEnd,
+            Key.F8 => PlaybackShortcut.VideoStart,
+            _ => PlaybackShortcut.VideoEnd
+        };
+        Assert.Null(shortcuts.Assign(action, new(key))); fixture.Set("_shortcuts", shortcuts);
+        foreach (var input in new DependencyObject[] { new TextBox(), new RichTextBox(), new PasswordBox(), new ComboBox { IsEditable = true } })
+        {
+            var args = fixture.Key(key, input);
+            await fixture.Window.HandlePlaybackKeyDownAsync(args, ModifierKeys.None); Assert.False(args.Handled);
+        }
+        var repeat = fixture.Key(key);
+        typeof(KeyEventArgs).GetField("_isRepeat", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(repeat, true);
+        Assert.True(repeat.IsRepeat);
+        await fixture.Window.HandlePlaybackKeyDownAsync(repeat, ModifierKeys.None);
+        Assert.True(repeat.Handled); Assert.Equal(TimeSpan.FromSeconds(1), plan.PendingStart); Assert.Empty(plan.MarkedSegments);
+        fixture.Window.IsEnabled = false;
+        await fixture.Window.HandlePlaybackKeyDownAsync(fixture.Key(key), ModifierKeys.None);
+        Assert.Equal(TimeSpan.FromSeconds(1), plan.PendingStart); Assert.Empty(plan.MarkedSegments);
+    });
+
+    [Theory]
+    [InlineData("Standard", CutEditingMode.Remove)]
+    [InlineData("Standard", CutEditingMode.Keep)]
+    [InlineData("PowerUser", CutEditingMode.Remove)]
+    [InlineData("PowerUser", CutEditingMode.Keep)]
+    [InlineData("PowerUser2", CutEditingMode.Remove)]
+    [InlineData("PowerUser2", CutEditingMode.Keep)]
+    public Task FactoryCutGesturesExecuteAfterReloadInAllLayoutsAndModes(string layout, CutEditingMode mode) => Sta(async () =>
+    {
+        await using var fixture = new Fixture(); await fixture.Load(); await fixture.Layout(layout);
+        var plan = fixture.Field<CutPlanViewModel>("_cutPlanViewModel"); plan.Initialize(TimeSpan.FromSeconds(10), mode);
+        var directory = Directory.CreateTempSubdirectory("can-default-keys-");
+        try
+        {
+            var path = Path.Combine(directory.FullName, "shortcuts.json");
+            new PlaybackShortcuts().Save(path); fixture.Set("_shortcuts", PlaybackShortcuts.Load(path));
+            async Task Press(Key key, ModifierKeys modifiers)
+            {
+                await Dispatcher.Yield(DispatcherPriority.DataBind);
+                var args = fixture.Key(key);
+                await fixture.Window.HandlePlaybackKeyDownAsync(args, modifiers);
+                Assert.True(args.Handled);
+            }
+            await Press(Key.A, ModifierKeys.None); Assert.Equal(TimeSpan.FromSeconds(3), plan.PendingStart);
+            fixture.Player.Position = TimeSpan.FromSeconds(4);
+            await Press(Key.E, ModifierKeys.None);
+            Assert.Equal(TimeSpan.FromSeconds(3), Assert.Single(plan.MarkedSegments).Start);
+            Assert.Equal(TimeSpan.FromSeconds(4), Assert.Single(plan.MarkedSegments).End);
+            plan.Initialize(TimeSpan.FromSeconds(10), mode);
+            await Press(Key.A, ModifierKeys.Shift); Assert.Equal(TimeSpan.Zero, plan.PendingStart);
+            await Press(Key.E, ModifierKeys.Shift);
+            Assert.Equal(TimeSpan.Zero, Assert.Single(plan.MarkedSegments).Start);
+            Assert.Equal(TimeSpan.FromSeconds(10), Assert.Single(plan.MarkedSegments).End);
+            Assert.Empty(fixture.Player.SeekPositions);
+        }
+        finally { directory.Delete(true); }
     });
 
     private sealed class Fixture : IAsyncDisposable

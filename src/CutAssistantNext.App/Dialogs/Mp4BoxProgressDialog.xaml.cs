@@ -15,6 +15,7 @@ public partial class Mp4BoxProgressDialog : Window
     private readonly BufferedCutProgressReporter? _progress;
     private DispatcherOperation? _protocolScroll;
     private bool _closed;
+    private bool _followProtocol = true;
 
     private bool _operationCompleted;
     private bool _allowClose;
@@ -182,11 +183,17 @@ public partial class Mp4BoxProgressDialog : Window
         _viewModel.RefreshTimings();
     }
 
+    private void ProtocolTextBox_ScrollChanged(object sender, System.Windows.Controls.ScrollChangedEventArgs e)
+    {
+        if (e.OriginalSource is System.Windows.Controls.ScrollViewer viewer && e.ExtentHeightChange == 0)
+            _followProtocol = viewer.ScrollableHeight - viewer.VerticalOffset < 1;
+    }
+
     private void ProtocolTextBox_TextChanged(
         object sender,
         System.Windows.Controls.TextChangedEventArgs e)
     {
-        if (_closed || _protocolScroll?.Status == DispatcherOperationStatus.Pending) return;
+        if (_closed || !_followProtocol || _protocolScroll?.Status == DispatcherOperationStatus.Pending) return;
         // TextChanged runs inside the binding's text change. Scroll only after layout settles.
         _protocolScroll = Dispatcher.InvokeAsync(() =>
         {

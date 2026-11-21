@@ -9,6 +9,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CutAssistantNext.App.Controls;
 using CutAssistantNext.App.Settings;
+using CutAssistantNext.App.Dialogs;
+using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Media;
 using CutAssistantNext.Cutlists.Editing;
 using CutAssistantNext.Cutlists.Serialization;
@@ -20,6 +22,64 @@ namespace CutAssistantNext.App.Tests;
 [Collection("WpfUi")]
 public sealed class CutToolLayoutTests
 {
+    [Fact]
+    public void ProtocolWindowKeepsAllLinesScrollableAndFailureVisible() => OnUiThread(_ =>
+    {
+        var vm = new Mp4BoxProgressViewModel(); vm.MarkRunning();
+        vm.ApplyProgress(new(CutProgressKind.Output, string.Join("\n", Enumerable.Range(0, 6000).Select(i => $"message {i} " + new string('x', 200)))));
+        var settingsPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "can-protocol62-" + Guid.NewGuid().ToString("N"), "windows.json");
+        var dialog = new Mp4BoxProgressDialog(vm, windowSettingsStore: new WindowSettingsStore(settingsPath));
+        try
+        {
+            dialog.Show(); dialog.UpdateLayout(); Pump();
+            var text = (TextBox)dialog.FindName("ProtocolTextBox");
+            Assert.Equal(vm.ProtocolText, text.Text);
+            Assert.True(text.ExtentHeight > text.ViewportHeight); Assert.True(text.ViewportHeight > 0);
+            Assert.True(text.ExtentWidth > text.ViewportWidth);
+            text.ScrollToHome(); Pump(); Assert.Equal(0, text.VerticalOffset);
+            text.ScrollToEnd(); Pump(); Assert.True(text.VerticalOffset > 0);
+            ((Expander)dialog.FindName("ProtocolExpander")).IsExpanded = false;
+            vm.MarkFailedException(new IOException("Write Error at 24%", new IOException("Full native technical detail")));
+            dialog.MarkOperationCompleted(false); Pump();
+            var status = (TextBlock)dialog.FindName("OperationStatus");
+            Assert.True(status.IsVisible); Assert.Equal(FontWeights.Bold, status.FontWeight);
+            Assert.Equal(Color.FromRgb(0xB9, 0x1C, 0x1C), ((SolidColorBrush)status.Foreground).Color);
+            Assert.Contains("Write Error", status.Text); Assert.Contains("Full native technical detail", text.Text);
+            Assert.Contains("message 0 ", text.Text); Assert.Equal(vm.ProtocolText, text.Text);
+            Assert.False(vm.ShouldAutoClose);
+        }
+        finally
+        {
+            dialog.MarkOperationCompleted(false); dialog.Close();
+            var folder = System.IO.Path.GetDirectoryName(settingsPath)!;
+            if (System.IO.Directory.Exists(folder)) System.IO.Directory.Delete(folder, true);
+        }
+    });
+
+    [Fact]
+    public void Build62AllTransitionsKeepStandardAndPower2MarkerOrder() => OnUiThread(window =>
+    {
+        var names = new[] { "VideoStartButton", "CutStartButton", "CutEndButton", "VideoEndButton" };
+        var controls = names.Select(name => Get<Button>(window, name)).ToArray();
+        foreach (var layout in new[] { InterfaceLayout.Standard, InterfaceLayout.PowerUser, InterfaceLayout.PowerUser2,
+            InterfaceLayout.PowerUser, InterfaceLayout.Standard, InterfaceLayout.PowerUser2, InterfaceLayout.Standard })
+        {
+            window.ApplyCutToolLayout(layout); Pump();
+            Assert.Equal(controls, names.Select(name => Get<Button>(window, name)));
+            if (layout == InterfaceLayout.Standard)
+                Assert.Equal(controls, Get<WrapPanel>(window, "CutMarkersPanel").Children.OfType<Button>());
+            else if (layout == InterfaceLayout.PowerUser2)
+                for (var i = 0; i < names.Length; i++) AssertCell(window, names[i], "Power2MarkersGrid", 0, i * 2);
+            else
+            {
+                AssertCell(window, "VideoStartButton", "PowerCutMarkersGrid", 0, 0);
+                AssertCell(window, "VideoEndButton", "PowerCutMarkersGrid", 0, 2);
+                AssertCell(window, "CutStartButton", "PowerCutMarkersGrid", 2, 0);
+                AssertCell(window, "CutEndButton", "PowerCutMarkersGrid", 2, 2);
+            }
+        }
+    });
+
     [Fact]
     public void KeepModeLabelsAndSharedTableBindingsSurviveLayoutChanges() => OnUiThread(window =>
     {
@@ -48,9 +108,9 @@ public sealed class CutToolLayoutTests
         Assert.Same(start, Get<Button>(window, "VideoStartButton"));
         Assert.Same(tableParent, table.Parent);
         AssertCell(window, "VideoStartButton", "PowerCutMarkersGrid", 0, 0);
-        AssertCell(window, "CutStartButton", "PowerCutMarkersGrid", 0, 2);
-        AssertCell(window, "CutEndButton", "PowerCutMarkersGrid", 2, 0);
-        AssertCell(window, "VideoEndButton", "PowerCutMarkersGrid", 2, 2);
+        AssertCell(window, "CutStartButton", "PowerCutMarkersGrid", 2, 0);
+        AssertCell(window, "CutEndButton", "PowerCutMarkersGrid", 2, 2);
+        AssertCell(window, "VideoEndButton", "PowerCutMarkersGrid", 0, 2);
         AssertCell(window, "RemoveCutSegmentButton", "PowerCutActionsGrid", 0, 0);
         Assert.Equal(HorizontalAlignment.Right, Get<Button>(window, "RemoveCutSegmentButton").HorizontalAlignment);
         AssertCell(window, "CutMp4BoxButton", "PowerCutEnginesGrid", 0, 0);
@@ -296,7 +356,15 @@ public sealed class CutToolLayoutTests
         var thread = new Thread(() =>
         {
             MainWindow? window = null;
-            try { window = new MainWindow(); assertion(window); }
+            try
+            {
+                window = new MainWindow();
+                window.WindowState = WindowState.Normal;
+                // These are layout tests; real libmpv lifetime is covered by the native harness.
+                typeof(MainWindow).GetField("_mediaPlayerInitializationTask", BindingFlags.Instance | BindingFlags.NonPublic)!
+                    .SetValue(window, Task.CompletedTask);
+                assertion(window);
+            }
             catch (Exception error) { failure = error; }
             finally
             {

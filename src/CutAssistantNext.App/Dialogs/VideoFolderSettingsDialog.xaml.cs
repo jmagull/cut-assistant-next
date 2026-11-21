@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows;
 using CutAssistantNext.App.Settings;
 using CutAssistantNext.App.ViewModels;
@@ -19,6 +20,8 @@ internal partial class VideoFolderSettingsDialog : Window
         _store = store;
         InitializeComponent();
         DataContext = viewModel;
+        Loaded += async (_, _) => await RefreshStorageAsync();
+        _viewModel.PropertyChanged += FolderSettingsChanged;
         Width = Math.Min(Width, SystemParameters.WorkArea.Width);
         Height = Math.Min(Height, SystemParameters.WorkArea.Height);
         MinWidth = Math.Min(MinWidth, Width);
@@ -28,7 +31,21 @@ internal partial class VideoFolderSettingsDialog : Window
     protected override void OnClosed(EventArgs e)
     {
         _closed = true;
+        _viewModel.PropertyChanged -= FolderSettingsChanged;
+        _viewModel.StorageInfo.Dispose();
         base.OnClosed(e);
+    }
+
+    private Task RefreshStorageAsync(bool debounce = false) => _closed
+        ? Task.CompletedTask : _viewModel.StorageInfo.RefreshAsync(_viewModel.CreateSettings(), debounce);
+
+    private async void RefreshStorage_Click(object sender, RoutedEventArgs e) => await RefreshStorageAsync();
+
+    private async void FolderSettingsChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(VideoFolderSettingsViewModel.WorkingDirectoryModeIndex) or
+            nameof(VideoFolderSettingsViewModel.CustomWorkingDirectory) or nameof(VideoFolderSettingsViewModel.CutVideosDirectory))
+            await RefreshStorageAsync(debounce: true);
     }
 
     private async void BrowseOriginal_Click(object sender, RoutedEventArgs e)
@@ -41,6 +58,12 @@ internal partial class VideoFolderSettingsDialog : Window
     {
         var folder = await ChooseFolderAsync("Ordner für geschnittene Videos auswählen", _viewModel.CutVideosDirectory);
         if (folder is not null) _viewModel.CutVideosDirectory = folder;
+    }
+
+    private async void BrowseWork_Click(object sender, RoutedEventArgs e)
+    {
+        var folder = await ChooseFolderAsync("Temporären Arbeitsordner auswählen", _viewModel.CustomWorkingDirectory);
+        if (folder is not null) _viewModel.CustomWorkingDirectory = folder;
     }
 
     private async void BrowseCutlists_Click(object sender, RoutedEventArgs e)
@@ -92,7 +115,21 @@ internal partial class VideoFolderSettingsDialog : Window
         ErrorText.Text = string.Empty;
         try
         {
-            var error = await Task.Run(() => VideoFolderPathResolver.GetValidationError(settings));
+            var error = await Task.Run(() =>
+            {
+                var validation = VideoFolderPathResolver.GetValidationError(settings);
+                if (validation is not null) return validation;
+                if (settings.WorkingDirectoryMode != CutWorkingDirectoryMode.OutputDirectory)
+                {
+                    try
+                    {
+                        CutAssistantNext.Media.Cutting.CutWorkspace.ValidateWritable(settings.ResolveWorkingDirectory(System.IO.Path.Combine(System.IO.Path.GetTempPath(), "output.mp4")));
+                    }
+                    catch (Exception failure) when (failure is System.IO.IOException or UnauthorizedAccessException)
+                    { return "Temporärer Arbeitsordner: " + failure.Message; }
+                }
+                return null;
+            });
             if (_closed) return;
             if (error is not null)
             {

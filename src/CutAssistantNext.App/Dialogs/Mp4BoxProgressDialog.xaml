@@ -39,11 +39,21 @@
                 CornerRadius="8">
 
             <StackPanel>
-                <TextBlock FontSize="16"
-                       FontWeight="SemiBold"
-                       Foreground="#1F2937"
-                       TextWrapping="Wrap"
-                       Text="{Binding StatusText}" />
+                <TextBlock x:Name="OperationStatus" FontSize="16"
+                       TextWrapping="Wrap" Text="{Binding StatusText}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#1F2937" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasFailed}" Value="True">
+                                    <Setter Property="Foreground" Value="#B91C1C" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
                 <ProgressBar Height="10" Margin="0,12,0,0" Minimum="0" Maximum="100"
                              IsIndeterminate="{Binding IsIndeterminate, Mode=OneWay}" Value="{Binding ProgressValue, Mode=OneWay}" />
                 <TextBlock Margin="0,8,0,0" Text="{Binding ProgressText}" Foreground="#4B5563" />
@@ -52,7 +62,7 @@
             </StackPanel>
         </Border>
 
-        <Expander Grid.Row="2" Header="Protokoll" IsExpanded="True">
+        <Expander x:Name="ProtocolExpander" Grid.Row="2" Header="Protokoll" IsExpanded="True" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
         <Border
                 Padding="1"
                 Background="White"
@@ -73,6 +83,7 @@
                      TextWrapping="NoWrap"
                      VerticalScrollBarVisibility="Auto"
                      HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.ScrollChanged="ProtocolTextBox_ScrollChanged"
                      TextChanged="ProtocolTextBox_TextChanged"
                      Text="{Binding DisplayProtocolText, Mode=OneWay}" />
         </Border>

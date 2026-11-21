@@ -1,6 +1,16 @@
 # Nutzeranleitung – Cut Assistant Next
 
-## Bedienung in Build 61 – lokaler Releasekandidat
+## Bedienung in Build 62 – lokale Prüffassung
+
+- Power-User 1: oben Videoanfang/Videoende, darunter Schnittanfang/Schnittende. Die beiden anderen Ansichten behalten ihre Anordnung.
+- Unter Einstellungen → Tastenkürzel die vier zusätzlichen Schnittaktionen persönlich belegen. Werkseinstellungen: Schnittanfang A, Schnittende E, Videoanfang Umschalt+A, Videoende Umschalt+E. Persönliche Belegungen bleiben erhalten; fehlende neue Aktionen erhalten nur konfliktfreie Standards. Die Schnittaktionen werden nur einmal pro Tastendruck ausgeführt.
+- Unter Einstellungen → Standardordner den temporären Arbeitsordner für beide Motoren wählen: Ausgabeordner, Windows-TEMP oder eigener vorhandener Ordner. Gemessener freier Platz und geschätzter zusätzlicher Bedarf stehen vor dem Schnitt im Protokoll. Eine Schätzung garantiert keinen tatsächlich ausreichenden Platz.
+- Im Bereich Temporärer Arbeitsordner zeigen Pfad, Datenträgerkapazität, freier Platz und Ordnergröße den aktuellen Stand in GiB. Aktualisieren liest erneut. Die Größe der Dateiinhalte wird im Hintergrund berechnet; unvollständige Werte erhalten einen Hinweis. Ordnergröße und freier Datenträgerplatz sind verschiedene Werte.
+- Das gesamte Protokoll bleibt scrollbar und kopierbar. Fehler sind rot hervorgehoben; technische Details und mögliche Speicherprobleme sind nachvollziehbar dokumentiert.
+
+[Vollständige Hinweise und persönliche Windows-11-Prüfrunde](PRUEFHINWEISE-BUILD62.md). Build 61 bleibt die stabile Veröffentlichung; Build 62 ist noch nicht persönlich abgenommen.
+
+## Bedienung in Build 61 - damaliger Releasekandidat
 
 Die persönliche Windows-11-Abnahme von Build 61 ist abgeschlossen. Die Veröffentlichung bedarf einer gesonderten Freigabe. PRUEFHINWEISE-BUILD61.md und ABNAHME-BUILD61-20261118.md dokumentieren die abgeschlossenen Prüfungen.
 

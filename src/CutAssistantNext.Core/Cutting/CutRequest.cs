@@ -9,7 +9,8 @@ public sealed class CutRequest
         IEnumerable<KeepSegment> keepSegments,
         double? framesPerSecond = null,
         bool overwriteExistingOutput = false,
-        string? sourceFilePath = null)
+        string? sourceFilePath = null,
+        string? workingDirectory = null)
     {
         ArgumentNullException.ThrowIfNull(keepSegments);
 
@@ -49,10 +50,13 @@ public sealed class CutRequest
             previous = segment;
         }
 
+        WorkingDirectory = workingDirectory is null ? null : Path.TrimEndingDirectorySeparator(GetAbsolutePath(workingDirectory, nameof(workingDirectory)));
         KeepSegments = Array.AsReadOnly(segments);
         FramesPerSecond = framesPerSecond;
         OverwriteExistingOutput = overwriteExistingOutput;
     }
+
+    public string? WorkingDirectory { get; }
 
     public string OriginalFilePath { get; }
 
@@ -77,8 +81,11 @@ public sealed class CutRequest
             KeepSegments,
             FramesPerSecond,
             OverwriteExistingOutput,
-            sourceFilePath);
+            sourceFilePath, WorkingDirectory);
     }
+
+    public CutRequest WithWorkingDirectory(string directory) => new(OriginalFilePath, OutputFilePath,
+        KeepSegments, FramesPerSecond, OverwriteExistingOutput, SourceFilePath, directory);
 
     private static string GetAbsolutePath(string path, string parameterName)
     {

@@ -101,7 +101,7 @@ public sealed class Mp4BoxRunnerConcatTests
                 () => runner.RunConcatAsync(segments, output));
 
             Assert.Equal(Mp4BoxCommandLineFormatter.Format(executable,
-                ["-add", segments[0], "-cat", segments[1], "-cat", segments[2], "-new", output]),
+                ["-add", segments[0], "-cat", segments[1], "-cat", segments[2], "-new", output, "-tmp", directory.FullName]),
                 command.Message);
         }
         finally

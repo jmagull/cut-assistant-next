@@ -1,4 +1,5 @@
 using System.IO;
+using CutAssistantNext.Media.Cutting;
 using CutAssistantNext.Core.Cutting;
 using CutAssistantNext.Core.Media;
 using CutAssistantNext.Media.Analysis;
@@ -143,7 +144,10 @@ internal sealed class OtrCanAacEmergencyCutService(
     {
         token.ThrowIfCancellationRequested();
         progress?.Report(new(CutProgressKind.Output, "Ausdrücklich bestätigt: " + notice));
-        var parent = Path.GetDirectoryName(request.OutputFilePath)!;
+        using var workspace = CutWorkspace.Create(request.OutputFilePath, request.WorkingDirectory, progress);
+        CutStoragePreflight.EnsureSufficient(request.SourceFilePath, workspace.DirectoryPath, request.OutputFilePath,
+            CutStorageEstimate.Mp4Box(new FileInfo(request.SourceFilePath).Length), progress);
+        var parent = workspace.DirectoryPath;
         var name = ".can-aac-" + Guid.NewGuid().ToString("N");
         var work = Path.Combine(parent, name);
         if (Directory.Exists(work) || File.Exists(work)) throw new IOException("Der AAC-Arbeitsbereich existiert bereits.");
